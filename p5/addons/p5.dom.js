@@ -1133,3 +1133,939 @@
           }
         },
         function(e) {
+          console.log(e);
+        }
+      );
+    } else {
+      throw 'getUserMedia not supported in this browser';
+    }
+    var c = addElement(elt, this, true);
+    c.loadedmetadata = false;
+    // set width and height onload metadata
+    elt.addEventListener('loadedmetadata', function() {
+      elt.play();
+      if (elt.width) {
+        c.width = elt.videoWidth = elt.width;
+        c.height = elt.videoHeight = elt.height;
+      } else {
+        c.width = c.elt.width = elt.videoWidth;
+        c.height = c.elt.height = elt.videoHeight;
+      }
+      c.loadedmetadata = true;
+    });
+    return c;
+  };
+
+  /**
+   * Creates element with given tag in the DOM with given content.
+   * Appends to the container node if one is specified, otherwise
+   * appends to body.
+   *
+   * @method createElement
+   * @param  {String} tag tag for the new element
+   * @param  {String} [content] html content to be inserted into the element
+   * @return {Object|p5.Element} pointer to p5.Element holding created node
+   * @example
+   * <div class='norender'><code>
+   * createElement('h2', 'im an h2 p5.element!');
+   * </code></div>
+   */
+  p5.prototype.createElement = function(tag, content) {
+    p5._validateParameters('createElement', arguments);
+    var elt = document.createElement(tag);
+    if (typeof content !== 'undefined') {
+      elt.innerHTML = content;
+    }
+    return addElement(elt, this);
+  };
+
+  // =============================================================================
+  //                         p5.Element additions
+  // =============================================================================
+  /**
+   *
+   * Adds specified class to the element.
+   *
+   * @for p5.Element
+   * @method addClass
+   * @param  {String} class name of class to add
+   * @return {Object|p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div = createDiv('div');
+   * div.addClass('myClass');
+   * </code></div>
+   */
+  p5.Element.prototype.addClass = function(c) {
+    if (this.elt.className) {
+      // PEND don't add class more than once
+      //var regex = new RegExp('[^a-zA-Z\d:]?'+c+'[^a-zA-Z\d:]?');
+      //if (this.elt.className.search(/[^a-zA-Z\d:]?hi[^a-zA-Z\d:]?/) === -1) {
+      this.elt.className = this.elt.className + ' ' + c;
+      //}
+    } else {
+      this.elt.className = c;
+    }
+    return this;
+  };
+
+  /**
+   *
+   * Removes specified class from the element.
+   *
+   * @method removeClass
+   * @param  {String} class name of class to remove
+   * @return {Object|p5.Element}   * @example
+   * <div class='norender'><code>
+   * // In this example, a class is set when the div is created
+   * // and removed when mouse is pressed. This could link up
+   * // with a CSS style rule to toggle style properties.
+   *
+   * var div;
+   *
+   * function setup() {
+   *   div = createDiv('div');
+   *   div.addClass('myClass');
+   * }
+   *
+   * function mousePressed() {
+   *   div.removeClass('myClass');
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.removeClass = function(c) {
+    var regex = new RegExp('(?:^|\\s)' + c + '(?!\\S)');
+    this.elt.className = this.elt.className.replace(regex, '');
+    this.elt.className = this.elt.className.replace(/^\s+|\s+$/g, ''); //prettify (optional)
+    return this;
+  };
+
+  /**
+   *
+   * Attaches the element  as a child to the parent specified.
+   * Accepts either a string ID, DOM node, or p5.Element.
+   * If no argument is specified, an array of children DOM nodes is returned.
+   *
+   * @method child
+   * @param  {String|Object|p5.Element} [child] the ID, DOM node, or p5.Element
+   *                         to add to the current element
+   * @return {p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var div1 = createDiv('this is the child');
+   * div0.child(div1); // use p5.Element
+   * </code></div>
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var div1 = createDiv('this is the child');
+   * div1.id('apples');
+   * div0.child('apples'); // use id
+   * </code></div>
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var elt = document.getElementById('myChildDiv');
+   * div0.child(elt); // use element from page
+   * </code></div>
+   */
+  p5.Element.prototype.child = function(c) {
+    if (typeof c === 'undefined') {
+      return this.elt.childNodes;
+    }
+    if (typeof c === 'string') {
+      if (c[0] === '#') {
+        c = c.substring(1);
+      }
+      c = document.getElementById(c);
+    } else if (c instanceof p5.Element) {
+      c = c.elt;
+    }
+    this.elt.appendChild(c);
+    return this;
+  };
+
+  /**
+   * Centers a p5 Element either vertically, horizontally,
+   * or both, relative to its parent or according to
+   * the body if the Element has no parent. If no argument is passed
+   * the Element is aligned both vertically and horizontally.
+   *
+   * @method center
+   * @param  {String} [align]       passing 'vertical', 'horizontal' aligns element accordingly
+   * @return {Object|p5.Element} pointer to p5.Element
+   * @example
+   * <div><code>
+   * function setup() {
+   *   var div = createDiv('').size(10, 10);
+   *   div.style('background-color', 'orange');
+   *   div.center();
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.center = function(align) {
+    var style = this.elt.style.display;
+    var hidden = this.elt.style.display === 'none';
+    var parentHidden = this.parent().style.display === 'none';
+    var pos = { x: this.elt.offsetLeft, y: this.elt.offsetTop };
+
+    if (hidden) this.show();
+
+    this.elt.style.display = 'block';
+    this.position(0, 0);
+
+    if (parentHidden) this.parent().style.display = 'block';
+
+    var wOffset = Math.abs(this.parent().offsetWidth - this.elt.offsetWidth);
+    var hOffset = Math.abs(this.parent().offsetHeight - this.elt.offsetHeight);
+    var y = pos.y;
+    var x = pos.x;
+
+    if (align === 'both' || align === undefined) {
+      this.position(wOffset / 2, hOffset / 2);
+    } else if (align === 'horizontal') {
+      this.position(wOffset / 2, y);
+    } else if (align === 'vertical') {
+      this.position(x, hOffset / 2);
+    }
+
+    this.style('display', style);
+
+    if (hidden) this.hide();
+
+    if (parentHidden) this.parent().style.display = 'none';
+
+    return this;
+  };
+
+  /**
+   *
+   * If an argument is given, sets the inner HTML of the element,
+   * replacing any existing html. If true is included as a second
+   * argument, html is appended instead of replacing existing html.
+   * If no arguments are given, returns
+   * the inner HTML of the element.
+   *
+   * @for p5.Element
+   * @method html
+   * @param  {String} [html] the HTML to be placed inside the element
+   * @param  {boolean} [append] whether to append HTML to existing
+   * @return {Object|p5.Element|String}
+   * @example
+   * <div class='norender'><code>
+   * var div = createDiv('').size(100, 100);
+   * div.html('hi');
+   * </code></div>
+   * <div class='norender'><code>
+   * var div = createDiv('Hello ').size(100, 100);
+   * div.html('World', true);
+   * </code></div>
+   */
+  p5.Element.prototype.html = function() {
+    if (arguments.length === 0) {
+      return this.elt.innerHTML;
+    } else if (arguments[1]) {
+      this.elt.innerHTML += arguments[0];
+      return this;
+    } else {
+      this.elt.innerHTML = arguments[0];
+      return this;
+    }
+  };
+
+  /**
+   *
+   * Sets the position of the element relative to (0, 0) of the
+   * window. Essentially, sets position:absolute and left and top
+   * properties of style. If no arguments given returns the x and y position
+   * of the element in an object.
+   *
+   * @method position
+   * @param  {Number} [x] x-position relative to upper left of window
+   * @param  {Number} [y] y-position relative to upper left of window
+   * @return {Object|p5.Element}
+   * @example
+   * <div><code class='norender'>
+   * function setup() {
+   *   var cnv = createCanvas(100, 100);
+   *   // positions canvas 50px to the right and 100px
+   *   // below upper left corner of the window
+   *   cnv.position(50, 100);
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.position = function() {
+    if (arguments.length === 0) {
+      return { x: this.elt.offsetLeft, y: this.elt.offsetTop };
+    } else {
+      this.elt.style.position = 'absolute';
+      this.elt.style.left = arguments[0] + 'px';
+      this.elt.style.top = arguments[1] + 'px';
+      this.x = arguments[0];
+      this.y = arguments[1];
+      return this;
+    }
+  };
+
+  /* Helper method called by p5.Element.style() */
+  p5.Element.prototype._translate = function() {
+    this.elt.style.position = 'absolute';
+    // save out initial non-translate transform styling
+    var transform = '';
+    if (this.elt.style.transform) {
+      transform = this.elt.style.transform.replace(/translate3d\(.*\)/g, '');
+      transform = transform.replace(/translate[X-Z]?\(.*\)/g, '');
+    }
+    if (arguments.length === 2) {
+      this.elt.style.transform =
+        'translate(' + arguments[0] + 'px, ' + arguments[1] + 'px)';
+    } else if (arguments.length > 2) {
+      this.elt.style.transform =
+        'translate3d(' +
+        arguments[0] +
+        'px,' +
+        arguments[1] +
+        'px,' +
+        arguments[2] +
+        'px)';
+      if (arguments.length === 3) {
+        this.elt.parentElement.style.perspective = '1000px';
+      } else {
+        this.elt.parentElement.style.perspective = arguments[3] + 'px';
+      }
+    }
+    // add any extra transform styling back on end
+    this.elt.style.transform += transform;
+    return this;
+  };
+
+  /* Helper method called by p5.Element.style() */
+  p5.Element.prototype._rotate = function() {
+    // save out initial non-rotate transform styling
+    var transform = '';
+    if (this.elt.style.transform) {
+      transform = this.elt.style.transform.replace(/rotate3d\(.*\)/g, '');
+      transform = transform.replace(/rotate[X-Z]?\(.*\)/g, '');
+    }
+
+    if (arguments.length === 1) {
+      this.elt.style.transform = 'rotate(' + arguments[0] + 'deg)';
+    } else if (arguments.length === 2) {
+      this.elt.style.transform =
+        'rotate(' + arguments[0] + 'deg, ' + arguments[1] + 'deg)';
+    } else if (arguments.length === 3) {
+      this.elt.style.transform = 'rotateX(' + arguments[0] + 'deg)';
+      this.elt.style.transform += 'rotateY(' + arguments[1] + 'deg)';
+      this.elt.style.transform += 'rotateZ(' + arguments[2] + 'deg)';
+    }
+    // add remaining transform back on
+    this.elt.style.transform += transform;
+    return this;
+  };
+
+  /**
+   * Sets the given style (css) property (1st arg) of the element with the
+   * given value (2nd arg). If a single argument is given, .style()
+   * returns the value of the given property; however, if the single argument
+   * is given in css syntax ('text-align:center'), .style() sets the css
+   * appropriatly. .style() also handles 2d and 3d css transforms. If
+   * the 1st arg is 'rotate', 'translate', or 'position', the following arguments
+   * accept Numbers as values. ('translate', 10, 100, 50);
+   *
+   * @method style
+   * @param  {String} property   property to be set
+   * @param  {String|Number|p5.Color} [value]   value to assign to property (only String|Number for rotate/translate)
+   * @param  {String|Number|p5.Color} [value2]  position can take a 2nd value
+   * @param  {String|Number|p5.Color} [value3]  translate can take a 2nd & 3rd value
+   * @return {String|Object|p5.Element} value of property, if no value is specified
+   * or p5.Element
+   * @example
+   * <div><code class='norender'>
+   * var myDiv = createDiv('I like pandas.');
+   * myDiv.style('font-size', '18px');
+   * myDiv.style('color', '#ff0000');
+   * </code></div>
+   * <div><code class='norender'>
+   * var col = color(25, 23, 200, 50);
+   * var button = createButton('button');
+   * button.style('background-color', col);
+   * button.position(10, 10);
+   * </code></div>
+   * <div><code class='norender'>
+   * var myDiv = createDiv('I like lizards.');
+   * myDiv.style('position', 20, 20);
+   * myDiv.style('rotate', 45);
+   * </code></div>
+   * <div><code class='norender'>
+   * var myDiv;
+   * function setup() {
+   *   background(200);
+   *   myDiv = createDiv('I like gray.');
+   *   myDiv.position(20, 20);
+   * }
+   *
+   * function draw() {
+   *   myDiv.style('font-size', mouseX + 'px');
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.style = function(prop, val) {
+    var self = this;
+
+    if (val instanceof p5.Color) {
+      val =
+        'rgba(' +
+        val.levels[0] +
+        ',' +
+        val.levels[1] +
+        ',' +
+        val.levels[2] +
+        ',' +
+        val.levels[3] / 255 +
+        ')';
+    }
+
+    if (typeof val === 'undefined') {
+      if (prop.indexOf(':') === -1) {
+        var styles = window.getComputedStyle(self.elt);
+        var style = styles.getPropertyValue(prop);
+        return style;
+      } else {
+        var attrs = prop.split(';');
+        for (var i = 0; i < attrs.length; i++) {
+          var parts = attrs[i].split(':');
+          if (parts[0] && parts[1]) {
+            this.elt.style[parts[0].trim()] = parts[1].trim();
+          }
+        }
+      }
+    } else {
+      if (prop === 'rotate' || prop === 'translate' || prop === 'position') {
+        var trans = Array.prototype.shift.apply(arguments);
+        var f = this[trans] || this['_' + trans];
+        f.apply(this, arguments);
+      } else {
+        this.elt.style[prop] = val;
+        if (
+          prop === 'width' ||
+          prop === 'height' ||
+          prop === 'left' ||
+          prop === 'top'
+        ) {
+          var numVal = val.replace(/\D+/g, '');
+          this[prop] = parseInt(numVal, 10); // pend: is this necessary?
+        }
+      }
+    }
+    return this;
+  };
+
+  /**
+   *
+   * Adds a new attribute or changes the value of an existing attribute
+   * on the specified element. If no value is specified, returns the
+   * value of the given attribute, or null if attribute is not set.
+   *
+   * @method attribute
+   * @param  {String} attr       attribute to set
+   * @param  {String} [value]    value to assign to attribute
+   * @return {String|Object|p5.Element} value of attribute, if no value is
+   *                             specified or p5.Element
+   * @example
+   * <div class='norender'><code>
+   * var myDiv = createDiv('I like pandas.');
+   * myDiv.attribute('align', 'center');
+   * </code></div>
+   */
+  p5.Element.prototype.attribute = function(attr, value) {
+    //handling for checkboxes and radios to ensure options get
+    //attributes not divs
+    if (
+      this.elt.firstChild != null &&
+      (this.elt.firstChild.type === 'checkbox' ||
+        this.elt.firstChild.type === 'radio')
+    ) {
+      if (typeof value === 'undefined') {
+        return this.elt.firstChild.getAttribute(attr);
+      } else {
+        for (var i = 0; i < this.elt.childNodes.length; i++) {
+          this.elt.childNodes[i].setAttribute(attr, value);
+        }
+      }
+    } else if (typeof value === 'undefined') {
+      return this.elt.getAttribute(attr);
+    } else {
+      this.elt.setAttribute(attr, value);
+      return this;
+    }
+  };
+
+  /**
+   *
+   * Removes an attribute on the specified element.
+   *
+   * @method removeAttribute
+   * @param  {String} attr       attribute to remove
+   * @return {Object|p5.Element}
+   *
+   * @example
+   * <div><code>
+   * var button;
+   * var checkbox;
+   *
+   * function setup() {
+   *   checkbox = createCheckbox('enable', true);
+   *   checkbox.changed(enableButton);
+   *   button = createButton('button');
+   *   button.position(10, 10);
+   * }
+   *
+   * function enableButton() {
+   *   if (this.checked()) {
+   *     // Re-enable the button
+   *     button.removeAttribute('disabled');
+   *   } else {
+   *     // Disable the button
+   *     button.attribute('disabled', '');
+   *   }
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.removeAttribute = function(attr) {
+    if (
+      this.elt.firstChild != null &&
+      (this.elt.firstChild.type === 'checkbox' ||
+        this.elt.firstChild.type === 'radio')
+    ) {
+      for (var i = 0; i < this.elt.childNodes.length; i++) {
+        this.elt.childNodes[i].removeAttribute(attr);
+      }
+    }
+    this.elt.removeAttribute(attr);
+    return this;
+  };
+
+  /**
+   * Either returns the value of the element if no arguments
+   * given, or sets the value of the element.
+   *
+   * @method value
+   * @param  {String|Number}     [value]
+   * @return {String|Object|p5.Element} value of element if no value is specified or p5.Element
+   * @example
+   * <div class='norender'><code>
+   * // gets the value
+   * var inp;
+   * function setup() {
+   *   inp = createInput('');
+   * }
+   *
+   * function mousePressed() {
+   *   print(inp.value());
+   * }
+   * </code></div>
+   * <div class='norender'><code>
+   * // sets the value
+   * var inp;
+   * function setup() {
+   *   inp = createInput('myValue');
+   * }
+   *
+   * function mousePressed() {
+   *   inp.value('myValue');
+   * }
+   * </code></div>
+   */
+  p5.Element.prototype.value = function() {
+    if (arguments.length > 0) {
+      this.elt.value = arguments[0];
+      return this;
+    } else {
+      if (this.elt.type === 'range') {
+        return parseFloat(this.elt.value);
+      } else return this.elt.value;
+    }
+  };
+
+  /**
+   *
+   * Shows the current element. Essentially, setting display:block for the style.
+   *
+   * @method show
+   * @return {Object|p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div = createDiv('div');
+   * div.style('display', 'none');
+   * div.show(); // turns display to block
+   * </code></div>
+   */
+  p5.Element.prototype.show = function() {
+    this.elt.style.display = 'block';
+    return this;
+  };
+
+  /**
+   * Hides the current element. Essentially, setting display:none for the style.
+   *
+   * @method hide
+   * @return {Object|p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div = createDiv('this is a div');
+   * div.hide();
+   * </code></div>
+   */
+  p5.Element.prototype.hide = function() {
+    this.elt.style.display = 'none';
+    return this;
+  };
+
+  /**
+   *
+   * Sets the width and height of the element. AUTO can be used to
+   * only adjust one dimension. If no arguments given returns the width and height
+   * of the element in an object.
+   *
+   * @method size
+   * @param  {Number|Constant} [w] width of the element, either AUTO, or a number
+   * @param  {Number|Constant} [h] height of the element, either AUTO, or a number
+   * @return {Object|p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div = createDiv('this is a div');
+   * div.size(100, 100);
+   * </code></div>
+   */
+  p5.Element.prototype.size = function(w, h) {
+    if (arguments.length === 0) {
+      return { width: this.elt.offsetWidth, height: this.elt.offsetHeight };
+    } else {
+      var aW = w;
+      var aH = h;
+      var AUTO = p5.prototype.AUTO;
+      if (aW !== AUTO || aH !== AUTO) {
+        if (aW === AUTO) {
+          aW = h * this.width / this.height;
+        } else if (aH === AUTO) {
+          aH = w * this.height / this.width;
+        }
+        // set diff for cnv vs normal div
+        if (this.elt instanceof HTMLCanvasElement) {
+          var j = {};
+          var k = this.elt.getContext('2d');
+          var prop;
+          for (prop in k) {
+            j[prop] = k[prop];
+          }
+          this.elt.setAttribute('width', aW * this._pInst._pixelDensity);
+          this.elt.setAttribute('height', aH * this._pInst._pixelDensity);
+          this.elt.setAttribute(
+            'style',
+            'width:' + aW + 'px; height:' + aH + 'px'
+          );
+          this._pInst.scale(
+            this._pInst._pixelDensity,
+            this._pInst._pixelDensity
+          );
+          for (prop in j) {
+            this.elt.getContext('2d')[prop] = j[prop];
+          }
+        } else {
+          this.elt.style.width = aW + 'px';
+          this.elt.style.height = aH + 'px';
+          this.elt.width = aW;
+          this.elt.height = aH;
+          this.width = aW;
+          this.height = aH;
+        }
+
+        this.width = this.elt.offsetWidth;
+        this.height = this.elt.offsetHeight;
+
+        if (this._pInst) {
+          // main canvas associated with p5 instance
+          if (this._pInst._curElement.elt === this.elt) {
+            this._pInst._setProperty('width', this.elt.offsetWidth);
+            this._pInst._setProperty('height', this.elt.offsetHeight);
+          }
+        }
+      }
+      return this;
+    }
+  };
+
+  /**
+   * Removes the element and deregisters all listeners.
+   * @method remove
+   * @example
+   * <div class='norender'><code>
+   * var myDiv = createDiv('this is some text');
+   * myDiv.remove();
+   * </code></div>
+   */
+  p5.Element.prototype.remove = function() {
+    // deregister events
+    for (var ev in this._events) {
+      this.elt.removeEventListener(ev, this._events[ev]);
+    }
+    if (this.elt.parentNode) {
+      this.elt.parentNode.removeChild(this.elt);
+    }
+    delete this;
+  };
+
+  // =============================================================================
+  //                         p5.MediaElement additions
+  // =============================================================================
+
+  /**
+   * Extends p5.Element to handle audio and video. In addition to the methods
+   * of p5.Element, it also contains methods for controlling media. It is not
+   * called directly, but p5.MediaElements are created by calling createVideo,
+   * createAudio, and createCapture.
+   *
+   * @class p5.MediaElement
+   * @constructor
+   * @param {String} elt DOM node that is wrapped
+   */
+  p5.MediaElement = function(elt, pInst) {
+    p5.Element.call(this, elt, pInst);
+
+    var self = this;
+    this.elt.crossOrigin = 'anonymous';
+
+    this._prevTime = 0;
+    this._cueIDCounter = 0;
+    this._cues = [];
+    this._pixelDensity = 1;
+    this._modified = false;
+
+    /**
+     * Path to the media element source.
+     *
+     * @property src
+     * @return {String} src
+     * @example
+     * <div><code>
+     * var ele;
+     *
+     * function setup() {
+     *   background(250);
+     *
+     *   //p5.MediaElement objects are usually created
+     *   //by calling the createAudio(), createVideo(),
+     *   //and createCapture() functions.
+     *
+     *   //In this example we create
+     *   //a new p5.MediaElement via createAudio().
+     *   ele = createAudio('assets/beat.mp3');
+     *
+     *   //We'll set up our example so that
+     *   //when you click on the text,
+     *   //an alert box displays the MediaElement's
+     *   //src field.
+     *   textAlign(CENTER);
+     *   text('Click Me!', width / 2, height / 2);
+     * }
+     *
+     * function mouseClicked() {
+     *   //here we test if the mouse is over the
+     *   //canvas element when it's clicked
+     *   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+     *     //Show our p5.MediaElement's src field
+     *     alert(ele.src);
+     *   }
+     * }
+     * </code></div>
+     */
+    Object.defineProperty(self, 'src', {
+      get: function() {
+        var firstChildSrc = self.elt.children[0].src;
+        var srcVal = self.elt.src === window.location.href ? '' : self.elt.src;
+        var ret =
+          firstChildSrc === window.location.href ? srcVal : firstChildSrc;
+        return ret;
+      },
+      set: function(newValue) {
+        for (var i = 0; i < self.elt.children.length; i++) {
+          self.elt.removeChild(self.elt.children[i]);
+        }
+        var source = document.createElement('source');
+        source.src = newValue;
+        elt.appendChild(source);
+        self.elt.src = newValue;
+        self.modified = true;
+      }
+    });
+
+    // private _onended callback, set by the method: onended(callback)
+    self._onended = function() {};
+    self.elt.onended = function() {
+      self._onended(self);
+    };
+  };
+  p5.MediaElement.prototype = Object.create(p5.Element.prototype);
+
+  /**
+   * Play an HTML5 media element.
+   *
+   * @method play
+   * @return {Object|p5.Element}
+   * @example
+   * <div><code>
+   * var ele;
+   *
+   * function setup() {
+   *   //p5.MediaElement objects are usually created
+   *   //by calling the createAudio(), createVideo(),
+   *   //and createCapture() functions.
+   *
+   *   //In this example we create
+   *   //a new p5.MediaElement via createAudio().
+   *   ele = createAudio('assets/beat.mp3');
+   *
+   *   background(250);
+   *   textAlign(CENTER);
+   *   text('Click to Play!', width / 2, height / 2);
+   * }
+   *
+   * function mouseClicked() {
+   *   //here we test if the mouse is over the
+   *   //canvas element when it's clicked
+   *   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+   *     //Here we call the play() function on
+   *     //the p5.MediaElement we created above.
+   *     //This will start the audio sample.
+   *     ele.play();
+   *
+   *     background(200);
+   *     text('You clicked Play!', width / 2, height / 2);
+   *   }
+   * }
+   * </code></div>
+   */
+  p5.MediaElement.prototype.play = function() {
+    if (this.elt.currentTime === this.elt.duration) {
+      this.elt.currentTime = 0;
+    }
+
+    if (this.elt.readyState > 1) {
+      this.elt.play();
+    } else {
+      // in Chrome, playback cannot resume after being stopped and must reload
+      this.elt.load();
+      this.elt.play();
+    }
+    return this;
+  };
+
+  /**
+   * Stops an HTML5 media element (sets current time to zero).
+   *
+   * @method stop
+   * @return {Object|p5.Element}
+   * @example
+   * <div><code>
+   * //This example both starts
+   * //and stops a sound sample
+   * //when the user clicks the canvas
+   *
+   * //We will store the p5.MediaElement
+   * //object in here
+   * var ele;
+   *
+   * //while our audio is playing,
+   * //this will be set to true
+   * var sampleIsPlaying = false;
+   *
+   * function setup() {
+   *   //Here we create a p5.MediaElement object
+   *   //using the createAudio() function.
+   *   ele = createAudio('assets/beat.mp3');
+   *   background(200);
+   *   textAlign(CENTER);
+   *   text('Click to play!', width / 2, height / 2);
+   * }
+   *
+   * function mouseClicked() {
+   *   //here we test if the mouse is over the
+   *   //canvas element when it's clicked
+   *   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+   *     background(200);
+   *
+   *     if (sampleIsPlaying) {
+   *       //if the sample is currently playing
+   *       //calling the stop() function on
+   *       //our p5.MediaElement will stop
+   *       //it and reset its current
+   *       //time to 0 (i.e. it will start
+   *       //at the beginning the next time
+   *       //you play it)
+   *       ele.stop();
+   *
+   *       sampleIsPlaying = false;
+   *       text('Click to play!', width / 2, height / 2);
+   *     } else {
+   *       //loop our sound element until we
+   *       //call ele.stop() on it.
+   *       ele.loop();
+   *
+   *       sampleIsPlaying = true;
+   *       text('Click to stop!', width / 2, height / 2);
+   *     }
+   *   }
+   * }
+   * </code></div>
+   */
+  p5.MediaElement.prototype.stop = function() {
+    this.elt.pause();
+    this.elt.currentTime = 0;
+    return this;
+  };
+
+  /**
+   * Pauses an HTML5 media element.
+   *
+   * @method pause
+   * @return {Object|p5.Element}
+   * @example
+   * <div><code>
+   * //This example both starts
+   * //and pauses a sound sample
+   * //when the user clicks the canvas
+   *
+   * //We will store the p5.MediaElement
+   * //object in here
+   * var ele;
+   *
+   * //while our audio is playing,
+   * //this will be set to true
+   * var sampleIsPlaying = false;
+   *
+   * function setup() {
+   *   //Here we create a p5.MediaElement object
+   *   //using the createAudio() function.
+   *   ele = createAudio('assets/lucky_dragons.mp3');
+   *   background(200);
+   *   textAlign(CENTER);
+   *   text('Click to play!', width / 2, height / 2);
+   * }
+   *
+   * function mouseClicked() {
+   *   //here we test if the mouse is over the
+   *   //canvas element when it's clicked
+   *   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+   *     background(200);
+   *
+   *     if (sampleIsPlaying) {
+   *       //Calling pause() on our
+   *       //p5.MediaElement will stop it
+   *       //playing, but when we call the
+   *       //loop() or play() functions
+   *       //the sample will start from
+   *       //where we paused it.
+   *       ele.pause();
+   *
+   *       sampleIsPlaying = false;
+   *       text('Click to resume!', width / 2, height / 2);
+   *     } else {
