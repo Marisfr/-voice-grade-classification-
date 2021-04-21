@@ -14,4 +14,21 @@
  *    Triangle, Square and Sawtooth waveforms. Base class of
  *    <a href="#/p5.Noise">p5.Noise</a> and <a href="#/p5.Pulse">p5.Pulse</a>.
  *    <br/>
- *  <a href="#/p5.Env"><b>p5.Env</b></a>: An Envelope is a ser
+ *  <a href="#/p5.Env"><b>p5.Env</b></a>: An Envelope is a series
+ *    of fades over time. Often used to control an object's
+ *    output gain level as an "ADSR Envelope" (Attack, Decay,
+ *    Sustain, Release). Can also modulate other parameters.<br/>
+ *  <a href="#/p5.Delay"><b>p5.Delay</b></a>: A delay effect with
+ *    parameters for feedback, delayTime, and lowpass filter.<br/>
+ *  <a href="#/p5.Filter"><b>p5.Filter</b></a>: Filter the frequency range of a
+ *    sound.
+ *  <br/>
+ *  <a href="#/p5.Reverb"><b>p5.Reverb</b></a>: Add reverb to a sound by specifying
+ *    duration and decay. <br/>
+ *  <b><a href="#/p5.Convolver">p5.Convolver</a>:</b> Extends
+ *  <a href="#/p5.Reverb">p5.Reverb</a> to simulate the sound of real
+ *    physical spaces through convolution.<br/>
+ *  <b><a href="#/p5.SoundRecorder">p5.SoundRecorder</a></b>: Record sound for playback
+ *    / save the .wav file.
+ *  <b><a href="#/p5.Phrase">p5.Phrase</a></b>, <b><a href="#/p5.Part">p5.Part</a></b> and
+ *  <b><a href="#/p5.Score">p5.Sc
