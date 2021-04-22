@@ -31,4 +31,29 @@
  *  <b><a href="#/p5.SoundRecorder">p5.SoundRecorder</a></b>: Record sound for playback
  *    / save the .wav file.
  *  <b><a href="#/p5.Phrase">p5.Phrase</a></b>, <b><a href="#/p5.Part">p5.Part</a></b> and
- *  <b><a href="#/p5.Score">p5.Sc
+ *  <b><a href="#/p5.Score">p5.Score</a></b>: Compose musical sequences.
+ *  <br/><br/>
+ *  p5.sound is on <a href="https://github.com/therewasaguy/p5.sound/">GitHub</a>.
+ *  Download the latest version
+ *  <a href="https://github.com/therewasaguy/p5.sound/blob/master/lib/p5.sound.js">here</a>.
+ *
+ *  @module p5.sound
+ *  @submodule p5.sound
+ *  @for p5.sound
+ *  @main
+ */
+
+/**
+ *  p5.sound
+ *  https://p5js.org/reference/#/libraries/p5.sound
+ *
+ *  From the Processing Foundation and contributors
+ *  https://github.com/processing/p5.js-sound/graphs/contributors
+ *
+ *  MIT License (MIT)
+ *  https://github.com/processing/p5.js-sound/blob/master/LICENSE
+ *
+ *  Some of the many audio libraries & resources that inspire p5.sound:
+ *   - TONE.js (c) Yotam Mann. Licensed under The MIT License (MIT). https://github.com/TONEnoTONE/Tone.js
+ *   - buzz.js (c) Jay Salvat. Licensed under The MIT License (MIT). http://buzz.jaysalvat.com/
+ *   - Boris Smus Web Audio API
