@@ -56,4 +56,28 @@
  *  Some of the many audio libraries & resources that inspire p5.sound:
  *   - TONE.js (c) Yotam Mann. Licensed under The MIT License (MIT). https://github.com/TONEnoTONE/Tone.js
  *   - buzz.js (c) Jay Salvat. Licensed under The MIT License (MIT). http://buzz.jaysalvat.com/
- *   - Boris Smus Web Audio API
+ *   - Boris Smus Web Audio API book, 2013. Licensed under the Apache License http://www.apache.org/licenses/LICENSE-2.0
+ *   - wavesurfer.js https://github.com/katspaugh/wavesurfer.js
+ *   - Web Audio Components by Jordan Santell https://github.com/web-audio-components
+ *   - Wilm Thoben's Sound library for Processing https://github.com/processing/processing/tree/master/java/libraries/sound
+ *
+ *   Web Audio API: http://w3.org/TR/webaudio/
+ */
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd)
+    define('p5.sound', ['p5'], function (p5) { (factory(p5));});
+  else if (typeof exports === 'object')
+    factory(require('../p5'));
+  else
+    factory(root['p5']);
+}(this, function (p5) {
+
+var sndcore;
+'use strict';
+sndcore = function () {
+  /* AudioContext Monkeypatch
+     Copyright 2013 Chris Wilson
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     
