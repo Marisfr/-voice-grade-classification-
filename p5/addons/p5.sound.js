@@ -114,4 +114,29 @@ sndcore = function () {
       };
       AudioContext.prototype.internal_createDelay = AudioContext.prototype.createDelay;
       AudioContext.prototype.createDelay = function (maxDelayTime) {
-        var node = maxDelayTime ? this.internal_createDelay(maxDelayTime) : this.internal_create
+        var node = maxDelayTime ? this.internal_createDelay(maxDelayTime) : this.internal_createDelay();
+        fixSetTarget(node.delayTime);
+        return node;
+      };
+      AudioContext.prototype.internal_createBufferSource = AudioContext.prototype.createBufferSource;
+      AudioContext.prototype.createBufferSource = function () {
+        var node = this.internal_createBufferSource();
+        if (!node.start) {
+          node.start = function (when, offset, duration) {
+            if (offset || duration)
+              this.noteGrainOn(when || 0, offset, duration);
+            else
+              this.noteOn(when || 0);
+          };
+        } else {
+          node.internal_start = node.start;
+          node.start = function (when, offset, duration) {
+            if (typeof duration !== 'undefined')
+              node.internal_start(when || 0, offset, duration);
+            else
+              node.internal_start(when || 0, offset || 0);
+          };
+        }
+        if (!node.stop) {
+          node.stop = function (when) {
+            this.noteOff(when || 
