@@ -100,4 +100,18 @@ sndcore = function () {
       window.AudioContext = window.webkitAudioContext;
       if (typeof AudioContext.prototype.createGain !== 'function')
         AudioContext.prototype.createGain = AudioContext.prototype.createGainNode;
-      if (typeof AudioC
+      if (typeof AudioContext.prototype.createDelay !== 'function')
+        AudioContext.prototype.createDelay = AudioContext.prototype.createDelayNode;
+      if (typeof AudioContext.prototype.createScriptProcessor !== 'function')
+        AudioContext.prototype.createScriptProcessor = AudioContext.prototype.createJavaScriptNode;
+      if (typeof AudioContext.prototype.createPeriodicWave !== 'function')
+        AudioContext.prototype.createPeriodicWave = AudioContext.prototype.createWaveTable;
+      AudioContext.prototype.internal_createGain = AudioContext.prototype.createGain;
+      AudioContext.prototype.createGain = function () {
+        var node = this.internal_createGain();
+        fixSetTarget(node.gain);
+        return node;
+      };
+      AudioContext.prototype.internal_createDelay = AudioContext.prototype.createDelay;
+      AudioContext.prototype.createDelay = function (maxDelayTime) {
+        var node = maxDelayTime ? this.internal_createDelay(maxDelayTime) : this.internal_create
