@@ -139,4 +139,29 @@ sndcore = function () {
         }
         if (!node.stop) {
           node.stop = function (when) {
-            this.noteOff(when || 
+            this.noteOff(when || 0);
+          };
+        } else {
+          node.internal_stop = node.stop;
+          node.stop = function (when) {
+            node.internal_stop(when || 0);
+          };
+        }
+        fixSetTarget(node.playbackRate);
+        return node;
+      };
+      AudioContext.prototype.internal_createDynamicsCompressor = AudioContext.prototype.createDynamicsCompressor;
+      AudioContext.prototype.createDynamicsCompressor = function () {
+        var node = this.internal_createDynamicsCompressor();
+        fixSetTarget(node.threshold);
+        fixSetTarget(node.knee);
+        fixSetTarget(node.ratio);
+        fixSetTarget(node.reduction);
+        fixSetTarget(node.attack);
+        fixSetTarget(node.release);
+        return node;
+      };
+      AudioContext.prototype.internal_createBiquadFilter = AudioContext.prototype.createBiquadFilter;
+      AudioContext.prototype.createBiquadFilter = function () {
+        var node = this.internal_createBiquadFilter();
+        fixSetTar
