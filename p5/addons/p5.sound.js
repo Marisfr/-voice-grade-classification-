@@ -164,4 +164,31 @@ sndcore = function () {
       AudioContext.prototype.internal_createBiquadFilter = AudioContext.prototype.createBiquadFilter;
       AudioContext.prototype.createBiquadFilter = function () {
         var node = this.internal_createBiquadFilter();
-        fixSetTar
+        fixSetTarget(node.frequency);
+        fixSetTarget(node.detune);
+        fixSetTarget(node.Q);
+        fixSetTarget(node.gain);
+        return node;
+      };
+      if (typeof AudioContext.prototype.createOscillator !== 'function') {
+        AudioContext.prototype.internal_createOscillator = AudioContext.prototype.createOscillator;
+        AudioContext.prototype.createOscillator = function () {
+          var node = this.internal_createOscillator();
+          if (!node.start) {
+            node.start = function (when) {
+              this.noteOn(when || 0);
+            };
+          } else {
+            node.internal_start = node.start;
+            node.start = function (when) {
+              node.internal_start(when || 0);
+            };
+          }
+          if (!node.stop) {
+            node.stop = function (when) {
+              this.noteOff(when || 0);
+            };
+          } else {
+            node.internal_stop = node.stop;
+            node.stop = function (when) {
+     
