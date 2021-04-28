@@ -356,4 +356,28 @@ master = function () {
    *
    *  <p>If no value is provided, returns a Web Audio API Gain Node</p>
    *
-   *  @method  masterVolum
+   *  @method  masterVolume
+   *  @param {Number|Object} volume  Volume (amplitude) between 0.0
+   *                                     and 1.0 or modulating signal/oscillator
+   *  @param {Number} [rampTime]  Fade for t seconds
+   *  @param {Number} [timeFromNow]  Schedule this event to happen at
+   *                                 t seconds in the future
+   */
+  p5.prototype.masterVolume = function (vol, rampTime, tFromNow) {
+    if (typeof vol === 'number') {
+      var rampTime = rampTime || 0;
+      var tFromNow = tFromNow || 0;
+      var now = p5sound.audiocontext.currentTime;
+      var currentVol = p5sound.output.gain.value;
+      p5sound.output.gain.cancelScheduledValues(now + tFromNow);
+      p5sound.output.gain.linearRampToValueAtTime(currentVol, now + tFromNow);
+      p5sound.output.gain.linearRampToValueAtTime(vol, now + tFromNow + rampTime);
+    } else if (vol) {
+      vol.connect(p5sound.output.gain);
+    } else {
+      // return the Gain Node
+      return p5sound.output.gain;
+    }
+  };
+  /**
+   *  
