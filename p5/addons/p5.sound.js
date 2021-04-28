@@ -308,4 +308,30 @@ master = function () {
     this.output.disconnect();
     // connect input to limiter
     this.input.connect(this.limiter);
-    // connect limi
+    // connect limiter to output
+    this.limiter.connect(this.output);
+    // meter is just for global Amplitude / FFT analysis
+    this.meter = audiocontext.createGain();
+    this.fftMeter = audiocontext.createGain();
+    this.output.connect(this.meter);
+    this.output.connect(this.fftMeter);
+    // connect output to destination
+    this.output.connect(this.audiocontext.destination);
+    // an array of all sounds in the sketch
+    this.soundArray = [];
+    // an array of all musical parts in the sketch
+    this.parts = [];
+    // file extensions to search for
+    this.extensions = [];
+  };
+  // create a single instance of the p5Sound / master output for use within this sketch
+  var p5sound = new Master();
+  /**
+   * Returns a number representing the master amplitude (volume) for sound
+   * in this sketch.
+   *
+   * @method getMasterVolume
+   * @return {Number} Master amplitude (volume) for sound in this sketch.
+   *                  Should be between 0.0 (silence) and 1.0.
+   */
+  p5.prototype.g
