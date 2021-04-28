@@ -221,4 +221,26 @@ sndcore = function () {
   p5.prototype.getAudioContext = function () {
     return audiocontext;
   };
-  // Polyfill for AudioIn, also 
+  // Polyfill for AudioIn, also handled by p5.dom createCapture
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+  /**
+   * Determine which filetypes are supported (inspired by buzz.js)
+   * The audio element (el) will only be used to test browser support for various audio formats
+   */
+  var el = document.createElement('audio');
+  p5.prototype.isSupported = function () {
+    return !!el.canPlayType;
+  };
+  var isOGGSupported = function () {
+    return !!el.canPlayType && el.canPlayType('audio/ogg; codecs="vorbis"');
+  };
+  var isMP3Supported = function () {
+    return !!el.canPlayType && el.canPlayType('audio/mpeg;');
+  };
+  var isWAVSupported = function () {
+    return !!el.canPlayType && el.canPlayType('audio/wav; codecs="1"');
+  };
+  var isAACSupported = function () {
+    return !!el.canPlayType && (el.canPlayType('audio/x-m4a;') || el.canPlayType('audio/aac;'));
+  };
+  var isAIFSupported 
