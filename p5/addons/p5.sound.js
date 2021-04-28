@@ -191,4 +191,34 @@ sndcore = function () {
           } else {
             node.internal_stop = node.stop;
             node.stop = function (when) {
-     
+              node.internal_stop(when || 0);
+            };
+          }
+          if (!node.setPeriodicWave)
+            node.setPeriodicWave = node.setWaveTable;
+          fixSetTarget(node.frequency);
+          fixSetTarget(node.detune);
+          return node;
+        };
+      }
+    }
+    if (window.hasOwnProperty('webkitOfflineAudioContext') && !window.hasOwnProperty('OfflineAudioContext')) {
+      window.OfflineAudioContext = window.webkitOfflineAudioContext;
+    }
+  }(window));
+  // <-- end MonkeyPatch.
+  // Create the Audio Context
+  var audiocontext = new window.AudioContext();
+  /**
+   * <p>Returns the Audio Context for this sketch. Useful for users
+   * who would like to dig deeper into the <a target='_blank' href=
+   * 'http://webaudio.github.io/web-audio-api/'>Web Audio API
+   * </a>.</p>
+   *
+   * @method getAudioContext
+   * @return {Object}    AudioContext for this sketch
+   */
+  p5.prototype.getAudioContext = function () {
+    return audiocontext;
+  };
+  // Polyfill for AudioIn, also 
