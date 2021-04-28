@@ -243,4 +243,37 @@ sndcore = function () {
   var isAACSupported = function () {
     return !!el.canPlayType && (el.canPlayType('audio/x-m4a;') || el.canPlayType('audio/aac;'));
   };
-  var isAIFSupported 
+  var isAIFSupported = function () {
+    return !!el.canPlayType && el.canPlayType('audio/x-aiff;');
+  };
+  p5.prototype.isFileSupported = function (extension) {
+    switch (extension.toLowerCase()) {
+    case 'mp3':
+      return isMP3Supported();
+    case 'wav':
+      return isWAVSupported();
+    case 'ogg':
+      return isOGGSupported();
+    case 'aac':
+    case 'm4a':
+    case 'mp4':
+      return isAACSupported();
+    case 'aif':
+    case 'aiff':
+      return isAIFSupported();
+    default:
+      return false;
+    }
+  };
+  // if it is iOS, we have to have a user interaction to start Web Audio
+  // http://paulbakaus.com/tutorials/html5/web-audio-on-ios/
+  var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
+  if (iOS) {
+    var iosStarted = false;
+    var startIOS = function () {
+      if (iosStarted)
+        return;
+      // create empty buffer
+      var buffer = audiocontext.createBuffer(1, 1, 22050);
+      var source = audiocontext.createBufferSource();
+      source.buffer
