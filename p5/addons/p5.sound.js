@@ -276,4 +276,36 @@ sndcore = function () {
       // create empty buffer
       var buffer = audiocontext.createBuffer(1, 1, 22050);
       var source = audiocontext.createBufferSource();
-      source.buffer
+      source.buffer = buffer;
+      // connect to output (your speakers)
+      source.connect(audiocontext.destination);
+      // play the file
+      source.start(0);
+      console.log('start ios!');
+      if (audiocontext.state === 'running') {
+        iosStarted = true;
+      }
+    };
+    document.addEventListener('touchend', startIOS, false);
+    document.addEventListener('touchstart', startIOS, false);
+  }
+}();
+var master;
+'use strict';
+master = function () {
+  /**
+   * Master contains AudioContext and the master sound output.
+   */
+  var Master = function () {
+    var audiocontext = p5.prototype.getAudioContext();
+    this.input = audiocontext.createGain();
+    this.output = audiocontext.createGain();
+    //put a hard limiter on the output
+    this.limiter = audiocontext.createDynamicsCompressor();
+    this.limiter.threshold.value = 0;
+    this.limiter.ratio.value = 20;
+    this.audiocontext = audiocontext;
+    this.output.disconnect();
+    // connect input to limiter
+    this.input.connect(this.limiter);
+    // connect limi
