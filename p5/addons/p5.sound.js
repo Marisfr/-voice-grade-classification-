@@ -380,4 +380,33 @@ master = function () {
     }
   };
   /**
-   *  
+   *  `p5.soundOut` is the p5.sound master output. It sends output to
+   *  the destination of this window's web audio context. It contains
+   *  Web Audio API nodes including a dyanmicsCompressor (<code>.limiter</code>),
+   *  and Gain Nodes for <code>.input</code> and <code>.output</code>.
+   *
+   *  @property {Object} soundOut
+   */
+  p5.prototype.soundOut = p5.soundOut = p5sound;
+  /**
+   *  a silent connection to the DesinationNode
+   *  which will ensure that anything connected to it
+   *  will not be garbage collected
+   *
+   *  @private
+   */
+  p5.soundOut._silentNode = p5sound.audiocontext.createGain();
+  p5.soundOut._silentNode.gain.value = 0;
+  p5.soundOut._silentNode.connect(p5sound.audiocontext.destination);
+  return p5sound;
+}();
+var helpers;
+'use strict';
+helpers = function () {
+  var p5sound = master;
+  /**
+   * @for p5
+   */
+  /**
+   * Returns a number representing the sample rate, in samples per second,
+   * of all sound obj
