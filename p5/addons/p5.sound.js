@@ -506,4 +506,35 @@ helpers = function () {
         ].indexOf(arguments[i]) > -1) {
         p5sound.extensions.push(arguments[i]);
       } else {
-        throw arguments[i] + ' is not a valid soun
+        throw arguments[i] + ' is not a valid sound format!';
+      }
+    }
+  };
+  p5.prototype.disposeSound = function () {
+    for (var i = 0; i < p5sound.soundArray.length; i++) {
+      p5sound.soundArray[i].dispose();
+    }
+  };
+  // register removeSound to dispose of p5sound SoundFiles, Convolvers,
+  // Oscillators etc when sketch ends
+  p5.prototype.registerMethod('remove', p5.prototype.disposeSound);
+  p5.prototype._checkFileFormats = function (paths) {
+    var path;
+    // if path is a single string, check to see if extension is provided
+    if (typeof paths === 'string') {
+      path = paths;
+      // see if extension is provided
+      var extTest = path.split('.').pop();
+      // if an extension is provided...
+      if ([
+          'mp3',
+          'wav',
+          'ogg',
+          'm4a',
+          'aac'
+        ].indexOf(extTest) > -1) {
+        if (p5.prototype.isFileSupported(extTest)) {
+          path = path;
+        } else {
+          var pathSplit = path.split('.');
+          var pathCore = pathSplit[pathS
