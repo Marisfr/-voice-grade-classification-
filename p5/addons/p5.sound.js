@@ -471,4 +471,39 @@ helpers = function () {
    *  List the SoundFile formats that you will include. LoadSound
    *  will search your directory for these extensions, and will pick
    *  a format that is compatable with the client's web browser.
-   *  <a href="http
+   *  <a href="http://media.io/">Here</a> is a free online file
+   *  converter.
+   *
+   *  @method soundFormats
+   *  @param {String} [...formats] i.e. 'mp3', 'wav', 'ogg'
+   *  @example
+   *  <div><code>
+   *  function preload() {
+   *    // set the global sound formats
+   *    soundFormats('mp3', 'ogg');
+   *
+   *    // load either beatbox.mp3, or .ogg, depending on browser
+   *    mySound = loadSound('assets/beatbox.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    mySound.play();
+   *  }
+   *  </code></div>
+   */
+  p5.prototype.soundFormats = function () {
+    // reset extensions array
+    p5sound.extensions = [];
+    // add extensions
+    for (var i = 0; i < arguments.length; i++) {
+      arguments[i] = arguments[i].toLowerCase();
+      if ([
+          'mp3',
+          'wav',
+          'ogg',
+          'm4a',
+          'aac'
+        ].indexOf(arguments[i]) > -1) {
+        p5sound.extensions.push(arguments[i]);
+      } else {
+        throw arguments[i] + ' is not a valid soun
