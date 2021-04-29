@@ -409,4 +409,32 @@ helpers = function () {
    */
   /**
    * Returns a number representing the sample rate, in samples per second,
-   * of all sound obj
+   * of all sound objects in this audio context. It is determined by the
+   * sampling rate of your operating system's sound card, and it is not
+   * currently possile to change.
+   * It is often 44100, or twice the range of human hearing.
+   *
+   * @method sampleRate
+   * @return {Number} samplerate samples per second
+   */
+  p5.prototype.sampleRate = function () {
+    return p5sound.audiocontext.sampleRate;
+  };
+  /**
+   *  Returns the closest MIDI note value for
+   *  a given frequency.
+   *
+   *  @method freqToMidi
+   *  @param  {Number} frequency A freqeuncy, for example, the "A"
+   *                             above Middle C is 440Hz
+   *  @return {Number}   MIDI note value
+   */
+  p5.prototype.freqToMidi = function (f) {
+    var mathlog2 = Math.log(f / 440) / Math.log(2);
+    var m = Math.round(12 * mathlog2) + 69;
+    return m;
+  };
+  /**
+   *  Returns the frequency value of a MIDI note value.
+   *  General MIDI treats notes as integers where middle C
+   *  i
