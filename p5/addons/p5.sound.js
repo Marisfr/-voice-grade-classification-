@@ -622,4 +622,33 @@ errorHandler = function () {
                                Note: this edits out stack trace within p5.js and p5.sound.
       @property {String} originalStack unedited, original stack trace
       @property {String} failedPath path to the file that failed to load
-      @ret
+      @return {Error}     returns a custom Error object
+     */
+  var CustomError = function (name, errorTrace, failedPath) {
+    var err = new Error();
+    var tempStack, splitStack;
+    err.name = name;
+    err.originalStack = err.stack + errorTrace;
+    tempStack = err.stack + errorTrace;
+    err.failedPath = failedPath;
+    // only print the part of the stack trace that refers to the user code:
+    var splitStack = tempStack.split('\n');
+    splitStack = splitStack.filter(function (ln) {
+      return !ln.match(/(p5.|native code|globalInit)/g);
+    });
+    err.stack = splitStack.join('\n');
+    return err;
+  };
+  return CustomError;
+}();
+var panner;
+'use strict';
+panner = function () {
+  var p5sound = master;
+  var ac = p5sound.audiocontext;
+  // Stereo panner
+  // if there is a stereo panner node use it
+  if (typeof ac.createStereoPanner !== 'undefined') {
+    p5.Panner = function (input, output) {
+      this.stereoPanner = this.input = ac.createStereoPanner();
+      in
