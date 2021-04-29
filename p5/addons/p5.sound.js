@@ -437,4 +437,38 @@ helpers = function () {
   /**
    *  Returns the frequency value of a MIDI note value.
    *  General MIDI treats notes as integers where middle C
-   *  i
+   *  is 60, C# is 61, D is 62 etc. Useful for generating
+   *  musical frequencies with oscillators.
+   *
+   *  @method  midiToFreq
+   *  @param  {Number} midiNote The number of a MIDI note
+   *  @return {Number} Frequency value of the given MIDI note
+   *  @example
+   *  <div><code>
+   *  var notes = [60, 64, 67, 72];
+   *  var i = 0;
+   *
+   *  function setup() {
+   *    osc = new p5.Oscillator('Triangle');
+   *    osc.start();
+   *    frameRate(1);
+   *  }
+   *
+   *  function draw() {
+   *    var freq = midiToFreq(notes[i]);
+   *    osc.freq(freq);
+   *    i++;
+   *    if (i >= notes.length){
+   *      i = 0;
+   *    }
+   *  }
+   *  </code></div>
+   */
+  p5.prototype.midiToFreq = function (m) {
+    return 440 * Math.pow(2, (m - 69) / 12);
+  };
+  /**
+   *  List the SoundFile formats that you will include. LoadSound
+   *  will search your directory for these extensions, and will pick
+   *  a format that is compatable with the client's web browser.
+   *  <a href="http
