@@ -537,4 +537,34 @@ helpers = function () {
           path = path;
         } else {
           var pathSplit = path.split('.');
-          var pathCore = pathSplit[pathS
+          var pathCore = pathSplit[pathSplit.length - 1];
+          for (var i = 0; i < p5sound.extensions.length; i++) {
+            var extension = p5sound.extensions[i];
+            var supported = p5.prototype.isFileSupported(extension);
+            if (supported) {
+              pathCore = '';
+              if (pathSplit.length === 2) {
+                pathCore += pathSplit[0];
+              }
+              for (var i = 1; i <= pathSplit.length - 2; i++) {
+                var p = pathSplit[i];
+                pathCore += '.' + p;
+              }
+              path = pathCore += '.';
+              path = path += extension;
+              break;
+            }
+          }
+        }
+      } else {
+        for (var i = 0; i < p5sound.extensions.length; i++) {
+          var extension = p5sound.extensions[i];
+          var supported = p5.prototype.isFileSupported(extension);
+          if (supported) {
+            path = path + '.' + extension;
+            break;
+          }
+        }
+      }
+    } else if (typeof paths === 'object') {
+   
