@@ -651,4 +651,31 @@ panner = function () {
   if (typeof ac.createStereoPanner !== 'undefined') {
     p5.Panner = function (input, output) {
       this.stereoPanner = this.input = ac.createStereoPanner();
-      in
+      input.connect(this.stereoPanner);
+      this.stereoPanner.connect(output);
+    };
+    p5.Panner.prototype.pan = function (val, tFromNow) {
+      var time = tFromNow || 0;
+      var t = ac.currentTime + time;
+      this.stereoPanner.pan.linearRampToValueAtTime(val, t);
+    };
+    //not implemented because stereopanner
+    //node does not require this and will automatically
+    //convert single channel or multichannel to stereo.
+    //tested with single and stereo, not with (>2) multichannel
+    p5.Panner.prototype.inputChannels = function () {
+    };
+    p5.Panner.prototype.connect = function (obj) {
+      this.stereoPanner.connect(obj);
+    };
+    p5.Panner.prototype.disconnect = function () {
+      this.stereoPanner.disconnect();
+    };
+  } else {
+    // if there is no createStereoPanner object
+    // such as in safari 7.1.7 at the time of writing this
+    // use this method to create the effect
+    p5.Panner = function (input, output, numInputChannels) {
+      this.input = ac.createGain();
+      input.connect(this.input);
+      th
