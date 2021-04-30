@@ -678,4 +678,29 @@ panner = function () {
     p5.Panner = function (input, output, numInputChannels) {
       this.input = ac.createGain();
       input.connect(this.input);
-      th
+      this.left = ac.createGain();
+      this.right = ac.createGain();
+      this.left.channelInterpretation = 'discrete';
+      this.right.channelInterpretation = 'discrete';
+      // if input is stereo
+      if (numInputChannels > 1) {
+        this.splitter = ac.createChannelSplitter(2);
+        this.input.connect(this.splitter);
+        this.splitter.connect(this.left, 1);
+        this.splitter.connect(this.right, 0);
+      } else {
+        this.input.connect(this.left);
+        this.input.connect(this.right);
+      }
+      this.output = ac.createChannelMerger(2);
+      this.left.connect(this.output, 0, 1);
+      this.right.connect(this.output, 0, 0);
+      this.output.connect(output);
+    };
+    // -1 is left, +1 is right
+    p5.Panner.prototype.pan = function (val, tFromNow) {
+      var time = tFromNow || 0;
+      var t = ac.currentTime + time;
+      var v = (val + 1) / 2;
+      var rightVal = Math.cos(v * Math.PI / 2);
+      var
