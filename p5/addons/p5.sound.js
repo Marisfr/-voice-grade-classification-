@@ -703,4 +703,31 @@ panner = function () {
       var t = ac.currentTime + time;
       var v = (val + 1) / 2;
       var rightVal = Math.cos(v * Math.PI / 2);
-      var
+      var leftVal = Math.sin(v * Math.PI / 2);
+      this.left.gain.linearRampToValueAtTime(leftVal, t);
+      this.right.gain.linearRampToValueAtTime(rightVal, t);
+    };
+    p5.Panner.prototype.inputChannels = function (numChannels) {
+      if (numChannels === 1) {
+        this.input.disconnect();
+        this.input.connect(this.left);
+        this.input.connect(this.right);
+      } else if (numChannels === 2) {
+        if (typeof (this.splitter === 'undefined')) {
+          this.splitter = ac.createChannelSplitter(2);
+        }
+        this.input.disconnect();
+        this.input.connect(this.splitter);
+        this.splitter.connect(this.left, 1);
+        this.splitter.connect(this.right, 0);
+      }
+    };
+    p5.Panner.prototype.connect = function (obj) {
+      this.output.connect(obj);
+    };
+    p5.Panner.prototype.disconnect = function () {
+      this.output.disconnect();
+    };
+  }
+}(master);
+var 
