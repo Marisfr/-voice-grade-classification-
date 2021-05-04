@@ -793,4 +793,34 @@ soundfile = function () {
         var path = p5.prototype._checkFileFormats(paths);
         this.url = path;
       } else if (typeof paths === 'object') {
-        if 
+        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+          // The File API isn't supported in this browser
+          throw 'Unable to load file because the File API is not supported';
+        }
+      }
+      // if type is a p5.File...get the actual file
+      if (paths.file) {
+        paths = paths.file;
+      }
+      this.file = paths;
+    }
+    // private _onended callback, set by the method: onended(callback)
+    this._onended = function () {
+    };
+    this._looping = false;
+    this._playing = false;
+    this._paused = false;
+    this._pauseTime = 0;
+    // cues for scheduling events with addCue() removeCue()
+    this._cues = [];
+    //  position of the most recently played sample
+    this._lastPos = 0;
+    this._counterNode = null;
+    this._scopeNode = null;
+    // array of sources so that they can all be stopped!
+    this.bufferSourceNodes = [];
+    // current source
+    this.bufferSourceNode = null;
+    this.buffer = null;
+    this.playbackRate = 1;
+    this
