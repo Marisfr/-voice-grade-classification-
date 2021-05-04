@@ -866,4 +866,26 @@ soundfile = function () {
    *                                    paths to soundfiles in multiple formats
    *                                    i.e. ['sound.ogg', 'sound.mp3'].
    *                                    Alternately, accepts an object: either
-   *                                    from the HTML5 File API, or a 
+   *                                    from the HTML5 File API, or a p5.File.
+   *  @param {Function} [successCallback]   Name of a function to call once file loads
+   *  @param {Function} [errorCallback]   Name of a function to call if there is
+   *                                      an error loading the file.
+   *  @param {Function} [whileLoading] Name of a function to call while file is loading.
+   *                                 This function will receive the percentage loaded
+   *                                 so far, from 0.0 to 1.0.
+   *  @return {SoundFile}            Returns a p5.SoundFile
+   *  @example
+   *  <div><code>
+   *  function preload() {
+   *   mySound = loadSound('assets/doorbell.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    mySound.setVolume(0.1);
+   *    mySound.play();
+   *  }
+   *  </code></div>
+   */
+  p5.prototype.loadSound = function (path, callback, onerror, whileLoading) {
+    // if loading locally without a server
+    if (window.location.origin.indexOf('file://') > -1 && w
