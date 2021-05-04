@@ -730,4 +730,29 @@ panner = function () {
     };
   }
 }(master);
-var 
+var soundfile;
+'use strict';
+soundfile = function () {
+  var CustomError = errorHandler;
+  var p5sound = master;
+  var ac = p5sound.audiocontext;
+  var midiToFreq = helpers.midiToFreq;
+  /**
+   *  <p>SoundFile object with a path to a file.</p>
+   *
+   *  <p>The p5.SoundFile may not be available immediately because
+   *  it loads the file information asynchronously.</p>
+   *
+   *  <p>To do something with the sound as soon as it loads
+   *  pass the name of a function as the second parameter.</p>
+   *
+   *  <p>Only one file path is required. However, audio file formats
+   *  (i.e. mp3, ogg, wav and m4a/aac) are not supported by all
+   *  web browsers. If you want to ensure compatability, instead of a single
+   *  file path, you may include an Array of filepaths, and the browser will
+   *  choose a format that works.</p>
+   *
+   *  @class p5.SoundFile
+   *  @constructor
+   *  @param {String|Array} path   path to a sound file (String). Optionally,
+   *      
