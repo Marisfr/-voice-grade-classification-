@@ -823,4 +823,31 @@ soundfile = function () {
     this.bufferSourceNode = null;
     this.buffer = null;
     this.playbackRate = 1;
-    this
+    this.input = p5sound.audiocontext.createGain();
+    this.output = p5sound.audiocontext.createGain();
+    this.reversed = false;
+    // start and end of playback / loop
+    this.startTime = 0;
+    this.endTime = null;
+    this.pauseTime = 0;
+    // "restart" would stop playback before retriggering
+    this.mode = 'sustain';
+    // time that playback was started, in millis
+    this.startMillis = null;
+    // stereo panning
+    this.panPosition = 0;
+    this.panner = new p5.Panner(this.output, p5sound.input, 2);
+    // it is possible to instantiate a soundfile with no path
+    if (this.url || this.file) {
+      this.load(onload, onerror);
+    }
+    // add this p5.SoundFile to the soundArray
+    p5sound.soundArray.push(this);
+    if (typeof whileLoading === 'function') {
+      this._whileLoading = whileLoading;
+    } else {
+      this._whileLoading = function () {
+      };
+    }
+  };
+  // register preload handling of l
