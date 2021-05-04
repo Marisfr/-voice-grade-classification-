@@ -850,4 +850,20 @@ soundfile = function () {
       };
     }
   };
-  // register preload handling of l
+  // register preload handling of loadSound
+  p5.prototype.registerPreloadMethod('loadSound', p5.prototype);
+  /**
+   *  loadSound() returns a new p5.SoundFile from a specified
+   *  path. If called during preload(), the p5.SoundFile will be ready
+   *  to play in time for setup() and draw(). If called outside of
+   *  preload, the p5.SoundFile will not be ready immediately, so
+   *  loadSound accepts a callback as the second parameter. Using a
+   *  <a href="https://github.com/processing/p5.js/wiki/Local-server">
+   *  local server</a> is recommended when loading external files.
+   *
+   *  @method loadSound
+   *  @param  {String|Array}   path     Path to the sound file, or an array with
+   *                                    paths to soundfiles in multiple formats
+   *                                    i.e. ['sound.ogg', 'sound.mp3'].
+   *                                    Alternately, accepts an object: either
+   *                                    from the HTML5 File API, or a 
