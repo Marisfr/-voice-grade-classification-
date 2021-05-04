@@ -766,4 +766,31 @@ soundfile = function () {
    *  @param {Function} [whileLoadingCallback]   Name of a function to call while file
    *                                             is loading. That function will
    *                                             receive progress of the request to
-   *                                             load the
+   *                                             load the sound file
+   *                                             (between 0 and 1) as its first
+   *                                             parameter. This progress
+   *                                             does not account for the additional
+   *                                             time needed to decode the audio data.
+   *
+   *  @example
+   *  <div><code>
+   *
+   *  function preload() {
+   *    soundFormats('mp3', 'ogg');
+   *    mySound = loadSound('assets/doorbell.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    mySound.setVolume(0.1);
+   *    mySound.play();
+   *  }
+   *
+   * </code></div>
+   */
+  p5.SoundFile = function (paths, onload, onerror, whileLoading) {
+    if (typeof paths !== 'undefined') {
+      if (typeof paths === 'string' || typeof paths[0] === 'string') {
+        var path = p5.prototype._checkFileFormats(paths);
+        this.url = path;
+      } else if (typeof paths === 'object') {
+        if 
