@@ -888,4 +888,29 @@ soundfile = function () {
    */
   p5.prototype.loadSound = function (path, callback, onerror, whileLoading) {
     // if loading locally without a server
-    if (window.location.origin.indexOf('file://') > -1 && w
+    if (window.location.origin.indexOf('file://') > -1 && window.cordova === 'undefined') {
+      window.alert('This sketch may require a server to load external files. Please see http://bit.ly/1qcInwS');
+    }
+    var self = this;
+    var s = new p5.SoundFile(path, function () {
+      if (typeof callback === 'function') {
+        callback.apply(self, arguments);
+      }
+      self._decrementPreload();
+    }, onerror, whileLoading);
+    return s;
+  };
+  /**
+   * This is a helper function that the p5.SoundFile calls to load
+   * itself. Accepts a callback (the name of another function)
+   * as an optional parameter.
+   *
+   * @private
+   * @param {Function} [successCallback]   Name of a function to call once file loads
+   * @param {Function} [errorCallback]   Name of a function to call if there is an error
+   */
+  p5.SoundFile.prototype.load = function (callback, errorCallback) {
+    var self = this;
+    var errorTrace = new Error().stack;
+    if (this.url !== undefined && this.url !== '') {
+      var request = new XMLH
