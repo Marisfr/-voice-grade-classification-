@@ -913,4 +913,27 @@ soundfile = function () {
     var self = this;
     var errorTrace = new Error().stack;
     if (this.url !== undefined && this.url !== '') {
-      var request = new XMLH
+      var request = new XMLHttpRequest();
+      request.addEventListener('progress', function (evt) {
+        self._updateProgress(evt);
+      }, false);
+      request.open('GET', this.url, true);
+      request.responseType = 'arraybuffer';
+      request.onload = function () {
+        if (request.status === 200) {
+          // on sucess loading file:
+          ac.decodeAudioData(request.response, // success decoding buffer:
+          function (buff) {
+            self.buffer = buff;
+            self.panner.inputChannels(buff.numberOfChannels);
+            if (callback) {
+              callback(self);
+            }
+          }, // error decoding buffer. "e" is undefined in Chrome 11/22/2015
+          function () {
+            var err = new CustomError('decodeAudioData', errorTrace, self.url);
+            var msg = 'AudioContext error at decodeAudioData for ' + self.url;
+            if (errorCallback) {
+              err.msg = msg;
+              errorCallback(err);
+        
