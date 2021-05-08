@@ -936,4 +936,27 @@ soundfile = function () {
             if (errorCallback) {
               err.msg = msg;
               errorCallback(err);
-        
+            } else {
+              console.error(msg + '\n The error stack trace includes: \n' + err.stack);
+            }
+          });
+        } else {
+          var err = new CustomError('loadSound', errorTrace, self.url);
+          var msg = 'Unable to load ' + self.url + '. The request status was: ' + request.status + ' (' + request.statusText + ')';
+          if (errorCallback) {
+            err.message = msg;
+            errorCallback(err);
+          } else {
+            console.error(msg + '\n The error stack trace includes: \n' + err.stack);
+          }
+        }
+      };
+      // if there is another error, aside from 404...
+      request.onerror = function () {
+        var err = new CustomError('loadSound', errorTrace, self.url);
+        var msg = 'There was no response from the server at ' + self.url + '. Check the url and internet connectivity.';
+        if (errorCallback) {
+          err.message = msg;
+          errorCallback(err);
+        } else {
+          console.error(msg + '\n Th
