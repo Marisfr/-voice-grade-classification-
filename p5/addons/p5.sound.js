@@ -959,4 +959,34 @@ soundfile = function () {
           err.message = msg;
           errorCallback(err);
         } else {
-          console.error(msg + '\n Th
+          console.error(msg + '\n The error stack trace includes: \n' + err.stack);
+        }
+      };
+      request.send();
+    } else if (this.file !== undefined) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        ac.decodeAudioData(reader.result, function (buff) {
+          self.buffer = buff;
+          self.panner.inputChannels(buff.numberOfChannels);
+          if (callback) {
+            callback(self);
+          }
+        });
+      };
+      reader.onerror = function (e) {
+        if (onerror) {
+          onerror(e);
+        }
+      };
+      reader.readAsArrayBuffer(this.file);
+    }
+  };
+  // TO DO: use this method to create a loading bar that shows progress during file upload/decode.
+  p5.SoundFile.prototype._updateProgress = function (evt) {
+    if (evt.lengthComputable) {
+      var percentComplete = evt.loaded / evt.total * 0.99;
+      this._whileLoading(percentComplete, evt);
+    } else {
+      // Unable to compute progress information since the total size is unknown
+      th
