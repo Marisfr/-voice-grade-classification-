@@ -989,4 +989,35 @@ soundfile = function () {
       this._whileLoading(percentComplete, evt);
     } else {
       // Unable to compute progress information since the total size is unknown
-      th
+      this._whileLoading('size unknown');
+    }
+  };
+  /**
+   *  Returns true if the sound file finished loading successfully.
+   *
+   *  @method  isLoaded
+   *  @return {Boolean}
+   */
+  p5.SoundFile.prototype.isLoaded = function () {
+    if (this.buffer) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  /**
+   * Play the p5.SoundFile
+   *
+   * @method play
+   * @param {Number} [startTime]            (optional) schedule playback to start (in seconds from now).
+   * @param {Number} [rate]             (optional) playback rate
+   * @param {Number} [amp]              (optional) amplitude (volume)
+   *                                     of playback
+   * @param {Number} [cueStart]        (optional) cue start time in seconds
+   * @param {Number} [duration]          (optional) duration of playback in seconds
+   */
+  p5.SoundFile.prototype.play = function (startTime, rate, amp, _cueStart, duration) {
+    var self = this;
+    var now = p5sound.audiocontext.currentTime;
+    var cueStart, cueEnd;
+    var time 
