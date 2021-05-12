@@ -1020,4 +1020,31 @@ soundfile = function () {
     var self = this;
     var now = p5sound.audiocontext.currentTime;
     var cueStart, cueEnd;
-    var time 
+    var time = startTime || 0;
+    if (time < 0) {
+      time = 0;
+    }
+    time = time + now;
+    if (typeof rate !== 'undefined') {
+      this.rate(rate);
+    }
+    if (typeof amp !== 'undefined') {
+      this.setVolume(amp);
+    }
+    // TO DO: if already playing, create array of buffers for easy stop()
+    if (this.buffer) {
+      // reset the pause time (if it was paused)
+      this._pauseTime = 0;
+      // handle restart playmode
+      if (this.mode === 'restart' && this.buffer && this.bufferSourceNode) {
+        this.bufferSourceNode.stop(time);
+        this._counterNode.stop(time);
+      }
+      //dont create another instance if already playing
+      if (this.mode === 'untildone' && this.isPlaying()) {
+        return;
+      }
+      // make a new source and counter. They are automatically assigned playbackRate and buffer
+      this.bufferSourceNode = this._initSourceNode();
+      // garbage collect counterNode and create a new one
+      de
