@@ -1097,4 +1097,27 @@ soundfile = function () {
     }
     // if looping, will restart at original time
     this.bufferSourceNode.loop = this._looping;
-    this._c
+    this._counterNode.loop = this._looping;
+    if (this._looping === true) {
+      cueEnd = duration ? duration : cueStart - 1e-15;
+      this.bufferSourceNode.loopStart = cueStart;
+      this.bufferSourceNode.loopEnd = cueEnd;
+      this._counterNode.loopStart = cueStart;
+      this._counterNode.loopEnd = cueEnd;
+    }
+  };
+  /**
+   *  p5.SoundFile has two play modes: <code>restart</code> and
+   *  <code>sustain</code>. Play Mode determines what happens to a
+   *  p5.SoundFile if it is triggered while in the middle of playback.
+   *  In sustain mode, playback will continue simultaneous to the
+   *  new playback. In restart mode, play() will stop playback
+   *  and start over. With untilDone, a sound will play only if it's
+   *  not already playing. Sustain is the default mode.
+   *
+   *  @method  playMode
+   *  @param  {String} str 'restart' or 'sustain' or 'untilDone'
+   *  @example
+   *  <div><code>
+   *  function setup(){
+   *    mySound = loadSound('assets/Damscray_Danc
