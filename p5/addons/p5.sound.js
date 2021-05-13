@@ -1047,4 +1047,28 @@ soundfile = function () {
       // make a new source and counter. They are automatically assigned playbackRate and buffer
       this.bufferSourceNode = this._initSourceNode();
       // garbage collect counterNode and create a new one
-      de
+      delete this._counterNode;
+      this._counterNode = this._initCounterNode();
+      if (_cueStart) {
+        if (_cueStart >= 0 && _cueStart < this.buffer.duration) {
+          // this.startTime = cueStart;
+          cueStart = _cueStart;
+        } else {
+          throw 'start time out of range';
+        }
+      } else {
+        cueStart = 0;
+      }
+      if (duration) {
+        // if duration is greater than buffer.duration, just play entire file anyway rather than throw an error
+        duration = duration <= this.buffer.duration - cueStart ? duration : this.buffer.duration;
+      }
+      // if it was paused, play at the pause position
+      if (this._paused) {
+        this.bufferSourceNode.start(time, this.pauseTime, duration);
+        this._counterNode.start(time, this.pauseTime, duration);
+      } else {
+        this.bufferSourceNode.start(time, cueStart, duration);
+        this._counterNode.start(time, cueStart, duration);
+      }
+      this._playing = 
