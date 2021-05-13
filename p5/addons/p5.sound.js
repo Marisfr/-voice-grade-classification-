@@ -1071,4 +1071,30 @@ soundfile = function () {
         this.bufferSourceNode.start(time, cueStart, duration);
         this._counterNode.start(time, cueStart, duration);
       }
-      this._playing = 
+      this._playing = true;
+      this._paused = false;
+      // add source to sources array, which is used in stopAll()
+      this.bufferSourceNodes.push(this.bufferSourceNode);
+      this.bufferSourceNode._arrayIndex = this.bufferSourceNodes.length - 1;
+      // delete this.bufferSourceNode from the sources array when it is done playing:
+      var clearOnEnd = function () {
+        this._playing = false;
+        this.removeEventListener('ended', clearOnEnd, false);
+        // call the onended callback
+        self._onended(self);
+        self.bufferSourceNodes.forEach(function (n, i) {
+          if (n._playing === false) {
+            self.bufferSourceNodes.splice(i);
+          }
+        });
+        if (self.bufferSourceNodes.length === 0) {
+          self._playing = false;
+        }
+      };
+      this.bufferSourceNode.onended = clearOnEnd;
+    } else {
+      throw 'not ready to play file, buffer has yet to load. Try preload()';
+    }
+    // if looping, will restart at original time
+    this.bufferSourceNode.loop = this._looping;
+    this._c
