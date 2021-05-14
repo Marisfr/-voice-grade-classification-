@@ -1184,4 +1184,34 @@ soundfile = function () {
    *  function keyReleased() {
    *    if (key == 'p') {
    *      soundFile.play();
-   *      background(0, 255, 0)
+   *      background(0, 255, 0);
+   *    }
+   *  }
+   *  </code>
+   *  </div>
+   */
+  p5.SoundFile.prototype.pause = function (startTime) {
+    var now = p5sound.audiocontext.currentTime;
+    var time = startTime || 0;
+    var pTime = time + now;
+    if (this.isPlaying() && this.buffer && this.bufferSourceNode) {
+      this.pauseTime = this.currentTime();
+      this.bufferSourceNode.stop(pTime);
+      this._counterNode.stop(pTime);
+      this._paused = true;
+      this._playing = false;
+      this._pauseTime = this.currentTime();
+    } else {
+      this._pauseTime = 0;
+    }
+  };
+  /**
+   * Loop the p5.SoundFile. Accepts optional parameters to set the
+   * playback rate, playback volume, loopStart, loopEnd.
+   *
+   * @method loop
+   * @param {Number} [startTime] (optional) schedule event to occur
+   *                             seconds from now
+   * @param {Number} [rate]        (optional) playback rate
+   * @param {Number} [amp]         (optional) playback volume
+   * @param {Number} [cueLoopStart] (optional) startTime in seconds
