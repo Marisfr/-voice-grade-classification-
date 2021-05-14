@@ -1120,4 +1120,36 @@ soundfile = function () {
    *  @example
    *  <div><code>
    *  function setup(){
-   *    mySound = loadSound('assets/Damscray_Danc
+   *    mySound = loadSound('assets/Damscray_DancingTiger.mp3');
+   *  }
+   *  function mouseClicked() {
+   *    mySound.playMode('sustain');
+   *    mySound.play();
+   *  }
+   *  function keyPressed() {
+   *    mySound.playMode('restart');
+   *    mySound.play();
+   *  }
+   *
+   * </code></div>
+   */
+  p5.SoundFile.prototype.playMode = function (str) {
+    var s = str.toLowerCase();
+    // if restart, stop all other sounds from playing
+    if (s === 'restart' && this.buffer && this.bufferSourceNode) {
+      for (var i = 0; i < this.bufferSourceNodes.length - 1; i++) {
+        var now = p5sound.audiocontext.currentTime;
+        this.bufferSourceNodes[i].stop(now);
+      }
+    }
+    // set play mode to effect future playback
+    if (s === 'restart' || s === 'sustain' || s === 'untildone') {
+      this.mode = s;
+    } else {
+      throw 'Invalid play mode. Must be either "restart" or "sustain"';
+    }
+  };
+  /**
+   *  Pauses a file that is currently playing. If the file is not
+   *  playing, then nothing will happen.
+   
