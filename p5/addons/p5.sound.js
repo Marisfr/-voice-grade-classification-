@@ -1152,4 +1152,36 @@ soundfile = function () {
   /**
    *  Pauses a file that is currently playing. If the file is not
    *  playing, then nothing will happen.
-   
+   *
+   *  After pausing, .play() will resume from the paused
+   *  position.
+   *  If p5.SoundFile had been set to loop before it was paused,
+   *  it will continue to loop after it is unpaused with .play().
+   *
+   *  @method pause
+   *  @param {Number} [startTime] (optional) schedule event to occur
+   *                               seconds from now
+   *  @example
+   *  <div><code>
+   *  var soundFile;
+   *
+   *  function preload() {
+   *    soundFormats('ogg', 'mp3');
+   *    soundFile = loadSound('assets/Damscray_02.mp3');
+   *  }
+   *  function setup() {
+   *    background(0, 255, 0);
+   *    soundFile.setVolume(0.1);
+   *    soundFile.loop();
+   *  }
+   *  function keyTyped() {
+   *    if (key == 'p') {
+   *      soundFile.pause();
+   *      background(255, 0, 0);
+   *    }
+   *  }
+   *
+   *  function keyReleased() {
+   *    if (key == 'p') {
+   *      soundFile.play();
+   *      background(0, 255, 0)
