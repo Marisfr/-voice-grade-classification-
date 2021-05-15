@@ -1215,3 +1215,34 @@ soundfile = function () {
    * @param {Number} [rate]        (optional) playback rate
    * @param {Number} [amp]         (optional) playback volume
    * @param {Number} [cueLoopStart] (optional) startTime in seconds
+   * @param {Number} [duration]  (optional) loop duration in seconds
+   */
+  p5.SoundFile.prototype.loop = function (startTime, rate, amp, loopStart, duration) {
+    this._looping = true;
+    this.play(startTime, rate, amp, loopStart, duration);
+  };
+  /**
+   * Set a p5.SoundFile's looping flag to true or false. If the sound
+   * is currently playing, this change will take effect when it
+   * reaches the end of the current playback.
+   *
+   * @method setLoop
+   * @param {Boolean} Boolean   set looping to true or false
+   */
+  p5.SoundFile.prototype.setLoop = function (bool) {
+    if (bool === true) {
+      this._looping = true;
+    } else if (bool === false) {
+      this._looping = false;
+    } else {
+      throw 'Error: setLoop accepts either true or false';
+    }
+    if (this.bufferSourceNode) {
+      this.bufferSourceNode.loop = this._looping;
+      this._counterNode.loop = this._looping;
+    }
+  };
+  /**
+   * Returns 'true' if a p5.SoundFile is currently looping and playing, 'false' if not.
+   *
+   * @meth
