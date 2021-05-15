@@ -1245,4 +1245,44 @@ soundfile = function () {
   /**
    * Returns 'true' if a p5.SoundFile is currently looping and playing, 'false' if not.
    *
-   * @meth
+   * @method isLooping
+   * @return {Boolean}
+   */
+  p5.SoundFile.prototype.isLooping = function () {
+    if (!this.bufferSourceNode) {
+      return false;
+    }
+    if (this._looping === true && this.isPlaying() === true) {
+      return true;
+    }
+    return false;
+  };
+  /**
+   *  Returns true if a p5.SoundFile is playing, false if not (i.e.
+   *  paused or stopped).
+   *
+   *  @method isPlaying
+   *  @return {Boolean}
+   */
+  p5.SoundFile.prototype.isPlaying = function () {
+    return this._playing;
+  };
+  /**
+   *  Returns true if a p5.SoundFile is paused, false if not (i.e.
+   *  playing or stopped).
+   *
+   *  @method  isPaused
+   *  @return {Boolean}
+   */
+  p5.SoundFile.prototype.isPaused = function () {
+    return this._paused;
+  };
+  /**
+   * Stop soundfile playback.
+   *
+   * @method stop
+   * @param {Number} [startTime] (optional) schedule event to occur
+   *                             in seconds from now
+   */
+  p5.SoundFile.prototype.stop = function (timeFromNow) {
+    var time
