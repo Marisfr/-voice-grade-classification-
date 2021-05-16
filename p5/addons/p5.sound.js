@@ -1285,4 +1285,33 @@ soundfile = function () {
    *                             in seconds from now
    */
   p5.SoundFile.prototype.stop = function (timeFromNow) {
-    var time
+    var time = timeFromNow || 0;
+    if (this.mode === 'sustain' || this.mode === 'untildone') {
+      this.stopAll(time);
+      this._playing = false;
+      this.pauseTime = 0;
+      this._paused = false;
+    } else if (this.buffer && this.bufferSourceNode) {
+      var now = p5sound.audiocontext.currentTime;
+      var t = time || 0;
+      this.pauseTime = 0;
+      this.bufferSourceNode.stop(now + t);
+      this._counterNode.stop(now + t);
+      this._playing = false;
+      this._paused = false;
+    }
+  };
+  /**
+   *  Stop playback on all of this soundfile's sources.
+   *  @private
+   */
+  p5.SoundFile.prototype.stopAll = function (_time) {
+    var now = p5sound.audiocontext.currentTime;
+    var time = _time || 0;
+    if (this.buffer && this.bufferSourceNode) {
+      for (var i = 0; i < this.bufferSourceNodes.length; i++) {
+        if (typeof this.bufferSourceNodes[i] !== undefined) {
+          try {
+            this.bufferSourceNodes[i].onended = function () {
+            };
+  
