@@ -1421,4 +1421,42 @@ soundfile = function () {
    *  @method rate
    *  @param {Number} [playbackRate]     Set the playback rate. 1.0 is normal,
    *                                     .5 is half-speed, 2.0 is twice as fast.
-   *                                     Value
+   *                                     Values less than zero play backwards.
+   *  @example
+   *  <div><code>
+   *  var song;
+   *
+   *  function preload() {
+   *    song = loadSound('assets/Damscray_DancingTiger.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    song.loop();
+   *  }
+   *
+   *  function draw() {
+   *    background(200);
+   *
+   *    // Set the rate to a range between 0.1 and 4
+   *    // Changing the rate also alters the pitch
+   *    var speed = map(mouseY, 0.1, height, 0, 2);
+   *    speed = constrain(speed, 0.01, 4);
+   *    song.rate(speed);
+   *
+   *    // Draw a circle to show what is going on
+   *    stroke(0);
+   *    fill(51, 100);
+   *    ellipse(mouseX, 100, 48, 48);
+   *  }
+   *
+   * </code>
+   * </div>
+   *
+   */
+  p5.SoundFile.prototype.rate = function (playbackRate) {
+    var reverse = false;
+    if (typeof playbackRate === 'undefined') {
+      return this.playbackRate;
+    }
+    this.playbackRate = playbackRate;
+    if (playbackR
