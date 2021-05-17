@@ -1394,4 +1394,31 @@ soundfile = function () {
    *    // map the ball's x location to a panning degree
    *    // between -1.0 (left) and 1.0 (right)
    *    var panning = map(ball.x, 0., width,-1.0, 1.0);
-   *    soundFile.pan(panni
+   *    soundFile.pan(panning);
+   *    soundFile.play();
+   *  }
+   *  </div></code>
+   */
+  p5.SoundFile.prototype.pan = function (pval, tFromNow) {
+    this.panPosition = pval;
+    this.panner.pan(pval, tFromNow);
+  };
+  /**
+   * Returns the current stereo pan position (-1.0 to 1.0)
+   *
+   * @method getPan
+   * @return {Number} Returns the stereo pan setting of the Oscillator
+   *                          as a number between -1.0 (left) and 1.0 (right).
+   *                          0.0 is center and default.
+   */
+  p5.SoundFile.prototype.getPan = function () {
+    return this.panPosition;
+  };
+  /**
+   *  Set the playback rate of a sound file. Will change the speed and the pitch.
+   *  Values less than zero will reverse the audio buffer.
+   *
+   *  @method rate
+   *  @param {Number} [playbackRate]     Set the playback rate. 1.0 is normal,
+   *                                     .5 is half-speed, 2.0 is twice as fast.
+   *                                     Value
