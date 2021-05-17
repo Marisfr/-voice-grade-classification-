@@ -1339,4 +1339,27 @@ soundfile = function () {
    *                                     and 1.0 or modulating signal/oscillator
    *  @param {Number} [rampTime]  Fade for t seconds
    *  @param {Number} [timeFromNow]  Schedule this event to happen at
-   *                     
+   *                                 t seconds in the future
+   */
+  p5.SoundFile.prototype.setVolume = function (vol, _rampTime, _tFromNow) {
+    if (typeof vol === 'number') {
+      var rampTime = _rampTime || 0;
+      var tFromNow = _tFromNow || 0;
+      var now = p5sound.audiocontext.currentTime;
+      var currentVol = this.output.gain.value;
+      this.output.gain.cancelScheduledValues(now + tFromNow);
+      this.output.gain.linearRampToValueAtTime(currentVol, now + tFromNow);
+      this.output.gain.linearRampToValueAtTime(vol, now + tFromNow + rampTime);
+    } else if (vol) {
+      vol.connect(this.output.gain);
+    } else {
+      // return the Gain Node
+      return this.output.gain;
+    }
+  };
+  // same as setVolume, to match Processing Sound
+  p5.SoundFile.prototype.amp = p5.SoundFile.prototype.setVolume;
+  // these are the same thing
+  p5.SoundFile.prototype.fade = p5.SoundFile.prototype.setVolume;
+  p5.SoundFile.prototype.getVolume = function () {
+    retu
