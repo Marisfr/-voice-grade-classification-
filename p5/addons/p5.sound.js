@@ -1459,4 +1459,29 @@ soundfile = function () {
       return this.playbackRate;
     }
     this.playbackRate = playbackRate;
-    if (playbackR
+    if (playbackRate === 0) {
+      playbackRate = 1e-13;
+    } else if (playbackRate < 0 && !this.reversed) {
+      playbackRate = Math.abs(playbackRate);
+      reverse = true;
+    } else if (playbackRate > 0 && this.reversed) {
+      reverse = true;
+    }
+    if (this.bufferSourceNode) {
+      var now = p5sound.audiocontext.currentTime;
+      this.bufferSourceNode.playbackRate.cancelScheduledValues(now);
+      this.bufferSourceNode.playbackRate.linearRampToValueAtTime(Math.abs(playbackRate), now);
+      this._counterNode.playbackRate.cancelScheduledValues(now);
+      this._counterNode.playbackRate.linearRampToValueAtTime(Math.abs(playbackRate), now);
+    }
+    if (reverse) {
+      this.reverseBuffer();
+    }
+    return this.playbackRate;
+  };
+  // TO DO: document this
+  p5.SoundFile.prototype.setPitch = function (num) {
+    var newPlaybackRate = midiToFreq(num) / midiToFreq(60);
+    this.rate(newPlaybackRate);
+  };
+  p5.SoundFile.prototype.ge
