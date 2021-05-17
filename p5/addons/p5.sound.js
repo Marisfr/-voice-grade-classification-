@@ -1362,4 +1362,36 @@ soundfile = function () {
   // these are the same thing
   p5.SoundFile.prototype.fade = p5.SoundFile.prototype.setVolume;
   p5.SoundFile.prototype.getVolume = function () {
-    retu
+    return this.output.gain.value;
+  };
+  /**
+   * Set the stereo panning of a p5.sound object to
+   * a floating point number between -1.0 (left) and 1.0 (right).
+   * Default is 0.0 (center).
+   *
+   * @method pan
+   * @param {Number} [panValue]     Set the stereo panner
+   * @param {Number} [timeFromNow]  schedule this event to happen
+   *                                 seconds from now
+   * @example
+   * <div><code>
+   *
+   *  var ball = {};
+   *  var soundFile;
+   *
+   *  function setup() {
+   *    soundFormats('ogg', 'mp3');
+   *    soundFile = loadSound('assets/beatbox.mp3');
+   *  }
+   *
+   *  function draw() {
+   *    background(0);
+   *    ball.x = constrain(mouseX, 0, width);
+   *    ellipse(ball.x, height/2, 20, 20)
+   *  }
+   *
+   *  function mousePressed(){
+   *    // map the ball's x location to a panning degree
+   *    // between -1.0 (left) and 1.0 (right)
+   *    var panning = map(ball.x, 0., width,-1.0, 1.0);
+   *    soundFile.pan(panni
