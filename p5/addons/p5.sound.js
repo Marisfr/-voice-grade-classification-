@@ -1484,4 +1484,31 @@ soundfile = function () {
     var newPlaybackRate = midiToFreq(num) / midiToFreq(60);
     this.rate(newPlaybackRate);
   };
-  p5.SoundFile.prototype.ge
+  p5.SoundFile.prototype.getPlaybackRate = function () {
+    return this.playbackRate;
+  };
+  /**
+   * Returns the duration of a sound file in seconds.
+   *
+   * @method duration
+   * @return {Number} The duration of the soundFile in seconds.
+   */
+  p5.SoundFile.prototype.duration = function () {
+    // Return Duration
+    if (this.buffer) {
+      return this.buffer.duration;
+    } else {
+      return 0;
+    }
+  };
+  /**
+   * Return the current position of the p5.SoundFile playhead, in seconds.
+   * Time is relative to the normal buffer direction, so if `reverseBuffer`
+   * has been called, currentTime will count backwards.
+   *
+   * @method currentTime
+   * @return {Number}   currentTime of the soundFile in seconds.
+   */
+  p5.SoundFile.prototype.currentTime = function () {
+    return this.reversed ? Math.abs(this._lastPos - this.buffer.length) / ac.sampleRate : this._lastPos / ac.sampleRate;
+  };
