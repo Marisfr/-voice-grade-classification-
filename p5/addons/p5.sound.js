@@ -1314,4 +1314,29 @@ soundfile = function () {
           try {
             this.bufferSourceNodes[i].onended = function () {
             };
-  
+            this.bufferSourceNodes[i].stop(now + time);
+          } catch (e) {
+          }
+        }
+      }
+      this._counterNode.stop(now + time);
+      this._onended(this);
+    }
+  };
+  /**
+   *  Multiply the output volume (amplitude) of a sound file
+   *  between 0.0 (silence) and 1.0 (full volume).
+   *  1.0 is the maximum amplitude of a digital sound, so multiplying
+   *  by greater than 1.0 may cause digital distortion. To
+   *  fade, provide a <code>rampTime</code> parameter. For more
+   *  complex fades, see the Env class.
+   *
+   *  Alternately, you can pass in a signal source such as an
+   *  oscillator to modulate the amplitude with an audio signal.
+   *
+   *  @method  setVolume
+   *  @param {Number|Object} volume  Volume (amplitude) between 0.0
+   *                                     and 1.0 or modulating signal/oscillator
+   *  @param {Number} [rampTime]  Fade for t seconds
+   *  @param {Number} [timeFromNow]  Schedule this event to happen at
+   *                     
