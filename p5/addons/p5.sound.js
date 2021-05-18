@@ -1512,3 +1512,34 @@ soundfile = function () {
   p5.SoundFile.prototype.currentTime = function () {
     return this.reversed ? Math.abs(this._lastPos - this.buffer.length) / ac.sampleRate : this._lastPos / ac.sampleRate;
   };
+  /**
+   * Move the playhead of the song to a position, in seconds. Start timing
+   * and playback duration. If none are given, will reset the file to play
+   * entire duration from start to finish.
+   *
+   * @method jump
+   * @param {Number} cueTime    cueTime of the soundFile in seconds.
+   * @param {Number} duration    duration in seconds.
+   */
+  p5.SoundFile.prototype.jump = function (cueTime, duration) {
+    if (cueTime < 0 || cueTime > this.buffer.duration) {
+      throw 'jump time out of range';
+    }
+    if (duration > this.buffer.duration - cueTime) {
+      throw 'end time out of range';
+    }
+    var cTime = cueTime || 0;
+    var dur = duration || undefined;
+    if (this.isPlaying()) {
+      this.stop(0);
+    }
+    this.play(0, this.playbackRate, this.output.gain.value, cTime, dur);
+  };
+  /**
+  * Return the number of channels in a sound file.
+  * For example, Mono = 1, Stereo = 2.
+  *
+  * @method channels
+  * @return {Number} [channels]
+  */
+  p5.SoundFile.prototype.channel
