@@ -1574,4 +1574,27 @@ soundfile = function () {
    * Inspired by Wavesurfer.js.
    *
    * @method  getPeaks
-   * @params {Number} [length] length is the size of the ret
+   * @params {Number} [length] length is the size of the returned array.
+   *                          Larger length results in more precision.
+   *                          Defaults to 5*width of the browser window.
+   * @returns {Float32Array} Array of peaks.
+   */
+  p5.SoundFile.prototype.getPeaks = function (length) {
+    if (this.buffer) {
+      // set length to window's width if no length is provided
+      if (!length) {
+        length = window.width * 5;
+      }
+      if (this.buffer) {
+        var buffer = this.buffer;
+        var sampleSize = buffer.length / length;
+        var sampleStep = ~~(sampleSize / 10) || 1;
+        var channels = buffer.numberOfChannels;
+        var peaks = new Float32Array(Math.round(length));
+        for (var c = 0; c < channels; c++) {
+          var chan = buffer.getChannelData(c);
+          for (var i = 0; i < length; i++) {
+            var start = ~~(i * sampleSize);
+            var end = ~~(start + sampleSize);
+            var max = 0;
+            for (var j = start; j < end; j 
