@@ -1542,4 +1542,36 @@ soundfile = function () {
   * @method channels
   * @return {Number} [channels]
   */
-  p5.SoundFile.prototype.channel
+  p5.SoundFile.prototype.channels = function () {
+    return this.buffer.numberOfChannels;
+  };
+  /**
+  * Return the sample rate of the sound file.
+  *
+  * @method sampleRate
+  * @return {Number} [sampleRate]
+  */
+  p5.SoundFile.prototype.sampleRate = function () {
+    return this.buffer.sampleRate;
+  };
+  /**
+  * Return the number of samples in a sound file.
+  * Equal to sampleRate * duration.
+  *
+  * @method frames
+  * @return {Number} [sampleCount]
+  */
+  p5.SoundFile.prototype.frames = function () {
+    return this.buffer.length;
+  };
+  /**
+   * Returns an array of amplitude peaks in a p5.SoundFile that can be
+   * used to draw a static waveform. Scans through the p5.SoundFile's
+   * audio buffer to find the greatest amplitudes. Accepts one
+   * parameter, 'length', which determines size of the array.
+   * Larger arrays result in more precise waveform visualizations.
+   *
+   * Inspired by Wavesurfer.js.
+   *
+   * @method  getPeaks
+   * @params {Number} [length] length is the size of the ret
