@@ -1639,4 +1639,36 @@ soundfile = function () {
    */
   p5.SoundFile.prototype.reverseBuffer = function () {
     if (this.buffer) {
-      var currentPos = thi
+      var currentPos = this._lastPos / ac.sampleRate;
+      var curVol = this.getVolume();
+      this.setVolume(0, 0.001);
+      const numChannels = this.buffer.numberOfChannels;
+      for (var i = 0; i < numChannels; i++) {
+        this.buffer.getChannelData(i).reverse();
+      }
+      // set reversed flag
+      this.reversed = !this.reversed;
+      if (currentPos) {
+        this.jump(this.duration() - currentPos);
+      }
+      this.setVolume(curVol, 0.001);
+    } else {
+      throw 'SoundFile is not done loading';
+    }
+  };
+  /**
+   *  Schedule an event to be called when the soundfile
+   *  reaches the end of a buffer. If the soundfile is
+   *  playing through once, this will be called when it
+   *  ends. If it is looping, it will be called when
+   *  stop is called.
+   *
+   *  @method  onended
+   *  @param  {Function} callback function to call when the
+   *                              soundfile has ended.
+   */
+  p5.SoundFile.prototype.onended = function (callback) {
+    this._onended = callback;
+    return this;
+  };
+  p5.SoundFile.prototype.
