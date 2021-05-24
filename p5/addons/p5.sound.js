@@ -1597,4 +1597,46 @@ soundfile = function () {
             var start = ~~(i * sampleSize);
             var end = ~~(start + sampleSize);
             var max = 0;
-            for (var j = start; j < end; j 
+            for (var j = start; j < end; j += sampleStep) {
+              var value = chan[j];
+              if (value > max) {
+                max = value;
+              } else if (-value > max) {
+                max = value;
+              }
+            }
+            if (c === 0 || Math.abs(max) > peaks[i]) {
+              peaks[i] = max;
+            }
+          }
+        }
+        return peaks;
+      }
+    } else {
+      throw 'Cannot load peaks yet, buffer is not loaded';
+    }
+  };
+  /**
+   *  Reverses the p5.SoundFile's buffer source.
+   *  Playback must be handled separately (see example).
+   *
+   *  @method  reverseBuffer
+   *  @example
+   *  <div><code>
+   *  var drum;
+   *
+   *  function preload() {
+   *    drum = loadSound('assets/drum.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    drum.reverseBuffer();
+   *    drum.play();
+   *  }
+   *
+   * </code>
+   * </div>
+   */
+  p5.SoundFile.prototype.reverseBuffer = function () {
+    if (this.buffer) {
+      var currentPos = thi
