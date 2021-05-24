@@ -1671,4 +1671,34 @@ soundfile = function () {
     this._onended = callback;
     return this;
   };
-  p5.SoundFile.prototype.
+  p5.SoundFile.prototype.add = function () {
+  };
+  p5.SoundFile.prototype.dispose = function () {
+    var now = p5sound.audiocontext.currentTime;
+    // remove reference to soundfile
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.stop(now);
+    if (this.buffer && this.bufferSourceNode) {
+      for (var i = 0; i < this.bufferSourceNodes.length - 1; i++) {
+        if (this.bufferSourceNodes[i] !== null) {
+          this.bufferSourceNodes[i].disconnect();
+          try {
+            this.bufferSourceNodes[i].stop(now);
+          } catch (e) {
+            console.warning('no buffer source node to dispose');
+          }
+          this.bufferSourceNodes[i] = null;
+        }
+      }
+      if (this.isPlaying()) {
+        try {
+          this._counterNode.stop(now);
+        } catch (e) {
+          console.log(e);
+        }
+        this._counterNode = null;
+      }
+    }
+    if (this.output) {
+      this.output.disconnect(
