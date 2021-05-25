@@ -1701,4 +1701,42 @@ soundfile = function () {
       }
     }
     if (this.output) {
-      this.output.disconnect(
+      this.output.disconnect();
+      this.output = null;
+    }
+    if (this.panner) {
+      this.panner.disconnect();
+      this.panner = null;
+    }
+  };
+  /**
+   * Connects the output of a p5sound object to input of another
+   * p5.sound object. For example, you may connect a p5.SoundFile to an
+   * FFT or an Effect. If no parameter is given, it will connect to
+   * the master output. Most p5sound objects connect to the master
+   * output when they are created.
+   *
+   * @method connect
+   * @param {Object} [object] Audio object that accepts an input
+   */
+  p5.SoundFile.prototype.connect = function (unit) {
+    if (!unit) {
+      this.panner.connect(p5sound.input);
+    } else {
+      if (unit.hasOwnProperty('input')) {
+        this.panner.connect(unit.input);
+      } else {
+        this.panner.connect(unit);
+      }
+    }
+  };
+  /**
+   * Disconnects the output of this p5sound object.
+   *
+   * @method disconnect
+   */
+  p5.SoundFile.prototype.disconnect = function () {
+    this.panner.disconnect();
+  };
+  /**
+   
