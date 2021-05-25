@@ -1768,4 +1768,24 @@ soundfile = function () {
     var numChannels = buf.length;
     var size = buf[0].length;
     var newBuffer = ac.createBuffer(numChannels, size, ac.sampleRate);
-    
+    if (!(buf[0] instanceof Float32Array)) {
+      buf[0] = new Float32Array(buf[0]);
+    }
+    for (var channelNum = 0; channelNum < numChannels; channelNum++) {
+      var channel = newBuffer.getChannelData(channelNum);
+      channel.set(buf[channelNum]);
+    }
+    this.buffer = newBuffer;
+    // set numbers of channels on input to the panner
+    this.panner.inputChannels(numChannels);
+  };
+  //////////////////////////////////////////////////
+  // script processor node with an empty buffer to help
+  // keep a sample-accurate position in playback buffer.
+  // Inspired by Chinmay Pendharkar's technique for Sonoport --> http://bit.ly/1HwdCsV
+  // Copyright [2015] [Sonoport (Asia) Pte. Ltd.],
+  // Licensed under the Apache License http://apache.org/licenses/LICENSE-2.0
+  ////////////////////////////////////////////////////////////////////////////////////
+  var _createCounterBuffer = function (buffer) {
+    const len = buffer.length;
+    const audioBuf = ac.createBuffer(1, buffer.len
