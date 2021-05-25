@@ -1739,4 +1739,33 @@ soundfile = function () {
     this.panner.disconnect();
   };
   /**
-   
+   */
+  p5.SoundFile.prototype.getLevel = function () {
+    console.warn('p5.SoundFile.getLevel has been removed from the library. Use p5.Amplitude instead');
+  };
+  /**
+   *  Reset the source for this SoundFile to a
+   *  new path (URL).
+   *
+   *  @method  setPath
+   *  @param {String}   path     path to audio file
+   *  @param {Function} callback Callback
+   */
+  p5.SoundFile.prototype.setPath = function (p, callback) {
+    var path = p5.prototype._checkFileFormats(p);
+    this.url = path;
+    this.load(callback);
+  };
+  /**
+   *  Replace the current Audio Buffer with a new Buffer.
+   *
+   *  @method setBuffer
+   *  @param {Array} buf Array of Float32 Array(s). 2 Float32 Arrays
+   *                     will create a stereo source. 1 will create
+   *                     a mono source.
+   */
+  p5.SoundFile.prototype.setBuffer = function (buf) {
+    var numChannels = buf.length;
+    var size = buf[0].length;
+    var newBuffer = ac.createBuffer(numChannels, size, ac.sampleRate);
+    
