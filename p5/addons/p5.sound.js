@@ -1788,4 +1788,28 @@ soundfile = function () {
   ////////////////////////////////////////////////////////////////////////////////////
   var _createCounterBuffer = function (buffer) {
     const len = buffer.length;
-    const audioBuf = ac.createBuffer(1, buffer.len
+    const audioBuf = ac.createBuffer(1, buffer.length, ac.sampleRate);
+    const arrayBuffer = audioBuf.getChannelData(0);
+    for (var index = 0; index < len; index++) {
+      arrayBuffer[index] = index;
+    }
+    return audioBuf;
+  };
+  // initialize counterNode, set its initial buffer and playbackRate
+  p5.SoundFile.prototype._initCounterNode = function () {
+    var self = this;
+    var now = ac.currentTime;
+    var cNode = ac.createBufferSource();
+    // dispose of scope node if it already exists
+    if (self._scopeNode) {
+      self._scopeNode.disconnect();
+      delete self._scopeNode.onaudioprocess;
+      delete self._scopeNode;
+    }
+    self._scopeNode = ac.createScriptProcessor(256, 1, 1);
+    // create counter buffer of the same length as self.buffer
+    cNode.buffer = _createCounterBuffer(self.buffer);
+    cNode.playbackRate.setValueAtTime(self.playbackRate, now);
+    cNode.connect(self._scopeNode);
+    self._scopeNode.connect(p5.soundOut._silentNode);
+    self._scopeNode.onaudioprocess
