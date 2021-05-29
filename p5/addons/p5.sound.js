@@ -1812,4 +1812,26 @@ soundfile = function () {
     cNode.playbackRate.setValueAtTime(self.playbackRate, now);
     cNode.connect(self._scopeNode);
     self._scopeNode.connect(p5.soundOut._silentNode);
-    self._scopeNode.onaudioprocess
+    self._scopeNode.onaudioprocess = function (processEvent) {
+      var inputBuffer = processEvent.inputBuffer.getChannelData(0);
+      self._lastPos = inputBuffer[inputBuffer.length - 1] || 0;
+      // do any callbacks that have been scheduled
+      self._onTimeUpdate(self._lastPos);
+    };
+    return cNode;
+  };
+  // initialize sourceNode, set its initial buffer and playbackRate
+  p5.SoundFile.prototype._initSourceNode = function () {
+    var bufferSourceNode = ac.createBufferSource();
+    bufferSourceNode.buffer = this.buffer;
+    bufferSourceNode.playbackRate.value = this.playbackRate;
+    bufferSourceNode.connect(this.output);
+    return bufferSourceNode;
+  };
+  /**
+   *  processPeaks returns an array of timestamps where it thinks there is a beat.
+   *
+   *  This is an asynchronous function that processes the soundfile in an offline audio context,
+   *  and sends the results to your callback function.
+   *
+   *  The process involves running the soundfile through a lowpass filter, and finding all of the
