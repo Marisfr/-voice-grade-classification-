@@ -1835,3 +1835,19 @@ soundfile = function () {
    *  and sends the results to your callback function.
    *
    *  The process involves running the soundfile through a lowpass filter, and finding all of the
+   *  peaks above the initial threshold. If the total number of peaks are below the minimum number of peaks,
+   *  it decreases the threshold and re-runs the analysis until either minPeaks or minThreshold are reached.
+   *
+   *  @method  processPeaks
+   *  @param  {Function} callback       a function to call once this data is returned
+   *  @param  {Number}   [initThreshold] initial threshold defaults to 0.9
+   *  @param  {Number}   [minThreshold]   minimum threshold defaults to 0.22
+   *  @param  {Number}   [minPeaks]       minimum number of peaks defaults to 200
+   *  @return {Array}                  Array of timestamped peaks
+   */
+  p5.SoundFile.prototype.processPeaks = function (callback, _initThreshold, _minThreshold, _minPeaks) {
+    var bufLen = this.buffer.length;
+    var sampleRate = this.buffer.sampleRate;
+    var buffer = this.buffer;
+    var allPeaks = [];
+    var initialThreshold = _initThreshold || 0
