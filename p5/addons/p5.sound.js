@@ -1850,4 +1850,24 @@ soundfile = function () {
     var sampleRate = this.buffer.sampleRate;
     var buffer = this.buffer;
     var allPeaks = [];
-    var initialThreshold = _initThreshold || 0
+    var initialThreshold = _initThreshold || 0.9, threshold = initialThreshold, minThreshold = _minThreshold || 0.22, minPeaks = _minPeaks || 200;
+    // Create offline context
+    var offlineContext = new window.OfflineAudioContext(1, bufLen, sampleRate);
+    // create buffer source
+    var source = offlineContext.createBufferSource();
+    source.buffer = buffer;
+    // Create filter. TO DO: allow custom setting of filter
+    var filter = offlineContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    source.connect(filter);
+    filter.connect(offlineContext.destination);
+    // start playing at time:0
+    source.start(0);
+    offlineContext.startRendering();
+    // Render the song
+    // act on the result
+    offlineContext.oncomplete = function (e) {
+      var filteredBuffer = e.renderedBuffer;
+      var bufferData = filteredBuffer.getChannelData(0);
+      // step 1:
+      // create Peak instances, add them to array, with stren
