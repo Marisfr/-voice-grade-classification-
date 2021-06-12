@@ -2001,4 +2001,35 @@ soundfile = function () {
     peaksAtTopTempo = peaksAtTopTempo.filter(function (peakTime, index, arr) {
       var dif = arr[index + 1] - peakTime;
       if (dif > 0.01) {
-        retu
+        return true;
+      }
+    });
+    return peaksAtTopTempo;
+  }
+  // helper function for processPeaks
+  function mapTempo(theoreticalTempo) {
+    // these scenarios create infinite while loop
+    if (!isFinite(theoreticalTempo) || theoreticalTempo === 0) {
+      return;
+    }
+    // Adjust the tempo to fit within the 90-180 BPM range
+    while (theoreticalTempo < 90)
+      theoreticalTempo *= 2;
+    while (theoreticalTempo > 180 && theoreticalTempo > 90)
+      theoreticalTempo /= 2;
+    return theoreticalTempo;
+  }
+  /*** SCHEDULE EVENTS ***/
+  // Cue inspired by JavaScript setTimeout, and the
+  // Tone.js Transport Timeline Event, MIT License Yotam Mann 2015 tonejs.org
+  var Cue = function (callback, time, id, val) {
+    this.callback = callback;
+    this.time = time;
+    this.id = id;
+    this.val = val;
+  };
+  /**
+   *  Schedule events to trigger every time a MediaElement
+   *  (audio/video) reaches a playback cue point.
+   *
+   *  Accepts a callback function, a time (in sec
