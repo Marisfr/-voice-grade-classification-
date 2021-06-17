@@ -2032,4 +2032,23 @@ soundfile = function () {
    *  Schedule events to trigger every time a MediaElement
    *  (audio/video) reaches a playback cue point.
    *
-   *  Accepts a callback function, a time (in sec
+   *  Accepts a callback function, a time (in seconds) at which to trigger
+   *  the callback, and an optional parameter for the callback.
+   *
+   *  Time will be passed as the first parameter to the callback function,
+   *  and param will be the second parameter.
+   *
+   *
+   *  @method  addCue
+   *  @param {Number}   time     Time in seconds, relative to this media
+   *                             element's playback. For example, to trigger
+   *                             an event every time playback reaches two
+   *                             seconds, pass in the number 2. This will be
+   *                             passed as the first parameter to
+   *                             the callback function.
+   *  @param {Function} callback Name of a function that will be
+   *                             called at the given time. The callback will
+   *                             receive time and (optionally) param as its
+   *                             two parameters.
+   *  @param {Object} [value]    An object to be passed as the
+   
