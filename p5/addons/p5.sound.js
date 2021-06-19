@@ -2205,4 +2205,34 @@ amplitude = function () {
     // the variables to return
     this.volume = 0;
     this.average = 0;
-    this.stereoV
+    this.stereoVol = [
+      0,
+      0
+    ];
+    this.stereoAvg = [
+      0,
+      0
+    ];
+    this.stereoVolNorm = [
+      0,
+      0
+    ];
+    this.volMax = 0.001;
+    this.normalize = false;
+    this.processor.onaudioprocess = this._audioProcess.bind(this);
+    this.processor.connect(this.output);
+    this.output.gain.value = 0;
+    // this may only be necessary because of a Chrome bug
+    this.output.connect(this.audiocontext.destination);
+    // connect to p5sound master output by default, unless set by input()
+    p5sound.meter.connect(this.processor);
+    // add this p5.SoundFile to the soundArray
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Connects to the p5sound instance (master output) by default.
+   *  Optionally, you can pass in a specific source (i.e. a soundfile).
+   *
+   *  @method setInput
+   *  @param {soundObject|undefined} [snd] set the sound source
+   *                                       (optional, defa
