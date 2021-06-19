@@ -2140,4 +2140,38 @@ soundfile = function () {
       var callbackTime = cue.time;
       var val = cue.val;
       if (this._prevTime < callbackTime && callbackTime <= playbackTime) {
-        // pass the scheduled callbackTime as parameter 
+        // pass the scheduled callbackTime as parameter to the callback
+        cue.callback(val);
+      }
+    }
+    this._prevTime = playbackTime;
+  };
+}(sndcore, errorHandler, master, helpers);
+var amplitude;
+'use strict';
+amplitude = function () {
+  var p5sound = master;
+  /**
+   *  Amplitude measures volume between 0.0 and 1.0.
+   *  Listens to all p5sound by default, or use setInput()
+   *  to listen to a specific sound source. Accepts an optional
+   *  smoothing value, which defaults to 0.
+   *
+   *  @class p5.Amplitude
+   *  @constructor
+   *  @param {Number} [smoothing] between 0.0 and .999 to smooth
+   *                             amplitude readings (defaults to 0)
+   *  @example
+   *  <div><code>
+   *  var sound, amplitude, cnv;
+   *
+   *  function preload(){
+   *    sound = loadSound('assets/beat.mp3');
+   *  }
+   *  function setup() {
+   *    cnv = createCanvas(100,100);
+   *    amplitude = new p5.Amplitude();
+   *
+   *    // start / stop the sound when canvas is clicked
+   *    cnv.mouseClicked(function() {
+   *      if 
