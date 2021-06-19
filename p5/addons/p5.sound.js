@@ -2174,4 +2174,35 @@ amplitude = function () {
    *
    *    // start / stop the sound when canvas is clicked
    *    cnv.mouseClicked(function() {
-   *      if 
+   *      if (sound.isPlaying() ){
+   *        sound.stop();
+   *      } else {
+   *        sound.play();
+   *      }
+   *    });
+   *  }
+   *  function draw() {
+   *    background(0);
+   *    fill(255);
+   *    var level = amplitude.getLevel();
+   *    var size = map(level, 0, 1, 0, 200);
+   *    ellipse(width/2, height/2, size, size);
+   *  }
+   *
+   *  </code></div>
+   */
+  p5.Amplitude = function (smoothing) {
+    // Set to 2048 for now. In future iterations, this should be inherited or parsed from p5sound's default
+    this.bufferSize = 2048;
+    // set audio context
+    this.audiocontext = p5sound.audiocontext;
+    this.processor = this.audiocontext.createScriptProcessor(this.bufferSize, 2, 1);
+    // for connections
+    this.input = this.processor;
+    this.output = this.audiocontext.createGain();
+    // smoothing defaults to 0
+    this.smoothing = smoothing || 0;
+    // the variables to return
+    this.volume = 0;
+    this.average = 0;
+    this.stereoV
