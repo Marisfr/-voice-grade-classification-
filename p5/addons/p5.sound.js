@@ -2235,4 +2235,36 @@ amplitude = function () {
    *
    *  @method setInput
    *  @param {soundObject|undefined} [snd] set the sound source
-   *                                       (optional, defa
+   *                                       (optional, defaults to
+   *                                       master output)
+   *  @param {Number|undefined} [smoothing] a range between 0.0 and 1.0
+   *                                        to smooth amplitude readings
+   *  @example
+   *  <div><code>
+   *  function preload(){
+   *    sound1 = loadSound('assets/beat.mp3');
+   *    sound2 = loadSound('assets/drum.mp3');
+   *  }
+   *  function setup(){
+   *    amplitude = new p5.Amplitude();
+   *    sound1.play();
+   *    sound2.play();
+   *    amplitude.setInput(sound2);
+   *  }
+   *  function draw() {
+   *    background(0);
+   *    fill(255);
+   *    var level = amplitude.getLevel();
+   *    var size = map(level, 0, 1, 0, 200);
+   *    ellipse(width/2, height/2, size, size);
+   *  }
+   *  function mouseClicked(){
+   *    sound1.stop();
+   *    sound2.stop();
+   *  }
+   *  </code></div>
+   */
+  p5.Amplitude.prototype.setInput = function (source, smoothing) {
+    p5sound.meter.disconnect();
+    if (smoothing) {
+      this.smo
