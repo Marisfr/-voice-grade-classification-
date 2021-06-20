@@ -2267,4 +2267,34 @@ amplitude = function () {
   p5.Amplitude.prototype.setInput = function (source, smoothing) {
     p5sound.meter.disconnect();
     if (smoothing) {
-      this.smo
+      this.smoothing = smoothing;
+    }
+    // connect to the master out of p5s instance if no snd is provided
+    if (source == null) {
+      console.log('Amplitude input source is not ready! Connecting to master output instead');
+      p5sound.meter.connect(this.processor);
+    } else if (source instanceof p5.Signal) {
+      source.output.connect(this.processor);
+    } else if (source) {
+      source.connect(this.processor);
+      this.processor.disconnect();
+      this.processor.connect(this.output);
+    } else {
+      p5sound.meter.connect(this.processor);
+    }
+  };
+  p5.Amplitude.prototype.connect = function (unit) {
+    if (unit) {
+      if (unit.hasOwnProperty('input')) {
+        this.output.connect(unit.input);
+      } else {
+        this.output.connect(unit);
+      }
+    } else {
+      this.output.connect(this.panner.connect(p5sound.input));
+    }
+  };
+  p5.Amplitude.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  // TO DO make this stereo / depen
