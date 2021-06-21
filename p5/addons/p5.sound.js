@@ -2297,4 +2297,26 @@ amplitude = function () {
   p5.Amplitude.prototype.disconnect = function () {
     this.output.disconnect();
   };
-  // TO DO make this stereo / depen
+  // TO DO make this stereo / dependent on # of audio channels
+  p5.Amplitude.prototype._audioProcess = function (event) {
+    for (var channel = 0; channel < event.inputBuffer.numberOfChannels; channel++) {
+      var inputBuffer = event.inputBuffer.getChannelData(channel);
+      var bufLength = inputBuffer.length;
+      var total = 0;
+      var sum = 0;
+      var x;
+      for (var i = 0; i < bufLength; i++) {
+        x = inputBuffer[i];
+        if (this.normalize) {
+          total += Math.max(Math.min(x / this.volMax, 1), -1);
+          sum += Math.max(Math.min(x / this.volMax, 1), -1) * Math.max(Math.min(x / this.volMax, 1), -1);
+        } else {
+          total += x;
+          sum += x * x;
+        }
+      }
+      var average = total / bufLength;
+      // ... then take the square root of the sum.
+      var rms = Math.sqrt(sum / bufLength);
+      this.stereoVol[channel] = Math.max(rms, this.stereoVol[channel] * this.smoothing);
+      this.stereoAvg[channel] = Math.max(average, 
