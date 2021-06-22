@@ -2319,4 +2319,25 @@ amplitude = function () {
       // ... then take the square root of the sum.
       var rms = Math.sqrt(sum / bufLength);
       this.stereoVol[channel] = Math.max(rms, this.stereoVol[channel] * this.smoothing);
-      this.stereoAvg[channel] = Math.max(average, 
+      this.stereoAvg[channel] = Math.max(average, this.stereoVol[channel] * this.smoothing);
+      this.volMax = Math.max(this.stereoVol[channel], this.volMax);
+    }
+    // add volume from all channels together
+    var self = this;
+    var volSum = this.stereoVol.reduce(function (previousValue, currentValue, index) {
+      self.stereoVolNorm[index - 1] = Math.max(Math.min(self.stereoVol[index - 1] / self.volMax, 1), 0);
+      self.stereoVolNorm[index] = Math.max(Math.min(self.stereoVol[index] / self.volMax, 1), 0);
+      return previousValue + currentValue;
+    });
+    // volume is average of channels
+    this.volume = volSum / this.stereoVol.length;
+    // normalized value
+    this.volNorm = Math.max(Math.min(this.volume / this.volMax, 1), 0);
+  };
+  /**
+   *  Returns a single Amplitude reading at the moment it is called.
+   *  For continuous readings, run in the draw loop.
+   *
+   *  @method getLevel
+   *  @param {Number} [channel] Optionally return only channel 0 (left) or 1 (right)
+   *  @return {Number}       Amplitude as a number between
