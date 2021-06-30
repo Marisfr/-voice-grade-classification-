@@ -2340,4 +2340,41 @@ amplitude = function () {
    *
    *  @method getLevel
    *  @param {Number} [channel] Optionally return only channel 0 (left) or 1 (right)
-   *  @return {Number}       Amplitude as a number between
+   *  @return {Number}       Amplitude as a number between 0.0 and 1.0
+   *  @example
+   *  <div><code>
+   *  function preload(){
+   *    sound = loadSound('assets/beat.mp3');
+   *  }
+   *  function setup() {
+   *    amplitude = new p5.Amplitude();
+   *    sound.play();
+   *  }
+   *  function draw() {
+   *    background(0);
+   *    fill(255);
+   *    var level = amplitude.getLevel();
+   *    var size = map(level, 0, 1, 0, 200);
+   *    ellipse(width/2, height/2, size, size);
+   *  }
+   *  function mouseClicked(){
+   *    sound.stop();
+   *  }
+   *  </code></div>
+   */
+  p5.Amplitude.prototype.getLevel = function (channel) {
+    if (typeof channel !== 'undefined') {
+      if (this.normalize) {
+        return this.stereoVolNorm[channel];
+      } else {
+        return this.stereoVol[channel];
+      }
+    } else if (this.normalize) {
+      return this.volNorm;
+    } else {
+      return this.volume;
+    }
+  };
+  /**
+   * Determines whether the results of Amplitude.process() will be
+   * Normalized. To normalize, Amplitude finds the differe
