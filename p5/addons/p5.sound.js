@@ -2377,4 +2377,32 @@ amplitude = function () {
   };
   /**
    * Determines whether the results of Amplitude.process() will be
-   * Normalized. To normalize, Amplitude finds the differe
+   * Normalized. To normalize, Amplitude finds the difference the
+   * loudest reading it has processed and the maximum amplitude of
+   * 1.0. Amplitude adds this difference to all values to produce
+   * results that will reliably map between 0.0 and 1.0. However,
+   * if a louder moment occurs, the amount that Normalize adds to
+   * all the values will change. Accepts an optional boolean parameter
+   * (true or false). Normalizing is off by default.
+   *
+   * @method toggleNormalize
+   * @param {boolean} [boolean] set normalize to true (1) or false (0)
+   */
+  p5.Amplitude.prototype.toggleNormalize = function (bool) {
+    if (typeof bool === 'boolean') {
+      this.normalize = bool;
+    } else {
+      this.normalize = !this.normalize;
+    }
+  };
+  /**
+   *  Smooth Amplitude analysis by averaging with the last analysis
+   *  frame. Off by default.
+   *
+   *  @method smooth
+   *  @param {Number} set smoothing from 0.0 <= 1
+   */
+  p5.Amplitude.prototype.smooth = function (s) {
+    if (s >= 0 && s < 1) {
+      this.smoothing = s;
+    } el
