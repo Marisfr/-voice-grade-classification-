@@ -2405,4 +2405,31 @@ amplitude = function () {
   p5.Amplitude.prototype.smooth = function (s) {
     if (s >= 0 && s < 1) {
       this.smoothing = s;
-    } el
+    } else {
+      console.log('Error: smoothing must be between 0 and 1');
+    }
+  };
+  p5.Amplitude.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.input.disconnect();
+    this.output.disconnect();
+    this.input = this.processor = undefined;
+    this.output = undefined;
+  };
+}(master);
+var fft;
+'use strict';
+fft = function () {
+  var p5sound = master;
+  /**
+   *  <p>FFT (Fast Fourier Transform) is an analysis algorithm that
+   *  isolates individual
+   *  <a href="https://en.wikipedia.org/wiki/Audio_frequency">
+   *  audio frequencies</a> within a waveform.</p>
+   *
+   *  <p>Once instantiated, a p5.FFT object can return an array based on
+   *  two types of analyses: <br> • <code>FFT.waveform()</code> computes
+   *  amplitude values along the time domain. The array indices correspond
+   *  to samples across a brief moment 
