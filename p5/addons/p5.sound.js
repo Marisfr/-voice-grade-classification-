@@ -2432,4 +2432,19 @@ fft = function () {
    *  <p>Once instantiated, a p5.FFT object can return an array based on
    *  two types of analyses: <br> • <code>FFT.waveform()</code> computes
    *  amplitude values along the time domain. The array indices correspond
-   *  to samples across a brief moment 
+   *  to samples across a brief moment in time. Each value represents
+   *  amplitude of the waveform at that sample of time.<br>
+   *  • <code>FFT.analyze() </code> computes amplitude values along the
+   *  frequency domain. The array indices correspond to frequencies (i.e.
+   *  pitches), from the lowest to the highest that humans can hear. Each
+   *  value represents amplitude at that slice of the frequency spectrum.
+   *  Use with <code>getEnergy()</code> to measure amplitude at specific
+   *  frequencies, or within a range of frequencies. </p>
+   *
+   *  <p>FFT analyzes a very short snapshot of sound called a sample
+   *  buffer. It returns an array of amplitude measurements, referred
+   *  to as <code>bins</code>. The array is 1024 bins long by default.
+   *  You can change the bin array length, but it must be a power of 2
+   *  between 16 and 1024 in order for the FFT algorithm to function
+   *  correctly. The actual size of the FFT buffer is twice the
+   *  numbe
