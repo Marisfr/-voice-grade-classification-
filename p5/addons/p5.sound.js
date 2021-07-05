@@ -2510,4 +2510,39 @@ fft = function () {
    *  </code></div>
    */
   p5.FFT = function (smoothing, bins) {
-    this.input = this.analyser = p5sound.audiocontext.createAnalyser()
+    this.input = this.analyser = p5sound.audiocontext.createAnalyser();
+    Object.defineProperties(this, {
+      bins: {
+        get: function () {
+          return this.analyser.fftSize / 2;
+        },
+        set: function (b) {
+          this.analyser.fftSize = b * 2;
+        },
+        configurable: true,
+        enumerable: true
+      },
+      smoothing: {
+        get: function () {
+          return this.analyser.smoothingTimeConstant;
+        },
+        set: function (s) {
+          this.analyser.smoothingTimeConstant = s;
+        },
+        configurable: true,
+        enumerable: true
+      }
+    });
+    // set default smoothing and bins
+    this.smooth(smoothing);
+    this.bins = bins || 1024;
+    // default connections to p5sound fftMeter
+    p5sound.fftMeter.connect(this.analyser);
+    this.freqDomain = new Uint8Array(this.analyser.frequencyBinCount);
+    this.timeDomain = new Uint8Array(this.analyser.frequencyBinCount);
+    // predefined frequency ranges, these will be tweakable
+    this.bass = [
+      20,
+      140
+    ];
+    thi
