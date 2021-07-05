@@ -2447,4 +2447,35 @@ fft = function () {
    *  You can change the bin array length, but it must be a power of 2
    *  between 16 and 1024 in order for the FFT algorithm to function
    *  correctly. The actual size of the FFT buffer is twice the
-   *  numbe
+   *  number of bins, so given a standard sample rate, the buffer is
+   *  2048/44100 seconds long.</p>
+   *
+   *
+   *  @class p5.FFT
+   *  @constructor
+   *  @param {Number} [smoothing]   Smooth results of Freq Spectrum.
+   *                                0.0 < smoothing < 1.0.
+   *                                Defaults to 0.8.
+   *  @param {Number} [bins]    Length of resulting array.
+   *                            Must be a power of two between
+   *                            16 and 1024. Defaults to 1024.
+   *  @example
+   *  <div><code>
+   *  function preload(){
+   *    sound = loadSound('assets/Damscray_DancingTiger.mp3');
+   *  }
+   *
+   *  function setup(){
+   *    var cnv = createCanvas(100,100);
+   *    cnv.mouseClicked(togglePlay);
+   *    fft = new p5.FFT();
+   *    sound.amp(0.2);
+   *  }
+   *
+   *  function draw(){
+   *    background(0);
+   *
+   *    var spectrum = fft.analyze();
+   *    noStroke();
+   *    fill(0,255,0); // spectrum is green
+   *    for (var i = 0; i
