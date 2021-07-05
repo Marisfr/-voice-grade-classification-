@@ -2545,4 +2545,44 @@ fft = function () {
       20,
       140
     ];
-    thi
+    this.lowMid = [
+      140,
+      400
+    ];
+    this.mid = [
+      400,
+      2600
+    ];
+    this.highMid = [
+      2600,
+      5200
+    ];
+    this.treble = [
+      5200,
+      14000
+    ];
+    // add this p5.SoundFile to the soundArray
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Set the input source for the FFT analysis. If no source is
+   *  provided, FFT will analyze all sound in the sketch.
+   *
+   *  @method  setInput
+   *  @param {Object} [source] p5.sound object (or web audio API source node)
+   */
+  p5.FFT.prototype.setInput = function (source) {
+    if (!source) {
+      p5sound.fftMeter.connect(this.analyser);
+    } else {
+      if (source.output) {
+        source.output.connect(this.analyser);
+      } else if (source.connect) {
+        source.connect(this.analyser);
+      }
+      p5sound.fftMeter.disconnect();
+    }
+  };
+  /**
+   *  Returns an array of amplitude values (between -1.0 and +1.0) that represent
+   *  a snapshot of amplitude readings in a single
