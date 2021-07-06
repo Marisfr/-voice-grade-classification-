@@ -2611,4 +2611,29 @@ fft = function () {
       }
     }
     // getFloatFrequencyData doesnt work in Safari as of 5/2015
-    if (mode && !p5.protot
+    if (mode && !p5.prototype._isSafari()) {
+      timeToFloat(this, this.timeDomain);
+      this.analyser.getFloatTimeDomainData(this.timeDomain);
+      return this.timeDomain;
+    } else {
+      timeToInt(this, this.timeDomain);
+      this.analyser.getByteTimeDomainData(this.timeDomain);
+      var normalArray = new Array();
+      for (var j = 0; j < this.timeDomain.length; j++) {
+        var scaled = p5.prototype.map(this.timeDomain[j], 0, 255, -1, 1);
+        normalArray.push(scaled);
+      }
+      return normalArray;
+    }
+  };
+  /**
+   *  Returns an array of amplitude values (between 0 and 255)
+   *  across the frequency spectrum. Length is equal to FFT bins
+   *  (1024 by default). The array indices correspond to frequencies
+   *  (i.e. pitches), from the lowest to the highest that humans can
+   *  hear. Each value represents amplitude at that slice of the
+   *  frequency spectrum. Must be called prior to using
+   *  <code>getEnergy()</code>.
+   *
+   *  @method analyze
+   *  @param {Number} [bins]    Must be a power of
