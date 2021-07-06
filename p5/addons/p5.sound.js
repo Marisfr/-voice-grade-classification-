@@ -2585,4 +2585,30 @@ fft = function () {
   };
   /**
    *  Returns an array of amplitude values (between -1.0 and +1.0) that represent
-   *  a snapshot of amplitude readings in a single
+   *  a snapshot of amplitude readings in a single buffer. Length will be
+   *  equal to bins (defaults to 1024). Can be used to draw the waveform
+   *  of a sound.
+   *
+   *  @method waveform
+   *  @param {Number} [bins]    Must be a power of two between
+   *                            16 and 1024. Defaults to 1024.
+   *  @param {String} [precision] If any value is provided, will return results
+   *                              in a Float32 Array which is more precise
+   *                              than a regular array.
+   *  @return {Array}  Array    Array of amplitude values (-1 to 1)
+   *                            over time. Array length = bins.
+   *
+   */
+  p5.FFT.prototype.waveform = function () {
+    var bins, mode, normalArray;
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] === 'number') {
+        bins = arguments[i];
+        this.analyser.fftSize = bins * 2;
+      }
+      if (typeof arguments[i] === 'string') {
+        mode = arguments[i];
+      }
+    }
+    // getFloatFrequencyData doesnt work in Safari as of 5/2015
+    if (mode && !p5.protot
