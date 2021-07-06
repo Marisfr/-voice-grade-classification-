@@ -2636,4 +2636,35 @@ fft = function () {
    *  <code>getEnergy()</code>.
    *
    *  @method analyze
-   *  @param {Number} [bins]    Must be a power of
+   *  @param {Number} [bins]    Must be a power of two between
+   *                             16 and 1024. Defaults to 1024.
+   *  @param {Number} [scale]    If "dB," returns decibel
+   *                             float measurements between
+   *                             -140 and 0 (max).
+   *                             Otherwise returns integers from 0-255.
+   *  @return {Array} spectrum    Array of energy (amplitude/volume)
+   *                              values across the frequency spectrum.
+   *                              Lowest energy (silence) = 0, highest
+   *                              possible is 255.
+   *  @example
+   *  <div><code>
+   *  var osc;
+   *  var fft;
+   *
+   *  function setup(){
+   *    createCanvas(100,100);
+   *    osc = new p5.Oscillator();
+   *    osc.amp(0);
+   *    osc.start();
+   *    fft = new p5.FFT();
+   *  }
+   *
+   *  function draw(){
+   *    background(0);
+   *
+   *    var freq = map(mouseX, 0, 800, 20, 15000);
+   *    freq = constrain(freq, 1, 20000);
+   *    osc.freq(freq);
+   *
+   *    var spectrum = fft.analyze();
+   *
