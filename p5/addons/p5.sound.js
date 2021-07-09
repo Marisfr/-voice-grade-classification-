@@ -2725,4 +2725,21 @@ fft = function () {
    *  frequencies. Accepts Number(s) corresponding
    *  to frequency (in Hz), or a String corresponding to predefined
    *  frequency ranges ("bass", "lowMid", "mid", "highMid", "treble").
-   *  Returns a ran
+   *  Returns a range between 0 (no energy/volume at that frequency) and
+   *  255 (maximum energy).
+   *  <em>NOTE: analyze() must be called prior to getEnergy(). Analyze()
+   *  tells the FFT to analyze frequency data, and getEnergy() uses
+   *  the results determine the value at a specific frequency or
+   *  range of frequencies.</em></p>
+   *
+   *  @method  getEnergy
+   *  @param  {Number|String} frequency1   Will return a value representing
+   *                                energy at this frequency. Alternately,
+   *                                the strings "bass", "lowMid" "mid",
+   *                                "highMid", and "treble" will return
+   *                                predefined frequency ranges.
+   *  @param  {Number} [frequency2] If a second frequency is given,
+   *                                will return average amount of
+   *                                energy that exists between the
+   *                                two frequencies.
+   *  @return {Number}   Energy   Energy (volume/a
