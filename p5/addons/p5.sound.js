@@ -2667,4 +2667,38 @@ fft = function () {
    *    osc.freq(freq);
    *
    *    var spectrum = fft.analyze();
+   *    noStroke();
+   *    fill(0,255,0); // spectrum is green
+   *    for (var i = 0; i< spectrum.length; i++){
+   *      var x = map(i, 0, spectrum.length, 0, width);
+   *      var h = -height + map(spectrum[i], 0, 255, height, 0);
+   *      rect(x, height, width / spectrum.length, h );
+   *    }
    *
+   *    stroke(255);
+   *    text('Freq: ' + round(freq)+'Hz', 10, 10);
+   *
+   *    isMouseOverCanvas();
+   *  }
+   *
+   *  // only play sound when mouse is over canvas
+   *  function isMouseOverCanvas() {
+   *    var mX = mouseX, mY = mouseY;
+   *    if (mX > 0 && mX < width && mY < height && mY > 0) {
+   *      osc.amp(0.5, 0.2);
+   *    } else {
+   *      osc.amp(0, 0.2);
+   *    }
+   *  }
+   *  </code></div>
+   *
+   *
+   */
+  p5.FFT.prototype.analyze = function () {
+    var mode;
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] === 'number') {
+        this.bins = arguments[i];
+        this.analyser.fftSize = this.bins * 2;
+      }
+      if (typeof arg
