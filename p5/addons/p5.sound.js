@@ -2701,4 +2701,28 @@ fft = function () {
         this.bins = arguments[i];
         this.analyser.fftSize = this.bins * 2;
       }
-      if (typeof arg
+      if (typeof arguments[i] === 'string') {
+        mode = arguments[i];
+      }
+    }
+    if (mode && mode.toLowerCase() === 'db') {
+      freqToFloat(this);
+      this.analyser.getFloatFrequencyData(this.freqDomain);
+      return this.freqDomain;
+    } else {
+      freqToInt(this, this.freqDomain);
+      this.analyser.getByteFrequencyData(this.freqDomain);
+      var normalArray = Array.apply([], this.freqDomain);
+      normalArray.length === this.analyser.fftSize;
+      normalArray.constructor === Array;
+      return normalArray;
+    }
+  };
+  /**
+   *  Returns the amount of energy (volume) at a specific
+   *  <a href="https://en.wikipedia.org/wiki/Audio_frequency" target="_blank">
+   *  frequency</a>, or the average amount of energy between two
+   *  frequencies. Accepts Number(s) corresponding
+   *  to frequency (in Hz), or a String corresponding to predefined
+   *  frequency ranges ("bass", "lowMid", "mid", "highMid", "treble").
+   *  Returns a ran
