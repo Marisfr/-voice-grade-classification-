@@ -2768,4 +2768,30 @@ fft = function () {
       throw 'invalid input for getEnergy()';
     } else if (!frequency2) {
       // if only one parameter:
-      var index = Math.round(frequency1 / nyquist * thi
+      var index = Math.round(frequency1 / nyquist * this.freqDomain.length);
+      return this.freqDomain[index];
+    } else if (frequency1 && frequency2) {
+      // if two parameters:
+      // if second is higher than first
+      if (frequency1 > frequency2) {
+        var swap = frequency2;
+        frequency2 = frequency1;
+        frequency1 = swap;
+      }
+      var lowIndex = Math.round(frequency1 / nyquist * this.freqDomain.length);
+      var highIndex = Math.round(frequency2 / nyquist * this.freqDomain.length);
+      var total = 0;
+      var numFrequencies = 0;
+      // add up all of the values for the frequencies
+      for (var i = lowIndex; i <= highIndex; i++) {
+        total += this.freqDomain[i];
+        numFrequencies += 1;
+      }
+      // divide by total number of frequencies
+      var toReturn = total / numFrequencies;
+      return toReturn;
+    } else {
+      throw 'invalid input for getEnergy()';
+    }
+  };
+  // compatability with v.012, changed to getEnergy in v.0121. Will
