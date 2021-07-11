@@ -2742,4 +2742,30 @@ fft = function () {
    *                                will return average amount of
    *                                energy that exists between the
    *                                two frequencies.
-   *  @return {Number}   Energy   Energy (volume/a
+   *  @return {Number}   Energy   Energy (volume/amplitude) from
+   *                              0 and 255.
+   *
+   */
+  p5.FFT.prototype.getEnergy = function (frequency1, frequency2) {
+    var nyquist = p5sound.audiocontext.sampleRate / 2;
+    if (frequency1 === 'bass') {
+      frequency1 = this.bass[0];
+      frequency2 = this.bass[1];
+    } else if (frequency1 === 'lowMid') {
+      frequency1 = this.lowMid[0];
+      frequency2 = this.lowMid[1];
+    } else if (frequency1 === 'mid') {
+      frequency1 = this.mid[0];
+      frequency2 = this.mid[1];
+    } else if (frequency1 === 'highMid') {
+      frequency1 = this.highMid[0];
+      frequency2 = this.highMid[1];
+    } else if (frequency1 === 'treble') {
+      frequency1 = this.treble[0];
+      frequency2 = this.treble[1];
+    }
+    if (typeof frequency1 !== 'number') {
+      throw 'invalid input for getEnergy()';
+    } else if (!frequency2) {
+      // if only one parameter:
+      var index = Math.round(frequency1 / nyquist * thi
