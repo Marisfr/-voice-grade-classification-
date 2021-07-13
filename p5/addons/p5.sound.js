@@ -2794,4 +2794,36 @@ fft = function () {
       throw 'invalid input for getEnergy()';
     }
   };
-  // compatability with v.012, changed to getEnergy in v.0121. Will
+  // compatability with v.012, changed to getEnergy in v.0121. Will be deprecated...
+  p5.FFT.prototype.getFreq = function (freq1, freq2) {
+    console.log('getFreq() is deprecated. Please use getEnergy() instead.');
+    var x = this.getEnergy(freq1, freq2);
+    return x;
+  };
+  /**
+     *  Returns the
+     *  <a href="http://en.wikipedia.org/wiki/Spectral_centroid" target="_blank">
+     *  spectral centroid</a> of the input signal.
+     *  <em>NOTE: analyze() must be called prior to getCentroid(). Analyze()
+     *  tells the FFT to analyze frequency data, and getCentroid() uses
+     *  the results determine the spectral centroid.</em></p>
+     *
+     *  @method  getCentroid
+     *  @return {Number}   Spectral Centroid Frequency   Frequency of the spectral centroid in Hz.
+     *
+     *
+     * @example
+     *  <div><code>
+     *
+     *
+     *function setup(){
+     *  cnv = createCanvas(800,400);
+     *  sound = new p5.AudioIn();
+     *  sound.start();
+     *  fft = new p5.FFT();
+     *  sound.connect(fft);
+     *}
+     *
+     *
+     *function draw(){
+    
