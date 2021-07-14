@@ -2858,4 +2858,32 @@ fft = function () {
      *
      *  stroke(255,0,0); // the line showing where the centroid is will be red
      *
- 
+     *  rect(centroidplot, 0, width / spectrum.length, height)
+     *  noStroke();
+     *  fill(255,255,255);  // text is white
+     *  textSize(40);
+     *  text("centroid: "+round(spectralCentroid)+" Hz", 10, 40);
+     *}
+     * </code></div>
+     */
+  p5.FFT.prototype.getCentroid = function () {
+    var nyquist = p5sound.audiocontext.sampleRate / 2;
+    var cumulative_sum = 0;
+    var centroid_normalization = 0;
+    for (var i = 0; i < this.freqDomain.length; i++) {
+      cumulative_sum += i * this.freqDomain[i];
+      centroid_normalization += this.freqDomain[i];
+    }
+    var mean_freq_index = 0;
+    if (centroid_normalization !== 0) {
+      mean_freq_index = cumulative_sum / centroid_normalization;
+    }
+    var spec_centroid_freq = mean_freq_index * (nyquist / this.freqDomain.length);
+    return spec_centroid_freq;
+  };
+  /**
+   *  Smooth FFT analysis by averaging with the last analysis frame.
+   *
+   *  @method smooth
+   *  @param {Number} smoothing    0.0 < smoothing < 1.0.
+   *                               
