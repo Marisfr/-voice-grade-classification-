@@ -2886,4 +2886,30 @@ fft = function () {
    *
    *  @method smooth
    *  @param {Number} smoothing    0.0 < smoothing < 1.0.
-   *                               
+   *                               Defaults to 0.8.
+   */
+  p5.FFT.prototype.smooth = function (s) {
+    if (typeof s !== 'undefined') {
+      this.smoothing = s;
+    }
+    return this.smoothing;
+  };
+  p5.FFT.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.analyser.disconnect();
+    this.analyser = undefined;
+  };
+  /**
+   *  Returns an array of average amplitude values for a given number
+   *  of frequency bands split equally. N defaults to 16.
+   *  <em>NOTE: analyze() must be called prior to linAverages(). Analyze()
+   *  tells the FFT to analyze frequency data, and linAverages() uses
+   *  the results to group them into a smaller set of averages.</em></p>
+   *
+   *  @method  linAverages
+   *  @param  {Number}  N                Number of returned frequency groups
+   *  @return {Array}   linearAverages   Array of average amplitude values for each group
+   */
+  p5.FFT.prototype.
