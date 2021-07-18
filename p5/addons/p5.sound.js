@@ -2912,4 +2912,25 @@ fft = function () {
    *  @param  {Number}  N                Number of returned frequency groups
    *  @return {Array}   linearAverages   Array of average amplitude values for each group
    */
-  p5.FFT.prototype.
+  p5.FFT.prototype.linAverages = function (N) {
+    var N = N || 16;
+    // This prevents undefined, null or 0 values of N
+    var spectrum = this.freqDomain;
+    var spectrumLength = spectrum.length;
+    var spectrumStep = Math.floor(spectrumLength / N);
+    var linearAverages = new Array(N);
+    // Keep a second index for the current average group and place the values accordingly
+    // with only one loop in the spectrum data
+    var groupIndex = 0;
+    for (var specIndex = 0; specIndex < spectrumLength; specIndex++) {
+      linearAverages[groupIndex] = linearAverages[groupIndex] !== undefined ? (linearAverages[groupIndex] + spectrum[specIndex]) / 2 : spectrum[specIndex];
+      // Increase the group index when the last element of the group is processed
+      if (specIndex % spectrumStep === spectrumStep - 1) {
+        groupIndex++;
+      }
+    }
+    return linearAverages;
+  };
+  /**
+   *  Returns an array of average amplitude values of the spectrum, for a given
+   *  se
