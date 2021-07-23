@@ -2933,4 +2933,22 @@ fft = function () {
   };
   /**
    *  Returns an array of average amplitude values of the spectrum, for a given
-   *  se
+   *  set of <a href="https://en.wikipedia.org/wiki/Octave_band" target="_blank">
+   *  Octave Bands</a>
+   *  <em>NOTE: analyze() must be called prior to logAverages(). Analyze()
+   *  tells the FFT to analyze frequency data, and logAverages() uses
+   *  the results to group them into a smaller set of averages.</em></p>
+   *
+   *  @method  logAverages
+   *  @param  {Array}   octaveBands    Array of Octave Bands objects for grouping
+   *  @return {Array}   logAverages    Array of average amplitude values for each group
+   */
+  p5.FFT.prototype.logAverages = function (octaveBands) {
+    var nyquist = p5sound.audiocontext.sampleRate / 2;
+    var spectrum = this.freqDomain;
+    var spectrumLength = spectrum.length;
+    var logAverages = new Array(octaveBands.length);
+    // Keep a second index for the current average group and place the values accordingly
+    // With only one loop in the spectrum data
+    var octaveIndex = 0;
+    for (var specIndex
