@@ -2970,4 +2970,25 @@ fft = function () {
    *  and produce less frequency groups.
    *
    *  @method   getOctaveBands
-   *  @param  {Number}  N   
+   *  @param  {Number}  N             Specifies the 1/N type of generated octave bands
+   *  @param  {Number}  fCtr0         Minimum central frequency for the lowest band
+   *  @return {Array}   octaveBands   Array of octave band objects with their bounds
+   */
+  p5.FFT.prototype.getOctaveBands = function (N, fCtr0) {
+    var N = N || 3;
+    // Default to 1/3 Octave Bands
+    var fCtr0 = fCtr0 || 15.625;
+    // Minimum central frequency, defaults to 15.625Hz
+    var octaveBands = [];
+    var lastFrequencyBand = {
+      lo: fCtr0 / Math.pow(2, 1 / (2 * N)),
+      ctr: fCtr0,
+      hi: fCtr0 * Math.pow(2, 1 / (2 * N))
+    };
+    octaveBands.push(lastFrequencyBand);
+    var nyquist = p5sound.audiocontext.sampleRate / 2;
+    while (lastFrequencyBand.hi < nyquist) {
+      var newFrequencyBand = {};
+      newFrequencyBand.lo = lastFrequencyBand.hi;
+      newFrequencyBand.ctr = lastFrequencyBand.ctr * Math.pow(2, 1 / N);
+      newFrequencyBand.hi = newFrequencyBand.ctr * Math.pow(2, 1 / (2 * N
