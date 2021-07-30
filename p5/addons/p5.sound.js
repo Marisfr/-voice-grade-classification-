@@ -2991,4 +2991,32 @@ fft = function () {
       var newFrequencyBand = {};
       newFrequencyBand.lo = lastFrequencyBand.hi;
       newFrequencyBand.ctr = lastFrequencyBand.ctr * Math.pow(2, 1 / N);
-      newFrequencyBand.hi = newFrequencyBand.ctr * Math.pow(2, 1 / (2 * N
+      newFrequencyBand.hi = newFrequencyBand.ctr * Math.pow(2, 1 / (2 * N));
+      octaveBands.push(newFrequencyBand);
+      lastFrequencyBand = newFrequencyBand;
+    }
+    return octaveBands;
+  };
+  // helper methods to convert type from float (dB) to int (0-255)
+  var freqToFloat = function (fft) {
+    if (fft.freqDomain instanceof Float32Array === false) {
+      fft.freqDomain = new Float32Array(fft.analyser.frequencyBinCount);
+    }
+  };
+  var freqToInt = function (fft) {
+    if (fft.freqDomain instanceof Uint8Array === false) {
+      fft.freqDomain = new Uint8Array(fft.analyser.frequencyBinCount);
+    }
+  };
+  var timeToFloat = function (fft) {
+    if (fft.timeDomain instanceof Float32Array === false) {
+      fft.timeDomain = new Float32Array(fft.analyser.frequencyBinCount);
+    }
+  };
+  var timeToInt = function (fft) {
+    if (fft.timeDomain instanceof Uint8Array === false) {
+      fft.timeDomain = new Uint8Array(fft.analyser.frequencyBinCount);
+    }
+  };
+}(master);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/l
