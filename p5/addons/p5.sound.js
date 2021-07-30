@@ -3019,4 +3019,35 @@ fft = function () {
     }
   };
 }(master);
-/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/l
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Tone;
+Tone_core_Tone = function () {
+  'use strict';
+  var Tone = function (inputs, outputs) {
+    if (this.isUndef(inputs) || inputs === 1) {
+      this.input = this.context.createGain();
+    } else if (inputs > 1) {
+      this.input = new Array(inputs);
+    }
+    if (this.isUndef(outputs) || outputs === 1) {
+      this.output = this.context.createGain();
+    } else if (outputs > 1) {
+      this.output = new Array(inputs);
+    }
+  };
+  Tone.prototype.set = function (params, value, rampTime) {
+    if (this.isObject(params)) {
+      rampTime = value;
+    } else if (this.isString(params)) {
+      var tmpObj = {};
+      tmpObj[params] = value;
+      params = tmpObj;
+    }
+    paramLoop:
+      for (var attr in params) {
+        value = params[attr];
+        var parent = this;
+        if (attr.indexOf('.') !== -1) {
+          var attrSplit = attr.split('.');
+          for (var i = 0; i < attrSplit.length - 1; i++) {
+     
