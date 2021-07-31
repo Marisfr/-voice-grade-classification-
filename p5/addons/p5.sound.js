@@ -3077,4 +3077,36 @@ Tone_core_Tone = function () {
             param.value = value;
           }
         } else if (param instanceof Tone) {
-          param.set(value
+          param.set(value);
+        } else if (param !== value) {
+          parent[attr] = value;
+        }
+      }
+    return this;
+  };
+  Tone.prototype.get = function (params) {
+    if (this.isUndef(params)) {
+      params = this._collectDefaults(this.constructor);
+    } else if (this.isString(params)) {
+      params = [params];
+    }
+    var ret = {};
+    for (var i = 0; i < params.length; i++) {
+      var attr = params[i];
+      var parent = this;
+      var subRet = ret;
+      if (attr.indexOf('.') !== -1) {
+        var attrSplit = attr.split('.');
+        for (var j = 0; j < attrSplit.length - 1; j++) {
+          var subAttr = attrSplit[j];
+          subRet[subAttr] = subRet[subAttr] || {};
+          subRet = subRet[subAttr];
+          parent = parent[subAttr];
+        }
+        attr = attrSplit[attrSplit.length - 1];
+      }
+      var param = parent[attr];
+      if (this.isObject(params[attr])) {
+        subRet[attr] = param.get();
+      } else if (Tone.Signal && param instanceof Tone.Signal) {
+      
