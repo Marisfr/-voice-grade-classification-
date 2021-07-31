@@ -3050,4 +3050,31 @@ Tone_core_Tone = function () {
         if (attr.indexOf('.') !== -1) {
           var attrSplit = attr.split('.');
           for (var i = 0; i < attrSplit.length - 1; i++) {
-     
+            parent = parent[attrSplit[i]];
+            if (parent instanceof Tone) {
+              attrSplit.splice(0, i + 1);
+              var innerParam = attrSplit.join('.');
+              parent.set(innerParam, value);
+              continue paramLoop;
+            }
+          }
+          attr = attrSplit[attrSplit.length - 1];
+        }
+        var param = parent[attr];
+        if (this.isUndef(param)) {
+          continue;
+        }
+        if (Tone.Signal && param instanceof Tone.Signal || Tone.Param && param instanceof Tone.Param) {
+          if (param.value !== value) {
+            if (this.isUndef(rampTime)) {
+              param.value = value;
+            } else {
+              param.rampTo(value, rampTime);
+            }
+          }
+        } else if (param instanceof AudioParam) {
+          if (param.value !== value) {
+            param.value = value;
+          }
+        } else if (param instanceof Tone) {
+          param.set(value
