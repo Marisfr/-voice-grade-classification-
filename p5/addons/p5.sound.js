@@ -3109,4 +3109,35 @@ Tone_core_Tone = function () {
       if (this.isObject(params[attr])) {
         subRet[attr] = param.get();
       } else if (Tone.Signal && param instanceof Tone.Signal) {
-      
+        subRet[attr] = param.value;
+      } else if (Tone.Param && param instanceof Tone.Param) {
+        subRet[attr] = param.value;
+      } else if (param instanceof AudioParam) {
+        subRet[attr] = param.value;
+      } else if (param instanceof Tone) {
+        subRet[attr] = param.get();
+      } else if (!this.isFunction(param) && !this.isUndef(param)) {
+        subRet[attr] = param;
+      }
+    }
+    return ret;
+  };
+  Tone.prototype._collectDefaults = function (constr) {
+    var ret = [];
+    if (!this.isUndef(constr.defaults)) {
+      ret = Object.keys(constr.defaults);
+    }
+    if (!this.isUndef(constr._super)) {
+      var superDefs = this._collectDefaults(constr._super);
+      for (var i = 0; i < superDefs.length; i++) {
+        if (ret.indexOf(superDefs[i]) === -1) {
+          ret.push(superDefs[i]);
+        }
+      }
+    }
+    return ret;
+  };
+  Tone.prototype.toString = function () {
+    for (var className in Tone) {
+      var isLetter = className[0].match(/^[A-Z]$/);
+      var sam
