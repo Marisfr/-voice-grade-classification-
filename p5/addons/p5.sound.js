@@ -3180,4 +3180,35 @@ Tone_core_Tone = function () {
       }
       this.input = null;
     }
-    if (!this.i
+    if (!this.isUndef(this.output)) {
+      if (this.output instanceof AudioNode) {
+        this.output.disconnect();
+      }
+      this.output = null;
+    }
+    return this;
+  };
+  Tone.prototype.connect = function (unit, outputNum, inputNum) {
+    if (Array.isArray(this.output)) {
+      outputNum = this.defaultArg(outputNum, 0);
+      this.output[outputNum].connect(unit, 0, inputNum);
+    } else {
+      this.output.connect(unit, outputNum, inputNum);
+    }
+    return this;
+  };
+  Tone.prototype.disconnect = function (destination, outputNum, inputNum) {
+    if (this.isArray(this.output)) {
+      if (this.isNumber(destination)) {
+        this.output[destination].disconnect();
+      } else {
+        outputNum = this.defaultArg(outputNum, 0);
+        this.output[outputNum].disconnect(destination, 0, inputNum);
+      }
+    } else {
+      this.output.disconnect.apply(this.output, arguments);
+    }
+  };
+  Tone.prototype.connectSeries = function () {
+    if (arguments.length > 1) {
+      var cu
