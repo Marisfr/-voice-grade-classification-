@@ -3140,4 +3140,44 @@ Tone_core_Tone = function () {
   Tone.prototype.toString = function () {
     for (var className in Tone) {
       var isLetter = className[0].match(/^[A-Z]$/);
-      var sam
+      var sameConstructor = Tone[className] === this.constructor;
+      if (this.isFunction(Tone[className]) && isLetter && sameConstructor) {
+        return className;
+      }
+    }
+    return 'Tone';
+  };
+  Object.defineProperty(Tone.prototype, 'numberOfInputs', {
+    get: function () {
+      if (this.input) {
+        if (this.isArray(this.input)) {
+          return this.input.length;
+        } else {
+          return 1;
+        }
+      } else {
+        return 0;
+      }
+    }
+  });
+  Object.defineProperty(Tone.prototype, 'numberOfOutputs', {
+    get: function () {
+      if (this.output) {
+        if (this.isArray(this.output)) {
+          return this.output.length;
+        } else {
+          return 1;
+        }
+      } else {
+        return 0;
+      }
+    }
+  });
+  Tone.prototype.dispose = function () {
+    if (!this.isUndef(this.input)) {
+      if (this.input instanceof AudioNode) {
+        this.input.disconnect();
+      }
+      this.input = null;
+    }
+    if (!this.i
