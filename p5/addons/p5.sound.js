@@ -3243,4 +3243,35 @@ Tone_core_Tone = function () {
   AudioNode.prototype.fan = Tone.prototype.fan;
   Tone.prototype.defaultArg = function (given, fallback) {
     if (this.isObject(given) && this.isObject(fallback)) {
-      var ret = {
+      var ret = {};
+      for (var givenProp in given) {
+        ret[givenProp] = this.defaultArg(fallback[givenProp], given[givenProp]);
+      }
+      for (var fallbackProp in fallback) {
+        ret[fallbackProp] = this.defaultArg(given[fallbackProp], fallback[fallbackProp]);
+      }
+      return ret;
+    } else {
+      return this.isUndef(given) ? fallback : given;
+    }
+  };
+  Tone.prototype.optionsObject = function (values, keys, defaults) {
+    var options = {};
+    if (values.length === 1 && this.isObject(values[0])) {
+      options = values[0];
+    } else {
+      for (var i = 0; i < keys.length; i++) {
+        options[keys[i]] = values[i];
+      }
+    }
+    if (!this.isUndef(defaults)) {
+      return this.defaultArg(options, defaults);
+    } else {
+      return options;
+    }
+  };
+  Tone.prototype.isUndef = function (val) {
+    return typeof val === 'undefined';
+  };
+  Tone.prototype.isFunction = function (val) {
+   
