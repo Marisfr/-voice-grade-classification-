@@ -3274,4 +3274,37 @@ Tone_core_Tone = function () {
     return typeof val === 'undefined';
   };
   Tone.prototype.isFunction = function (val) {
-   
+    return typeof val === 'function';
+  };
+  Tone.prototype.isNumber = function (arg) {
+    return typeof arg === 'number';
+  };
+  Tone.prototype.isObject = function (arg) {
+    return Object.prototype.toString.call(arg) === '[object Object]' && arg.constructor === Object;
+  };
+  Tone.prototype.isBoolean = function (arg) {
+    return typeof arg === 'boolean';
+  };
+  Tone.prototype.isArray = function (arg) {
+    return Array.isArray(arg);
+  };
+  Tone.prototype.isString = function (arg) {
+    return typeof arg === 'string';
+  };
+  Tone.noOp = function () {
+  };
+  Tone.prototype._readOnly = function (property) {
+    if (Array.isArray(property)) {
+      for (var i = 0; i < property.length; i++) {
+        this._readOnly(property[i]);
+      }
+    } else {
+      Object.defineProperty(this, property, {
+        writable: false,
+        enumerable: true
+      });
+    }
+  };
+  Tone.prototype._writable = function (property) {
+    if (Array.isArray(property)) {
+      for (var i = 0; i < property.le
