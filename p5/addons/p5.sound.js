@@ -3211,4 +3211,36 @@ Tone_core_Tone = function () {
   };
   Tone.prototype.connectSeries = function () {
     if (arguments.length > 1) {
-      var cu
+      var currentUnit = arguments[0];
+      for (var i = 1; i < arguments.length; i++) {
+        var toUnit = arguments[i];
+        currentUnit.connect(toUnit);
+        currentUnit = toUnit;
+      }
+    }
+    return this;
+  };
+  Tone.prototype.chain = function () {
+    if (arguments.length > 0) {
+      var currentUnit = this;
+      for (var i = 0; i < arguments.length; i++) {
+        var toUnit = arguments[i];
+        currentUnit.connect(toUnit);
+        currentUnit = toUnit;
+      }
+    }
+    return this;
+  };
+  Tone.prototype.fan = function () {
+    if (arguments.length > 0) {
+      for (var i = 0; i < arguments.length; i++) {
+        this.connect(arguments[i]);
+      }
+    }
+    return this;
+  };
+  AudioNode.prototype.chain = Tone.prototype.chain;
+  AudioNode.prototype.fan = Tone.prototype.fan;
+  Tone.prototype.defaultArg = function (given, fallback) {
+    if (this.isObject(given) && this.isObject(fallback)) {
+      var ret = {
