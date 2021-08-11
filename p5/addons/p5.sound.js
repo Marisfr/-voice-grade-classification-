@@ -3307,4 +3307,42 @@ Tone_core_Tone = function () {
   };
   Tone.prototype._writable = function (property) {
     if (Array.isArray(property)) {
-      for (var i = 0; i < property.le
+      for (var i = 0; i < property.length; i++) {
+        this._writable(property[i]);
+      }
+    } else {
+      Object.defineProperty(this, property, { writable: true });
+    }
+  };
+  Tone.State = {
+    Started: 'started',
+    Stopped: 'stopped',
+    Paused: 'paused'
+  };
+  Tone.prototype.equalPowerScale = function (percent) {
+    var piFactor = 0.5 * Math.PI;
+    return Math.sin(percent * piFactor);
+  };
+  Tone.prototype.dbToGain = function (db) {
+    return Math.pow(2, db / 6);
+  };
+  Tone.prototype.gainToDb = function (gain) {
+    return 20 * (Math.log(gain) / Math.LN10);
+  };
+  Tone.prototype.intervalToFrequencyRatio = function (interval) {
+    return Math.pow(2, interval / 12);
+  };
+  Tone.prototype.now = function () {
+    return Tone.context.now();
+  };
+  Tone.now = function () {
+    return Tone.context.now();
+  };
+  Tone.extend = function (child, parent) {
+    if (Tone.prototype.isUndef(parent)) {
+      parent = Tone;
+    }
+    function TempConstructor() {
+    }
+    TempConstructor.prototype = parent.prototype;
+    child.prototype = new Te
