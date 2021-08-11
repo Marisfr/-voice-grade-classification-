@@ -3380,4 +3380,28 @@ Tone_core_Tone = function () {
   });
   Object.defineProperty(Tone.prototype, 'sampleTime', {
     get: function () {
-      return 1 / this.context.
+      return 1 / this.context.sampleRate;
+    }
+  });
+  Object.defineProperty(Tone, 'supported', {
+    get: function () {
+      var hasAudioContext = window.hasOwnProperty('AudioContext') || window.hasOwnProperty('webkitAudioContext');
+      var hasPromises = window.hasOwnProperty('Promise');
+      var hasWorkers = window.hasOwnProperty('Worker');
+      return hasAudioContext && hasPromises && hasWorkers;
+    }
+  });
+  Tone.version = 'r10';
+  if (!window.TONE_SILENCE_VERSION_LOGGING) {
+  }
+  return Tone;
+}();
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_SignalBase;
+Tone_signal_SignalBase = function (Tone) {
+  'use strict';
+  Tone.SignalBase = function () {
+  };
+  Tone.extend(Tone.SignalBase);
+  Tone.SignalBase.prototype.connect = function (node, outputNumber, inputNumber) {
+    if (Tone.Signal && Tone.Signal === node.constructor || Tone.Param && Tone.Param === node.constructor || Tone.TimelineSignal && Tone.TimelineSignal === node.cons
