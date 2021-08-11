@@ -3345,4 +3345,39 @@ Tone_core_Tone = function () {
     function TempConstructor() {
     }
     TempConstructor.prototype = parent.prototype;
-    child.prototype = new Te
+    child.prototype = new TempConstructor();
+    child.prototype.constructor = child;
+    child._super = parent;
+  };
+  var audioContext;
+  Object.defineProperty(Tone, 'context', {
+    get: function () {
+      return audioContext;
+    },
+    set: function (context) {
+      if (Tone.Context && context instanceof Tone.Context) {
+        audioContext = context;
+      } else {
+        audioContext = new Tone.Context(context);
+      }
+      if (Tone.Context) {
+        Tone.Context.emit('init', audioContext);
+      }
+    }
+  });
+  Object.defineProperty(Tone.prototype, 'context', {
+    get: function () {
+      return Tone.context;
+    }
+  });
+  Tone.setContext = function (ctx) {
+    Tone.context = ctx;
+  };
+  Object.defineProperty(Tone.prototype, 'blockTime', {
+    get: function () {
+      return 128 / this.context.sampleRate;
+    }
+  });
+  Object.defineProperty(Tone.prototype, 'sampleTime', {
+    get: function () {
+      return 1 / this.context.
