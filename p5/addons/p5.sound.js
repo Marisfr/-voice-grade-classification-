@@ -3429,4 +3429,35 @@ Tone_signal_WaveShaper = function (Tone) {
     } else if (isFinite(mapping) || this.isUndef(mapping)) {
       this._curve = new Float32Array(this.defaultArg(mapping, 1024));
     } else if (this.isFunction(mapping)) {
-      th
+      this._curve = new Float32Array(this.defaultArg(bufferLen, 1024));
+      this.setMap(mapping);
+    }
+  };
+  Tone.extend(Tone.WaveShaper, Tone.SignalBase);
+  Tone.WaveShaper.prototype.setMap = function (mapping) {
+    for (var i = 0, len = this._curve.length; i < len; i++) {
+      var normalized = i / (len - 1) * 2 - 1;
+      this._curve[i] = mapping(normalized, i);
+    }
+    this._shaper.curve = this._curve;
+    return this;
+  };
+  Object.defineProperty(Tone.WaveShaper.prototype, 'curve', {
+    get: function () {
+      return this._shaper.curve;
+    },
+    set: function (mapping) {
+      this._curve = new Float32Array(mapping);
+      this._shaper.curve = this._curve;
+    }
+  });
+  Object.defineProperty(Tone.WaveShaper.prototype, 'oversample', {
+    get: function () {
+      return this._shaper.oversample;
+    },
+    set: function (oversampling) {
+      if ([
+          'none',
+          '2x',
+          '4x'
+        ].indexOf(
