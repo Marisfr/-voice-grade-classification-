@@ -3404,4 +3404,29 @@ Tone_signal_SignalBase = function (Tone) {
   };
   Tone.extend(Tone.SignalBase);
   Tone.SignalBase.prototype.connect = function (node, outputNumber, inputNumber) {
-    if (Tone.Signal && Tone.Signal === node.constructor || Tone.Param && Tone.Param === node.constructor || Tone.TimelineSignal && Tone.TimelineSignal === node.cons
+    if (Tone.Signal && Tone.Signal === node.constructor || Tone.Param && Tone.Param === node.constructor || Tone.TimelineSignal && Tone.TimelineSignal === node.constructor) {
+      node._param.cancelScheduledValues(0);
+      node._param.value = 0;
+      node.overridden = true;
+    } else if (node instanceof AudioParam) {
+      node.cancelScheduledValues(0);
+      node.value = 0;
+    }
+    Tone.prototype.connect.call(this, node, outputNumber, inputNumber);
+    return this;
+  };
+  return Tone.SignalBase;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_WaveShaper;
+Tone_signal_WaveShaper = function (Tone) {
+  'use strict';
+  Tone.WaveShaper = function (mapping, bufferLen) {
+    this._shaper = this.input = this.output = this.context.createWaveShaper();
+    this._curve = null;
+    if (Array.isArray(mapping)) {
+      this.curve = mapping;
+    } else if (isFinite(mapping) || this.isUndef(mapping)) {
+      this._curve = new Float32Array(this.defaultArg(mapping, 1024));
+    } else if (this.isFunction(mapping)) {
+      th
