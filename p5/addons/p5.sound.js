@@ -3460,4 +3460,30 @@ Tone_signal_WaveShaper = function (Tone) {
           'none',
           '2x',
           '4x'
-        ].indexOf(
+        ].indexOf(oversampling) !== -1) {
+        this._shaper.oversample = oversampling;
+      } else {
+        throw new RangeError('Tone.WaveShaper: oversampling must be either \'none\', \'2x\', or \'4x\'');
+      }
+    }
+  });
+  Tone.WaveShaper.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._shaper.disconnect();
+    this._shaper = null;
+    this._curve = null;
+    return this;
+  };
+  return Tone.WaveShaper;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_type_TimeBase;
+Tone_type_TimeBase = function (Tone) {
+  Tone.TimeBase = function (val, units) {
+    if (this instanceof Tone.TimeBase) {
+      this._expr = this._noOp;
+      if (val instanceof Tone.TimeBase) {
+        this.copy(val);
+      } else if (!this.isUndef(units) || this.isNumber(val)) {
+        units = this.defaultArg(units, this._defaultUnits);
+        var method = this._primaryExpressions
