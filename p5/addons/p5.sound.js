@@ -3486,4 +3486,37 @@ Tone_type_TimeBase = function (Tone) {
         this.copy(val);
       } else if (!this.isUndef(units) || this.isNumber(val)) {
         units = this.defaultArg(units, this._defaultUnits);
-        var method = this._primaryExpressions
+        var method = this._primaryExpressions[units].method;
+        this._expr = method.bind(this, val);
+      } else if (this.isString(val)) {
+        this.set(val);
+      } else if (this.isUndef(val)) {
+        this._expr = this._defaultExpr();
+      }
+    } else {
+      return new Tone.TimeBase(val, units);
+    }
+  };
+  Tone.extend(Tone.TimeBase);
+  Tone.TimeBase.prototype.set = function (exprString) {
+    this._expr = this._parseExprString(exprString);
+    return this;
+  };
+  Tone.TimeBase.prototype.clone = function () {
+    var instance = new this.constructor();
+    instance.copy(this);
+    return instance;
+  };
+  Tone.TimeBase.prototype.copy = function (time) {
+    var val = time._expr();
+    return this.set(val);
+  };
+  Tone.TimeBase.prototype._primaryExpressions = {
+    'n': {
+      regexp: /^(\d+)n/i,
+      method: function (value) {
+        value = parseInt(value);
+        if (value === 1) {
+          return this._beatsToUnits(this._timeSignature());
+        } else {
+          r
