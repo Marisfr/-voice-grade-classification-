@@ -3593,4 +3593,47 @@ Tone_type_TimeBase = function (Tone) {
     },
     '-': {
       regexp: /^\-/,
-      pre
+      precedence: 2,
+      method: function (lh, rh) {
+        return lh() - rh();
+      }
+    },
+    '*': {
+      regexp: /^\*/,
+      precedence: 1,
+      method: function (lh, rh) {
+        return lh() * rh();
+      }
+    },
+    '/': {
+      regexp: /^\//,
+      precedence: 1,
+      method: function (lh, rh) {
+        return lh() / rh();
+      }
+    }
+  };
+  Tone.TimeBase.prototype._unaryExpressions = {
+    'neg': {
+      regexp: /^\-/,
+      method: function (lh) {
+        return -lh();
+      }
+    }
+  };
+  Tone.TimeBase.prototype._syntaxGlue = {
+    '(': { regexp: /^\(/ },
+    ')': { regexp: /^\)/ }
+  };
+  Tone.TimeBase.prototype._tokenize = function (expr) {
+    var position = -1;
+    var tokens = [];
+    while (expr.length > 0) {
+      expr = expr.trim();
+      var token = getNextToken(expr, this);
+      tokens.push(token);
+      expr = expr.substr(token.value.length);
+    }
+    function getNextToken(expr, context) {
+      var expressions = [
+ 
