@@ -3519,4 +3519,39 @@ Tone_type_TimeBase = function (Tone) {
         if (value === 1) {
           return this._beatsToUnits(this._timeSignature());
         } else {
-          r
+          return this._beatsToUnits(4 / value);
+        }
+      }
+    },
+    't': {
+      regexp: /^(\d+)t/i,
+      method: function (value) {
+        value = parseInt(value);
+        return this._beatsToUnits(8 / (parseInt(value) * 3));
+      }
+    },
+    'm': {
+      regexp: /^(\d+)m/i,
+      method: function (value) {
+        return this._beatsToUnits(parseInt(value) * this._timeSignature());
+      }
+    },
+    'i': {
+      regexp: /^(\d+)i/i,
+      method: function (value) {
+        return this._ticksToUnits(parseInt(value));
+      }
+    },
+    'hz': {
+      regexp: /^(\d+(?:\.\d+)?)hz/i,
+      method: function (value) {
+        return this._frequencyToUnits(parseFloat(value));
+      }
+    },
+    'tr': {
+      regexp: /^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?):?(\d+(?:\.\d+)?)?/,
+      method: function (m, q, s) {
+        var total = 0;
+        if (m && m !== '0') {
+          total += this._beatsToUnits(this._timeSignature() * parseFloat(m));
+      
