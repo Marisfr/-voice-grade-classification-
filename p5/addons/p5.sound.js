@@ -3554,4 +3554,43 @@ Tone_type_TimeBase = function (Tone) {
         var total = 0;
         if (m && m !== '0') {
           total += this._beatsToUnits(this._timeSignature() * parseFloat(m));
-      
+        }
+        if (q && q !== '0') {
+          total += this._beatsToUnits(parseFloat(q));
+        }
+        if (s && s !== '0') {
+          total += this._beatsToUnits(parseFloat(s) / 4);
+        }
+        return total;
+      }
+    },
+    's': {
+      regexp: /^(\d+(?:\.\d+)?s)/,
+      method: function (value) {
+        return this._secondsToUnits(parseFloat(value));
+      }
+    },
+    'samples': {
+      regexp: /^(\d+)samples/,
+      method: function (value) {
+        return parseInt(value) / this.context.sampleRate;
+      }
+    },
+    'default': {
+      regexp: /^(\d+(?:\.\d+)?)/,
+      method: function (value) {
+        return this._primaryExpressions[this._defaultUnits].method.call(this, value);
+      }
+    }
+  };
+  Tone.TimeBase.prototype._binaryExpressions = {
+    '+': {
+      regexp: /^\+/,
+      precedence: 2,
+      method: function (lh, rh) {
+        return lh() + rh();
+      }
+    },
+    '-': {
+      regexp: /^\-/,
+      pre
