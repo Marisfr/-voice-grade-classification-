@@ -3671,4 +3671,40 @@ Tone_type_TimeBase = function (Tone) {
   Tone.TimeBase.prototype._matchGroup = function (token, group, prec) {
     var ret = false;
     if (!this.isUndef(token)) {
-      for
+      for (var opName in group) {
+        var op = group[opName];
+        if (op.regexp.test(token.value)) {
+          if (!this.isUndef(prec)) {
+            if (op.precedence === prec) {
+              return op;
+            }
+          } else {
+            return op;
+          }
+        }
+      }
+    }
+    return ret;
+  };
+  Tone.TimeBase.prototype._parseBinary = function (lexer, precedence) {
+    if (this.isUndef(precedence)) {
+      precedence = 2;
+    }
+    var expr;
+    if (precedence < 0) {
+      expr = this._parseUnary(lexer);
+    } else {
+      expr = this._parseBinary(lexer, precedence - 1);
+    }
+    var token = lexer.peek();
+    while (token && this._matchGroup(token, this._binaryExpressions, precedence)) {
+      token = lexer.next();
+      expr = token.method.bind(this, expr, this._parseBinary(lexer, precedence - 1));
+      token = lexer.peek();
+    }
+    return expr;
+  };
+  Tone.TimeBase.prototype._parseUnary = function (lexer) {
+    var token, expr;
+    token = lexer.peek();
+    var op 
