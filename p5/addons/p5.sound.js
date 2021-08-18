@@ -3636,4 +3636,39 @@ Tone_type_TimeBase = function (Tone) {
     }
     function getNextToken(expr, context) {
       var expressions = [
- 
+        '_binaryExpressions',
+        '_unaryExpressions',
+        '_primaryExpressions',
+        '_syntaxGlue'
+      ];
+      for (var i = 0; i < expressions.length; i++) {
+        var group = context[expressions[i]];
+        for (var opName in group) {
+          var op = group[opName];
+          var reg = op.regexp;
+          var match = expr.match(reg);
+          if (match !== null) {
+            return {
+              method: op.method,
+              precedence: op.precedence,
+              regexp: op.regexp,
+              value: match[0]
+            };
+          }
+        }
+      }
+      throw new SyntaxError('Tone.TimeBase: Unexpected token ' + expr);
+    }
+    return {
+      next: function () {
+        return tokens[++position];
+      },
+      peek: function () {
+        return tokens[position + 1];
+      }
+    };
+  };
+  Tone.TimeBase.prototype._matchGroup = function (token, group, prec) {
+    var ret = false;
+    if (!this.isUndef(token)) {
+      for
