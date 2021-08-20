@@ -3707,4 +3707,32 @@ Tone_type_TimeBase = function (Tone) {
   Tone.TimeBase.prototype._parseUnary = function (lexer) {
     var token, expr;
     token = lexer.peek();
-    var op 
+    var op = this._matchGroup(token, this._unaryExpressions);
+    if (op) {
+      token = lexer.next();
+      expr = this._parseUnary(lexer);
+      return op.method.bind(this, expr);
+    }
+    return this._parsePrimary(lexer);
+  };
+  Tone.TimeBase.prototype._parsePrimary = function (lexer) {
+    var token, expr;
+    token = lexer.peek();
+    if (this.isUndef(token)) {
+      throw new SyntaxError('Tone.TimeBase: Unexpected end of expression');
+    }
+    if (this._matchGroup(token, this._primaryExpressions)) {
+      token = lexer.next();
+      var matching = token.value.match(token.regexp);
+      return token.method.bind(this, matching[1], matching[2], matching[3]);
+    }
+    if (token && token.value === '(') {
+      lexer.next();
+      expr = this._parseBinary(lexer);
+      token = lexer.next();
+      if (!(token && token.value === ')')) {
+        throw new SyntaxError('Expected )');
+      }
+      return expr;
+    }
+    throw new SyntaxError('Tone.TimeBas
