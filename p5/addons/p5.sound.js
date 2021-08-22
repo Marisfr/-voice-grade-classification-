@@ -3735,4 +3735,33 @@ Tone_type_TimeBase = function (Tone) {
       }
       return expr;
     }
-    throw new SyntaxError('Tone.TimeBas
+    throw new SyntaxError('Tone.TimeBase: Cannot process token ' + token.value);
+  };
+  Tone.TimeBase.prototype._parseExprString = function (exprString) {
+    if (!this.isString(exprString)) {
+      exprString = exprString.toString();
+    }
+    var lexer = this._tokenize(exprString);
+    var tree = this._parseBinary(lexer);
+    return tree;
+  };
+  Tone.TimeBase.prototype._noOp = function () {
+    return 0;
+  };
+  Tone.TimeBase.prototype._defaultExpr = function () {
+    return this._noOp;
+  };
+  Tone.TimeBase.prototype._defaultUnits = 's';
+  Tone.TimeBase.prototype._frequencyToUnits = function (freq) {
+    return 1 / freq;
+  };
+  Tone.TimeBase.prototype._beatsToUnits = function (beats) {
+    return 60 / Tone.Transport.bpm.value * beats;
+  };
+  Tone.TimeBase.prototype._secondsToUnits = function (seconds) {
+    return seconds;
+  };
+  Tone.TimeBase.prototype._ticksToUnits = function (ticks) {
+    return ticks * (this._beatsToUnits(1) / Tone.Transport.PPQ);
+  };
+  Tone.TimeBase.prototype._timeSignatur
