@@ -3764,4 +3764,34 @@ Tone_type_TimeBase = function (Tone) {
   Tone.TimeBase.prototype._ticksToUnits = function (ticks) {
     return ticks * (this._beatsToUnits(1) / Tone.Transport.PPQ);
   };
-  Tone.TimeBase.prototype._timeSignatur
+  Tone.TimeBase.prototype._timeSignature = function () {
+    return Tone.Transport.timeSignature;
+  };
+  Tone.TimeBase.prototype._pushExpr = function (val, name, units) {
+    if (!(val instanceof Tone.TimeBase)) {
+      val = new this.constructor(val, units);
+    }
+    this._expr = this._binaryExpressions[name].method.bind(this, this._expr, val._expr);
+    return this;
+  };
+  Tone.TimeBase.prototype.add = function (val, units) {
+    return this._pushExpr(val, '+', units);
+  };
+  Tone.TimeBase.prototype.sub = function (val, units) {
+    return this._pushExpr(val, '-', units);
+  };
+  Tone.TimeBase.prototype.mult = function (val, units) {
+    return this._pushExpr(val, '*', units);
+  };
+  Tone.TimeBase.prototype.div = function (val, units) {
+    return this._pushExpr(val, '/', units);
+  };
+  Tone.TimeBase.prototype.valueOf = function () {
+    return this._expr();
+  };
+  Tone.TimeBase.prototype.dispose = function () {
+    this._expr = null;
+  };
+  return Tone.TimeBase;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/license
