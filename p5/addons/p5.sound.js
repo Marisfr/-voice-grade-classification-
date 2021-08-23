@@ -3794,4 +3794,35 @@ Tone_type_TimeBase = function (Tone) {
   };
   return Tone.TimeBase;
 }(Tone_core_Tone);
-/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/license
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_type_Time;
+Tone_type_Time = function (Tone) {
+  Tone.Time = function (val, units) {
+    if (this instanceof Tone.Time) {
+      this._plusNow = false;
+      Tone.TimeBase.call(this, val, units);
+    } else {
+      return new Tone.Time(val, units);
+    }
+  };
+  Tone.extend(Tone.Time, Tone.TimeBase);
+  Tone.Time.prototype._unaryExpressions = Object.create(Tone.TimeBase.prototype._unaryExpressions);
+  Tone.Time.prototype._unaryExpressions.quantize = {
+    regexp: /^@/,
+    method: function (rh) {
+      return Tone.Transport.nextSubdivision(rh());
+    }
+  };
+  Tone.Time.prototype._unaryExpressions.now = {
+    regexp: /^\+/,
+    method: function (lh) {
+      this._plusNow = true;
+      return lh();
+    }
+  };
+  Tone.Time.prototype.quantize = function (subdiv, percent) {
+    percent = this.defaultArg(percent, 1);
+    this._expr = function (expr, subdivision, percent) {
+      expr = expr();
+      subdivision = subdivision.toSeconds();
+     
