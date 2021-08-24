@@ -3865,4 +3865,33 @@ Tone_type_Time = function (Tone) {
       '4n',
       '4t',
       '8n',
- 
+      '8t',
+      '16n',
+      '16t',
+      '32n',
+      '32t',
+      '64n',
+      '64t',
+      '128n'
+    ];
+    var retTripletNotation = this._toNotationHelper(time, testTripletNotations);
+    if (retTripletNotation.split('+').length < retNotation.split('+').length) {
+      return retTripletNotation;
+    } else {
+      return retNotation;
+    }
+  };
+  Tone.Time.prototype._toNotationHelper = function (units, testNotations) {
+    var threshold = this._notationToUnits(testNotations[testNotations.length - 1]);
+    var retNotation = '';
+    for (var i = 0; i < testNotations.length; i++) {
+      var notationTime = this._notationToUnits(testNotations[i]);
+      var multiple = units / notationTime;
+      var floatingPointError = 0.000001;
+      if (1 - multiple % 1 < floatingPointError) {
+        multiple += floatingPointError;
+      }
+      multiple = Math.floor(multiple);
+      if (multiple > 0) {
+        if (multiple === 1) {
+          retNotation += testNotations[
