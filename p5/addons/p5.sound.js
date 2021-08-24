@@ -3825,4 +3825,44 @@ Tone_type_Time = function (Tone) {
     this._expr = function (expr, subdivision, percent) {
       expr = expr();
       subdivision = subdivision.toSeconds();
-     
+      var multiple = Math.round(expr / subdivision);
+      var ideal = multiple * subdivision;
+      var diff = ideal - expr;
+      return expr + diff * percent;
+    }.bind(this, this._expr, new this.constructor(subdiv), percent);
+    return this;
+  };
+  Tone.Time.prototype.addNow = function () {
+    this._plusNow = true;
+    return this;
+  };
+  Tone.Time.prototype._defaultExpr = function () {
+    this._plusNow = true;
+    return this._noOp;
+  };
+  Tone.Time.prototype.copy = function (time) {
+    Tone.TimeBase.prototype.copy.call(this, time);
+    this._plusNow = time._plusNow;
+    return this;
+  };
+  Tone.Time.prototype.toNotation = function () {
+    var time = this.toSeconds();
+    var testNotations = [
+      '1m',
+      '2n',
+      '4n',
+      '8n',
+      '16n',
+      '32n',
+      '64n',
+      '128n'
+    ];
+    var retNotation = this._toNotationHelper(time, testNotations);
+    var testTripletNotations = [
+      '1m',
+      '2n',
+      '2t',
+      '4n',
+      '4t',
+      '8n',
+ 
