@@ -3894,4 +3894,39 @@ Tone_type_Time = function (Tone) {
       multiple = Math.floor(multiple);
       if (multiple > 0) {
         if (multiple === 1) {
-          retNotation += testNotations[
+          retNotation += testNotations[i];
+        } else {
+          retNotation += multiple.toString() + '*' + testNotations[i];
+        }
+        units -= multiple * notationTime;
+        if (units < threshold) {
+          break;
+        } else {
+          retNotation += ' + ';
+        }
+      }
+    }
+    if (retNotation === '') {
+      retNotation = '0';
+    }
+    return retNotation;
+  };
+  Tone.Time.prototype._notationToUnits = function (notation) {
+    var primaryExprs = this._primaryExpressions;
+    var notationExprs = [
+      primaryExprs.n,
+      primaryExprs.t,
+      primaryExprs.m
+    ];
+    for (var i = 0; i < notationExprs.length; i++) {
+      var expr = notationExprs[i];
+      var match = notation.match(expr.regexp);
+      if (match) {
+        return expr.method.call(this, match[1]);
+      }
+    }
+  };
+  Tone.Time.prototype.toBarsBeatsSixteenths = function () {
+    var quarterTime = this._beatsToUnits(1);
+    var quarters = this.toSeconds() / quarterTime;
+    var measures = Math.floor(quarters / this._timeSignature(
