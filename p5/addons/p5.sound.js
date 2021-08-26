@@ -3929,4 +3929,35 @@ Tone_type_Time = function (Tone) {
   Tone.Time.prototype.toBarsBeatsSixteenths = function () {
     var quarterTime = this._beatsToUnits(1);
     var quarters = this.toSeconds() / quarterTime;
-    var measures = Math.floor(quarters / this._timeSignature(
+    var measures = Math.floor(quarters / this._timeSignature());
+    var sixteenths = quarters % 1 * 4;
+    quarters = Math.floor(quarters) % this._timeSignature();
+    sixteenths = sixteenths.toString();
+    if (sixteenths.length > 3) {
+      sixteenths = parseFloat(sixteenths).toFixed(3);
+    }
+    var progress = [
+      measures,
+      quarters,
+      sixteenths
+    ];
+    return progress.join(':');
+  };
+  Tone.Time.prototype.toTicks = function () {
+    var quarterTime = this._beatsToUnits(1);
+    var quarters = this.valueOf() / quarterTime;
+    return Math.floor(quarters * Tone.Transport.PPQ);
+  };
+  Tone.Time.prototype.toSamples = function () {
+    return this.toSeconds() * this.context.sampleRate;
+  };
+  Tone.Time.prototype.toFrequency = function () {
+    return 1 / this.toSeconds();
+  };
+  Tone.Time.prototype.toSeconds = function () {
+    return this.valueOf();
+  };
+  Tone.Time.prototype.toMilliseconds = function () {
+    return this.toSeconds() * 1000;
+  };
+  Tone.Time.prototype.valueOf = function () {
