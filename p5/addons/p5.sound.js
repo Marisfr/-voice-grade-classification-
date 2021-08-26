@@ -3961,3 +3961,31 @@ Tone_type_Time = function (Tone) {
     return this.toSeconds() * 1000;
   };
   Tone.Time.prototype.valueOf = function () {
+    var val = this._expr();
+    return val + (this._plusNow ? this.now() : 0);
+  };
+  return Tone.Time;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_type_Frequency;
+Tone_type_Frequency = function (Tone) {
+  Tone.Frequency = function (val, units) {
+    if (this instanceof Tone.Frequency) {
+      Tone.TimeBase.call(this, val, units);
+    } else {
+      return new Tone.Frequency(val, units);
+    }
+  };
+  Tone.extend(Tone.Frequency, Tone.TimeBase);
+  Tone.Frequency.prototype._primaryExpressions = Object.create(Tone.TimeBase.prototype._primaryExpressions);
+  Tone.Frequency.prototype._primaryExpressions.midi = {
+    regexp: /^(\d+(?:\.\d+)?midi)/,
+    method: function (value) {
+      return this.midiToFrequency(value);
+    }
+  };
+  Tone.Frequency.prototype._primaryExpressions.note = {
+    regexp: /^([a-g]{1}(?:b|#|x|bb)?)(-?[0-9]+)/i,
+    method: function (pitch, octave) {
+      var index = noteToScaleIndex[pitch.toLowerCase()];
+     
