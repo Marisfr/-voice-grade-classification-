@@ -3988,4 +3988,35 @@ Tone_type_Frequency = function (Tone) {
     regexp: /^([a-g]{1}(?:b|#|x|bb)?)(-?[0-9]+)/i,
     method: function (pitch, octave) {
       var index = noteToScaleIndex[pitch.toLowerCase()];
-     
+      var noteNumber = index + (parseInt(octave) + 1) * 12;
+      return this.midiToFrequency(noteNumber);
+    }
+  };
+  Tone.Frequency.prototype._primaryExpressions.tr = {
+    regexp: /^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?):?(\d+(?:\.\d+)?)?/,
+    method: function (m, q, s) {
+      var total = 1;
+      if (m && m !== '0') {
+        total *= this._beatsToUnits(this._timeSignature() * parseFloat(m));
+      }
+      if (q && q !== '0') {
+        total *= this._beatsToUnits(parseFloat(q));
+      }
+      if (s && s !== '0') {
+        total *= this._beatsToUnits(parseFloat(s) / 4);
+      }
+      return total;
+    }
+  };
+  Tone.Frequency.prototype.transpose = function (interval) {
+    this._expr = function (expr, interval) {
+      var val = expr();
+      return val * this.intervalToFrequencyRatio(interval);
+    }.bind(this, this._expr, interval);
+    return this;
+  };
+  Tone.Frequency.prototype.harmonize = function (intervals) {
+    this._expr = function (expr, intervals) {
+      var val = expr();
+      var ret = [];
+      for (var i = 0; i < interv
