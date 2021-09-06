@@ -4019,4 +4019,34 @@ Tone_type_Frequency = function (Tone) {
     this._expr = function (expr, intervals) {
       var val = expr();
       var ret = [];
-      for (var i = 0; i < interv
+      for (var i = 0; i < intervals.length; i++) {
+        ret[i] = val * this.intervalToFrequencyRatio(intervals[i]);
+      }
+      return ret;
+    }.bind(this, this._expr, intervals);
+    return this;
+  };
+  Tone.Frequency.prototype.toMidi = function () {
+    return this.frequencyToMidi(this.valueOf());
+  };
+  Tone.Frequency.prototype.toNote = function () {
+    var freq = this.valueOf();
+    var log = Math.log(freq / Tone.Frequency.A4) / Math.LN2;
+    var noteNumber = Math.round(12 * log) + 57;
+    var octave = Math.floor(noteNumber / 12);
+    if (octave < 0) {
+      noteNumber += -12 * octave;
+    }
+    var noteName = scaleIndexToNote[noteNumber % 12];
+    return noteName + octave.toString();
+  };
+  Tone.Frequency.prototype.toSeconds = function () {
+    return 1 / this.valueOf();
+  };
+  Tone.Frequency.prototype.toFrequency = function () {
+    return this.valueOf();
+  };
+  Tone.Frequency.prototype.toTicks = function () {
+    var quarterTime = this._beatsToUnits(1);
+    var quarters = this.valueOf() / quarterTime;
+ 
