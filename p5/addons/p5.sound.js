@@ -4096,4 +4096,43 @@ Tone_type_Frequency = function (Tone) {
     'a#': 10,
     'ax': 11,
     'bbb': 9,
-    '
+    'bb': 10,
+    'b': 11,
+    'b#': 12,
+    'bx': 13
+  };
+  var scaleIndexToNote = [
+    'C',
+    'C#',
+    'D',
+    'D#',
+    'E',
+    'F',
+    'F#',
+    'G',
+    'G#',
+    'A',
+    'A#',
+    'B'
+  ];
+  Tone.Frequency.A4 = 440;
+  Tone.Frequency.prototype.midiToFrequency = function (midi) {
+    return Tone.Frequency.A4 * Math.pow(2, (midi - 69) / 12);
+  };
+  Tone.Frequency.prototype.frequencyToMidi = function (frequency) {
+    return 69 + 12 * Math.log(frequency / Tone.Frequency.A4) / Math.LN2;
+  };
+  return Tone.Frequency;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_type_TransportTime;
+Tone_type_TransportTime = function (Tone) {
+  Tone.TransportTime = function (val, units) {
+    if (this instanceof Tone.TransportTime) {
+      Tone.Time.call(this, val, units);
+    } else {
+      return new Tone.TransportTime(val, units);
+    }
+  };
+  Tone.extend(Tone.TransportTime, Tone.Time);
+  Tone.TransportTime.prototype._unaryEx
