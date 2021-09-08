@@ -4135,4 +4135,27 @@ Tone_type_TransportTime = function (Tone) {
     }
   };
   Tone.extend(Tone.TransportTime, Tone.Time);
-  Tone.TransportTime.prototype._unaryEx
+  Tone.TransportTime.prototype._unaryExpressions = Object.create(Tone.Time.prototype._unaryExpressions);
+  Tone.TransportTime.prototype._unaryExpressions.quantize = {
+    regexp: /^@/,
+    method: function (rh) {
+      var subdivision = this._secondsToTicks(rh());
+      var multiple = Math.ceil(Tone.Transport.ticks / subdivision);
+      return this._ticksToUnits(multiple * subdivision);
+    }
+  };
+  Tone.TransportTime.prototype._secondsToTicks = function (seconds) {
+    var quarterTime = this._beatsToUnits(1);
+    var quarters = seconds / quarterTime;
+    return Math.round(quarters * Tone.Transport.PPQ);
+  };
+  Tone.TransportTime.prototype.valueOf = function () {
+    var val = this._secondsToTicks(this._expr());
+    return val + (this._plusNow ? Tone.Transport.ticks : 0);
+  };
+  Tone.TransportTime.prototype.toTicks = function () {
+    return this.valueOf();
+  };
+  Tone.TransportTime.prototype.toSeconds = function () {
+    var val = this._expr();
+    return val + (this._plusNow ? Tone.Transport.
