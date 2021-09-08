@@ -4158,4 +4158,34 @@ Tone_type_TransportTime = function (Tone) {
   };
   Tone.TransportTime.prototype.toSeconds = function () {
     var val = this._expr();
-    return val + (this._plusNow ? Tone.Transport.
+    return val + (this._plusNow ? Tone.Transport.seconds : 0);
+  };
+  Tone.TransportTime.prototype.toFrequency = function () {
+    return 1 / this.toSeconds();
+  };
+  return Tone.TransportTime;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Emitter;
+Tone_core_Emitter = function (Tone) {
+  'use strict';
+  Tone.Emitter = function () {
+    this._events = {};
+  };
+  Tone.extend(Tone.Emitter);
+  Tone.Emitter.prototype.on = function (event, callback) {
+    var events = event.split(/\W+/);
+    for (var i = 0; i < events.length; i++) {
+      var eventName = events[i];
+      if (!this._events.hasOwnProperty(eventName)) {
+        this._events[eventName] = [];
+      }
+      this._events[eventName].push(callback);
+    }
+    return this;
+  };
+  Tone.Emitter.prototype.off = function (event, callback) {
+    var events = event.split(/\W+/);
+    for (var ev = 0; ev < events.length; ev++) {
+      event = events[ev];
+      if (thi
