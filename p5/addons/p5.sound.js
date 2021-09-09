@@ -4223,4 +4223,34 @@ Tone_core_Emitter = function (Tone) {
     ];
     object._events = {};
     for (var i = 0; i < functions.length; i++) {
-      var func
+      var func = functions[i];
+      var emitterFunc = Tone.Emitter.prototype[func];
+      object[func] = emitterFunc;
+    }
+  };
+  Tone.Emitter.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._events = null;
+    return this;
+  };
+  return Tone.Emitter;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Context;
+Tone_core_Context = function (Tone) {
+  if (!window.hasOwnProperty('AudioContext') && window.hasOwnProperty('webkitAudioContext')) {
+    window.AudioContext = window.webkitAudioContext;
+  }
+  Tone.Context = function (context) {
+    Tone.Emitter.call(this);
+    if (!context) {
+      context = new window.AudioContext();
+    }
+    this._context = context;
+    for (var prop in this._context) {
+      this._defineProperty(this._context, prop);
+    }
+    this._latencyHint = 'interactive';
+    this._lookAhead = 0.1;
+    this._updateInterval = this._lookAhead / 3;
+    this._computedUpdat
