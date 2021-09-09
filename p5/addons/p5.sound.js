@@ -4188,4 +4188,39 @@ Tone_core_Emitter = function (Tone) {
     var events = event.split(/\W+/);
     for (var ev = 0; ev < events.length; ev++) {
       event = events[ev];
-      if (thi
+      if (this._events.hasOwnProperty(event)) {
+        if (Tone.prototype.isUndef(callback)) {
+          this._events[event] = [];
+        } else {
+          var eventList = this._events[event];
+          for (var i = 0; i < eventList.length; i++) {
+            if (eventList[i] === callback) {
+              eventList.splice(i, 1);
+            }
+          }
+        }
+      }
+    }
+    return this;
+  };
+  Tone.Emitter.prototype.emit = function (event) {
+    if (this._events) {
+      var args = Array.apply(null, arguments).slice(1);
+      if (this._events.hasOwnProperty(event)) {
+        var eventList = this._events[event];
+        for (var i = 0, len = eventList.length; i < len; i++) {
+          eventList[i].apply(this, args);
+        }
+      }
+    }
+    return this;
+  };
+  Tone.Emitter.mixin = function (object) {
+    var functions = [
+      'on',
+      'off',
+      'emit'
+    ];
+    object._events = {};
+    for (var i = 0; i < functions.length; i++) {
+      var func
