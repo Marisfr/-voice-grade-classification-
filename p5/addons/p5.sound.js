@@ -4253,4 +4253,31 @@ Tone_core_Context = function (Tone) {
     this._latencyHint = 'interactive';
     this._lookAhead = 0.1;
     this._updateInterval = this._lookAhead / 3;
-    this._computedUpdat
+    this._computedUpdateInterval = 0;
+    this._worker = this._createWorker();
+    this._constants = {};
+  };
+  Tone.extend(Tone.Context, Tone.Emitter);
+  Tone.Emitter.mixin(Tone.Context);
+  Tone.Context.prototype._defineProperty = function (context, prop) {
+    if (this.isUndef(this[prop])) {
+      Object.defineProperty(this, prop, {
+        get: function () {
+          if (typeof context[prop] === 'function') {
+            return context[prop].bind(context);
+          } else {
+            return context[prop];
+          }
+        },
+        set: function (val) {
+          context[prop] = val;
+        }
+      });
+    }
+  };
+  Tone.Context.prototype.now = function () {
+    return this._context.currentTime;
+  };
+  Tone.Context.prototype._createWorker = function () {
+    window.URL = window.URL || window.webkitURL;
+    var blob = new Blob(['var timeoutTime = ' + (this._updateInterval * 1000).toFixed(1) + ';' + 'self.onmessage = function(msg){' + '\ttimeoutTime = parseInt(msg.data);' + '};' + 'fu
