@@ -4280,4 +4280,29 @@ Tone_core_Context = function (Tone) {
   };
   Tone.Context.prototype._createWorker = function () {
     window.URL = window.URL || window.webkitURL;
-    var blob = new Blob(['var timeoutTime = ' + (this._updateInterval * 1000).toFixed(1) + ';' + 'self.onmessage = function(msg){' + '\ttimeoutTime = parseInt(msg.data);' + '};' + 'fu
+    var blob = new Blob(['var timeoutTime = ' + (this._updateInterval * 1000).toFixed(1) + ';' + 'self.onmessage = function(msg){' + '\ttimeoutTime = parseInt(msg.data);' + '};' + 'function tick(){' + '\tsetTimeout(tick, timeoutTime);' + '\tself.postMessage(\'tick\');' + '}' + 'tick();']);
+    var blobUrl = URL.createObjectURL(blob);
+    var worker = new Worker(blobUrl);
+    worker.addEventListener('message', function () {
+      this.emit('tick');
+    }.bind(this));
+    worker.addEventListener('message', function () {
+      var now = this.now();
+      if (this.isNumber(this._lastUpdate)) {
+        var diff = now - this._lastUpdate;
+        this._computedUpdateInterval = Math.max(diff, this._computedUpdateInterval * 0.97);
+      }
+      this._lastUpdate = now;
+    }.bind(this));
+    return worker;
+  };
+  Tone.Context.prototype.getConstant = function (val) {
+    if (this._constants[val]) {
+      return this._constants[val];
+    } else {
+      var buffer = this._context.createBuffer(1, 128, this._context.sampleRate);
+      var arr = buffer.getChannelData(0);
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = val;
+      }
+      var constant = this._context.createBufferSource(
