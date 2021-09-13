@@ -4305,4 +4305,38 @@ Tone_core_Context = function (Tone) {
       for (var i = 0; i < arr.length; i++) {
         arr[i] = val;
       }
-      var constant = this._context.createBufferSource(
+      var constant = this._context.createBufferSource();
+      constant.channelCount = 1;
+      constant.channelCountMode = 'explicit';
+      constant.buffer = buffer;
+      constant.loop = true;
+      constant.start(0);
+      this._constants[val] = constant;
+      return constant;
+    }
+  };
+  Object.defineProperty(Tone.Context.prototype, 'lag', {
+    get: function () {
+      var diff = this._computedUpdateInterval - this._updateInterval;
+      diff = Math.max(diff, 0);
+      return diff;
+    }
+  });
+  Object.defineProperty(Tone.Context.prototype, 'lookAhead', {
+    get: function () {
+      return this._lookAhead;
+    },
+    set: function (lA) {
+      this._lookAhead = lA;
+    }
+  });
+  Object.defineProperty(Tone.Context.prototype, 'updateInterval', {
+    get: function () {
+      return this._updateInterval;
+    },
+    set: function (interval) {
+      this._updateInterval = Math.max(interval, Tone.prototype.blockTime);
+      this._worker.postMessage(Math.max(interval * 1000, 1));
+    }
+  });
+  Object.defineProperty(Tone.Context.protot
