@@ -4339,4 +4339,39 @@ Tone_core_Context = function (Tone) {
       this._worker.postMessage(Math.max(interval * 1000, 1));
     }
   });
-  Object.defineProperty(Tone.Context.protot
+  Object.defineProperty(Tone.Context.prototype, 'latencyHint', {
+    get: function () {
+      return this._latencyHint;
+    },
+    set: function (hint) {
+      var lookAhead = hint;
+      this._latencyHint = hint;
+      if (this.isString(hint)) {
+        switch (hint) {
+        case 'interactive':
+          lookAhead = 0.1;
+          this._context.latencyHint = hint;
+          break;
+        case 'playback':
+          lookAhead = 0.8;
+          this._context.latencyHint = hint;
+          break;
+        case 'balanced':
+          lookAhead = 0.25;
+          this._context.latencyHint = hint;
+          break;
+        case 'fastest':
+          lookAhead = 0.01;
+          break;
+        }
+      }
+      this.lookAhead = lookAhead;
+      this.updateInterval = lookAhead / 3;
+    }
+  });
+  function shimConnect() {
+    var nativeConnect = AudioNode.prototype.connect;
+    var nativeDisconnect = AudioNode.prototype.disconnect;
+    function toneConnect(B, outNum, inNum) {
+      if (B.input) {
+        if (Array.
