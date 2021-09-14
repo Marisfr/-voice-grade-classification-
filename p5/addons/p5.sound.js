@@ -4404,4 +4404,39 @@ Tone_core_Context = function (Tone) {
         this.disconnect(B.input, outNum, inNum);
       } else {
         try {
-          nativeDisconnect.apply(t
+          nativeDisconnect.apply(this, arguments);
+        } catch (e) {
+          throw new Error('error disconnecting node: ' + B + '\n' + e);
+        }
+      }
+    }
+    if (AudioNode.prototype.connect !== toneConnect) {
+      AudioNode.prototype.connect = toneConnect;
+      AudioNode.prototype.disconnect = toneDisconnect;
+    }
+  }
+  if (Tone.supported) {
+    shimConnect();
+    Tone.context = new Tone.Context();
+  } else {
+    console.warn('This browser does not support Tone.js');
+  }
+  return Tone.Context;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_type_Type;
+Tone_type_Type = function (Tone) {
+  Tone.Type = {
+    Default: 'number',
+    Time: 'time',
+    Frequency: 'frequency',
+    TransportTime: 'transportTime',
+    Ticks: 'ticks',
+    NormalRange: 'normalRange',
+    AudioRange: 'audioRange',
+    Decibels: 'db',
+    Interval: 'interval',
+    BPM: 'bpm',
+    Positive: 'positive',
+    Cents: 'cents',
+    Degrees: 'deg
