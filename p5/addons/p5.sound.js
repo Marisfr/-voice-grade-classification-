@@ -4374,4 +4374,34 @@ Tone_core_Context = function (Tone) {
     var nativeDisconnect = AudioNode.prototype.disconnect;
     function toneConnect(B, outNum, inNum) {
       if (B.input) {
-        if (Array.
+        if (Array.isArray(B.input)) {
+          if (Tone.prototype.isUndef(inNum)) {
+            inNum = 0;
+          }
+          this.connect(B.input[inNum]);
+        } else {
+          this.connect(B.input, outNum, inNum);
+        }
+      } else {
+        try {
+          if (B instanceof AudioNode) {
+            nativeConnect.call(this, B, outNum, inNum);
+          } else {
+            nativeConnect.call(this, B, outNum);
+          }
+        } catch (e) {
+          throw new Error('error connecting to node: ' + B + '\n' + e);
+        }
+      }
+    }
+    function toneDisconnect(B, outNum, inNum) {
+      if (B && B.input && Array.isArray(B.input)) {
+        if (Tone.prototype.isUndef(inNum)) {
+          inNum = 0;
+        }
+        this.disconnect(B.input[inNum], outNum, inNum);
+      } else if (B && B.input) {
+        this.disconnect(B.input, outNum, inNum);
+      } else {
+        try {
+          nativeDisconnect.apply(t
