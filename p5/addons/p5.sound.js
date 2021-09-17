@@ -4439,4 +4439,36 @@ Tone_type_Type = function (Tone) {
     BPM: 'bpm',
     Positive: 'positive',
     Cents: 'cents',
-    Degrees: 'deg
+    Degrees: 'degrees',
+    MIDI: 'midi',
+    BarsBeatsSixteenths: 'barsBeatsSixteenths',
+    Samples: 'samples',
+    Hertz: 'hertz',
+    Note: 'note',
+    Milliseconds: 'milliseconds',
+    Seconds: 'seconds',
+    Notation: 'notation'
+  };
+  Tone.prototype.toSeconds = function (time) {
+    if (this.isNumber(time)) {
+      return time;
+    } else if (this.isUndef(time)) {
+      return this.now();
+    } else if (this.isString(time)) {
+      return new Tone.Time(time).toSeconds();
+    } else if (time instanceof Tone.TimeBase) {
+      return time.toSeconds();
+    }
+  };
+  Tone.prototype.toFrequency = function (freq) {
+    if (this.isNumber(freq)) {
+      return freq;
+    } else if (this.isString(freq) || this.isUndef(freq)) {
+      return new Tone.Frequency(freq).valueOf();
+    } else if (freq instanceof Tone.TimeBase) {
+      return freq.toFrequency();
+    }
+  };
+  Tone.prototype.toTicks = function (time) {
+    if (this.isNumber(time) || this.isString(time)) {
+      retur
