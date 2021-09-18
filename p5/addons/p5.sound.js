@@ -4471,4 +4471,35 @@ Tone_type_Type = function (Tone) {
   };
   Tone.prototype.toTicks = function (time) {
     if (this.isNumber(time) || this.isString(time)) {
-      retur
+      return new Tone.TransportTime(time).toTicks();
+    } else if (this.isUndef(time)) {
+      return Tone.Transport.ticks;
+    } else if (time instanceof Tone.TimeBase) {
+      return time.toTicks();
+    }
+  };
+  return Tone;
+}(Tone_core_Tone, Tone_type_Time, Tone_type_Frequency, Tone_type_TransportTime);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Param;
+Tone_core_Param = function (Tone) {
+  'use strict';
+  Tone.Param = function () {
+    var options = this.optionsObject(arguments, [
+      'param',
+      'units',
+      'convert'
+    ], Tone.Param.defaults);
+    this._param = this.input = options.param;
+    this.units = options.units;
+    this.convert = options.convert;
+    this.overridden = false;
+    this._lfo = null;
+    if (this.isObject(options.lfo)) {
+      this.value = options.lfo;
+    } else if (!this.isUndef(options.value)) {
+      this.value = options.value;
+    }
+  };
+  Tone.extend(Tone.Param);
+  Tone.Param.d
