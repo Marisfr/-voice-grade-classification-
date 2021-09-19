@@ -4502,4 +4502,36 @@ Tone_core_Param = function (Tone) {
     }
   };
   Tone.extend(Tone.Param);
-  Tone.Param.d
+  Tone.Param.defaults = {
+    'units': Tone.Type.Default,
+    'convert': true,
+    'param': undefined
+  };
+  Object.defineProperty(Tone.Param.prototype, 'value', {
+    get: function () {
+      return this._toUnits(this._param.value);
+    },
+    set: function (value) {
+      if (this.isObject(value)) {
+        if (this.isUndef(Tone.LFO)) {
+          throw new Error('Include \'Tone.LFO\' to use an LFO as a Param value.');
+        }
+        if (this._lfo) {
+          this._lfo.dispose();
+        }
+        this._lfo = new Tone.LFO(value).start();
+        this._lfo.connect(this.input);
+      } else {
+        var convertedVal = this._fromUnits(value);
+        this._param.cancelScheduledValues(0);
+        this._param.value = convertedVal;
+      }
+    }
+  });
+  Tone.Param.prototype._fromUnits = function (val) {
+    if (this.convert || this.isUndef(this.convert)) {
+      switch (this.units) {
+      case Tone.Type.Time:
+        return this.toSeconds(val);
+      case Tone.Type.Frequency:
+        return this.t
