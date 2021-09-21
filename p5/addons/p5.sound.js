@@ -4534,4 +4534,39 @@ Tone_core_Param = function (Tone) {
       case Tone.Type.Time:
         return this.toSeconds(val);
       case Tone.Type.Frequency:
-        return this.t
+        return this.toFrequency(val);
+      case Tone.Type.Decibels:
+        return this.dbToGain(val);
+      case Tone.Type.NormalRange:
+        return Math.min(Math.max(val, 0), 1);
+      case Tone.Type.AudioRange:
+        return Math.min(Math.max(val, -1), 1);
+      case Tone.Type.Positive:
+        return Math.max(val, 0);
+      default:
+        return val;
+      }
+    } else {
+      return val;
+    }
+  };
+  Tone.Param.prototype._toUnits = function (val) {
+    if (this.convert || this.isUndef(this.convert)) {
+      switch (this.units) {
+      case Tone.Type.Decibels:
+        return this.gainToDb(val);
+      default:
+        return val;
+      }
+    } else {
+      return val;
+    }
+  };
+  Tone.Param.prototype._minOutput = 0.00001;
+  Tone.Param.prototype.setValueAtTime = function (value, time) {
+    value = this._fromUnits(value);
+    time = this.toSeconds(time);
+    if (time <= this.now() + this.blockTime) {
+      this._param.value = value;
+    } else {
+      this._param.setValueAtTime
