@@ -4569,4 +4569,31 @@ Tone_core_Param = function (Tone) {
     if (time <= this.now() + this.blockTime) {
       this._param.value = value;
     } else {
-      this._param.setValueAtTime
+      this._param.setValueAtTime(value, time);
+    }
+    return this;
+  };
+  Tone.Param.prototype.setRampPoint = function (now) {
+    now = this.defaultArg(now, this.now());
+    var currentVal = this._param.value;
+    if (currentVal === 0) {
+      currentVal = this._minOutput;
+    }
+    this._param.setValueAtTime(currentVal, now);
+    return this;
+  };
+  Tone.Param.prototype.linearRampToValueAtTime = function (value, endTime) {
+    value = this._fromUnits(value);
+    this._param.linearRampToValueAtTime(value, this.toSeconds(endTime));
+    return this;
+  };
+  Tone.Param.prototype.exponentialRampToValueAtTime = function (value, endTime) {
+    value = this._fromUnits(value);
+    value = Math.max(this._minOutput, value);
+    this._param.exponentialRampToValueAtTime(value, this.toSeconds(endTime));
+    return this;
+  };
+  Tone.Param.prototype.exponentialRampToValue = function (value, rampTime, startTime) {
+    startTime = this.toSeconds(startTime);
+    this.setRampPoint(startTime);
+    th
