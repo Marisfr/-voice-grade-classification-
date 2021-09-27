@@ -4617,4 +4617,35 @@ Tone_core_Param = function (Tone) {
       values[i] = this._fromUnits(values[i]);
     }
     this._param.setValueCurveAtTime(values, this.toSeconds(startTime), this.toSeconds(duration));
-    return th
+    return this;
+  };
+  Tone.Param.prototype.cancelScheduledValues = function (startTime) {
+    this._param.cancelScheduledValues(this.toSeconds(startTime));
+    return this;
+  };
+  Tone.Param.prototype.rampTo = function (value, rampTime, startTime) {
+    rampTime = this.defaultArg(rampTime, 0);
+    if (this.units === Tone.Type.Frequency || this.units === Tone.Type.BPM || this.units === Tone.Type.Decibels) {
+      this.exponentialRampToValue(value, rampTime, startTime);
+    } else {
+      this.linearRampToValue(value, rampTime, startTime);
+    }
+    return this;
+  };
+  Object.defineProperty(Tone.Param.prototype, 'lfo', {
+    get: function () {
+      return this._lfo;
+    }
+  });
+  Tone.Param.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._param = null;
+    if (this._lfo) {
+      this._lfo.dispose();
+      this._lfo = null;
+    }
+    return this;
+  };
+  return Tone.Param;
+}(Tone_core_Tone);
+/** Tone.js module by Y
