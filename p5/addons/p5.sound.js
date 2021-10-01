@@ -4679,4 +4679,36 @@ Tone_core_Gain = function (Tone) {
     this._gainNode.disconnect();
     this._gainNode = null;
     this._writable('gain');
-    this.gai
+    this.gain.dispose();
+    this.gain = null;
+  };
+  Tone.prototype.createInsOuts = function (inputs, outputs) {
+    if (inputs === 1) {
+      this.input = new Tone.Gain();
+    } else if (inputs > 1) {
+      this.input = new Array(inputs);
+    }
+    if (outputs === 1) {
+      this.output = new Tone.Gain();
+    } else if (outputs > 1) {
+      this.output = new Array(inputs);
+    }
+  };
+  return Tone.Gain;
+}(Tone_core_Tone, Tone_core_Param);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Signal;
+Tone_signal_Signal = function (Tone) {
+  'use strict';
+  Tone.Signal = function () {
+    var options = this.optionsObject(arguments, [
+      'value',
+      'units'
+    ], Tone.Signal.defaults);
+    this.output = this._gain = this.context.createGain();
+    options.param = this._gain.gain;
+    Tone.Param.call(this, options);
+    this.input = this._param = this._gain.gain;
+    this.context.getConstant(1).chain(this._gain);
+  };
+  Tone.extend(Tone.Signal
