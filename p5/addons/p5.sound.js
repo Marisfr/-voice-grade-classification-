@@ -4711,4 +4711,31 @@ Tone_signal_Signal = function (Tone) {
     this.input = this._param = this._gain.gain;
     this.context.getConstant(1).chain(this._gain);
   };
-  Tone.extend(Tone.Signal
+  Tone.extend(Tone.Signal, Tone.Param);
+  Tone.Signal.defaults = {
+    'value': 0,
+    'units': Tone.Type.Default,
+    'convert': true
+  };
+  Tone.Signal.prototype.connect = Tone.SignalBase.prototype.connect;
+  Tone.Signal.prototype.dispose = function () {
+    Tone.Param.prototype.dispose.call(this);
+    this._param = null;
+    this._gain.disconnect();
+    this._gain = null;
+    return this;
+  };
+  return Tone.Signal;
+}(Tone_core_Tone, Tone_signal_WaveShaper, Tone_type_Type, Tone_core_Param);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Add;
+Tone_signal_Add = function (Tone) {
+  'use strict';
+  Tone.Add = function (value) {
+    this.createInsOuts(2, 0);
+    this._sum = this.input[0] = this.input[1] = this.output = new Tone.Gain();
+    this._param = this.input[1] = new Tone.Signal(value);
+    this._param.connect(this._sum);
+  };
+  Tone.extend(Tone.Add, Tone.Signal);
+  Tone.Add.prototype.dispose = function 
