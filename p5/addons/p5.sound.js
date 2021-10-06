@@ -4738,4 +4738,34 @@ Tone_signal_Add = function (Tone) {
     this._param.connect(this._sum);
   };
   Tone.extend(Tone.Add, Tone.Signal);
-  Tone.Add.prototype.dispose = function 
+  Tone.Add.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._sum.dispose();
+    this._sum = null;
+    this._param.dispose();
+    this._param = null;
+    return this;
+  };
+  return Tone.Add;
+}(Tone_core_Tone, Tone_signal_Signal);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Multiply;
+Tone_signal_Multiply = function (Tone) {
+  'use strict';
+  Tone.Multiply = function (value) {
+    this.createInsOuts(2, 0);
+    this._mult = this.input[0] = this.output = new Tone.Gain();
+    this._param = this.input[1] = this.output.gain;
+    this._param.value = this.defaultArg(value, 0);
+  };
+  Tone.extend(Tone.Multiply, Tone.Signal);
+  Tone.Multiply.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._mult.dispose();
+    this._mult = null;
+    this._param = null;
+    return this;
+  };
+  return Tone.Multiply;
+}(Tone_core_Tone, Tone_signal_Signal);
+/*
