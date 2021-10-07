@@ -4768,4 +4768,36 @@ Tone_signal_Multiply = function (Tone) {
   };
   return Tone.Multiply;
 }(Tone_core_Tone, Tone_signal_Signal);
-/*
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Scale;
+Tone_signal_Scale = function (Tone) {
+  'use strict';
+  Tone.Scale = function (outputMin, outputMax) {
+    this._outputMin = this.defaultArg(outputMin, 0);
+    this._outputMax = this.defaultArg(outputMax, 1);
+    this._scale = this.input = new Tone.Multiply(1);
+    this._add = this.output = new Tone.Add(0);
+    this._scale.connect(this._add);
+    this._setRange();
+  };
+  Tone.extend(Tone.Scale, Tone.SignalBase);
+  Object.defineProperty(Tone.Scale.prototype, 'min', {
+    get: function () {
+      return this._outputMin;
+    },
+    set: function (min) {
+      this._outputMin = min;
+      this._setRange();
+    }
+  });
+  Object.defineProperty(Tone.Scale.prototype, 'max', {
+    get: function () {
+      return this._outputMax;
+    },
+    set: function (max) {
+      this._outputMax = max;
+      this._setRange();
+    }
+  });
+  Tone.Scale.prototype._setRange = function () {
+    this._add.value
