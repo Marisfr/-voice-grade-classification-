@@ -4800,4 +4800,34 @@ Tone_signal_Scale = function (Tone) {
     }
   });
   Tone.Scale.prototype._setRange = function () {
-    this._add.value
+    this._add.value = this._outputMin;
+    this._scale.value = this._outputMax - this._outputMin;
+  };
+  Tone.Scale.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._add.dispose();
+    this._add = null;
+    this._scale.dispose();
+    this._scale = null;
+    return this;
+  };
+  return Tone.Scale;
+}(Tone_core_Tone, Tone_signal_Add, Tone_signal_Multiply);
+var signal;
+'use strict';
+signal = function () {
+  // Signal is built with the Tone.js signal by Yotam Mann
+  // https://github.com/TONEnoTONE/Tone.js/
+  var Signal = Tone_signal_Signal;
+  var Add = Tone_signal_Add;
+  var Mult = Tone_signal_Multiply;
+  var Scale = Tone_signal_Scale;
+  var Tone = Tone_core_Tone;
+  var p5sound = master;
+  Tone.setContext(p5sound.audiocontext);
+  /**
+   *  <p>p5.Signal is a constant audio-rate signal used by p5.Oscillator
+   *  and p5.Envelope for modulation math.</p>
+   *
+   *  <p>This is necessary because Web Audio is processed on a seprate clock.
+   *  For example
