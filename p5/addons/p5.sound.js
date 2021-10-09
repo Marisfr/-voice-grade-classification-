@@ -4830,4 +4830,26 @@ signal = function () {
    *  and p5.Envelope for modulation math.</p>
    *
    *  <p>This is necessary because Web Audio is processed on a seprate clock.
-   *  For example
+   *  For example, the p5 draw loop runs about 60 times per second. But
+   *  the audio clock must process samples 44100 times per second. If we
+   *  want to add a value to each of those samples, we can't do it in the
+   *  draw loop, but we can do it by adding a constant-rate audio signal.</p.
+   *
+   *  <p>This class mostly functions behind the scenes in p5.sound, and returns
+   *  a Tone.Signal from the Tone.js library by Yotam Mann.
+   *  If you want to work directly with audio signals for modular
+   *  synthesis, check out
+   *  <a href='http://bit.ly/1oIoEng' target=_'blank'>tone.js.</a></p>
+   *
+   *  @class  p5.Signal
+   *  @constructor
+   *  @return {Tone.Signal} A Signal object from the Tone.js library
+   *  @example
+   *  <div><code>
+   *  function setup() {
+   *    carrier = new p5.Oscillator('sine');
+   *    carrier.amp(1); // set amplitude
+   *    carrier.freq(220); // set frequency
+   *    carrier.start(); // start oscillating
+   *
+   *    modu
