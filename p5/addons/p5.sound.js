@@ -4852,4 +4852,34 @@ signal = function () {
    *    carrier.freq(220); // set frequency
    *    carrier.start(); // start oscillating
    *
-   *    modu
+   *    modulator = new p5.Oscillator('sawtooth');
+   *    modulator.disconnect();
+   *    modulator.amp(1);
+   *    modulator.freq(4);
+   *    modulator.start();
+   *
+   *    // Modulator's default amplitude range is -1 to 1.
+   *    // Multiply it by -200, so the range is -200 to 200
+   *    // then add 220 so the range is 20 to 420
+   *    carrier.freq( modulator.mult(-200).add(220) );
+   *  }
+   *  </code></div>
+   */
+  p5.Signal = function (value) {
+    var s = new Signal(value);
+    // p5sound.soundArray.push(s);
+    return s;
+  };
+  /**
+   *  Fade to value, for smooth transitions
+   *
+   *  @method  fade
+   *  @param  {Number} value          Value to set this signal
+   *  @param  {Number} [secondsFromNow] Length of fade, in seconds from now
+   */
+  Signal.prototype.fade = Signal.prototype.linearRampToValueAtTime;
+  Mult.prototype.fade = Signal.prototype.fade;
+  Add.prototype.fade = Signal.prototype.fade;
+  Scale.prototype.fade = Signal.prototype.fade;
+  /**
+   *  Connect a p5.sound object or Web Audi
