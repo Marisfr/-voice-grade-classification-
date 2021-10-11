@@ -4882,4 +4882,35 @@ signal = function () {
   Add.prototype.fade = Signal.prototype.fade;
   Scale.prototype.fade = Signal.prototype.fade;
   /**
-   *  Connect a p5.sound object or Web Audi
+   *  Connect a p5.sound object or Web Audio node to this
+   *  p5.Signal so that its amplitude values can be scaled.
+   *
+   *  @method setInput
+   *  @param {Object} input
+   */
+  Signal.prototype.setInput = function (_input) {
+    _input.connect(this);
+  };
+  Mult.prototype.setInput = Signal.prototype.setInput;
+  Add.prototype.setInput = Signal.prototype.setInput;
+  Scale.prototype.setInput = Signal.prototype.setInput;
+  // signals can add / mult / scale themselves
+  /**
+   *  Add a constant value to this audio signal,
+   *  and return the resulting audio signal. Does
+   *  not change the value of the original signal,
+   *  instead it returns a new p5.SignalAdd.
+   *
+   *  @method  add
+   *  @param {Number} number
+   *  @return {p5.Signal} object
+   */
+  Signal.prototype.add = function (num) {
+    var add = new Add(num);
+    // add.setInput(this);
+    this.connect(add);
+    return add;
+  };
+  Mult.prototype.add = Signal.prototype.add;
+  Add.prototype.add = Signal.prototype.add;
+  Scale.prototype
