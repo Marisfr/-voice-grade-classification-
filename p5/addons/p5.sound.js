@@ -4913,4 +4913,34 @@ signal = function () {
   };
   Mult.prototype.add = Signal.prototype.add;
   Add.prototype.add = Signal.prototype.add;
-  Scale.prototype
+  Scale.prototype.add = Signal.prototype.add;
+  /**
+   *  Multiply this signal by a constant value,
+   *  and return the resulting audio signal. Does
+   *  not change the value of the original signal,
+   *  instead it returns a new p5.SignalMult.
+   *
+   *  @method  mult
+   *  @param {Number} number to multiply
+   *  @return {p5.Signal} object
+   */
+  Signal.prototype.mult = function (num) {
+    var mult = new Mult(num);
+    // mult.setInput(this);
+    this.connect(mult);
+    return mult;
+  };
+  Mult.prototype.mult = Signal.prototype.mult;
+  Add.prototype.mult = Signal.prototype.mult;
+  Scale.prototype.mult = Signal.prototype.mult;
+  /**
+   *  Scale this signal value to a given range,
+   *  and return the result as an audio signal. Does
+   *  not change the value of the original signal,
+   *  instead it returns a new p5.SignalScale.
+   *
+   *  @method  scale
+   *  @param {Number} number to multiply
+   *  @param  {Number} inMin  input range minumum
+   *  @param  {Number} inMax  input range maximum
+   *  
