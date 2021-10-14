@@ -4943,4 +4943,29 @@ signal = function () {
    *  @param {Number} number to multiply
    *  @param  {Number} inMin  input range minumum
    *  @param  {Number} inMax  input range maximum
-   *  
+   *  @param  {Number} outMin input range minumum
+   *  @param  {Number} outMax input range maximum
+   *  @return {p5.Signal} object
+   */
+  Signal.prototype.scale = function (inMin, inMax, outMin, outMax) {
+    var mapOutMin, mapOutMax;
+    if (arguments.length === 4) {
+      mapOutMin = p5.prototype.map(outMin, inMin, inMax, 0, 1) - 0.5;
+      mapOutMax = p5.prototype.map(outMax, inMin, inMax, 0, 1) - 0.5;
+    } else {
+      mapOutMin = arguments[0];
+      mapOutMax = arguments[1];
+    }
+    var scale = new Scale(mapOutMin, mapOutMax);
+    this.connect(scale);
+    return scale;
+  };
+  Mult.prototype.scale = Signal.prototype.scale;
+  Add.prototype.scale = Signal.prototype.scale;
+  Scale.prototype.scale = Signal.prototype.scale;
+}(Tone_signal_Signal, Tone_signal_Add, Tone_signal_Multiply, Tone_signal_Scale, Tone_core_Tone, master);
+var oscillator;
+'use strict';
+oscillator = function () {
+  var p5sound = master;
+  var Add = Tone_signal_Add
