@@ -4968,4 +4968,26 @@ var oscillator;
 'use strict';
 oscillator = function () {
   var p5sound = master;
-  var Add = Tone_signal_Add
+  var Add = Tone_signal_Add;
+  var Mult = Tone_signal_Multiply;
+  var Scale = Tone_signal_Scale;
+  /**
+   *  <p>Creates a signal that oscillates between -1.0 and 1.0.
+   *  By default, the oscillation takes the form of a sinusoidal
+   *  shape ('sine'). Additional types include 'triangle',
+   *  'sawtooth' and 'square'. The frequency defaults to
+   *  440 oscillations per second (440Hz, equal to the pitch of an
+   *  'A' note).</p>
+   *
+   *  <p>Set the type of oscillation with setType(), or by instantiating a
+   *  specific oscillator: <a href="/reference/#/p5.SinOsc">p5.SinOsc</a>, <a
+   *  href="/reference/#/p5.TriOsc">p5.TriOsc</a>, <a
+   *  href="/reference/#/p5.SqrOsc">p5.SqrOsc</a>, or <a
+   *  href="/reference/#/p5.SawOsc">p5.SawOsc</a>.
+   *  </p>
+   *
+   *  @class p5.Oscillator
+   *  @constructor
+   *  @param {Number} [freq] frequency defaults to 440Hz
+   *  @param {String} [type] type of oscillator. Options:
+   *                         
