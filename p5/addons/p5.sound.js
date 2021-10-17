@@ -5024,4 +5024,36 @@ oscillator = function () {
    *        // ramp amplitude to 0 over 0.5 seconds
    *        osc.amp(0, 0.5);
    *        playing = false;
-   *        back
+   *        backgroundColor = color(255,0,255);
+   *      }
+   *    }
+   *  }
+   *  </code> </div>
+   */
+  p5.Oscillator = function (freq, type) {
+    if (typeof freq === 'string') {
+      var f = type;
+      type = freq;
+      freq = f;
+    }
+    if (typeof type === 'number') {
+      var f = type;
+      type = freq;
+      freq = f;
+    }
+    this.started = false;
+    // components
+    this.phaseAmount = undefined;
+    this.oscillator = p5sound.audiocontext.createOscillator();
+    this.f = freq || 440;
+    // frequency
+    this.oscillator.type = type || 'sine';
+    this.oscillator.frequency.setValueAtTime(this.f, p5sound.audiocontext.currentTime);
+    // connections
+    this.output = p5sound.audiocontext.createGain();
+    this._freqMods = [];
+    // modulators connected to this oscillator's frequency
+    // set default output gain to 0.5
+    this.output.gain.value = 0.5;
+    this.output.gain.setValueAtTime(0.5, p5sound.audiocontext.currentTime);
+    this.oscillator.connect(this.outp
