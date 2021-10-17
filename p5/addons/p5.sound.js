@@ -5056,4 +5056,32 @@ oscillator = function () {
     // set default output gain to 0.5
     this.output.gain.value = 0.5;
     this.output.gain.setValueAtTime(0.5, p5sound.audiocontext.currentTime);
-    this.oscillator.connect(this.outp
+    this.oscillator.connect(this.output);
+    // stereo panning
+    this.panPosition = 0;
+    this.connection = p5sound.input;
+    // connect to p5sound by default
+    this.panner = new p5.Panner(this.output, this.connection, 1);
+    //array of math operation signal chaining
+    this.mathOps = [this.output];
+    // add to the soundArray so we can dispose of the osc later
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Start an oscillator. Accepts an optional parameter to
+   *  determine how long (in seconds from now) until the
+   *  oscillator starts.
+   *
+   *  @method  start
+   *  @param  {Number} [time] startTime in seconds from now.
+   *  @param  {Number} [frequency] frequency in Hz.
+   */
+  p5.Oscillator.prototype.start = function (time, f) {
+    if (this.started) {
+      var now = p5sound.audiocontext.currentTime;
+      this.stop(now);
+    }
+    if (!this.started) {
+      var freq = f || this.f;
+      var type = this.oscillator.type;
+      // set old osc free to b
