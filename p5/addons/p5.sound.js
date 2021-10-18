@@ -5084,4 +5084,29 @@ oscillator = function () {
     if (!this.started) {
       var freq = f || this.f;
       var type = this.oscillator.type;
-      // set old osc free to b
+      // set old osc free to be garbage collected (memory)
+      if (this.oscillator) {
+        this.oscillator.disconnect();
+        this.oscillator = undefined;
+      }
+      // var detune = this.oscillator.frequency.value;
+      this.oscillator = p5sound.audiocontext.createOscillator();
+      this.oscillator.frequency.value = Math.abs(freq);
+      this.oscillator.type = type;
+      // this.oscillator.detune.value = detune;
+      this.oscillator.connect(this.output);
+      time = time || 0;
+      this.oscillator.start(time + p5sound.audiocontext.currentTime);
+      this.freqNode = this.oscillator.frequency;
+      // if other oscillators are already connected to this osc's freq
+      for (var i in this._freqMods) {
+        if (typeof this._freqMods[i].connect !== 'undefined') {
+          this._freqMods[i].connect(this.oscillator.frequency);
+        }
+      }
+      this.started = true;
+    }
+  };
+  /**
+   *  Stop an oscillator. Accepts an optional parameter
+   *  to determi
