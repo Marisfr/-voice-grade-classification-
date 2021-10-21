@@ -5134,4 +5134,29 @@ oscillator = function () {
    *  @param {Number} [timeFromNow] schedule this event to happen
    *                                seconds from now
    *  @return  {AudioParam} gain  If no value is provided,
-   *               
+   *                              returns the Web Audio API
+   *                              AudioParam that controls
+   *                              this oscillator's
+   *                              gain/amplitude/volume)
+   */
+  p5.Oscillator.prototype.amp = function (vol, rampTime, tFromNow) {
+    var self = this;
+    if (typeof vol === 'number') {
+      var rampTime = rampTime || 0;
+      var tFromNow = tFromNow || 0;
+      var now = p5sound.audiocontext.currentTime;
+      this.output.gain.linearRampToValueAtTime(vol, now + tFromNow + rampTime);
+    } else if (vol) {
+      vol.connect(self.output.gain);
+    } else {
+      // return the Gain Node
+      return this.output.gain;
+    }
+  };
+  // these are now the same thing
+  p5.Oscillator.prototype.fade = p5.Oscillator.prototype.amp;
+  p5.Oscillator.prototype.getAmp = function () {
+    return this.output.gain.value;
+  };
+  /**
+   *  Set frequency of an oscillator to a value. Or, pass in an objec
