@@ -5109,4 +5109,29 @@ oscillator = function () {
   };
   /**
    *  Stop an oscillator. Accepts an optional parameter
-   *  to determi
+   *  to determine how long (in seconds from now) until the
+   *  oscillator stops.
+   *
+   *  @method  stop
+   *  @param  {Number} secondsFromNow Time, in seconds from now.
+   */
+  p5.Oscillator.prototype.stop = function (time) {
+    if (this.started) {
+      var t = time || 0;
+      var now = p5sound.audiocontext.currentTime;
+      this.oscillator.stop(t + now);
+      this.started = false;
+    }
+  };
+  /**
+   *  Set the amplitude between 0 and 1.0. Or, pass in an object
+   *  such as an oscillator to modulate amplitude with an audio signal.
+   *
+   *  @method  amp
+   *  @param  {Number|Object} vol between 0 and 1.0
+   *                              or a modulating signal/oscillator
+   *  @param {Number} [rampTime] create a fade that lasts rampTime
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   *  @return  {AudioParam} gain  If no value is provided,
+   *               
