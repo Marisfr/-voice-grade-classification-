@@ -5182,4 +5182,30 @@ oscillator = function () {
   p5.Oscillator.prototype.freq = function (val, rampTime, tFromNow) {
     if (typeof val === 'number' && !isNaN(val)) {
       this.f = val;
-      var now = p5sound.au
+      var now = p5sound.audiocontext.currentTime;
+      var rampTime = rampTime || 0;
+      var tFromNow = tFromNow || 0;
+      var t = now + tFromNow + rampTime;
+      // var currentFreq = this.oscillator.frequency.value;
+      // this.oscillator.frequency.cancelScheduledValues(now);
+      if (rampTime === 0) {
+        this.oscillator.frequency.setValueAtTime(val, tFromNow + now);
+      } else {
+        if (val > 0) {
+          this.oscillator.frequency.exponentialRampToValueAtTime(val, tFromNow + rampTime + now);
+        } else {
+          this.oscillator.frequency.linearRampToValueAtTime(val, tFromNow + rampTime + now);
+        }
+      }
+      // reset phase if oscillator has a phase
+      if (this.phaseAmount) {
+        this.phase(this.phaseAmount);
+      }
+    } else if (val) {
+      if (val.output) {
+        val = val.output;
+      }
+      val.connect(this.oscillator.frequency);
+      // keep track of what is modulating this param
+      // so it can be re-connected if
+      this._freqMo
