@@ -5159,4 +5159,27 @@ oscillator = function () {
     return this.output.gain.value;
   };
   /**
-   *  Set frequency of an oscillator to a value. Or, pass in an objec
+   *  Set frequency of an oscillator to a value. Or, pass in an object
+   *  such as an oscillator to modulate the frequency with an audio signal.
+   *
+   *  @method  freq
+   *  @param  {Number|Object} Frequency Frequency in Hz
+   *                                        or modulating signal/oscillator
+   *  @param  {Number} [rampTime] Ramp time (in seconds)
+   *  @param  {Number} [timeFromNow] Schedule this event to happen
+   *                                   at x seconds from now
+   *  @return  {AudioParam} Frequency If no value is provided,
+   *                                  returns the Web Audio API
+   *                                  AudioParam that controls
+   *                                  this oscillator's frequency
+   *  @example
+   *  <div><code>
+   *  var osc = new p5.Oscillator(300);
+   *  osc.start();
+   *  osc.freq(40, 10);
+   *  </code></div>
+   */
+  p5.Oscillator.prototype.freq = function (val, rampTime, tFromNow) {
+    if (typeof val === 'number' && !isNaN(val)) {
+      this.f = val;
+      var now = p5sound.au
