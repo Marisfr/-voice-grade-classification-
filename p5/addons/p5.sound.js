@@ -5208,4 +5208,38 @@ oscillator = function () {
       val.connect(this.oscillator.frequency);
       // keep track of what is modulating this param
       // so it can be re-connected if
-      this._freqMo
+      this._freqMods.push(val);
+    } else {
+      // return the Frequency Node
+      return this.oscillator.frequency;
+    }
+  };
+  p5.Oscillator.prototype.getFreq = function () {
+    return this.oscillator.frequency.value;
+  };
+  /**
+   *  Set type to 'sine', 'triangle', 'sawtooth' or 'square'.
+   *
+   *  @method  setType
+   *  @param {String} type 'sine', 'triangle', 'sawtooth' or 'square'.
+   */
+  p5.Oscillator.prototype.setType = function (type) {
+    this.oscillator.type = type;
+  };
+  p5.Oscillator.prototype.getType = function () {
+    return this.oscillator.type;
+  };
+  /**
+   *  Connect to a p5.sound / Web Audio object.
+   *
+   *  @method  connect
+   *  @param  {Object} unit A p5.sound or Web Audio object
+   */
+  p5.Oscillator.prototype.connect = function (unit) {
+    if (!unit) {
+      this.panner.connect(p5sound.input);
+    } else if (unit.hasOwnProperty('input')) {
+      this.panner.connect(unit.input);
+      this.connection = unit.input;
+    } else {
+      this.
