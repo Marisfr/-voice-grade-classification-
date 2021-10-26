@@ -5242,4 +5242,38 @@ oscillator = function () {
       this.panner.connect(unit.input);
       this.connection = unit.input;
     } else {
-      this.
+      this.panner.connect(unit);
+      this.connection = unit;
+    }
+  };
+  /**
+   *  Disconnect all outputs
+   *
+   *  @method  disconnect
+   */
+  p5.Oscillator.prototype.disconnect = function () {
+    this.output.disconnect();
+    this.panner.disconnect();
+    this.output.connect(this.panner);
+    this.oscMods = [];
+  };
+  /**
+   *  Pan between Left (-1) and Right (1)
+   *
+   *  @method  pan
+   *  @param  {Number} panning Number between -1 and 1
+   *  @param  {Number} timeFromNow schedule this event to happen
+   *                                seconds from now
+   */
+  p5.Oscillator.prototype.pan = function (pval, tFromNow) {
+    this.panPosition = pval;
+    this.panner.pan(pval, tFromNow);
+  };
+  p5.Oscillator.prototype.getPan = function () {
+    return this.panPosition;
+  };
+  // get rid of the oscillator
+  p5.Oscillator.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5so
