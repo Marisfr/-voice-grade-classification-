@@ -5276,4 +5276,34 @@ oscillator = function () {
   p5.Oscillator.prototype.dispose = function () {
     // remove reference from soundArray
     var index = p5sound.soundArray.indexOf(this);
-    p5so
+    p5sound.soundArray.splice(index, 1);
+    if (this.oscillator) {
+      var now = p5sound.audiocontext.currentTime;
+      this.stop(now);
+      this.disconnect();
+      this.panner = null;
+      this.oscillator = null;
+    }
+    // if it is a Pulse
+    if (this.osc2) {
+      this.osc2.dispose();
+    }
+  };
+  /**
+   *  Set the phase of an oscillator between 0.0 and 1.0.
+   *  In this implementation, phase is a delay time
+   *  based on the oscillator's current frequency.
+   *
+   *  @method  phase
+   *  @param  {Number} phase float between 0.0 and 1.0
+   */
+  p5.Oscillator.prototype.phase = function (p) {
+    var delayAmt = p5.prototype.map(p, 0, 1, 0, 1 / this.f);
+    var now = p5sound.audiocontext.currentTime;
+    this.phaseAmount = p;
+    if (!this.dNode) {
+      // create a delay node
+      this.dNode = p5sound.audiocontext.createDelay();
+      // put the delay node in between output and panner
+      this.oscillator.disconnect();
+      this.osci
