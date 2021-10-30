@@ -5306,4 +5306,29 @@ oscillator = function () {
       this.dNode = p5sound.audiocontext.createDelay();
       // put the delay node in between output and panner
       this.oscillator.disconnect();
-      this.osci
+      this.oscillator.connect(this.dNode);
+      this.dNode.connect(this.output);
+    }
+    // set delay time to match phase:
+    this.dNode.delayTime.setValueAtTime(delayAmt, now);
+  };
+  // ========================== //
+  // SIGNAL MATH FOR MODULATION //
+  // ========================== //
+  // return sigChain(this, scale, thisChain, nextChain, Scale);
+  var sigChain = function (o, mathObj, thisChain, nextChain, type) {
+    var chainSource = o.oscillator;
+    // if this type of math already exists in the chain, replace it
+    for (var i in o.mathOps) {
+      if (o.mathOps[i] instanceof type) {
+        chainSource.disconnect();
+        o.mathOps[i].dispose();
+        thisChain = i;
+        // assume nextChain is output gain node unless...
+        if (thisChain < o.mathOps.length - 2) {
+          nextChain = o.mathOps[i + 1];
+        }
+      }
+    }
+    if (thisChain === o.mathOps.length - 1) {
+      o.mathOps.pu
