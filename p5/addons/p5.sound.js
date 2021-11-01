@@ -5331,4 +5331,35 @@ oscillator = function () {
       }
     }
     if (thisChain === o.mathOps.length - 1) {
-      o.mathOps.pu
+      o.mathOps.push(nextChain);
+    }
+    // assume source is the oscillator unless i > 0
+    if (i > 0) {
+      chainSource = o.mathOps[i - 1];
+    }
+    chainSource.disconnect();
+    chainSource.connect(mathObj);
+    mathObj.connect(nextChain);
+    o.mathOps[thisChain] = mathObj;
+    return o;
+  };
+  /**
+   *  Add a value to the p5.Oscillator's output amplitude,
+   *  and return the oscillator. Calling this method again
+   *  will override the initial add() with a new value.
+   *
+   *  @method  add
+   *  @param {Number} number Constant number to add
+   *  @return {p5.Oscillator} Oscillator Returns this oscillator
+   *                                     with scaled output
+   *
+   */
+  p5.Oscillator.prototype.add = function (num) {
+    var add = new Add(num);
+    var thisChain = this.mathOps.length - 1;
+    var nextChain = this.output;
+    return sigChain(this, add, thisChain, nextChain, Add);
+  };
+  /**
+   *  Multiply the p5.Oscillator's output amplitude
+   *  by a fixed value (i.e. turn it up!). Calling this me
