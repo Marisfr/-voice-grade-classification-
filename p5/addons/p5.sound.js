@@ -5362,4 +5362,28 @@ oscillator = function () {
   };
   /**
    *  Multiply the p5.Oscillator's output amplitude
-   *  by a fixed value (i.e. turn it up!). Calling this me
+   *  by a fixed value (i.e. turn it up!). Calling this method
+   *  again will override the initial mult() with a new value.
+   *
+   *  @method  mult
+   *  @param {Number} number Constant number to multiply
+   *  @return {p5.Oscillator} Oscillator Returns this oscillator
+   *                                     with multiplied output
+   */
+  p5.Oscillator.prototype.mult = function (num) {
+    var mult = new Mult(num);
+    var thisChain = this.mathOps.length - 1;
+    var nextChain = this.output;
+    return sigChain(this, mult, thisChain, nextChain, Mult);
+  };
+  /**
+   *  Scale this oscillator's amplitude values to a given
+   *  range, and return the oscillator. Calling this method
+   *  again will override the initial scale() with new values.
+   *
+   *  @method  scale
+   *  @param  {Number} inMin  input range minumum
+   *  @param  {Number} inMax  input range maximum
+   *  @param  {Number} outMin input range minumum
+   *  @param  {Number} outMax input range maximum
+   *  @return {p5.Oscillator} Osc
