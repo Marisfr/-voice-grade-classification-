@@ -5386,4 +5386,29 @@ oscillator = function () {
    *  @param  {Number} inMax  input range maximum
    *  @param  {Number} outMin input range minumum
    *  @param  {Number} outMax input range maximum
-   *  @return {p5.Oscillator} Osc
+   *  @return {p5.Oscillator} Oscillator Returns this oscillator
+   *                                     with scaled output
+   */
+  p5.Oscillator.prototype.scale = function (inMin, inMax, outMin, outMax) {
+    var mapOutMin, mapOutMax;
+    if (arguments.length === 4) {
+      mapOutMin = p5.prototype.map(outMin, inMin, inMax, 0, 1) - 0.5;
+      mapOutMax = p5.prototype.map(outMax, inMin, inMax, 0, 1) - 0.5;
+    } else {
+      mapOutMin = arguments[0];
+      mapOutMax = arguments[1];
+    }
+    var scale = new Scale(mapOutMin, mapOutMax);
+    var thisChain = this.mathOps.length - 1;
+    var nextChain = this.output;
+    return sigChain(this, scale, thisChain, nextChain, Scale);
+  };
+  // ============================== //
+  // SinOsc, TriOsc, SqrOsc, SawOsc //
+  // ============================== //
+  /**
+   *  Constructor: <code>new p5.SinOsc()</code>.
+   *  This creates a Sine Wave Oscillator and is
+   *  equivalent to <code> new p5.Oscillator('sine')
+   *  </code> or creating a p5.Oscillator and then calling
+   *  its 
