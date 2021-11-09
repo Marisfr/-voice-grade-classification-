@@ -5411,4 +5411,35 @@ oscillator = function () {
    *  This creates a Sine Wave Oscillator and is
    *  equivalent to <code> new p5.Oscillator('sine')
    *  </code> or creating a p5.Oscillator and then calling
-   *  its 
+   *  its method <code>setType('sine')</code>.
+   *  See p5.Oscillator for methods.
+   *
+   *  @class  p5.SinOsc
+   *  @constructor
+   *  @extends p5.Oscillator
+   *  @param {Number} [freq] Set the frequency
+   */
+  p5.SinOsc = function (freq) {
+    p5.Oscillator.call(this, freq, 'sine');
+  };
+  p5.SinOsc.prototype = Object.create(p5.Oscillator.prototype);
+  /**
+   *  Constructor: <code>new p5.TriOsc()</code>.
+   *  This creates a Triangle Wave Oscillator and is
+   *  equivalent to <code>new p5.Oscillator('triangle')
+   *  </code> or creating a p5.Oscillator and then calling
+   *  its method <code>setType('triangle')</code>.
+   *  See p5.Oscillator for methods.
+   *
+   *  @class  p5.TriOsc
+   *  @constructor
+   *  @extends p5.Oscillator
+   *  @param {Number} [freq] Set the frequency
+   */
+  p5.TriOsc = function (freq) {
+    p5.Oscillator.call(this, freq, 'triangle');
+  };
+  p5.TriOsc.prototype = Object.create(p5.Oscillator.prototype);
+  /**
+   *  Constructor: <code>new p5.SawOsc()</code>.
+   *  This creates a SawTooth
