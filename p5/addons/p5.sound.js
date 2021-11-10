@@ -5442,4 +5442,32 @@ oscillator = function () {
   p5.TriOsc.prototype = Object.create(p5.Oscillator.prototype);
   /**
    *  Constructor: <code>new p5.SawOsc()</code>.
-   *  This creates a SawTooth
+   *  This creates a SawTooth Wave Oscillator and is
+   *  equivalent to <code> new p5.Oscillator('sawtooth')
+   *  </code> or creating a p5.Oscillator and then calling
+   *  its method <code>setType('sawtooth')</code>.
+   *  See p5.Oscillator for methods.
+   *
+   *  @class  p5.SawOsc
+   *  @constructor
+   *  @extends p5.Oscillator
+   *  @param {Number} [freq] Set the frequency
+   */
+  p5.SawOsc = function (freq) {
+    p5.Oscillator.call(this, freq, 'sawtooth');
+  };
+  p5.SawOsc.prototype = Object.create(p5.Oscillator.prototype);
+  /**
+   *  Constructor: <code>new p5.SqrOsc()</code>.
+   *  This creates a Square Wave Oscillator and is
+   *  equivalent to <code> new p5.Oscillator('square')
+   *  </code> or creating a p5.Oscillator and then calling
+   *  its method <code>setType('square')</code>.
+   *  See p5.Oscillator for methods.
+   *
+   *  @class  p5.SqrOsc
+   *  @constructor
+   *  @extends p5.Oscillator
+   *  @param {Number} [freq] Set the frequency
+   */
+  p5.SqrOsc = functio
