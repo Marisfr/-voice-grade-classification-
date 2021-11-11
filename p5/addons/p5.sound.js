@@ -5470,4 +5470,30 @@ oscillator = function () {
    *  @extends p5.Oscillator
    *  @param {Number} [freq] Set the frequency
    */
-  p5.SqrOsc = functio
+  p5.SqrOsc = function (freq) {
+    p5.Oscillator.call(this, freq, 'square');
+  };
+  p5.SqrOsc.prototype = Object.create(p5.Oscillator.prototype);
+}(master, Tone_signal_Add, Tone_signal_Multiply, Tone_signal_Scale);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Timeline;
+Tone_core_Timeline = function (Tone) {
+  'use strict';
+  Tone.Timeline = function () {
+    var options = this.optionsObject(arguments, ['memory'], Tone.Timeline.defaults);
+    this._timeline = [];
+    this._toRemove = [];
+    this._iterating = false;
+    this.memory = options.memory;
+  };
+  Tone.extend(Tone.Timeline);
+  Tone.Timeline.defaults = { 'memory': Infinity };
+  Object.defineProperty(Tone.Timeline.prototype, 'length', {
+    get: function () {
+      return this._timeline.length;
+    }
+  });
+  Tone.Timeline.prototype.add = function (event) {
+    if (this.isUndef(event.time)) {
+      throw new Error('Tone.Timeline: events must have a time attribute');
+  
