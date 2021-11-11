@@ -5496,4 +5496,40 @@ Tone_core_Timeline = function (Tone) {
   Tone.Timeline.prototype.add = function (event) {
     if (this.isUndef(event.time)) {
       throw new Error('Tone.Timeline: events must have a time attribute');
-  
+    }
+    if (this._timeline.length) {
+      var index = this._search(event.time);
+      this._timeline.splice(index + 1, 0, event);
+    } else {
+      this._timeline.push(event);
+    }
+    if (this.length > this.memory) {
+      var diff = this.length - this.memory;
+      this._timeline.splice(0, diff);
+    }
+    return this;
+  };
+  Tone.Timeline.prototype.remove = function (event) {
+    if (this._iterating) {
+      this._toRemove.push(event);
+    } else {
+      var index = this._timeline.indexOf(event);
+      if (index !== -1) {
+        this._timeline.splice(index, 1);
+      }
+    }
+    return this;
+  };
+  Tone.Timeline.prototype.get = function (time) {
+    var index = this._search(time);
+    if (index !== -1) {
+      return this._timeline[index];
+    } else {
+      return null;
+    }
+  };
+  Tone.Timeline.prototype.peek = function () {
+    return this._timeline[0];
+  };
+  Tone.Timeline.prototype.shift = function () {
+    return this._timel
