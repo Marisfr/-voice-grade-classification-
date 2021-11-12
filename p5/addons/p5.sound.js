@@ -5532,4 +5532,36 @@ Tone_core_Timeline = function (Tone) {
     return this._timeline[0];
   };
   Tone.Timeline.prototype.shift = function () {
-    return this._timel
+    return this._timeline.shift();
+  };
+  Tone.Timeline.prototype.getAfter = function (time) {
+    var index = this._search(time);
+    if (index + 1 < this._timeline.length) {
+      return this._timeline[index + 1];
+    } else {
+      return null;
+    }
+  };
+  Tone.Timeline.prototype.getBefore = function (time) {
+    var len = this._timeline.length;
+    if (len > 0 && this._timeline[len - 1].time < time) {
+      return this._timeline[len - 1];
+    }
+    var index = this._search(time);
+    if (index - 1 >= 0) {
+      return this._timeline[index - 1];
+    } else {
+      return null;
+    }
+  };
+  Tone.Timeline.prototype.cancel = function (after) {
+    if (this._timeline.length > 1) {
+      var index = this._search(after);
+      if (index >= 0) {
+        if (this._timeline[index].time === after) {
+          for (var i = index; i >= 0; i--) {
+            if (this._timeline[i].time === after) {
+              index = i;
+            } else {
+              break;
+     
