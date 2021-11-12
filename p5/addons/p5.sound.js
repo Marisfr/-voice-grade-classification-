@@ -5564,4 +5564,38 @@ Tone_core_Timeline = function (Tone) {
               index = i;
             } else {
               break;
-     
+            }
+          }
+          this._timeline = this._timeline.slice(0, index);
+        } else {
+          this._timeline = this._timeline.slice(0, index + 1);
+        }
+      } else {
+        this._timeline = [];
+      }
+    } else if (this._timeline.length === 1) {
+      if (this._timeline[0].time >= after) {
+        this._timeline = [];
+      }
+    }
+    return this;
+  };
+  Tone.Timeline.prototype.cancelBefore = function (time) {
+    if (this._timeline.length) {
+      var index = this._search(time);
+      if (index >= 0) {
+        this._timeline = this._timeline.slice(index + 1);
+      }
+    }
+    return this;
+  };
+  Tone.Timeline.prototype._search = function (time) {
+    var beginning = 0;
+    var len = this._timeline.length;
+    var end = len;
+    if (len > 0 && this._timeline[len - 1].time <= time) {
+      return len - 1;
+    }
+    while (beginning < end) {
+      var midPoint = Math.floor(beginning + (end - beginning) / 2);
+      var event = this._timeline[midPo
