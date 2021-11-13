@@ -5627,4 +5627,37 @@ Tone_core_Timeline = function (Tone) {
     }
     this._iterating = false;
     if (this._toRemove.length > 0) {
-      for (var j = 0; j < this._toRemo
+      for (var j = 0; j < this._toRemove.length; j++) {
+        var index = this._timeline.indexOf(this._toRemove[j]);
+        if (index !== -1) {
+          this._timeline.splice(index, 1);
+        }
+      }
+      this._toRemove = [];
+    }
+  };
+  Tone.Timeline.prototype.forEach = function (callback) {
+    this._iterate(callback);
+    return this;
+  };
+  Tone.Timeline.prototype.forEachBefore = function (time, callback) {
+    var upperBound = this._search(time);
+    if (upperBound !== -1) {
+      this._iterate(callback, 0, upperBound);
+    }
+    return this;
+  };
+  Tone.Timeline.prototype.forEachAfter = function (time, callback) {
+    var lowerBound = this._search(time);
+    this._iterate(callback, lowerBound + 1);
+    return this;
+  };
+  Tone.Timeline.prototype.forEachFrom = function (time, callback) {
+    var lowerBound = this._search(time);
+    while (lowerBound >= 0 && this._timeline[lowerBound].time >= time) {
+      lowerBound--;
+    }
+    this._iterate(callback, lowerBound + 1);
+    return this;
+  };
+  Tone.Timeline.prototype.for
