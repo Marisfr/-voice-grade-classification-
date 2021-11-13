@@ -5598,4 +5598,33 @@ Tone_core_Timeline = function (Tone) {
     }
     while (beginning < end) {
       var midPoint = Math.floor(beginning + (end - beginning) / 2);
-      var event = this._timeline[midPo
+      var event = this._timeline[midPoint];
+      var nextEvent = this._timeline[midPoint + 1];
+      if (event.time === time) {
+        for (var i = midPoint; i < this._timeline.length; i++) {
+          var testEvent = this._timeline[i];
+          if (testEvent.time === time) {
+            midPoint = i;
+          }
+        }
+        return midPoint;
+      } else if (event.time < time && nextEvent.time > time) {
+        return midPoint;
+      } else if (event.time > time) {
+        end = midPoint;
+      } else if (event.time < time) {
+        beginning = midPoint + 1;
+      }
+    }
+    return -1;
+  };
+  Tone.Timeline.prototype._iterate = function (callback, lowerBound, upperBound) {
+    this._iterating = true;
+    lowerBound = this.defaultArg(lowerBound, 0);
+    upperBound = this.defaultArg(upperBound, this._timeline.length - 1);
+    for (var i = lowerBound; i <= upperBound; i++) {
+      callback(this._timeline[i]);
+    }
+    this._iterating = false;
+    if (this._toRemove.length > 0) {
+      for (var j = 0; j < this._toRemo
