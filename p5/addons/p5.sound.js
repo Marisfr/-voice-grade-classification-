@@ -5660,4 +5660,36 @@ Tone_core_Timeline = function (Tone) {
     this._iterate(callback, lowerBound + 1);
     return this;
   };
-  Tone.Timeline.prototype.for
+  Tone.Timeline.prototype.forEachAtTime = function (time, callback) {
+    var upperBound = this._search(time);
+    if (upperBound !== -1) {
+      this._iterate(function (event) {
+        if (event.time === time) {
+          callback(event);
+        }
+      }, 0, upperBound);
+    }
+    return this;
+  };
+  Tone.Timeline.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._timeline = null;
+    this._toRemove = null;
+  };
+  return Tone.Timeline;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_TimelineSignal;
+Tone_signal_TimelineSignal = function (Tone) {
+  'use strict';
+  Tone.TimelineSignal = function () {
+    var options = this.optionsObject(arguments, [
+      'value',
+      'units'
+    ], Tone.Signal.defaults);
+    this._events = new Tone.Timeline(10);
+    Tone.Signal.apply(this, options);
+    options.param = this._param;
+    Tone.Param.call(this, options);
+    this._initial = this._fromUnits(this._param.value);
+  }
