@@ -5692,4 +5692,35 @@ Tone_signal_TimelineSignal = function (Tone) {
     options.param = this._param;
     Tone.Param.call(this, options);
     this._initial = this._fromUnits(this._param.value);
-  }
+  };
+  Tone.extend(Tone.TimelineSignal, Tone.Param);
+  Tone.TimelineSignal.Type = {
+    Linear: 'linear',
+    Exponential: 'exponential',
+    Target: 'target',
+    Curve: 'curve',
+    Set: 'set'
+  };
+  Object.defineProperty(Tone.TimelineSignal.prototype, 'value', {
+    get: function () {
+      var now = this.now();
+      var val = this.getValueAtTime(now);
+      return this._toUnits(val);
+    },
+    set: function (value) {
+      var convertedVal = this._fromUnits(value);
+      this._initial = convertedVal;
+      this.cancelScheduledValues();
+      this._param.value = convertedVal;
+    }
+  });
+  Tone.TimelineSignal.prototype.setValueAtTime = function (value, startTime) {
+    value = this._fromUnits(value);
+    startTime = this.toSeconds(startTime);
+    this._events.add({
+      'type': Tone.TimelineSignal.Type.Set,
+      'value': value,
+      'time': startTime
+    });
+    this._param.setValueAtTime(value, startTime);
+    return this;
