@@ -5750,4 +5750,31 @@ Tone_signal_TimelineSignal = function (Tone) {
       'time': endTime
     });
     if (value < this._minOutput) {
-      this._param.exponentialRampToValueAtTime(this._minOutput, endTime - this.sampleTime
+      this._param.exponentialRampToValueAtTime(this._minOutput, endTime - this.sampleTime);
+      this.setValueAtTime(0, endTime);
+    } else {
+      this._param.exponentialRampToValueAtTime(value, endTime);
+    }
+    return this;
+  };
+  Tone.TimelineSignal.prototype.setTargetAtTime = function (value, startTime, timeConstant) {
+    value = this._fromUnits(value);
+    value = Math.max(this._minOutput, value);
+    timeConstant = Math.max(this._minOutput, timeConstant);
+    startTime = this.toSeconds(startTime);
+    this._events.add({
+      'type': Tone.TimelineSignal.Type.Target,
+      'value': value,
+      'time': startTime,
+      'constant': timeConstant
+    });
+    this._param.setTargetAtTime(value, startTime, timeConstant);
+    return this;
+  };
+  Tone.TimelineSignal.prototype.setValueCurveAtTime = function (values, startTime, duration, scaling) {
+    scaling = this.defaultArg(scaling, 1);
+    var floats = new Array(values.length);
+    for (var i = 0; i < floats.length; i++) {
+      floats[i] = this._fromUnits(values[i]) * scaling;
+    }
+    startTime = this.toSeconds(startTi
