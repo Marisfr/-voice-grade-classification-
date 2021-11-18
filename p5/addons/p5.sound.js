@@ -5724,3 +5724,30 @@ Tone_signal_TimelineSignal = function (Tone) {
     });
     this._param.setValueAtTime(value, startTime);
     return this;
+  };
+  Tone.TimelineSignal.prototype.linearRampToValueAtTime = function (value, endTime) {
+    value = this._fromUnits(value);
+    endTime = this.toSeconds(endTime);
+    this._events.add({
+      'type': Tone.TimelineSignal.Type.Linear,
+      'value': value,
+      'time': endTime
+    });
+    this._param.linearRampToValueAtTime(value, endTime);
+    return this;
+  };
+  Tone.TimelineSignal.prototype.exponentialRampToValueAtTime = function (value, endTime) {
+    endTime = this.toSeconds(endTime);
+    var beforeEvent = this._searchBefore(endTime);
+    if (beforeEvent && beforeEvent.value === 0) {
+      this.setValueAtTime(this._minOutput, beforeEvent.time);
+    }
+    value = this._fromUnits(value);
+    var setValue = Math.max(value, this._minOutput);
+    this._events.add({
+      'type': Tone.TimelineSignal.Type.Exponential,
+      'value': setValue,
+      'time': endTime
+    });
+    if (value < this._minOutput) {
+      this._param.exponentialRampToValueAtTime(this._minOutput, endTime - this.sampleTime
