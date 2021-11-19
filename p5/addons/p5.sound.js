@@ -5777,4 +5777,30 @@ Tone_signal_TimelineSignal = function (Tone) {
     for (var i = 0; i < floats.length; i++) {
       floats[i] = this._fromUnits(values[i]) * scaling;
     }
-    startTime = this.toSeconds(startTi
+    startTime = this.toSeconds(startTime);
+    duration = this.toSeconds(duration);
+    this._events.add({
+      'type': Tone.TimelineSignal.Type.Curve,
+      'value': floats,
+      'time': startTime,
+      'duration': duration
+    });
+    this._param.setValueAtTime(floats[0], startTime);
+    for (var j = 1; j < floats.length; j++) {
+      var segmentTime = startTime + j / (floats.length - 1) * duration;
+      this._param.linearRampToValueAtTime(floats[j], segmentTime);
+    }
+    return this;
+  };
+  Tone.TimelineSignal.prototype.cancelScheduledValues = function (after) {
+    after = this.toSeconds(after);
+    this._events.cancel(after);
+    this._param.cancelScheduledValues(after);
+    return this;
+  };
+  Tone.TimelineSignal.prototype.setRampPoint = function (time) {
+    time = this.toSeconds(time);
+    var val = this._toUnits(this.getValueAtTime(time));
+    var before = this._searchBefore(time);
+    if (before && before.time === time) {
+      this.cancelScheduledValu
