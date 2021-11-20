@@ -5803,4 +5803,29 @@ Tone_signal_TimelineSignal = function (Tone) {
     var val = this._toUnits(this.getValueAtTime(time));
     var before = this._searchBefore(time);
     if (before && before.time === time) {
-      this.cancelScheduledValu
+      this.cancelScheduledValues(time + this.sampleTime);
+    } else if (before && before.type === Tone.TimelineSignal.Type.Curve && before.time + before.duration > time) {
+      this.cancelScheduledValues(time);
+      this.linearRampToValueAtTime(val, time);
+    } else {
+      var after = this._searchAfter(time);
+      if (after) {
+        this.cancelScheduledValues(time);
+        if (after.type === Tone.TimelineSignal.Type.Linear) {
+          this.linearRampToValueAtTime(val, time);
+        } else if (after.type === Tone.TimelineSignal.Type.Exponential) {
+          this.exponentialRampToValueAtTime(val, time);
+        }
+      }
+      this.setValueAtTime(val, time);
+    }
+    return this;
+  };
+  Tone.TimelineSignal.prototype.linearRampToValueBetween = function (value, start, finish) {
+    this.setRampPoint(start);
+    this.linearRampToValueAtTime(value, finish);
+    return this;
+  };
+  Tone.TimelineSignal.prototype.exponentialRampToValueBetween = function (value, start, finish) {
+    this.setRampPoint(start);
+    this.exponentialRampToValueAtTi
