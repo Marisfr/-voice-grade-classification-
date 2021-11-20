@@ -5828,4 +5828,29 @@ Tone_signal_TimelineSignal = function (Tone) {
   };
   Tone.TimelineSignal.prototype.exponentialRampToValueBetween = function (value, start, finish) {
     this.setRampPoint(start);
-    this.exponentialRampToValueAtTi
+    this.exponentialRampToValueAtTime(value, finish);
+    return this;
+  };
+  Tone.TimelineSignal.prototype._searchBefore = function (time) {
+    return this._events.get(time);
+  };
+  Tone.TimelineSignal.prototype._searchAfter = function (time) {
+    return this._events.getAfter(time);
+  };
+  Tone.TimelineSignal.prototype.getValueAtTime = function (time) {
+    time = this.toSeconds(time);
+    var after = this._searchAfter(time);
+    var before = this._searchBefore(time);
+    var value = this._initial;
+    if (before === null) {
+      value = this._initial;
+    } else if (before.type === Tone.TimelineSignal.Type.Target) {
+      var previous = this._events.getBefore(before.time);
+      var previouVal;
+      if (previous === null) {
+        previouVal = this._initial;
+      } else {
+        previouVal = previous.value;
+      }
+      value = this._exponentialApproach(before.time, previouVal, before.value, before.constant, time);
+    } else
