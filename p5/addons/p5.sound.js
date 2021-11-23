@@ -5853,4 +5853,22 @@ Tone_signal_TimelineSignal = function (Tone) {
         previouVal = previous.value;
       }
       value = this._exponentialApproach(before.time, previouVal, before.value, before.constant, time);
-    } else
+    } else if (before.type === Tone.TimelineSignal.Type.Curve) {
+      value = this._curveInterpolate(before.time, before.value, before.duration, time);
+    } else if (after === null) {
+      value = before.value;
+    } else if (after.type === Tone.TimelineSignal.Type.Linear) {
+      value = this._linearInterpolate(before.time, before.value, after.time, after.value, time);
+    } else if (after.type === Tone.TimelineSignal.Type.Exponential) {
+      value = this._exponentialInterpolate(before.time, before.value, after.time, after.value, time);
+    } else {
+      value = before.value;
+    }
+    return value;
+  };
+  Tone.TimelineSignal.prototype.connect = Tone.SignalBase.prototype.connect;
+  Tone.TimelineSignal.prototype._exponentialApproach = function (t0, v0, v1, timeConstant, t) {
+    return v1 + (v0 - v1) * Math.exp(-(t - t0) / timeConstant);
+  };
+  Tone.TimelineSignal.prototype._linearInterpolate = function (t0, v0, t1, v1, t) {
+    return v0 + (v1 - v0) * (
