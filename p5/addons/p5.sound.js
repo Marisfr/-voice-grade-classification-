@@ -5871,4 +5871,29 @@ Tone_signal_TimelineSignal = function (Tone) {
     return v1 + (v0 - v1) * Math.exp(-(t - t0) / timeConstant);
   };
   Tone.TimelineSignal.prototype._linearInterpolate = function (t0, v0, t1, v1, t) {
-    return v0 + (v1 - v0) * (
+    return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
+  };
+  Tone.TimelineSignal.prototype._exponentialInterpolate = function (t0, v0, t1, v1, t) {
+    v0 = Math.max(this._minOutput, v0);
+    return v0 * Math.pow(v1 / v0, (t - t0) / (t1 - t0));
+  };
+  Tone.TimelineSignal.prototype._curveInterpolate = function (start, curve, duration, time) {
+    var len = curve.length;
+    if (time >= start + duration) {
+      return curve[len - 1];
+    } else if (time <= start) {
+      return curve[0];
+    } else {
+      var progress = (time - start) / duration;
+      var lowerIndex = Math.floor((len - 1) * progress);
+      var upperIndex = Math.ceil((len - 1) * progress);
+      var lowerVal = curve[lowerIndex];
+      var upperVal = curve[upperIndex];
+      if (upperIndex === lowerIndex) {
+        return lowerVal;
+      } else {
+        return this._linearInterpolate(lowerIndex, lowerVal, upperIndex, upperVal, progress * (len - 1));
+      }
+    }
+  };
+  Tone.TimelineSignal.prototype.d
