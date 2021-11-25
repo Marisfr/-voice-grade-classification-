@@ -5896,4 +5896,29 @@ Tone_signal_TimelineSignal = function (Tone) {
       }
     }
   };
-  Tone.TimelineSignal.prototype.d
+  Tone.TimelineSignal.prototype.dispose = function () {
+    Tone.Signal.prototype.dispose.call(this);
+    Tone.Param.prototype.dispose.call(this);
+    this._events.dispose();
+    this._events = null;
+  };
+  return Tone.TimelineSignal;
+}(Tone_core_Tone, Tone_signal_Signal);
+var env;
+'use strict';
+env = function () {
+  var p5sound = master;
+  var Add = Tone_signal_Add;
+  var Mult = Tone_signal_Multiply;
+  var Scale = Tone_signal_Scale;
+  var TimelineSignal = Tone_signal_TimelineSignal;
+  var Tone = Tone_core_Tone;
+  Tone.setContext(p5sound.audiocontext);
+  /**
+   *  <p>Envelopes are pre-defined amplitude distribution over time.
+   *  Typically, envelopes are used to control the output volume
+   *  of an object, a series of fades referred to as Attack, Decay,
+   *  Sustain and Release (
+   *  <a href="https://upload.wikimedia.org/wikipedia/commons/e/ea/ADSR_parameter.svg">ADSR</a>
+   *  ). Envelopes can also control other Web Audio Parameters—for example, a p5.Env can
+   *  control an O
