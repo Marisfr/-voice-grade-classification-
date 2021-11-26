@@ -5921,4 +5921,29 @@ env = function () {
    *  Sustain and Release (
    *  <a href="https://upload.wikimedia.org/wikipedia/commons/e/ea/ADSR_parameter.svg">ADSR</a>
    *  ). Envelopes can also control other Web Audio Parameters—for example, a p5.Env can
-   *  control an O
+   *  control an Oscillator's frequency like this: <code>osc.freq(env)</code>.</p>
+   *  <p>Use <code><a href="#/p5.Env/setRange">setRange</a></code> to change the attack/release level.
+   *  Use <code><a href="#/p5.Env/setADSR">setADSR</a></code> to change attackTime, decayTime, sustainPercent and releaseTime.</p>
+   *  <p>Use the <code><a href="#/p5.Env/play">play</a></code> method to play the entire envelope,
+   *  the <code><a href="#/p5.Env/ramp">ramp</a></code> method for a pingable trigger,
+   *  or <code><a href="#/p5.Env/triggerAttack">triggerAttack</a></code>/
+   *  <code><a href="#/p5.Env/triggerRelease">triggerRelease</a></code> to trigger noteOn/noteOff.</p>
+   *
+   *  @class p5.Env
+   *  @constructor
+   *  @example
+   *  <div><code>
+   *  var attackLevel = 1.0;
+   *  var releaseLevel = 0;
+   *
+   *  var attackTime = 0.001
+   *  var decayTime = 0.2;
+   *  var susPercent = 0.2;
+   *  var releaseTime = 0.5;
+   *
+   *  var env, triOsc;
+   *
+   *  function setup() {
+   *    var cnv = createCanvas(100, 100);
+   *
+   *    tex
