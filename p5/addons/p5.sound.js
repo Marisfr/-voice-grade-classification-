@@ -5946,4 +5946,41 @@ env = function () {
    *  function setup() {
    *    var cnv = createCanvas(100, 100);
    *
-   *    tex
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, height/2);
+   *
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime, susPercent, releaseTime);
+   *    env.setRange(attackLevel, releaseLevel);
+   *
+   *    triOsc = new p5.Oscillator('triangle');
+   *    triOsc.amp(env);
+   *    triOsc.start();
+   *    triOsc.freq(220);
+   *
+   *    cnv.mousePressed(playEnv);
+   *  }
+   *
+   *  function playEnv(){
+   *    env.play();
+   *  }
+   *  </code></div>
+   */
+  p5.Env = function (t1, l1, t2, l2, t3, l3) {
+    /**
+     * Time until envelope reaches attackLevel
+     * @property attackTime
+     */
+    this.aTime = t1 || 0.1;
+    /**
+     * Level once attack is complete.
+     * @property attackLevel
+     */
+    this.aLevel = l1 || 1;
+    /**
+     * Time until envelope reaches decayLevel.
+     * @property decayTime
+     */
+    this.dTime = t2 || 0.5;
+    /**
+     * Level after decay. The enve
