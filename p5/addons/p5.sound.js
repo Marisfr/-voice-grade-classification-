@@ -6014,4 +6014,27 @@ env = function () {
     // oscillator or buffer source to clear on env complete
     // to save resources if/when it is retriggered
     this.sourceToClear = null;
-    // set to true if attack is set, th
+    // set to true if attack is set, then false on release
+    this.wasTriggered = false;
+    // add to the soundArray so we can dispose of the env later
+    p5sound.soundArray.push(this);
+  };
+  // this init function just smooths the starting value to zero and gives a start point for the timeline
+  // - it was necessary to remove glitches at the beginning.
+  p5.Env.prototype._init = function () {
+    var now = p5sound.audiocontext.currentTime;
+    var t = now;
+    this.control.setTargetAtTime(0.00001, t, 0.001);
+    //also, compute the correct time constants
+    this._setRampAD(this.aTime, this.dTime);
+  };
+  /**
+   *  Reset the envelope with a series of time/value pairs.
+   *
+   *  @method  set
+   *  @param {Number} attackTime     Time (in seconds) before level
+   *                                 reaches attackLevel
+   *  @param {Number} attackLevel    Typically an amplitude between
+   *                                 0.0 and 1.0
+   *  @param {Number} decayTime      Time
+   *  @param {Number} decayLevel  
