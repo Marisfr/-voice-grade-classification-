@@ -5983,4 +5983,35 @@ env = function () {
      */
     this.dTime = t2 || 0.5;
     /**
-     * Level after decay. The enve
+     * Level after decay. The envelope will sustain here until it is released.
+     * @property decayLevel
+     */
+    this.dLevel = l2 || 0;
+    /**
+     * Duration of the release portion of the envelope.
+     * @property releaseTime
+     */
+    this.rTime = t3 || 0;
+    /**
+     * Level at the end of the release.
+     * @property releaseLevel
+     */
+    this.rLevel = l3 || 0;
+    this._rampHighPercentage = 0.98;
+    this._rampLowPercentage = 0.02;
+    this.output = p5sound.audiocontext.createGain();
+    this.control = new TimelineSignal();
+    this._init();
+    // this makes sure the envelope starts at zero
+    this.control.connect(this.output);
+    // connect to the output
+    this.connection = null;
+    // store connection
+    //array of math operation signal chaining
+    this.mathOps = [this.control];
+    //whether envelope should be linear or exponential curve
+    this.isExponential = false;
+    // oscillator or buffer source to clear on env complete
+    // to save resources if/when it is retriggered
+    this.sourceToClear = null;
+    // set to true if attack is set, th
