@@ -6067,4 +6067,34 @@ env = function () {
    *    triOsc.start();
    *  }
    *
-   * 
+   *  // mouseClick triggers envelope if over canvas
+   *  function mouseClicked() {
+   *    // is mouse over canvas?
+   *    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+   *      env.play(triOsc);
+   *    }
+   *  }
+   *  </code></div>
+   *
+   */
+  p5.Env.prototype.set = function (t1, l1, t2, l2, t3, l3) {
+    this.aTime = t1;
+    this.aLevel = l1;
+    this.dTime = t2 || 0;
+    this.dLevel = l2 || 0;
+    this.rTime = t3 || 0;
+    this.rLevel = l3 || 0;
+    // set time constants for ramp
+    this._setRampAD(t1, t2);
+  };
+  /**
+   *  Set values like a traditional
+   *  <a href="https://en.wikipedia.org/wiki/Synthesizer#/media/File:ADSR_parameter.svg">
+   *  ADSR envelope
+   *  </a>.
+   *
+   *  @method  setADSR
+   *  @param {Number} attackTime    Time (in seconds before envelope
+   *                                reaches Attack Level
+   *  @param {Number} [decayTime]    Time (in seconds) before envelope
+   *       
