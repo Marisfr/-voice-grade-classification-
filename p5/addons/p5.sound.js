@@ -6147,4 +6147,38 @@ env = function () {
     this.dTime = dTime || 0;
     // lerp
     this.sPercent = sPercent || 0;
-    this.dLevel = typeof sPercent !== 'undefined' ? sPercent * (this.aLevel -
+    this.dLevel = typeof sPercent !== 'undefined' ? sPercent * (this.aLevel - this.rLevel) + this.rLevel : 0;
+    this.rTime = rTime || 0;
+    // also set time constants for ramp
+    this._setRampAD(aTime, dTime);
+  };
+  /**
+   *  Set max (attackLevel) and min (releaseLevel) of envelope.
+   *
+   *  @method  setRange
+   *  @param {Number} aLevel attack level (defaults to 1)
+   *  @param {Number} rLevel release level (defaults to 0)
+   *  @example
+   *  <div><code>
+   *  var attackLevel = 1.0;
+   *  var releaseLevel = 0;
+   *
+   *  var attackTime = 0.001
+   *  var decayTime = 0.2;
+   *  var susPercent = 0.2;
+   *  var releaseTime = 0.5;
+   *
+   *  var env, triOsc;
+   *
+   *  function setup() {
+   *    var cnv = createCanvas(100, 100);
+   *
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, height/2);
+   *
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime, susPercent, releaseTime);
+   *    env.setRange(attackLevel, releaseLevel);
+   *
+   *    triOsc = new p5.Oscillator('triangle');
+   *    triOsc.a
