@@ -6181,4 +6181,34 @@ env = function () {
    *    env.setRange(attackLevel, releaseLevel);
    *
    *    triOsc = new p5.Oscillator('triangle');
-   *    triOsc.a
+   *    triOsc.amp(env);
+   *    triOsc.start();
+   *    triOsc.freq(220);
+   *
+   *    cnv.mousePressed(playEnv);
+   *  }
+   *
+   *  function playEnv(){
+   *    env.play();
+   *  }
+   *  </code></div>
+   */
+  p5.Env.prototype.setRange = function (aLevel, rLevel) {
+    this.aLevel = aLevel || 1;
+    this.rLevel = rLevel || 0;
+  };
+  //  private (undocumented) method called when ADSR is set to set time constants for ramp
+  //
+  //  Set the <a href="https://en.wikipedia.org/wiki/RC_time_constant">
+  //  time constants</a> for simple exponential ramps.
+  //  The larger the time constant value, the slower the
+  //  transition will be.
+  //
+  //  method  _setRampAD
+  //  param {Number} attackTimeConstant  attack time constant
+  //  param {Number} decayTimeConstant   decay time constant
+  //
+  p5.Env.prototype._setRampAD = function (t1, t2) {
+    this._rampAttackTime = this.checkExpInput(t1);
+    this._rampDecayTime = this.checkExpInput(t2);
+    va
