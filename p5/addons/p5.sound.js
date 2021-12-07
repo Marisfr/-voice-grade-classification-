@@ -6211,4 +6211,20 @@ env = function () {
   p5.Env.prototype._setRampAD = function (t1, t2) {
     this._rampAttackTime = this.checkExpInput(t1);
     this._rampDecayTime = this.checkExpInput(t2);
-    va
+    var TCDenominator = 1;
+    /// Aatish Bhatia's calculation for time constant for rise(to adjust 1/1-e calculation to any percentage)
+    TCDenominator = Math.log(1 / this.checkExpInput(1 - this._rampHighPercentage));
+    this._rampAttackTC = t1 / this.checkExpInput(TCDenominator);
+    TCDenominator = Math.log(1 / this._rampLowPercentage);
+    this._rampDecayTC = t2 / this.checkExpInput(TCDenominator);
+  };
+  // private method
+  p5.Env.prototype.setRampPercentages = function (p1, p2) {
+    //set the percentages that the simple exponential ramps go to
+    this._rampHighPercentage = this.checkExpInput(p1);
+    this._rampLowPercentage = this.checkExpInput(p2);
+    var TCDenominator = 1;
+    //now re-compute the time constants based on those percentages
+    /// Aatish Bhatia's calculation for time constant for rise(to adjust 1/1-e calculation to any percentage)
+    TCDenominator = Math.log(1 / this.checkExpInput(1 - this._rampHighPercentage));
+    this._rampAttackTC = this._r
