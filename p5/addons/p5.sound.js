@@ -6227,4 +6227,29 @@ env = function () {
     //now re-compute the time constants based on those percentages
     /// Aatish Bhatia's calculation for time constant for rise(to adjust 1/1-e calculation to any percentage)
     TCDenominator = Math.log(1 / this.checkExpInput(1 - this._rampHighPercentage));
-    this._rampAttackTC = this._r
+    this._rampAttackTC = this._rampAttackTime / this.checkExpInput(TCDenominator);
+    TCDenominator = Math.log(1 / this._rampLowPercentage);
+    this._rampDecayTC = this._rampDecayTime / this.checkExpInput(TCDenominator);
+  };
+  /**
+   *  Assign a parameter to be controlled by this envelope.
+   *  If a p5.Sound object is given, then the p5.Env will control its
+   *  output gain. If multiple inputs are provided, the env will
+   *  control all of them.
+   *
+   *  @method  setInput
+   *  @param  {Object} [...inputs]         A p5.sound object or
+   *                                Web Audio Param.
+   */
+  p5.Env.prototype.setInput = function () {
+    for (var i = 0; i < arguments.length; i++) {
+      this.connect(arguments[i]);
+    }
+  };
+  /**
+   *  Set whether the envelope ramp is linear (default) or exponential.
+   *  Exponential ramps can be useful because we perceive amplitude
+   *  and frequency logarithmically.
+   *
+   *  @method  setExp
+   *  @param 
