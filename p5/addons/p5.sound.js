@@ -6252,4 +6252,28 @@ env = function () {
    *  and frequency logarithmically.
    *
    *  @method  setExp
-   *  @param 
+   *  @param {Boolean} isExp true is exponential, false is linear
+   */
+  p5.Env.prototype.setExp = function (isExp) {
+    this.isExponential = isExp;
+  };
+  //helper method to protect against zero values being sent to exponential functions
+  p5.Env.prototype.checkExpInput = function (value) {
+    if (value <= 0) {
+      value = 1e-8;
+    }
+    return value;
+  };
+  /**
+   *  Play tells the envelope to start acting on a given input.
+   *  If the input is a p5.sound object (i.e. AudioIn, Oscillator,
+   *  SoundFile), then Env will control its output volume.
+   *  Envelopes can also be used to control any <a href="
+   *  http://docs.webplatform.org/wiki/apis/webaudio/AudioParam">
+   *  Web Audio Audio Param.</a>
+   *
+   *  @method  play
+   *  @param  {Object} unit         A p5.sound object or
+   *                                Web Audio Param.
+   *  @param  {Number} [startTime]  time from now (in seconds) at which to play
+   *  @param  {Number} [sustainTime]
