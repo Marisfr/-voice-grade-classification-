@@ -6276,4 +6276,40 @@ env = function () {
    *  @param  {Object} unit         A p5.sound object or
    *                                Web Audio Param.
    *  @param  {Number} [startTime]  time from now (in seconds) at which to play
-   *  @param  {Number} [sustainTime]
+   *  @param  {Number} [sustainTime] time to sustain before releasing the envelope
+   *  @example
+   *  <div><code>
+   *  var attackLevel = 1.0;
+   *  var releaseLevel = 0;
+   *
+   *  var attackTime = 0.001
+   *  var decayTime = 0.2;
+   *  var susPercent = 0.2;
+   *  var releaseTime = 0.5;
+   *
+   *  var env, triOsc;
+   *
+   *  function setup() {
+   *    var cnv = createCanvas(100, 100);
+   *
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, height/2);
+   *
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime, susPercent, releaseTime);
+   *    env.setRange(attackLevel, releaseLevel);
+   *
+   *    triOsc = new p5.Oscillator('triangle');
+   *    triOsc.amp(env);
+   *    triOsc.start();
+   *    triOsc.freq(220);
+   *
+   *    cnv.mousePressed(playEnv);
+   *  }
+   *
+   *  function playEnv(){
+   *    // trigger env on triOsc, 0 seconds from now
+   *    // After decay, sustain for 0.2 seconds before release
+   *    env.play(triOsc, 0, 0.2);
+   *  }
+   *  </code>
