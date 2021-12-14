@@ -6312,4 +6312,35 @@ env = function () {
    *    // After decay, sustain for 0.2 seconds before release
    *    env.play(triOsc, 0, 0.2);
    *  }
-   *  </code>
+   *  </code></div>
+   */
+  p5.Env.prototype.play = function (unit, secondsFromNow, susTime) {
+    var tFromNow = secondsFromNow || 0;
+    var susTime = susTime || 0;
+    if (unit) {
+      if (this.connection !== unit) {
+        this.connect(unit);
+      }
+    }
+    this.triggerAttack(unit, tFromNow);
+    this.triggerRelease(unit, tFromNow + this.aTime + this.dTime + susTime);
+  };
+  /**
+   *  Trigger the Attack, and Decay portion of the Envelope.
+   *  Similar to holding down a key on a piano, but it will
+   *  hold the sustain level until you let go. Input can be
+   *  any p5.sound object, or a <a href="
+   *  http://docs.webplatform.org/wiki/apis/webaudio/AudioParam">
+   *  Web Audio Param</a>.
+   *
+   *  @method  triggerAttack
+   *  @param  {Object} unit p5.sound Object or Web Audio Param
+   *  @param  {Number} secondsFromNow time from now (in seconds)
+   *  @example
+   *  <div><code>
+   *
+   *  var attackLevel = 1.0;
+   *  var releaseLevel = 0;
+   *
+   *  var attackTime = 0.001
+   *  var dec
