@@ -6343,4 +6343,44 @@ env = function () {
    *  var releaseLevel = 0;
    *
    *  var attackTime = 0.001
-   *  var dec
+   *  var decayTime = 0.3;
+   *  var susPercent = 0.4;
+   *  var releaseTime = 0.5;
+   *
+   *  var env, triOsc;
+   *
+   *  function setup() {
+   *    var cnv = createCanvas(100, 100);
+   *    background(200);
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, height/2);
+   *
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime, susPercent, releaseTime);
+   *    env.setRange(attackLevel, releaseLevel);
+   *
+   *    triOsc = new p5.Oscillator('triangle');
+   *    triOsc.amp(env);
+   *    triOsc.start();
+   *    triOsc.freq(220);
+   *
+   *    cnv.mousePressed(envAttack);
+   *  }
+   *
+   *  function envAttack(){
+   *    console.log('trigger attack');
+   *    env.triggerAttack();
+   *
+   *    background(0,255,0);
+   *    text('attack!', width/2, height/2);
+   *  }
+   *
+   *  function mouseReleased() {
+   *    env.triggerRelease();
+   *
+   *    background(200);
+   *    text('click to play', width/2, height/2);
+   *  }
+   *  </code></div>
+   */
+  p5.Env.p
