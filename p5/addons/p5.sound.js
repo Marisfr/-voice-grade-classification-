@@ -6383,4 +6383,29 @@ env = function () {
    *  }
    *  </code></div>
    */
-  p5.Env.p
+  p5.Env.prototype.triggerAttack = function (unit, secondsFromNow) {
+    var now = p5sound.audiocontext.currentTime;
+    var tFromNow = secondsFromNow || 0;
+    var t = now + tFromNow;
+    this.lastAttack = t;
+    this.wasTriggered = true;
+    if (unit) {
+      if (this.connection !== unit) {
+        this.connect(unit);
+      }
+    }
+    // get and set value (with linear ramp) to anchor automation
+    var valToSet = this.control.getValueAtTime(t);
+    if (this.isExponential === true) {
+      this.control.exponentialRampToValueAtTime(this.checkExpInput(valToSet), t);
+    } else {
+      this.control.linearRampToValueAtTime(valToSet, t);
+    }
+    // after each ramp completes, cancel scheduled values
+    // (so they can be overridden in case env has been re-triggered)
+    // then, set current value (with linearRamp to avoid click)
+    // then, schedule the next automation...
+    // attack
+    t += this.aTime;
+    if (this.isExponential === true) {
+      this.control.ex
