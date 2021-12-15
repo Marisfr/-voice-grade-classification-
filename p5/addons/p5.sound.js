@@ -6408,4 +6408,22 @@ env = function () {
     // attack
     t += this.aTime;
     if (this.isExponential === true) {
-      this.control.ex
+      this.control.exponentialRampToValueAtTime(this.checkExpInput(this.aLevel), t);
+      valToSet = this.checkExpInput(this.control.getValueAtTime(t));
+      this.control.cancelScheduledValues(t);
+      this.control.exponentialRampToValueAtTime(valToSet, t);
+    } else {
+      this.control.linearRampToValueAtTime(this.aLevel, t);
+      valToSet = this.control.getValueAtTime(t);
+      this.control.cancelScheduledValues(t);
+      this.control.linearRampToValueAtTime(valToSet, t);
+    }
+    // decay to decay level (if using ADSR, then decay level == sustain level)
+    t += this.dTime;
+    if (this.isExponential === true) {
+      this.control.exponentialRampToValueAtTime(this.checkExpInput(this.dLevel), t);
+      valToSet = this.checkExpInput(this.control.getValueAtTime(t));
+      this.control.cancelScheduledValues(t);
+      this.control.exponentialRampToValueAtTime(valToSet, t);
+    } else {
+      this.control.linearRampToValueAtTime(this.dLeve
