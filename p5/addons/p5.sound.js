@@ -6459,4 +6459,36 @@ env = function () {
    *    textAlign(CENTER);
    *    text('click to play', width/2, height/2);
    *
-   *    env = new p5.Env
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime, susPercent, releaseTime);
+   *    env.setRange(attackLevel, releaseLevel);
+   *
+   *    triOsc = new p5.Oscillator('triangle');
+   *    triOsc.amp(env);
+   *    triOsc.start();
+   *    triOsc.freq(220);
+   *
+   *    cnv.mousePressed(envAttack);
+   *  }
+   *
+   *  function envAttack(){
+   *    console.log('trigger attack');
+   *    env.triggerAttack();
+   *
+   *    background(0,255,0);
+   *    text('attack!', width/2, height/2);
+   *  }
+   *
+   *  function mouseReleased() {
+   *    env.triggerRelease();
+   *
+   *    background(200);
+   *    text('click to play', width/2, height/2);
+   *  }
+   *  </code></div>
+   */
+  p5.Env.prototype.triggerRelease = function (unit, secondsFromNow) {
+    // only trigger a release if an attack was triggered
+    if (!this.wasTriggered) {
+      // this currently causes a bit of trouble:
+      // if a later release has been scheduled (via the pla
