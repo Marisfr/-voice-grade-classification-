@@ -6426,4 +6426,37 @@ env = function () {
       this.control.cancelScheduledValues(t);
       this.control.exponentialRampToValueAtTime(valToSet, t);
     } else {
-      this.control.linearRampToValueAtTime(this.dLeve
+      this.control.linearRampToValueAtTime(this.dLevel, t);
+      valToSet = this.control.getValueAtTime(t);
+      this.control.cancelScheduledValues(t);
+      this.control.linearRampToValueAtTime(valToSet, t);
+    }
+  };
+  /**
+   *  Trigger the Release of the Envelope. This is similar to releasing
+   *  the key on a piano and letting the sound fade according to the
+   *  release level and release time.
+   *
+   *  @method  triggerRelease
+   *  @param  {Object} unit p5.sound Object or Web Audio Param
+   *  @param  {Number} secondsFromNow time to trigger the release
+   *  @example
+   *  <div><code>
+   *
+   *  var attackLevel = 1.0;
+   *  var releaseLevel = 0;
+   *
+   *  var attackTime = 0.001
+   *  var decayTime = 0.3;
+   *  var susPercent = 0.4;
+   *  var releaseTime = 0.5;
+   *
+   *  var env, triOsc;
+   *
+   *  function setup() {
+   *    var cnv = createCanvas(100, 100);
+   *    background(200);
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, height/2);
+   *
+   *    env = new p5.Env
