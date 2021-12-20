@@ -6517,4 +6517,25 @@ env = function () {
     // release
     t += this.rTime;
     if (this.isExponential === true) {
-      thi
+      this.control.exponentialRampToValueAtTime(this.checkExpInput(this.rLevel), t);
+      valToSet = this.checkExpInput(this.control.getValueAtTime(t));
+      this.control.cancelScheduledValues(t);
+      this.control.exponentialRampToValueAtTime(valToSet, t);
+    } else {
+      this.control.linearRampToValueAtTime(this.rLevel, t);
+      valToSet = this.control.getValueAtTime(t);
+      this.control.cancelScheduledValues(t);
+      this.control.linearRampToValueAtTime(valToSet, t);
+    }
+    this.wasTriggered = false;
+  };
+  /**
+   *  Exponentially ramp to a value using the first two
+   *  values from <code><a href="#/p5.Env/setADSR">setADSR(attackTime, decayTime)</a></code>
+   *  as <a href="https://en.wikipedia.org/wiki/RC_time_constant">
+   *  time constants</a> for simple exponential ramps.
+   *  If the value is higher than current value, it uses attackTime,
+   *  while a decrease uses decayTime.
+   *
+   *  @method  ramp
+   *  @param  {Object} unit           p5.sound Object or Web Audio P
