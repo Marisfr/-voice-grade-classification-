@@ -6491,4 +6491,30 @@ env = function () {
     // only trigger a release if an attack was triggered
     if (!this.wasTriggered) {
       // this currently causes a bit of trouble:
-      // if a later release has been scheduled (via the pla
+      // if a later release has been scheduled (via the play function)
+      // a new earlier release won't interrupt it, because
+      // this.wasTriggered has already been set to false.
+      // If we want new earlier releases to override, then we need to
+      // keep track of the last release time, and if the new release time is
+      // earlier, then use it.
+      return;
+    }
+    var now = p5sound.audiocontext.currentTime;
+    var tFromNow = secondsFromNow || 0;
+    var t = now + tFromNow;
+    if (unit) {
+      if (this.connection !== unit) {
+        this.connect(unit);
+      }
+    }
+    // get and set value (with linear or exponential ramp) to anchor automation
+    var valToSet = this.control.getValueAtTime(t);
+    if (this.isExponential === true) {
+      this.control.exponentialRampToValueAtTime(this.checkExpInput(valToSet), t);
+    } else {
+      this.control.linearRampToValueAtTime(valToSet, t);
+    }
+    // release
+    t += this.rTime;
+    if (this.isExponential === true) {
+      thi
