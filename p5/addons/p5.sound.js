@@ -6538,4 +6538,42 @@ env = function () {
    *  while a decrease uses decayTime.
    *
    *  @method  ramp
-   *  @param  {Object} unit           p5.sound Object or Web Audio P
+   *  @param  {Object} unit           p5.sound Object or Web Audio Param
+   *  @param  {Number} secondsFromNow When to trigger the ramp
+   *  @param  {Number} v              Target value
+   *  @param  {Number} [v2]           Second target value (optional)
+   *  @example
+   *  <div><code>
+   *  var env, osc, amp, cnv;
+   *
+   *  var attackTime = 0.001;
+   *  var decayTime = 0.2;
+   *  var attackLevel = 1;
+   *  var decayLevel = 0;
+   *
+   *  function setup() {
+   *    cnv = createCanvas(100, 100);
+   *    fill(0,255,0);
+   *    noStroke();
+   *
+   *    env = new p5.Env();
+   *    env.setADSR(attackTime, decayTime);
+   *
+   *    osc = new p5.Oscillator();
+   *    osc.amp(env);
+   *    osc.start();
+   *
+   *    amp = new p5.Amplitude();
+   *
+   *    cnv.mousePressed(triggerRamp);
+   *  }
+   *
+   *  function triggerRamp() {
+   *    env.ramp(osc, 0, attackLevel, decayLevel);
+   *  }
+   *
+   *  function draw() {
+   *    background(20,20,20);
+   *    text('click me', 10, 20);
+   *    var h = map(amp.getLevel(), 0, 0.4, 0, height);;
+  
