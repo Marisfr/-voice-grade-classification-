@@ -6576,4 +6576,29 @@ env = function () {
    *    background(20,20,20);
    *    text('click me', 10, 20);
    *    var h = map(amp.getLevel(), 0, 0.4, 0, height);;
-  
+   *
+   *    rect(0, height, width, -h);
+   *  }
+   *  </code></div>
+   */
+  p5.Env.prototype.ramp = function (unit, secondsFromNow, v1, v2) {
+    var now = p5sound.audiocontext.currentTime;
+    var tFromNow = secondsFromNow || 0;
+    var t = now + tFromNow;
+    var destination1 = this.checkExpInput(v1);
+    var destination2 = typeof v2 !== 'undefined' ? this.checkExpInput(v2) : undefined;
+    // connect env to unit if not already connected
+    if (unit) {
+      if (this.connection !== unit) {
+        this.connect(unit);
+      }
+    }
+    //get current value
+    var currentVal = this.checkExpInput(this.control.getValueAtTime(t));
+    // this.control.cancelScheduledValues(t);
+    //if it's going up
+    if (destination1 > currentVal) {
+      this.control.setTargetAtTime(destination1, t, this._rampAttackTC);
+      t += this._rampAttackTime;
+    } else if (destination1 < currentVal) {
+      this.control.setTargetAtTime(destination1, t,
