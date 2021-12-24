@@ -6601,4 +6601,28 @@ env = function () {
       this.control.setTargetAtTime(destination1, t, this._rampAttackTC);
       t += this._rampAttackTime;
     } else if (destination1 < currentVal) {
-      this.control.setTargetAtTime(destination1, t,
+      this.control.setTargetAtTime(destination1, t, this._rampDecayTC);
+      t += this._rampDecayTime;
+    }
+    // Now the second part of envelope begins
+    if (destination2 === undefined)
+      return;
+    //if it's going up
+    if (destination2 > destination1) {
+      this.control.setTargetAtTime(destination2, t, this._rampAttackTC);
+    } else if (destination2 < destination1) {
+      this.control.setTargetAtTime(destination2, t, this._rampDecayTC);
+    }
+  };
+  p5.Env.prototype.connect = function (unit) {
+    this.connection = unit;
+    // assume we're talking about output gain
+    // unless given a different audio param
+    if (unit instanceof p5.Oscillator || unit instanceof p5.SoundFile || unit instanceof p5.AudioIn || unit instanceof p5.Reverb || unit instanceof p5.Noise || unit instanceof p5.Filter || unit instanceof p5.Delay) {
+      unit = unit.output.gain;
+    }
+    if (unit instanceof AudioParam) {
+      //set the initial value
+      unit.setValueAtTime(0, p5sound.audiocontext.currentTime);
+    }
+    if (unit instanceof p5.Sig
