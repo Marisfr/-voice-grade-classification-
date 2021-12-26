@@ -6625,4 +6625,35 @@ env = function () {
       //set the initial value
       unit.setValueAtTime(0, p5sound.audiocontext.currentTime);
     }
-    if (unit instanceof p5.Sig
+    if (unit instanceof p5.Signal) {
+      unit.setValue(0);
+    }
+    this.output.connect(unit);
+  };
+  p5.Env.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  // Signal Math
+  /**
+   *  Add a value to the p5.Oscillator's output amplitude,
+   *  and return the oscillator. Calling this method
+   *  again will override the initial add() with new values.
+   *
+   *  @method  add
+   *  @param {Number} number Constant number to add
+   *  @return {p5.Env} Envelope Returns this envelope
+   *                                     with scaled output
+   */
+  p5.Env.prototype.add = function (num) {
+    var add = new Add(num);
+    var thisChain = this.mathOps.length;
+    var nextChain = this.output;
+    return p5.prototype._mathChain(this, add, thisChain, nextChain, Add);
+  };
+  /**
+   *  Multiply the p5.Env's output amplitude
+   *  by a fixed value. Calling this method
+   *  again will override the initial mult() with new values.
+   *
+   *  @method  mult
+   *  @param {Number} number Constant number t
