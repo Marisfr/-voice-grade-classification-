@@ -6680,4 +6680,34 @@ env = function () {
    *                                     with scaled output
    */
   p5.Env.prototype.scale = function (inMin, inMax, outMin, outMax) {
-    var scale = new Scale(inMin, inM
+    var scale = new Scale(inMin, inMax, outMin, outMax);
+    var thisChain = this.mathOps.length;
+    var nextChain = this.output;
+    return p5.prototype._mathChain(this, scale, thisChain, nextChain, Scale);
+  };
+  // get rid of the oscillator
+  p5.Env.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.disconnect();
+    try {
+      this.control.dispose();
+      this.control = null;
+    } catch (e) {
+      console.warn(e, 'already disposed p5.Env');
+    }
+    for (var i = 1; i < this.mathOps.length; i++) {
+      this.mathOps[i].dispose();
+    }
+  };
+}(master, Tone_signal_Add, Tone_signal_Multiply, Tone_signal_Scale, Tone_signal_TimelineSignal, Tone_core_Tone);
+var pulse;
+'use strict';
+pulse = function () {
+  var p5sound = master;
+  /**
+   *  Creates a Pulse object, an oscillator that implements
+   *  Pulse Width Modulation.
+   *  The pulse is created with two oscillators.
+   *  Accepts a parameter for freq
