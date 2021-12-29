@@ -6656,4 +6656,28 @@ env = function () {
    *  again will override the initial mult() with new values.
    *
    *  @method  mult
-   *  @param {Number} number Constant number t
+   *  @param {Number} number Constant number to multiply
+   *  @return {p5.Env} Envelope Returns this envelope
+   *                                     with scaled output
+   */
+  p5.Env.prototype.mult = function (num) {
+    var mult = new Mult(num);
+    var thisChain = this.mathOps.length;
+    var nextChain = this.output;
+    return p5.prototype._mathChain(this, mult, thisChain, nextChain, Mult);
+  };
+  /**
+   *  Scale this envelope's amplitude values to a given
+   *  range, and return the envelope. Calling this method
+   *  again will override the initial scale() with new values.
+   *
+   *  @method  scale
+   *  @param  {Number} inMin  input range minumum
+   *  @param  {Number} inMax  input range maximum
+   *  @param  {Number} outMin input range minumum
+   *  @param  {Number} outMax input range maximum
+   *  @return {p5.Env} Envelope Returns this envelope
+   *                                     with scaled output
+   */
+  p5.Env.prototype.scale = function (inMin, inMax, outMin, outMax) {
+    var scale = new Scale(inMin, inM
