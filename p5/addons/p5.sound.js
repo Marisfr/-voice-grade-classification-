@@ -6710,4 +6710,38 @@ pulse = function () {
    *  Creates a Pulse object, an oscillator that implements
    *  Pulse Width Modulation.
    *  The pulse is created with two oscillators.
-   *  Accepts a parameter for freq
+   *  Accepts a parameter for frequency, and to set the
+   *  width between the pulses. See <a href="
+   *  http://p5js.org/reference/#/p5.Oscillator">
+   *  <code>p5.Oscillator</code> for a full list of methods.
+   *
+   *  @class p5.Pulse
+   *  @extends p5.Oscillator
+   *  @constructor
+   *  @param {Number} [freq] Frequency in oscillations per second (Hz)
+   *  @param {Number} [w]    Width between the pulses (0 to 1.0,
+   *                         defaults to 0)
+   *  @example
+   *  <div><code>
+   *  var pulse;
+   *  function setup() {
+   *    background(0);
+   *
+   *    // Create and start the pulse wave oscillator
+   *    pulse = new p5.Pulse();
+   *    pulse.amp(0.5);
+   *    pulse.freq(220);
+   *    pulse.start();
+   *  }
+   *
+   *  function draw() {
+   *    var w = map(mouseX, 0, width, 0, 1);
+   *    w = constrain(w, 0, 1);
+   *    pulse.width(w)
+   *  }
+   *  </code></div>
+   */
+  p5.Pulse = function (freq, w) {
+    p5.Oscillator.call(this, freq, 'sawtooth');
+    // width of PWM, should be betw 0 to 1.0
+    this.w = w ||
