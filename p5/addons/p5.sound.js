@@ -6744,4 +6744,31 @@ pulse = function () {
   p5.Pulse = function (freq, w) {
     p5.Oscillator.call(this, freq, 'sawtooth');
     // width of PWM, should be betw 0 to 1.0
-    this.w = w ||
+    this.w = w || 0;
+    // create a second oscillator with inverse frequency
+    this.osc2 = new p5.SawOsc(freq);
+    // create a delay node
+    this.dNode = p5sound.audiocontext.createDelay();
+    // dc offset
+    this.dcOffset = createDCOffset();
+    this.dcGain = p5sound.audiocontext.createGain();
+    this.dcOffset.connect(this.dcGain);
+    this.dcGain.connect(this.output);
+    // set delay time based on PWM width
+    this.f = freq || 440;
+    var mW = this.w / this.oscillator.frequency.value;
+    this.dNode.delayTime.value = mW;
+    this.dcGain.gain.value = 1.7 * (0.5 - this.w);
+    // disconnect osc2 and connect it to delay, which is connected to output
+    this.osc2.disconnect();
+    this.osc2.panner.disconnect();
+    this.osc2.amp(-1);
+    // inverted amplitude
+    this.osc2.output.connect(this.dNode);
+    this.dNode.connect(this.output);
+    this.output.gain.value = 1;
+    this.output.connect(this.panner);
+  };
+  p5.Pulse.prototype = Object.create(p5.Oscillator.prototype);
+  /**
+   * 
