@@ -6771,4 +6771,33 @@ pulse = function () {
   };
   p5.Pulse.prototype = Object.create(p5.Oscillator.prototype);
   /**
-   * 
+   *  Set the width of a Pulse object (an oscillator that implements
+   *  Pulse Width Modulation).
+   *
+   *  @method  width
+   *  @param {Number} [width]    Width between the pulses (0 to 1.0,
+   *                         defaults to 0)
+   */
+  p5.Pulse.prototype.width = function (w) {
+    if (typeof w === 'number') {
+      if (w <= 1 && w >= 0) {
+        this.w = w;
+        // set delay time based on PWM width
+        // var mW = map(this.w, 0, 1.0, 0, 1/this.f);
+        var mW = this.w / this.oscillator.frequency.value;
+        this.dNode.delayTime.value = mW;
+      }
+      this.dcGain.gain.value = 1.7 * (0.5 - this.w);
+    } else {
+      w.connect(this.dNode.delayTime);
+      var sig = new p5.SignalAdd(-0.5);
+      sig.setInput(w);
+      sig = sig.mult(-1);
+      sig = sig.mult(1.7);
+      sig.connect(this.dcGain.gain);
+    }
+  };
+  p5.Pulse.prototype.start = function (f, time) {
+    var now = p5sound.audiocontext.currentTime;
+    var t = time || 0;
+    if (!this.start
