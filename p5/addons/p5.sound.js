@@ -6800,4 +6800,27 @@ pulse = function () {
   p5.Pulse.prototype.start = function (f, time) {
     var now = p5sound.audiocontext.currentTime;
     var t = time || 0;
-    if (!this.start
+    if (!this.started) {
+      var freq = f || this.f;
+      var type = this.oscillator.type;
+      this.oscillator = p5sound.audiocontext.createOscillator();
+      this.oscillator.frequency.setValueAtTime(freq, now);
+      this.oscillator.type = type;
+      this.oscillator.connect(this.output);
+      this.oscillator.start(t + now);
+      // set up osc2
+      this.osc2.oscillator = p5sound.audiocontext.createOscillator();
+      this.osc2.oscillator.frequency.setValueAtTime(freq, t + now);
+      this.osc2.oscillator.type = type;
+      this.osc2.oscillator.connect(this.osc2.output);
+      this.osc2.start(t + now);
+      this.freqNode = [
+        this.oscillator.frequency,
+        this.osc2.oscillator.frequency
+      ];
+      // start dcOffset, too
+      this.dcOffset = createDCOffset();
+      this.dcOffset.connect(this.dcGain);
+      this.dcOffset.start(t + now);
+      // if LFO connections depend on these oscillators
+      if (this.
