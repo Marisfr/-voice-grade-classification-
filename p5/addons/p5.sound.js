@@ -6823,4 +6823,31 @@ pulse = function () {
       this.dcOffset.connect(this.dcGain);
       this.dcOffset.start(t + now);
       // if LFO connections depend on these oscillators
-      if (this.
+      if (this.mods !== undefined && this.mods.frequency !== undefined) {
+        this.mods.frequency.connect(this.freqNode[0]);
+        this.mods.frequency.connect(this.freqNode[1]);
+      }
+      this.started = true;
+      this.osc2.started = true;
+    }
+  };
+  p5.Pulse.prototype.stop = function (time) {
+    if (this.started) {
+      var t = time || 0;
+      var now = p5sound.audiocontext.currentTime;
+      this.oscillator.stop(t + now);
+      this.osc2.oscillator.stop(t + now);
+      this.dcOffset.stop(t + now);
+      this.started = false;
+      this.osc2.started = false;
+    }
+  };
+  p5.Pulse.prototype.freq = function (val, rampTime, tFromNow) {
+    if (typeof val === 'number') {
+      this.f = val;
+      var now = p5sound.audiocontext.currentTime;
+      var rampTime = rampTime || 0;
+      var tFromNow = tFromNow || 0;
+      var currentFreq = this.oscillator.frequency.value;
+      this.oscillator.frequency.cancelScheduledValues(now);
+      this.oscillator.frequency.setValueAtTime(current
