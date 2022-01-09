@@ -6850,4 +6850,27 @@ pulse = function () {
       var tFromNow = tFromNow || 0;
       var currentFreq = this.oscillator.frequency.value;
       this.oscillator.frequency.cancelScheduledValues(now);
-      this.oscillator.frequency.setValueAtTime(current
+      this.oscillator.frequency.setValueAtTime(currentFreq, now + tFromNow);
+      this.oscillator.frequency.exponentialRampToValueAtTime(val, tFromNow + rampTime + now);
+      this.osc2.oscillator.frequency.cancelScheduledValues(now);
+      this.osc2.oscillator.frequency.setValueAtTime(currentFreq, now + tFromNow);
+      this.osc2.oscillator.frequency.exponentialRampToValueAtTime(val, tFromNow + rampTime + now);
+      if (this.freqMod) {
+        this.freqMod.output.disconnect();
+        this.freqMod = null;
+      }
+    } else if (val.output) {
+      val.output.disconnect();
+      val.output.connect(this.oscillator.frequency);
+      val.output.connect(this.osc2.oscillator.frequency);
+      this.freqMod = val;
+    }
+  };
+  // inspiration: http://webaudiodemos.appspot.com/oscilloscope/
+  function createDCOffset() {
+    var ac = p5sound.audiocontext;
+    var buffer = ac.createBuffer(1, 2048, ac.sampleRate);
+    var data = buffer.getChannelData(0);
+    for (var i = 0; i < 2048; i++)
+      data[i] = 1;
+    var bufferSource = a
