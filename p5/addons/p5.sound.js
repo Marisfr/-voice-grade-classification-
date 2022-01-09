@@ -6873,4 +6873,40 @@ pulse = function () {
     var data = buffer.getChannelData(0);
     for (var i = 0; i < 2048; i++)
       data[i] = 1;
-    var bufferSource = a
+    var bufferSource = ac.createBufferSource();
+    bufferSource.buffer = buffer;
+    bufferSource.loop = true;
+    return bufferSource;
+  }
+}(master, oscillator);
+var noise;
+'use strict';
+noise = function () {
+  var p5sound = master;
+  /**
+   *  Noise is a type of oscillator that generates a buffer with random values.
+   *
+   *  @class p5.Noise
+   *  @extends p5.Oscillator
+   *  @constructor
+   *  @param {String} type Type of noise can be 'white' (default),
+   *                       'brown' or 'pink'.
+   */
+  p5.Noise = function (type) {
+    var assignType;
+    p5.Oscillator.call(this);
+    delete this.f;
+    delete this.freq;
+    delete this.oscillator;
+    if (type === 'brown') {
+      assignType = _brownNoise;
+    } else if (type === 'pink') {
+      assignType = _pinkNoise;
+    } else {
+      assignType = _whiteNoise;
+    }
+    this.buffer = assignType;
+  };
+  p5.Noise.prototype = Object.create(p5.Oscillator.prototype);
+  // generate noise buffers
+  var _whiteNoise
