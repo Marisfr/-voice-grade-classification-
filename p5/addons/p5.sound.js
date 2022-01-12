@@ -6909,4 +6909,24 @@ noise = function () {
   };
   p5.Noise.prototype = Object.create(p5.Oscillator.prototype);
   // generate noise buffers
-  var _whiteNoise
+  var _whiteNoise = function () {
+    var bufferSize = 2 * p5sound.audiocontext.sampleRate;
+    var whiteBuffer = p5sound.audiocontext.createBuffer(1, bufferSize, p5sound.audiocontext.sampleRate);
+    var noiseData = whiteBuffer.getChannelData(0);
+    for (var i = 0; i < bufferSize; i++) {
+      noiseData[i] = Math.random() * 2 - 1;
+    }
+    whiteBuffer.type = 'white';
+    return whiteBuffer;
+  }();
+  var _pinkNoise = function () {
+    var bufferSize = 2 * p5sound.audiocontext.sampleRate;
+    var pinkBuffer = p5sound.audiocontext.createBuffer(1, bufferSize, p5sound.audiocontext.sampleRate);
+    var noiseData = pinkBuffer.getChannelData(0);
+    var b0, b1, b2, b3, b4, b5, b6;
+    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0;
+    for (var i = 0; i < bufferSize; i++) {
+      var white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.969 * b2 + whit
