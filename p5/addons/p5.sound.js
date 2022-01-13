@@ -6956,4 +6956,44 @@ noise = function () {
     return brownBuffer;
   }();
   /**
-   *  Se
+   *  Set type of noise to 'white', 'pink' or 'brown'.
+   *  White is the default.
+   *
+   *  @method setType
+   *  @param {String} [type] 'white', 'pink' or 'brown'
+   */
+  p5.Noise.prototype.setType = function (type) {
+    switch (type) {
+    case 'white':
+      this.buffer = _whiteNoise;
+      break;
+    case 'pink':
+      this.buffer = _pinkNoise;
+      break;
+    case 'brown':
+      this.buffer = _brownNoise;
+      break;
+    default:
+      this.buffer = _whiteNoise;
+    }
+    if (this.started) {
+      var now = p5sound.audiocontext.currentTime;
+      this.stop(now);
+      this.start(now + 0.01);
+    }
+  };
+  p5.Noise.prototype.getType = function () {
+    return this.buffer.type;
+  };
+  /**
+   *  Start the noise
+   *
+   *  @method start
+   */
+  p5.Noise.prototype.start = function () {
+    if (this.started) {
+      this.stop();
+    }
+    this.noise = p5sound.audiocontext.createBufferSource();
+    this.noise.buffer = this.buffer;
+    this.noise.loop = true;
