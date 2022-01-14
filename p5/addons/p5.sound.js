@@ -7030,4 +7030,45 @@ noise = function () {
    *  @method amp
    *  @param  {Number|Object} volume amplitude between 0 and 1.0
    *                                     or modulating signal/oscillator
-   *  @param {Number} 
+   *  @param {Number} [rampTime] create a fade that lasts rampTime
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   */
+  /**
+   *  Send output to a p5.sound or web audio object
+   *
+   *  @method  connect
+   *  @param  {Object} unit
+   */
+  /**
+   *  Disconnect all output.
+   *
+   *  @method disconnect
+   */
+  p5.Noise.prototype.dispose = function () {
+    var now = p5sound.audiocontext.currentTime;
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    if (this.noise) {
+      this.noise.disconnect();
+      this.stop(now);
+    }
+    if (this.output) {
+      this.output.disconnect();
+    }
+    if (this.panner) {
+      this.panner.disconnect();
+    }
+    this.output = null;
+    this.panner = null;
+    this.buffer = null;
+    this.noise = null;
+  };
+}(master);
+var audioin;
+'use strict';
+audioin = function () {
+  var p5sound = master;
+  // an array of input sources
+  p5sound.in
