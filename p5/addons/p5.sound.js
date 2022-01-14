@@ -6997,3 +6997,37 @@ noise = function () {
     this.noise = p5sound.audiocontext.createBufferSource();
     this.noise.buffer = this.buffer;
     this.noise.loop = true;
+    this.noise.connect(this.output);
+    var now = p5sound.audiocontext.currentTime;
+    this.noise.start(now);
+    this.started = true;
+  };
+  /**
+   *  Stop the noise.
+   *
+   *  @method  stop
+   */
+  p5.Noise.prototype.stop = function () {
+    var now = p5sound.audiocontext.currentTime;
+    if (this.noise) {
+      this.noise.stop(now);
+      this.started = false;
+    }
+  };
+  /**
+   *  Pan the noise.
+   *
+   *  @method  pan
+   *  @param  {Number} panning Number between -1 (left)
+   *                           and 1 (right)
+   *  @param  {Number} timeFromNow schedule this event to happen
+   *                                seconds from now
+   */
+  /**
+   *  Set the amplitude of the noise between 0 and 1.0. Or,
+   *  modulate amplitude with an audio signal such as an oscillator.
+   *
+   *  @method amp
+   *  @param  {Number|Object} volume amplitude between 0 and 1.0
+   *                                     or modulating signal/oscillator
+   *  @param {Number} 
