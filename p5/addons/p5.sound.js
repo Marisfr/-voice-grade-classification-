@@ -7090,4 +7090,32 @@ audioin = function () {
    *  @class p5.AudioIn
    *  @constructor
    *  @param {Function} [errorCallback] A function to call if there is an error
-   *                                    accessing the Audio
+   *                                    accessing the AudioIn. For example,
+   *                                    Safari and iOS devices do not
+   *                                    currently allow microphone access.
+   *  @example
+   *  <div><code>
+   *  var mic;
+   *  function setup(){
+   *    mic = new p5.AudioIn()
+   *    mic.start();
+   *  }
+   *  function draw(){
+   *    background(0);
+   *    micLevel = mic.getLevel();
+   *    ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
+   *  }
+   *  </code></div>
+   */
+  p5.AudioIn = function (errorCallback) {
+    // set up audio input
+    this.input = p5sound.audiocontext.createGain();
+    this.output = p5sound.audiocontext.createGain();
+    this.stream = null;
+    this.mediaStream = null;
+    this.currentSource = null;
+    /**
+     *  Client must allow browser to access their microphone / audioin source.
+     *  Default: false. Will become true when the client enables acces.
+     *
+     *  @property {Boolean}
