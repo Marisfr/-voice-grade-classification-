@@ -7071,4 +7071,23 @@ var audioin;
 audioin = function () {
   var p5sound = master;
   // an array of input sources
-  p5sound.in
+  p5sound.inputSources = [];
+  /**
+   *  <p>Get audio from an input, i.e. your computer's microphone.</p>
+   *
+   *  <p>Turn the mic on/off with the start() and stop() methods. When the mic
+   *  is on, its volume can be measured with getLevel or by connecting an
+   *  FFT object.</p>
+   *
+   *  <p>If you want to hear the AudioIn, use the .connect() method.
+   *  AudioIn does not connect to p5.sound output by default to prevent
+   *  feedback.</p>
+   *
+   *  <p><em>Note: This uses the <a href="http://caniuse.com/stream">getUserMedia/
+   *  Stream</a> API, which is not supported by certain browsers. Access in Chrome browser
+   *  is limited to localhost and https, but access over http may be limited.</em></p>
+   *
+   *  @class p5.AudioIn
+   *  @constructor
+   *  @param {Function} [errorCallback] A function to call if there is an error
+   *                                    accessing the Audio
