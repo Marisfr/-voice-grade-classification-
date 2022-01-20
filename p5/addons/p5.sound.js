@@ -7118,4 +7118,24 @@ audioin = function () {
      *  Client must allow browser to access their microphone / audioin source.
      *  Default: false. Will become true when the client enables acces.
      *
-     *  @property {Boolean}
+     *  @property {Boolean} enabled
+     */
+    this.enabled = false;
+    // create an amplitude, connect to it by default but not to master out
+    this.amplitude = new p5.Amplitude();
+    this.output.connect(this.amplitude.input);
+    if (!window.MediaStreamTrack || !window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+      errorCallback ? errorCallback() : window.alert('This browser does not support MediaStreamTrack and mediaDevices');
+    }
+    // add to soundArray so we can dispose on close
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Start processing audio input. This enables the use of other
+   *  AudioIn methods like getLevel(). Note that by default, AudioIn
+   *  is not connected to p5.sound's output. So you won't hear
+   *  anything unless you use the connect() method.<br/>
+   *
+   *  Certain browsers limit access to the user's microphone. For example,
+   *  Chrome only allows access from localhost and over https. For this reason,
+   *  you may want t
