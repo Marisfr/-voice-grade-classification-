@@ -7138,4 +7138,29 @@ audioin = function () {
    *
    *  Certain browsers limit access to the user's microphone. For example,
    *  Chrome only allows access from localhost and over https. For this reason,
-   *  you may want t
+   *  you may want to include an errorCallback—a function that is called in case
+   *  the browser won't provide mic access.
+   *
+   *  @method start
+   *  @param {Function} [successCallback] Name of a function to call on
+   *                                    success.
+   *  @param {Function} [errorCallback] Name of a function to call if
+   *                                    there was an error. For example,
+   *                                    some browsers do not support
+   *                                    getUserMedia.
+   */
+  p5.AudioIn.prototype.start = function (successCallback, errorCallback) {
+    var self = this;
+    if (this.stream) {
+      this.stop();
+    }
+    // set the audio source
+    var audioSource = p5sound.inputSources[self.currentSource];
+    var constraints = {
+      audio: {
+        sampleRate: p5sound.audiocontext.sampleRate,
+        echoCancellation: false
+      }
+    };
+    // if developers determine which source to use
+    if (p5sound.inputSour
