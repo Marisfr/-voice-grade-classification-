@@ -7190,4 +7190,37 @@ audioin = function () {
    *  @method stop
    */
   p5.AudioIn.prototype.stop = function () {
-    if (this.stream
+    if (this.stream) {
+      this.stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+      this.mediaStream.disconnect();
+      delete this.mediaStream;
+      delete this.stream;
+    }
+  };
+  /**
+   *  Connect to an audio unit. If no parameter is provided, will
+   *  connect to the master output (i.e. your speakers).<br/>
+   *
+   *  @method  connect
+   *  @param  {Object} [unit] An object that accepts audio input,
+   *                          such as an FFT
+   */
+  p5.AudioIn.prototype.connect = function (unit) {
+    if (unit) {
+      if (unit.hasOwnProperty('input')) {
+        this.output.connect(unit.input);
+      } else if (unit.hasOwnProperty('analyser')) {
+        this.output.connect(unit.analyser);
+      } else {
+        this.output.connect(unit);
+      }
+    } else {
+      this.output.connect(p5sound.input);
+    }
+  };
+  /**
+   *  Disconnect the AudioIn from all audio units. For example, if
+   *  connect() had been called, disconnect() will stop sending
+   *  signal to your speakers.<
