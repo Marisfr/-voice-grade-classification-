@@ -7163,4 +7163,31 @@ audioin = function () {
       }
     };
     // if developers determine which source to use
-    if (p5sound.inputSour
+    if (p5sound.inputSources[this.currentSource]) {
+      constraints.audio.deviceId = audioSource.deviceId;
+    }
+    window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+      self.stream = stream;
+      self.enabled = true;
+      // Wrap a MediaStreamSourceNode around the live input
+      self.mediaStream = p5sound.audiocontext.createMediaStreamSource(stream);
+      self.mediaStream.connect(self.output);
+      // only send to the Amplitude reader, so we can see it but not hear it.
+      self.amplitude.setInput(self.output);
+      if (successCallback)
+        successCallback();
+    }).catch(function (err) {
+      if (errorCallback)
+        errorCallback(err);
+      else
+        console.error(err);
+    });
+  };
+  /**
+   *  Turn the AudioIn off. If the AudioIn is stopped, it cannot getLevel().
+   *  If re-starting, the user may be prompted for permission access.
+   *
+   *  @method stop
+   */
+  p5.AudioIn.prototype.stop = function () {
+    if (this.stream
