@@ -7223,4 +7223,29 @@ audioin = function () {
   /**
    *  Disconnect the AudioIn from all audio units. For example, if
    *  connect() had been called, disconnect() will stop sending
-   *  signal to your speakers.<
+   *  signal to your speakers.<br/>
+   *
+   *  @method  disconnect
+   */
+  p5.AudioIn.prototype.disconnect = function () {
+    this.output.disconnect();
+    // stay connected to amplitude even if not outputting to p5
+    this.output.connect(this.amplitude.input);
+  };
+  /**
+   *  Read the Amplitude (volume level) of an AudioIn. The AudioIn
+   *  class contains its own instance of the Amplitude class to help
+   *  make it easy to get a microphone's volume level. Accepts an
+   *  optional smoothing value (0.0 < 1.0). <em>NOTE: AudioIn must
+   *  .start() before using .getLevel().</em><br/>
+   *
+   *  @method  getLevel
+   *  @param  {Number} [smoothing] Smoothing is 0.0 by default.
+   *                               Smooths values based on previous values.
+   *  @return {Number}           Volume level (between 0.0 and 1.0)
+   */
+  p5.AudioIn.prototype.getLevel = function (smoothing) {
+    if (smoothing) {
+      this.amplitude.smoothing = smoothing;
+    }
+    return this
