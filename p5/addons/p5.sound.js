@@ -7248,4 +7248,28 @@ audioin = function () {
     if (smoothing) {
       this.amplitude.smoothing = smoothing;
     }
-    return this
+    return this.amplitude.getLevel();
+  };
+  /**
+   *  Set amplitude (volume) of a mic input between 0 and 1.0. <br/>
+   *
+   *  @method  amp
+   *  @param  {Number} vol between 0 and 1.0
+   *  @param {Number} [time] ramp time (optional)
+   */
+  p5.AudioIn.prototype.amp = function (vol, t) {
+    if (t) {
+      var rampTime = t || 0;
+      var currentVol = this.output.gain.value;
+      this.output.gain.cancelScheduledValues(p5sound.audiocontext.currentTime);
+      this.output.gain.setValueAtTime(currentVol, p5sound.audiocontext.currentTime);
+      this.output.gain.linearRampToValueAtTime(vol, rampTime + p5sound.audiocontext.currentTime);
+    } else {
+      this.output.gain.cancelScheduledValues(p5sound.audiocontext.currentTime);
+      this.output.gain.setValueAtTime(vol, p5sound.audiocontext.currentTime);
+    }
+  };
+  /**
+   * Returns a list of available input sources. This is a wrapper
+   * for <a title="MediaDevices.enumerateDevices() - Web APIs | MDN" target="_blank" href=
+   *  "https://d
