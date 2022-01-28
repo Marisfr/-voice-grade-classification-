@@ -7272,4 +7272,26 @@ audioin = function () {
   /**
    * Returns a list of available input sources. This is a wrapper
    * for <a title="MediaDevices.enumerateDevices() - Web APIs | MDN" target="_blank" href=
-   *  "https://d
+   *  "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+   *  > and it returns a Promise.
+   *
+   * @method  getSources
+   * @param  {Function} [successCallback] This callback function handles the sources when they
+   *                                      have been enumerated. The callback function
+   *                                      receives the deviceList array as its only argument
+   * @param  {Function} [errorCallback] This optional callback receives the error
+   *                                    message as its argument.
+   * @returns {Object} Returns a Promise that can be used in place of the callbacks, similar
+   *                            to the enumerateDevices() method
+   * @example
+   *  <div><code>
+   *  var audiograb;
+   *
+   *  function setup(){
+   *    //new audioIn
+   *    audioGrab = new p5.AudioIn();
+   *
+   *    audioGrab.getSources(function(deviceList) {
+   *      //print out the array of available sources
+   *      console.log(deviceList);
+   *      //set 
