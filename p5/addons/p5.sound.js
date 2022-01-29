@@ -7324,4 +7324,28 @@ audioin = function () {
    *  Set the input source. Accepts a number representing a
    *  position in the array returned by getSources().
    *  This is only available in browsers that support
-   *  <a title="MediaDevices.enumerateDevic
+   *  <a title="MediaDevices.enumerateDevices() - Web APIs | MDN" target="_blank" href=
+   *  "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+   *  >navigator.mediaDevices.enumerateDevices()</a>.<br/>
+   *
+   *  @method setSource
+   *  @param {number} num position of input source in the array
+   */
+  p5.AudioIn.prototype.setSource = function (num) {
+    if (p5sound.inputSources.length > 0 && num < p5sound.inputSources.length) {
+      // set the current source
+      this.currentSource = num;
+      console.log('set source to ', p5sound.inputSources[this.currentSource]);
+    } else {
+      console.log('unable to set input source');
+    }
+    // restart stream if currently active
+    if (this.stream && this.stream.active) {
+      this.start();
+    }
+  };
+  // private method
+  p5.AudioIn.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(i
