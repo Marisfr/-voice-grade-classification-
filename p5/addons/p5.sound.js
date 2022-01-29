@@ -7294,4 +7294,34 @@ audioin = function () {
    *    audioGrab.getSources(function(deviceList) {
    *      //print out the array of available sources
    *      console.log(deviceList);
-   *      //set 
+   *      //set the source to the first item in the deviceList array
+   *      audioGrab.setSource(0);
+   *    });
+   *  }
+   *  </code></div>
+   */
+  p5.AudioIn.prototype.getSources = function (onSuccess, onError) {
+    return new Promise(function (resolve, reject) {
+      window.navigator.mediaDevices.enumerateDevices().then(function (devices) {
+        p5sound.inputSources = devices.filter(function (device) {
+          return device.kind === 'audioinput';
+        });
+        resolve(p5sound.inputSources);
+        if (onSuccess) {
+          onSuccess(p5sound.inputSources);
+        }
+      }).catch(function (error) {
+        reject(error);
+        if (onError) {
+          onError(error);
+        } else {
+          console.error('This browser does not support MediaStreamTrack.getSources()');
+        }
+      });
+    });
+  };
+  /**
+   *  Set the input source. Accepts a number representing a
+   *  position in the array returned by getSources().
+   *  This is only available in browsers that support
+   *  <a title="MediaDevices.enumerateDevic
