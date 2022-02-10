@@ -7348,4 +7348,37 @@ audioin = function () {
   p5.AudioIn.prototype.dispose = function () {
     // remove reference from soundArray
     var index = p5sound.soundArray.indexOf(this);
-    p5sound.soundArray.splice(i
+    p5sound.soundArray.splice(index, 1);
+    this.stop();
+    if (this.output) {
+      this.output.disconnect();
+    }
+    if (this.amplitude) {
+      this.amplitude.disconnect();
+    }
+    delete this.amplitude;
+    delete this.output;
+  };
+}(master);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Negate;
+Tone_signal_Negate = function (Tone) {
+  'use strict';
+  Tone.Negate = function () {
+    this._multiply = this.input = this.output = new Tone.Multiply(-1);
+  };
+  Tone.extend(Tone.Negate, Tone.SignalBase);
+  Tone.Negate.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._multiply.dispose();
+    this._multiply = null;
+    return this;
+  };
+  return Tone.Negate;
+}(Tone_core_Tone, Tone_signal_Multiply);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Subtract;
+Tone_signal_Subtract = function (Tone) {
+  'use strict';
+  Tone.Subtract = function (value) {
+    t
