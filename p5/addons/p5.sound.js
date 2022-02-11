@@ -7381,4 +7381,29 @@ var Tone_signal_Subtract;
 Tone_signal_Subtract = function (Tone) {
   'use strict';
   Tone.Subtract = function (value) {
-    t
+    this.createInsOuts(2, 0);
+    this._sum = this.input[0] = this.output = new Tone.Gain();
+    this._neg = new Tone.Negate();
+    this._param = this.input[1] = new Tone.Signal(value);
+    this._param.chain(this._neg, this._sum);
+  };
+  Tone.extend(Tone.Subtract, Tone.Signal);
+  Tone.Subtract.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._neg.dispose();
+    this._neg = null;
+    this._sum.disconnect();
+    this._sum = null;
+    this._param.dispose();
+    this._param = null;
+    return this;
+  };
+  return Tone.Subtract;
+}(Tone_core_Tone, Tone_signal_Add, Tone_signal_Negate, Tone_signal_Signal);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_GreaterThanZero;
+Tone_signal_GreaterThanZero = function (Tone) {
+  'use strict';
+  Tone.GreaterThanZero = function () {
+    this._thresh = this.output = new Tone.WaveShaper(function (val) {
+      if (
