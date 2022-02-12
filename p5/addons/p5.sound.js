@@ -7406,4 +7406,35 @@ Tone_signal_GreaterThanZero = function (Tone) {
   'use strict';
   Tone.GreaterThanZero = function () {
     this._thresh = this.output = new Tone.WaveShaper(function (val) {
-      if (
+      if (val <= 0) {
+        return 0;
+      } else {
+        return 1;
+      }
+    }, 127);
+    this._scale = this.input = new Tone.Multiply(10000);
+    this._scale.connect(this._thresh);
+  };
+  Tone.extend(Tone.GreaterThanZero, Tone.SignalBase);
+  Tone.GreaterThanZero.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._scale.dispose();
+    this._scale = null;
+    this._thresh.dispose();
+    this._thresh = null;
+    return this;
+  };
+  return Tone.GreaterThanZero;
+}(Tone_core_Tone, Tone_signal_Signal, Tone_signal_Multiply);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_GreaterThan;
+Tone_signal_GreaterThan = function (Tone) {
+  'use strict';
+  Tone.GreaterThan = function (value) {
+    this.createInsOuts(2, 0);
+    this._param = this.input[0] = new Tone.Subtract(value);
+    this.input[1] = this._param.input[1];
+    this._gtz = this.output = new Tone.GreaterThanZero();
+    this._param.connect(this._gtz);
+  };
+  Tone.extend(Tone.GreaterTh
