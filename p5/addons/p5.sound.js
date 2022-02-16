@@ -7493,4 +7493,36 @@ Tone_signal_Modulo = function (Tone) {
       return multiple;
     });
   };
-  Object.defineProperty(Tone.Modulo.prototype, 'val
+  Object.defineProperty(Tone.Modulo.prototype, 'value', {
+    get: function () {
+      return this._modSignal.value;
+    },
+    set: function (mod) {
+      this._modSignal.value = mod;
+      this._setWaveShaper(mod);
+    }
+  });
+  Tone.Modulo.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._shaper.dispose();
+    this._shaper = null;
+    this._multiply.dispose();
+    this._multiply = null;
+    this._subtract.dispose();
+    this._subtract = null;
+    this._modSignal.dispose();
+    this._modSignal = null;
+    return this;
+  };
+  return Tone.Modulo;
+}(Tone_core_Tone, Tone_signal_WaveShaper, Tone_signal_Multiply);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Pow;
+Tone_signal_Pow = function (Tone) {
+  'use strict';
+  Tone.Pow = function (exp) {
+    this._exp = this.defaultArg(exp, 1);
+    this._expScaler = this.input = this.output = new Tone.WaveShaper(this._expFunc(this._exp), 8192);
+  };
+  Tone.extend(Tone.Pow, Tone.SignalBase);
+  Obje
