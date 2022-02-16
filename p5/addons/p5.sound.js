@@ -7470,4 +7470,27 @@ Tone_signal_Abs = function (Tone) {
   };
   return Tone.Abs;
 }(Tone_core_Tone, Tone_signal_WaveShaper);
-/** Tone.js module by Yotam M
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Modulo;
+Tone_signal_Modulo = function (Tone) {
+  'use strict';
+  Tone.Modulo = function (modulus) {
+    this.createInsOuts(1, 0);
+    this._shaper = new Tone.WaveShaper(Math.pow(2, 16));
+    this._multiply = new Tone.Multiply();
+    this._subtract = this.output = new Tone.Subtract();
+    this._modSignal = new Tone.Signal(modulus);
+    this.input.fan(this._shaper, this._subtract);
+    this._modSignal.connect(this._multiply, 0, 0);
+    this._shaper.connect(this._multiply, 0, 1);
+    this._multiply.connect(this._subtract, 0, 1);
+    this._setWaveShaper(modulus);
+  };
+  Tone.extend(Tone.Modulo, Tone.SignalBase);
+  Tone.Modulo.prototype._setWaveShaper = function (mod) {
+    this._shaper.setMap(function (val) {
+      var multiple = Math.floor((val + 0.0001) / mod);
+      return multiple;
+    });
+  };
+  Object.defineProperty(Tone.Modulo.prototype, 'val
