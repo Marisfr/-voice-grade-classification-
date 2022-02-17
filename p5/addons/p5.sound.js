@@ -7557,4 +7557,34 @@ Tone_signal_AudioToGain = function (Tone) {
     });
   };
   Tone.extend(Tone.AudioToGain, Tone.SignalBase);
-  Tone.AudioToGain.prototype.di
+  Tone.AudioToGain.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._norm.dispose();
+    this._norm = null;
+    return this;
+  };
+  return Tone.AudioToGain;
+}(Tone_core_Tone, Tone_signal_WaveShaper);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_Expr;
+Tone_signal_Expr = function (Tone) {
+  'use strict';
+  Tone.Expr = function () {
+    var expr = this._replacements(Array.prototype.slice.call(arguments));
+    var inputCount = this._parseInputs(expr);
+    this._nodes = [];
+    this.input = new Array(inputCount);
+    for (var i = 0; i < inputCount; i++) {
+      this.input[i] = this.context.createGain();
+    }
+    var tree = this._parseTree(expr);
+    var result;
+    try {
+      result = this._eval(tree);
+    } catch (e) {
+      this._disposeNodes();
+      throw new Error('Tone.Expr: Could evaluate expression: ' + expr);
+    }
+    this.output = result;
+  };
+  Tone.extend(Ton
