@@ -7525,4 +7525,36 @@ Tone_signal_Pow = function (Tone) {
     this._expScaler = this.input = this.output = new Tone.WaveShaper(this._expFunc(this._exp), 8192);
   };
   Tone.extend(Tone.Pow, Tone.SignalBase);
-  Obje
+  Object.defineProperty(Tone.Pow.prototype, 'value', {
+    get: function () {
+      return this._exp;
+    },
+    set: function (exp) {
+      this._exp = exp;
+      this._expScaler.setMap(this._expFunc(this._exp));
+    }
+  });
+  Tone.Pow.prototype._expFunc = function (exp) {
+    return function (val) {
+      return Math.pow(Math.abs(val), exp);
+    };
+  };
+  Tone.Pow.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._expScaler.dispose();
+    this._expScaler = null;
+    return this;
+  };
+  return Tone.Pow;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_AudioToGain;
+Tone_signal_AudioToGain = function (Tone) {
+  'use strict';
+  Tone.AudioToGain = function () {
+    this._norm = this.input = this.output = new Tone.WaveShaper(function (x) {
+      return (x + 1) / 2;
+    });
+  };
+  Tone.extend(Tone.AudioToGain, Tone.SignalBase);
+  Tone.AudioToGain.prototype.di
