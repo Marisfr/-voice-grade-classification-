@@ -7587,4 +7587,36 @@ Tone_signal_Expr = function (Tone) {
     }
     this.output = result;
   };
-  Tone.extend(Ton
+  Tone.extend(Tone.Expr, Tone.SignalBase);
+  function applyBinary(Constructor, args, self) {
+    var op = new Constructor();
+    self._eval(args[0]).connect(op, 0, 0);
+    self._eval(args[1]).connect(op, 0, 1);
+    return op;
+  }
+  function applyUnary(Constructor, args, self) {
+    var op = new Constructor();
+    self._eval(args[0]).connect(op, 0, 0);
+    return op;
+  }
+  function getNumber(arg) {
+    return arg ? parseFloat(arg) : undefined;
+  }
+  function literalNumber(arg) {
+    return arg && arg.args ? parseFloat(arg.args) : undefined;
+  }
+  Tone.Expr._Expressions = {
+    'value': {
+      'signal': {
+        regexp: /^\d+\.\d+|^\d+/,
+        method: function (arg) {
+          var sig = new Tone.Signal(getNumber(arg));
+          return sig;
+        }
+      },
+      'input': {
+        regexp: /^\$\d/,
+        method: function (arg, self) {
+          return self.input[getNumber(arg.substr(1))];
+        }
+      }
