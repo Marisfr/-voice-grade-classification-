@@ -7620,3 +7620,43 @@ Tone_signal_Expr = function (Tone) {
           return self.input[getNumber(arg.substr(1))];
         }
       }
+    },
+    'glue': {
+      '(': { regexp: /^\(/ },
+      ')': { regexp: /^\)/ },
+      ',': { regexp: /^,/ }
+    },
+    'func': {
+      'abs': {
+        regexp: /^abs/,
+        method: applyUnary.bind(this, Tone.Abs)
+      },
+      'mod': {
+        regexp: /^mod/,
+        method: function (args, self) {
+          var modulus = literalNumber(args[1]);
+          var op = new Tone.Modulo(modulus);
+          self._eval(args[0]).connect(op);
+          return op;
+        }
+      },
+      'pow': {
+        regexp: /^pow/,
+        method: function (args, self) {
+          var exp = literalNumber(args[1]);
+          var op = new Tone.Pow(exp);
+          self._eval(args[0]).connect(op);
+          return op;
+        }
+      },
+      'a2g': {
+        regexp: /^a2g/,
+        method: function (args, self) {
+          var op = new Tone.AudioToGain();
+          self._eval(args[0]).connect(op);
+          return op;
+        }
+      }
+    },
+    'binary': {
+    
