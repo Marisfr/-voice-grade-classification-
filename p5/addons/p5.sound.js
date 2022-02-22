@@ -7659,4 +7659,43 @@ Tone_signal_Expr = function (Tone) {
       }
     },
     'binary': {
-    
+      '+': {
+        regexp: /^\+/,
+        precedence: 1,
+        method: applyBinary.bind(this, Tone.Add)
+      },
+      '-': {
+        regexp: /^\-/,
+        precedence: 1,
+        method: function (args, self) {
+          if (args.length === 1) {
+            return applyUnary(Tone.Negate, args, self);
+          } else {
+            return applyBinary(Tone.Subtract, args, self);
+          }
+        }
+      },
+      '*': {
+        regexp: /^\*/,
+        precedence: 0,
+        method: applyBinary.bind(this, Tone.Multiply)
+      }
+    },
+    'unary': {
+      '-': {
+        regexp: /^\-/,
+        method: applyUnary.bind(this, Tone.Negate)
+      },
+      '!': {
+        regexp: /^\!/,
+        method: applyUnary.bind(this, Tone.NOT)
+      }
+    }
+  };
+  Tone.Expr.prototype._parseInputs = function (expr) {
+    var inputArray = expr.match(/\$\d/g);
+    var inputMax = 0;
+    if (inputArray !== null) {
+      for (var i = 0; i < inputArray.length; i++) {
+        var inputNum = parseInt(inputArray[i].substr(1)) + 1;
+        inputMax = Math.max(inputMax, in
