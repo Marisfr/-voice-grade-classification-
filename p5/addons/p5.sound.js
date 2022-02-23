@@ -7698,4 +7698,38 @@ Tone_signal_Expr = function (Tone) {
     if (inputArray !== null) {
       for (var i = 0; i < inputArray.length; i++) {
         var inputNum = parseInt(inputArray[i].substr(1)) + 1;
-        inputMax = Math.max(inputMax, in
+        inputMax = Math.max(inputMax, inputNum);
+      }
+    }
+    return inputMax;
+  };
+  Tone.Expr.prototype._replacements = function (args) {
+    var expr = args.shift();
+    for (var i = 0; i < args.length; i++) {
+      expr = expr.replace(/\%/i, args[i]);
+    }
+    return expr;
+  };
+  Tone.Expr.prototype._tokenize = function (expr) {
+    var position = -1;
+    var tokens = [];
+    while (expr.length > 0) {
+      expr = expr.trim();
+      var token = getNextToken(expr);
+      tokens.push(token);
+      expr = expr.substr(token.value.length);
+    }
+    function getNextToken(expr) {
+      for (var type in Tone.Expr._Expressions) {
+        var group = Tone.Expr._Expressions[type];
+        for (var opName in group) {
+          var op = group[opName];
+          var reg = op.regexp;
+          var match = expr.match(reg);
+          if (match !== null) {
+            return {
+              type: type,
+              value: match[0],
+              method: op.method
+            };
+    
