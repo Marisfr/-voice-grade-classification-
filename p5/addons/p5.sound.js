@@ -7732,4 +7732,41 @@ Tone_signal_Expr = function (Tone) {
               value: match[0],
               method: op.method
             };
-    
+          }
+        }
+      }
+      throw new SyntaxError('Tone.Expr: Unexpected token ' + expr);
+    }
+    return {
+      next: function () {
+        return tokens[++position];
+      },
+      peek: function () {
+        return tokens[position + 1];
+      }
+    };
+  };
+  Tone.Expr.prototype._parseTree = function (expr) {
+    var lexer = this._tokenize(expr);
+    var isUndef = this.isUndef.bind(this);
+    function matchSyntax(token, syn) {
+      return !isUndef(token) && token.type === 'glue' && token.value === syn;
+    }
+    function matchGroup(token, groupName, prec) {
+      var ret = false;
+      var group = Tone.Expr._Expressions[groupName];
+      if (!isUndef(token)) {
+        for (var opName in group) {
+          var op = group[opName];
+          if (op.regexp.test(token.value)) {
+            if (!isUndef(prec)) {
+              if (op.precedence === prec) {
+                return true;
+              }
+            } else {
+              return true;
+            }
+          }
+        }
+      }
+ 
