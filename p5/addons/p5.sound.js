@@ -7769,4 +7769,45 @@ Tone_signal_Expr = function (Tone) {
           }
         }
       }
- 
+      return ret;
+    }
+    function parseExpression(precedence) {
+      if (isUndef(precedence)) {
+        precedence = 5;
+      }
+      var expr;
+      if (precedence < 0) {
+        expr = parseUnary();
+      } else {
+        expr = parseExpression(precedence - 1);
+      }
+      var token = lexer.peek();
+      while (matchGroup(token, 'binary', precedence)) {
+        token = lexer.next();
+        expr = {
+          operator: token.value,
+          method: token.method,
+          args: [
+            expr,
+            parseExpression(precedence - 1)
+          ]
+        };
+        token = lexer.peek();
+      }
+      return expr;
+    }
+    function parseUnary() {
+      var token, expr;
+      token = lexer.peek();
+      if (matchGroup(token, 'unary')) {
+        token = lexer.next();
+        expr = parseUnary();
+        return {
+          operator: token.value,
+          method: token.method,
+          args: [expr]
+        };
+      }
+      return parsePrimary();
+    }
+    function parsePrimary
