@@ -7842,4 +7842,41 @@ Tone_signal_Expr = function (Tone) {
       var token, args = [];
       token = lexer.next();
       if (!matchSyntax(token, '(')) {
-       
+        throw new SyntaxError('Tone.Expr: Expected ( in a function call "' + func.value + '"');
+      }
+      token = lexer.peek();
+      if (!matchSyntax(token, ')')) {
+        args = parseArgumentList();
+      }
+      token = lexer.next();
+      if (!matchSyntax(token, ')')) {
+        throw new SyntaxError('Tone.Expr: Expected ) in a function call "' + func.value + '"');
+      }
+      return {
+        method: func.method,
+        args: args,
+        name: name
+      };
+    }
+    function parseArgumentList() {
+      var token, expr, args = [];
+      while (true) {
+        expr = parseExpression();
+        if (isUndef(expr)) {
+          break;
+        }
+        args.push(expr);
+        token = lexer.peek();
+        if (!matchSyntax(token, ',')) {
+          break;
+        }
+        lexer.next();
+      }
+      return args;
+    }
+    return parseExpression();
+  };
+  Tone.Expr.prototype._eval = function (tree) {
+    if (!this.isUndef(tree)) {
+      var node = tree.method(tree.args, this);
+     
