@@ -7810,4 +7810,36 @@ Tone_signal_Expr = function (Tone) {
       }
       return parsePrimary();
     }
-    function parsePrimary
+    function parsePrimary() {
+      var token, expr;
+      token = lexer.peek();
+      if (isUndef(token)) {
+        throw new SyntaxError('Tone.Expr: Unexpected termination of expression');
+      }
+      if (token.type === 'func') {
+        token = lexer.next();
+        return parseFunctionCall(token);
+      }
+      if (token.type === 'value') {
+        token = lexer.next();
+        return {
+          method: token.method,
+          args: token.value
+        };
+      }
+      if (matchSyntax(token, '(')) {
+        lexer.next();
+        expr = parseExpression();
+        token = lexer.next();
+        if (!matchSyntax(token, ')')) {
+          throw new SyntaxError('Expected )');
+        }
+        return expr;
+      }
+      throw new SyntaxError('Tone.Expr: Parse error, cannot process token ' + token.value);
+    }
+    function parseFunctionCall(func) {
+      var token, args = [];
+      token = lexer.next();
+      if (!matchSyntax(token, '(')) {
+       
