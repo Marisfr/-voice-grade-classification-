@@ -7879,4 +7879,32 @@ Tone_signal_Expr = function (Tone) {
   Tone.Expr.prototype._eval = function (tree) {
     if (!this.isUndef(tree)) {
       var node = tree.method(tree.args, this);
-     
+      this._nodes.push(node);
+      return node;
+    }
+  };
+  Tone.Expr.prototype._disposeNodes = function () {
+    for (var i = 0; i < this._nodes.length; i++) {
+      var node = this._nodes[i];
+      if (this.isFunction(node.dispose)) {
+        node.dispose();
+      } else if (this.isFunction(node.disconnect)) {
+        node.disconnect();
+      }
+      node = null;
+      this._nodes[i] = null;
+    }
+    this._nodes = null;
+  };
+  Tone.Expr.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._disposeNodes();
+  };
+  return Tone.Expr;
+}(Tone_core_Tone, Tone_signal_Add, Tone_signal_Subtract, Tone_signal_Multiply, Tone_signal_GreaterThan, Tone_signal_GreaterThanZero, Tone_signal_Abs, Tone_signal_Negate, Tone_signal_Modulo, Tone_signal_Pow);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_signal_EqualPowerGain;
+Tone_signal_EqualPowerGain = function (Tone) {
+  'use strict';
+  Tone.EqualPowerGain = function () {
+    this._eqPower = this.input = thi
