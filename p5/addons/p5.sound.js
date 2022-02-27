@@ -7907,4 +7907,31 @@ var Tone_signal_EqualPowerGain;
 Tone_signal_EqualPowerGain = function (Tone) {
   'use strict';
   Tone.EqualPowerGain = function () {
-    this._eqPower = this.input = thi
+    this._eqPower = this.input = this.output = new Tone.WaveShaper(function (val) {
+      if (Math.abs(val) < 0.001) {
+        return 0;
+      } else {
+        return this.equalPowerScale(val);
+      }
+    }.bind(this), 4096);
+  };
+  Tone.extend(Tone.EqualPowerGain, Tone.SignalBase);
+  Tone.EqualPowerGain.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._eqPower.dispose();
+    this._eqPower = null;
+    return this;
+  };
+  return Tone.EqualPowerGain;
+}(Tone_core_Tone);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_component_CrossFade;
+Tone_component_CrossFade = function (Tone) {
+  'use strict';
+  Tone.CrossFade = function (initialFade) {
+    this.createInsOuts(2, 1);
+    this.a = this.input[0] = new Tone.Gain();
+    this.b = this.input[1] = new Tone.Gain();
+    this.fade = new Tone.Signal(this.defaultArg(initialFade, 0.5), Tone.Type.NormalRange);
+    this._equalPowerA = new Tone.EqualPowerGain();
+    th
