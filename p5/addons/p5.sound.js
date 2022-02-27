@@ -7934,4 +7934,34 @@ Tone_component_CrossFade = function (Tone) {
     this.b = this.input[1] = new Tone.Gain();
     this.fade = new Tone.Signal(this.defaultArg(initialFade, 0.5), Tone.Type.NormalRange);
     this._equalPowerA = new Tone.EqualPowerGain();
-    th
+    this._equalPowerB = new Tone.EqualPowerGain();
+    this._invert = new Tone.Expr('1 - $0');
+    this.a.connect(this.output);
+    this.b.connect(this.output);
+    this.fade.chain(this._equalPowerB, this.b.gain);
+    this.fade.chain(this._invert, this._equalPowerA, this.a.gain);
+    this._readOnly('fade');
+  };
+  Tone.extend(Tone.CrossFade);
+  Tone.CrossFade.prototype.dispose = function () {
+    Tone.prototype.dispose.call(this);
+    this._writable('fade');
+    this._equalPowerA.dispose();
+    this._equalPowerA = null;
+    this._equalPowerB.dispose();
+    this._equalPowerB = null;
+    this.fade.dispose();
+    this.fade = null;
+    this._invert.dispose();
+    this._invert = null;
+    this.a.dispose();
+    this.a = null;
+    this.b.dispose();
+    this.b = null;
+    return this;
+  };
+  return Tone.CrossFade;
+}(Tone_core_Tone, Tone_signal_Signal, Tone_signal_Expr, Tone_signal_EqualPowerGain);
+var effect;
+'use strict';
+effe
