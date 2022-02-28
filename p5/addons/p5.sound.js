@@ -7964,4 +7964,27 @@ Tone_component_CrossFade = function (Tone) {
 }(Tone_core_Tone, Tone_signal_Signal, Tone_signal_Expr, Tone_signal_EqualPowerGain);
 var effect;
 'use strict';
-effe
+effect = function () {
+  var p5sound = master;
+  var CrossFade = Tone_component_CrossFade;
+  /**
+  * Effect is a base class for audio effects in p5. <br>
+  * This module handles the nodes and methods that are
+  * common and useful for current and future effects.
+  *
+  *
+  * This class is extended by <a href="reference/#/p5.Distortion">p5.Distortion</a>,
+  * <a href="reference/#/p5.Compressor">p5.Compressor</a>,
+  * <a href="reference/#/p5.Delay">p5.Delay</a>,
+  * <a href="reference/#/p5.Filter">p5.Filter</a>,
+  * <a href="reference/#/p5.Reverb">p5.Reverb</a>.
+  *
+  * @class  p5.Effect
+  * @constructor
+  *
+  * @param {Object} [ac]   Reference to the audio context of the p5 object
+  * @param {AudioNode} [input]  Gain Node effect wrapper
+  * @param {AudioNode} [output] Gain Node effect wrapper
+  * @param {Object} [_drywet]   Tone.JS CrossFade node (defaults to value: 1)
+  * @param {AudioNode} [wet]  Effects that extend this class should connect
+  *                     
