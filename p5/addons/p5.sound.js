@@ -7987,4 +7987,35 @@ effect = function () {
   * @param {AudioNode} [output] Gain Node effect wrapper
   * @param {Object} [_drywet]   Tone.JS CrossFade node (defaults to value: 1)
   * @param {AudioNode} [wet]  Effects that extend this class should connect
-  *                     
+  *                              to the wet signal to this gain node, so that dry and wet
+  *                              signals are mixed properly.
+  */
+  p5.Effect = function () {
+    this.ac = p5sound.audiocontext;
+    this.input = this.ac.createGain();
+    this.output = this.ac.createGain();
+    /**
+    * The p5.Effect class is built
+    *   using Tone.js CrossFade
+    *   @private
+    */
+    this._drywet = new CrossFade(1);
+    /**
+     *  In classes that extend
+     *  p5.Effect, connect effect nodes
+     *  to the wet parameter
+     */
+    this.wet = this.ac.createGain();
+    this.input.connect(this._drywet.a);
+    this.wet.connect(this._drywet.b);
+    this._drywet.connect(this.output);
+    this.connect();
+    //Add to the soundArray
+    p5sound.soundArray.push(this);
+  };
+  /**
+  *  Set the output volume of the filter.
+  *
+  *  @method  amp
+  *  @param {Number} [vol] amplitude between 0 and 1.0
+  *  @param {Number} [rampTime] create a fade that l
