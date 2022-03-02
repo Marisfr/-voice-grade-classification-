@@ -8018,4 +8018,28 @@ effect = function () {
   *
   *  @method  amp
   *  @param {Number} [vol] amplitude between 0 and 1.0
-  *  @param {Number} [rampTime] create a fade that l
+  *  @param {Number} [rampTime] create a fade that lasts until rampTime
+  *  @param {Number} [tFromNow] schedule this event to happen in tFromNow seconds
+  */
+  p5.Effect.prototype.amp = function (vol, rampTime, tFromNow) {
+    var rampTime = rampTime || 0;
+    var tFromNow = tFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    var currentVol = this.output.gain.value;
+    this.output.gain.cancelScheduledValues(now);
+    this.output.gain.linearRampToValueAtTime(currentVol, now + tFromNow + 0.001);
+    this.output.gain.linearRampToValueAtTime(vol, now + tFromNow + rampTime + 0.001);
+  };
+  /**
+  * Link effects together in a chain
+  * Example usage: filter.chain(reverb, delay, panner);
+  * May be used with an open-ended number of arguments
+  *
+  * @method chain
+     *  @param {Object} [arguments]  Chain together multiple sound objects
+  */
+  p5.Effect.prototype.chain = function () {
+    if (arguments.length > 0) {
+      this.connect(arguments[0]);
+      for (var i = 1; i < arguments.length; i += 1) {
+     
