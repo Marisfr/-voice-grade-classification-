@@ -8042,4 +8042,43 @@ effect = function () {
     if (arguments.length > 0) {
       this.connect(arguments[0]);
       for (var i = 1; i < arguments.length; i += 1) {
-     
+        arguments[i - 1].connect(arguments[i]);
+      }
+    }
+    return this;
+  };
+  /**
+  * Adjust the dry/wet value.
+  *
+  * @method drywet
+  * @param {Number} [fade] The desired drywet value (0 - 1.0)
+  */
+  p5.Effect.prototype.drywet = function (fade) {
+    if (typeof fade !== 'undefined') {
+      this._drywet.fade.value = fade;
+    }
+    return this._drywet.fade.value;
+  };
+  /**
+  * Send output to a p5.js-sound, Web Audio Node, or use signal to
+  * control an AudioParam
+  *
+  * @method connect
+  * @param {Object} unit
+  */
+  p5.Effect.prototype.connect = function (unit) {
+    var u = unit || p5.soundOut.input;
+    this.output.connect(u.input ? u.input : u);
+  };
+  /**
+  * Disconnect all output.
+  *
+  * @method disconnect
+  */
+  p5.Effect.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  p5.Effect.prototype.dispose = function () {
+    // remove refernce form soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.sou
