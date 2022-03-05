@@ -8081,4 +8081,31 @@ effect = function () {
   p5.Effect.prototype.dispose = function () {
     // remove refernce form soundArray
     var index = p5sound.soundArray.indexOf(this);
-    p5sound.sou
+    p5sound.soundArray.splice(index, 1);
+    this.input.disconnect();
+    this.input = undefined;
+    this.output.disconnect();
+    this.output = undefined;
+    this._drywet.disconnect();
+    delete this._drywet;
+    this.wet.disconnect();
+    delete this.wet;
+    this.ac = undefined;
+  };
+  return p5.Effect;
+}(master, Tone_component_CrossFade);
+var filter;
+'use strict';
+filter = function () {
+  var p5sound = master;
+  var Effect = effect;
+  /**
+   *  <p>A p5.Filter uses a Web Audio Biquad Filter to filter
+   *  the frequency response of an input source. Subclasses
+   *  include:</p>
+   *  * <a href="/reference/#/p5.LowPass"><code>p5.LowPass</code></a>:
+   *  Allows frequencies below the cutoff frequency to pass through,
+   *  and attenuates frequencies above the cutoff.<br/>
+   *  * <a href="/reference/#/p5.HighPass"><code>p5.HighPass</code></a>:
+   *  The opposite of a lowpass filter. <br/>
+   *  * <a href="/reference/#/p5.Ban
