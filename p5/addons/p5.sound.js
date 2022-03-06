@@ -8108,4 +8108,27 @@ filter = function () {
    *  and attenuates frequencies above the cutoff.<br/>
    *  * <a href="/reference/#/p5.HighPass"><code>p5.HighPass</code></a>:
    *  The opposite of a lowpass filter. <br/>
-   *  * <a href="/reference/#/p5.Ban
+   *  * <a href="/reference/#/p5.BandPass"><code>p5.BandPass</code></a>:
+   *  Allows a range of frequencies to pass through and attenuates
+   *  the frequencies below and above this frequency range.<br/>
+   *
+   *  The <code>.res()</code> method controls either width of the
+   *  bandpass, or resonance of the low/highpass cutoff frequency.
+   *
+   *  This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
+   *  Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
+   *  <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
+   *  <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *
+   *  @class p5.Filter
+   *  @extends p5.Effect
+   *  @constructor
+   *  @param {String} [type] 'lowpass' (default), 'highpass', 'bandpass'
+   *  @example
+   *  <div><code>
+   *  var fft, noise, filter;
+   *
+   *  function setup() {
+   *    fill(255, 40, 255);
+   *
+   *    filter = new 
