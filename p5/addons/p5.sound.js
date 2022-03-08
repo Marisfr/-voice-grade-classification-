@@ -8165,4 +8165,40 @@ filter = function () {
    *  }
    *
    *  function isMouseOverCanvas() {
-   *    var mX 
+   *    var mX = mouseX, mY = mouseY;
+   *    if (mX > 0 && mX < width && mY < height && mY > 0) {
+   *      noise.amp(0.5, 0.2);
+   *    } else {
+   *      noise.amp(0, 0.2);
+   *    }
+   *  }
+   *  </code></div>
+   */
+  //constructor with inheritance
+  p5.Filter = function (type) {
+    Effect.call(this);
+    //add extend Effect by adding a Biquad Filter
+    /**
+        *  The p5.Filter is built with a
+        *  <a href="http://www.w3.org/TR/webaudio/#BiquadFilterNode">
+        *  Web Audio BiquadFilter Node</a>.
+        *
+        *  @property {DelayNode} biquadFilter
+     */
+    this.biquad = this.ac.createBiquadFilter();
+    this.input.connect(this.biquad);
+    this.biquad.connect(this.wet);
+    if (type) {
+      this.setType(type);
+    }
+    //Properties useful for the toggle method.
+    this._on = true;
+    this._untoggledType = this.biquad.type;
+  };
+  p5.Filter.prototype = Object.create(Effect.prototype);
+  /**
+   *  Filter an audio signal according to a set
+   *  of filter parameters.
+   *
+   *  @method  process
+   *  @param  {Object} Signal  An
