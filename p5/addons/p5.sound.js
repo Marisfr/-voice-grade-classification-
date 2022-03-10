@@ -8201,4 +8201,32 @@ filter = function () {
    *  of filter parameters.
    *
    *  @method  process
-   *  @param  {Object} Signal  An
+   *  @param  {Object} Signal  An object that outputs audio
+   *  @param {Number} [freq] Frequency in Hz, from 10 to 22050
+   *  @param {Number} [res] Resonance/Width of the filter frequency
+   *                        from 0.001 to 1000
+   */
+  p5.Filter.prototype.process = function (src, freq, res, time) {
+    src.connect(this.input);
+    this.set(freq, res, time);
+  };
+  /**
+   *  Set the frequency and the resonance of the filter.
+   *
+   *  @method  set
+   *  @param {Number} [freq] Frequency in Hz, from 10 to 22050
+   *  @param {Number} [res]  Resonance (Q) from 0.001 to 1000
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   */
+  p5.Filter.prototype.set = function (freq, res, time) {
+    if (freq) {
+      this.freq(freq, time);
+    }
+    if (res) {
+      this.res(res, time);
+    }
+  };
+  /**
+   *  Set the filter frequency, in Hz, from 10 to 22050 (the range of
+   *  human hearing, although in reality most people hear in a narrowe
