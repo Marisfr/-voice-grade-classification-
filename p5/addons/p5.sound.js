@@ -8229,4 +8229,33 @@ filter = function () {
   };
   /**
    *  Set the filter frequency, in Hz, from 10 to 22050 (the range of
-   *  human hearing, although in reality most people hear in a narrowe
+   *  human hearing, although in reality most people hear in a narrower
+   *  range).
+   *
+   *  @method  freq
+   *  @param  {Number} freq Filter Frequency
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   *  @return {Number} value  Returns the current frequency value
+   */
+  p5.Filter.prototype.freq = function (freq, time) {
+    var t = time || 0;
+    if (freq <= 0) {
+      freq = 1;
+    }
+    if (typeof freq === 'number') {
+      this.biquad.frequency.value = freq;
+      this.biquad.frequency.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.biquad.frequency.exponentialRampToValueAtTime(freq, this.ac.currentTime + 0.02 + t);
+    } else if (freq) {
+      freq.connect(this.biquad.frequency);
+    }
+    return this.biquad.frequency.value;
+  };
+  /**
+   *  Controls either width of a bandpass frequency,
+   *  or the resonance of a low/highpass cutoff frequency.
+   *
+   *  @method  res
+   *  @param {Number} res  Resonance/Width of filter freq
+   *                     
