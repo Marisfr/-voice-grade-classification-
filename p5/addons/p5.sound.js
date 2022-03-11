@@ -8258,4 +8258,28 @@ filter = function () {
    *
    *  @method  res
    *  @param {Number} res  Resonance/Width of filter freq
-   *                     
+   *                       from 0.001 to 1000
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   *  @return {Number} value Returns the current res value
+   */
+  p5.Filter.prototype.res = function (res, time) {
+    var t = time || 0;
+    if (typeof res === 'number') {
+      this.biquad.Q.value = res;
+      this.biquad.Q.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.biquad.Q.linearRampToValueAtTime(res, this.ac.currentTime + 0.02 + t);
+    } else if (res) {
+      res.connect(this.biquad.Q);
+    }
+    return this.biquad.Q.value;
+  };
+  /**
+   * Controls the gain attribute of a Biquad Filter.
+   * This is distinctly different from .amp() which is inherited from p5.Effect
+   * .amp() controls the volume via the output gain node
+   * p5.Filter.gain() controls the gain parameter of a Biquad Filter node.
+   *
+   * @method gain
+   * @param  {Number} gain
+   * @return {Number} Returns
