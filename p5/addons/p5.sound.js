@@ -8282,4 +8282,34 @@ filter = function () {
    *
    * @method gain
    * @param  {Number} gain
-   * @return {Number} Returns
+   * @return {Number} Returns the current or updated gain value
+   */
+  p5.Filter.prototype.gain = function (gain, time) {
+    var t = time || 0;
+    if (typeof gain === 'number') {
+      this.biquad.gain.value = gain;
+      this.biquad.gain.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.biquad.gain.linearRampToValueAtTime(gain, this.ac.currentTime + 0.02 + t);
+    } else if (gain) {
+      gain.connect(this.biquad.gain);
+    }
+    return this.biquad.gain.value;
+  };
+  /**
+   * Toggle function. Switches between the specified type and allpass
+   *
+   * @method toggle
+   * @return {boolean} [Toggle value]
+   */
+  p5.Filter.prototype.toggle = function () {
+    this._on = !this._on;
+    if (this._on === true) {
+      this.biquad.type = this._untoggledType;
+    } else if (this._on === false) {
+      this.biquad.type = 'allpass';
+    }
+    return this._on;
+  };
+  /**
+   *  Set the type of a p5.Filter. Possible types include:
+   *  "lowpass" (default), "highpass",
