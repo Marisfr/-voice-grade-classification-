@@ -8345,4 +8345,39 @@ filter = function () {
   p5.LowPass.prototype = Object.create(p5.Filter.prototype);
   /**
    *  Constructor: <code>new p5.HighPass()</code> Filter.
-   *  This is the same as creating a p5.Filte
+   *  This is the same as creating a p5.Filter and then calling
+   *  its method <code>setType('highpass')</code>.
+   *  See p5.Filter for methods.
+   *
+   *  @class p5.HighPass
+   *  @constructor
+   *  @extends p5.Filter
+   */
+  p5.HighPass = function () {
+    p5.Filter.call(this, 'highpass');
+  };
+  p5.HighPass.prototype = Object.create(p5.Filter.prototype);
+  /**
+   *  Constructor: <code>new p5.BandPass()</code> Filter.
+   *  This is the same as creating a p5.Filter and then calling
+   *  its method <code>setType('bandpass')</code>.
+   *  See p5.Filter for methods.
+   *
+   *  @class p5.BandPass
+   *  @constructor
+   *  @extends p5.Filter
+   */
+  p5.BandPass = function () {
+    p5.Filter.call(this, 'bandpass');
+  };
+  p5.BandPass.prototype = Object.create(p5.Filter.prototype);
+  return p5.Filter;
+}(master, effect);
+var src_eqFilter;
+'use strict';
+src_eqFilter = function () {
+  var Filter = filter;
+  var p5sound = master;
+  /**
+   *  EQFilter extends p5.Filter with constraints
+   *  necessary for
