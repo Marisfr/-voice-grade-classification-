@@ -8312,4 +8312,37 @@ filter = function () {
   };
   /**
    *  Set the type of a p5.Filter. Possible types include:
-   *  "lowpass" (default), "highpass",
+   *  "lowpass" (default), "highpass", "bandpass",
+   *  "lowshelf", "highshelf", "peaking", "notch",
+   *  "allpass".
+   *
+   *  @method  setType
+   *  @param {String} t
+   */
+  p5.Filter.prototype.setType = function (t) {
+    this.biquad.type = t;
+    this._untoggledType = this.biquad.type;
+  };
+  p5.Filter.prototype.dispose = function () {
+    // remove reference from soundArray
+    Effect.prototype.dispose.apply(this);
+    this.biquad.disconnect();
+    this.biquad = undefined;
+  };
+  /**
+   *  Constructor: <code>new p5.LowPass()</code> Filter.
+   *  This is the same as creating a p5.Filter and then calling
+   *  its method <code>setType('lowpass')</code>.
+   *  See p5.Filter for methods.
+   *
+   *  @class p5.LowPass
+   *  @constructor
+   *  @extends p5.Filter
+   */
+  p5.LowPass = function () {
+    p5.Filter.call(this, 'lowpass');
+  };
+  p5.LowPass.prototype = Object.create(p5.Filter.prototype);
+  /**
+   *  Constructor: <code>new p5.HighPass()</code> Filter.
+   *  This is the same as creating a p5.Filte
