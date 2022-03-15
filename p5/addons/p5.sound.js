@@ -8413,4 +8413,26 @@ src_eqFilter = function () {
     this.biquad.disconnect();
   };
   EQFilter.prototype.dispose = function () {
-    // remove ref
+    // remove reference form soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.disconnect();
+    delete this.biquad;
+  };
+  return EQFilter;
+}(filter, master);
+var eq;
+'use strict';
+eq = function () {
+  var Effect = effect;
+  var EQFilter = src_eqFilter;
+  /**
+   * p5.EQ is an audio effect that performs the function of a multiband
+   * audio equalizer. Equalization is used to adjust the balance of
+   * frequency compoenents of an audio signal. This process is commonly used
+   * in sound production and recording to change the waveform before it reaches
+   * a sound output device. EQ can also be used as an audio effect to create
+   * interesting distortions by filtering out parts of the spectrum. p5.EQ is
+   * built using a chain of Web Audio Biquad Filter Nodes and can be
+   * instantiated with 3 or 8 bands. Bands can be added or removed from
+   * the EQ by directly modifying p5.EQ.bands (the array that 
