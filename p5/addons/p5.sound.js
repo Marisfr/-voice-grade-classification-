@@ -8435,4 +8435,34 @@ eq = function () {
    * interesting distortions by filtering out parts of the spectrum. p5.EQ is
    * built using a chain of Web Audio Biquad Filter Nodes and can be
    * instantiated with 3 or 8 bands. Bands can be added or removed from
-   * the EQ by directly modifying p5.EQ.bands (the array that 
+   * the EQ by directly modifying p5.EQ.bands (the array that stores filters).
+   *
+   * This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
+   * Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
+   * <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
+   * <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *
+   * @class p5.EQ
+   * @constructor
+   * @extends p5.Effect
+   * @param {Number} [_eqsize] Constructor will accept 3 or 8, defaults to 3
+   * @return {Object} p5.EQ object
+   *
+   * @example
+   * <div><code>
+   * var eq;
+   * var band_names;
+   * var band_index;
+   *
+   * var soundFile, play;
+   *
+   * function preload() {
+   *   soundFormats('mp3', 'ogg');
+   *   soundFile = loadSound('assets/beat');
+   * }
+   *
+   * function setup() {
+   *   eq = new p5.EQ(3);
+   *   soundFile.disconnect();
+   *   eq.process(soundFile);
+ 
