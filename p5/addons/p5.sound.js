@@ -8502,4 +8502,37 @@ eq = function () {
    * function keyPressed() {
    *   if (key===' ') {
    *     play = !play
-   *     play ? soundFile.loop(
+   *     play ? soundFile.loop() : soundFile.pause();
+   *   }
+   * }
+   * </code></div>
+   */
+  p5.EQ = function (_eqsize) {
+    Effect.call(this);
+    //p5.EQ can be of size (3) or (8), defaults to 3
+    _eqsize = _eqsize === 3 || _eqsize === 8 ? _eqsize : 3;
+    var factor;
+    _eqsize === 3 ? factor = Math.pow(2, 3) : factor = 2;
+    /**
+      *  The p5.EQ is built with abstracted p5.Filter objects.
+      *  To modify any bands, use methods of the <a
+      *  href="/reference/#/p5.Filter" title="p5.Filter reference">
+      *  p5.Filter</a> API, especially `gain` and `freq`.
+      *  Bands are stored in an array, with indices 0 - 3, or 0 - 7
+      *  @property {Array}  bands
+      *
+    */
+    this.bands = [];
+    var freq, res;
+    for (var i = 0; i < _eqsize; i++) {
+      if (i === _eqsize - 1) {
+        freq = 21000;
+        res = 0.01;
+      } else if (i === 0) {
+        freq = 100;
+        res = 0.1;
+      } else if (i === 1) {
+        freq = _eqsize === 3 ? 360 * factor : 360;
+        res = 1;
+      } else {
+  
