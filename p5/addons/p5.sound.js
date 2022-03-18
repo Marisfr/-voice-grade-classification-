@@ -8535,4 +8535,32 @@ eq = function () {
         freq = _eqsize === 3 ? 360 * factor : 360;
         res = 1;
       } else {
-  
+        freq = this.bands[i - 1].freq() * factor;
+        res = 1;
+      }
+      this.bands[i] = this._newBand(freq, res);
+      if (i > 0) {
+        this.bands[i - 1].connect(this.bands[i].biquad);
+      } else {
+        this.input.connect(this.bands[i].biquad);
+      }
+    }
+    this.bands[_eqsize - 1].connect(this.output);
+  };
+  p5.EQ.prototype = Object.create(Effect.prototype);
+  /**
+   * Process an input by connecting it to the EQ
+   * @method  process
+   * @param  {Object} src Audio source
+   */
+  p5.EQ.prototype.process = function (src) {
+    src.connect(this.input);
+  };
+  //  /**
+  //   * Set the frequency and gain of each band in the EQ. This method should be
+  //   * called with 3 or 8 frequency and gain pairs, depending on the size of the EQ.
+  //   * ex. eq.set(freq0, gain0, freq1, gain1, freq2, gain2);
+  //   *
+  //   * @method  set
+  //   * @param {Number} [freq0] Frequency value for band with index 0
+  //   * @param {Number} [gain0] Gain value for band with
