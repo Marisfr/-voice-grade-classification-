@@ -8563,4 +8563,20 @@ eq = function () {
   //   *
   //   * @method  set
   //   * @param {Number} [freq0] Frequency value for band with index 0
-  //   * @param {Number} [gain0] Gain value for band with
+  //   * @param {Number} [gain0] Gain value for band with index 0
+  //   * @param {Number} [freq1] Frequency value for band with index 1
+  //   * @param {Number} [gain1] Gain value for band with index 1
+  //   * @param {Number} [freq2] Frequency value for band with index 2
+  //   * @param {Number} [gain2] Gain value for band with index 2
+  //   * @param {Number} [freq3] Frequency value for band with index 3
+  //   * @param {Number} [gain3] Gain value for band with index 3
+  //   * @param {Number} [freq4] Frequency value for band with index 4
+  //   * @param {Number} [gain4] Gain value for band with index 4
+  //   * @param {Number} [freq5] Frequency value for band with index 5
+  //   * @param {Number} [gain5] Gain value for band with index 5
+  //   * @param {Number} [freq6] Frequency value for band with index 6
+  //   * @param {Number} [gain6] Gain value for band with index 6
+  //   * @param {Number} [freq7] Frequency value for band with index 7
+  //   * @param {Number} [gain7] Gain value for band with index 7
+  //   */
+  p5.EQ.prototype.set = func
