@@ -8579,4 +8579,28 @@ eq = function () {
   //   * @param {Number} [freq7] Frequency value for band with index 7
   //   * @param {Number} [gain7] Gain value for band with index 7
   //   */
-  p5.EQ.prototype.set = func
+  p5.EQ.prototype.set = function () {
+    if (arguments.length === this.bands.length * 2) {
+      for (var i = 0; i < arguments.length; i += 2) {
+        this.bands[i / 2].freq(arguments[i]);
+        this.bands[i / 2].gain(arguments[i + 1]);
+      }
+    } else {
+      console.error('Argument mismatch. .set() should be called with ' + this.bands.length * 2 + ' arguments. (one frequency and gain value pair for each band of the eq)');
+    }
+  };
+  /**
+   * Add a new band. Creates a p5.Filter and strips away everything but
+   * the raw biquad filter. This method returns an abstracted p5.Filter,
+   * which can be added to p5.EQ.bands, in order to create new EQ bands.
+   * @private
+   * @method  _newBand
+   * @param  {Number} freq
+   * @param  {Number} res
+   * @return {Object}      Abstracted Filter
+   */
+  p5.EQ.prototype._newBand = function (freq, res) {
+    return new EQFilter(freq, res);
+  };
+  p5.EQ.prototype.dispose = function () {
+    Effe
