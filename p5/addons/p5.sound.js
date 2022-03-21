@@ -8603,4 +8603,36 @@ eq = function () {
     return new EQFilter(freq, res);
   };
   p5.EQ.prototype.dispose = function () {
-    Effe
+    Effect.prototype.dispose.apply(this);
+    while (this.bands.length > 0) {
+      delete this.bands.pop().dispose();
+    }
+    delete this.bands;
+  };
+  return p5.EQ;
+}(effect, src_eqFilter);
+var panner3d;
+'use strict';
+panner3d = function () {
+  var p5sound = master;
+  var Effect = effect;
+  /**
+   * Panner3D is based on the <a title="Web Audio Panner docs"  href=
+   * "https://developer.mozilla.org/en-US/docs/Web/API/PannerNode">
+   * Web Audio Spatial Panner Node</a>.
+   * This panner is a spatial processing node that allows audio to be positioned
+   * and oriented in 3D space.
+   *
+   * The position is relative to an <a title="Web Audio Listener docs" href=
+   * "https://developer.mozilla.org/en-US/docs/Web/API/AudioListener">
+   * Audio Context Listener</a>, which can be accessed
+   * by <code>p5.soundOut.audiocontext.listener</code>
+   *
+   *
+   * @class p5.Panner3D
+   * @constructor
+   */
+  p5.Panner3D = function () {
+    Effect.call(this);
+    /**
+     *  <a tit
