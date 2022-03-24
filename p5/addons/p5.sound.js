@@ -8663,4 +8663,39 @@ panner3d = function () {
    * @method  process
    * @param  {Object} src Input source
    */
-  p5.Panner3D.prototype.proces
+  p5.Panner3D.prototype.process = function (src) {
+    src.connect(this.input);
+  };
+  /**
+   * Set the X,Y,Z position of the Panner
+   * @method set
+   * @param  {Number} xVal
+   * @param  {Number} yVal
+   * @param  {Number} zVal
+   * @param  {Number} time
+   * @return {Array}      Updated x, y, z values as an array
+   */
+  p5.Panner3D.prototype.set = function (xVal, yVal, zVal, time) {
+    this.positionX(xVal, time);
+    this.positionY(yVal, time);
+    this.positionZ(zVal, time);
+    return [
+      this.panner.positionX.value,
+      this.panner.positionY.value,
+      this.panner.positionZ.value
+    ];
+  };
+  /**
+   * Getter and setter methods for position coordinates
+   * @method positionX
+   * @return {Number}      updated coordinate value
+   */
+  /**
+   * Getter and setter methods for position coordinates
+   * @method positionY
+   * @return {Number}      updated coordinate value
+   */
+  /**
+   * Getter and setter methods for position coordinates
+   * @method positionZ
+   * @return {Numbe
