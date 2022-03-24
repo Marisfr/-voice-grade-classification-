@@ -8635,4 +8635,32 @@ panner3d = function () {
   p5.Panner3D = function () {
     Effect.call(this);
     /**
-     *  <a tit
+     *  <a title="Web Audio Panner docs"  href=
+     *  "https://developer.mozilla.org/en-US/docs/Web/API/PannerNode">
+     *  Web Audio Spatial Panner Node</a>
+     *
+     *  Properties include
+     *    -  <a title="w3 spec for Panning Model"
+     *    href="https://www.w3.org/TR/webaudio/#idl-def-PanningModelType"
+     *    >panningModel</a>: "equal power" or "HRTF"
+     *    -  <a title="w3 spec for Distance Model"
+     *    href="https://www.w3.org/TR/webaudio/#idl-def-DistanceModelType"
+     *    >distanceModel</a>: "linear", "inverse", or "exponential"
+     *
+     *  @property {AudioNode} panner
+     *
+     */
+    this.panner = this.ac.createPanner();
+    this.panner.panningModel = 'HRTF';
+    this.panner.distanceModel = 'linear';
+    this.panner.connect(this.output);
+    this.input.connect(this.panner);
+  };
+  p5.Panner3D.prototype = Object.create(Effect.prototype);
+  /**
+   * Connect an audio sorce
+   *
+   * @method  process
+   * @param  {Object} src Input source
+   */
+  p5.Panner3D.prototype.proces
