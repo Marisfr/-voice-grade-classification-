@@ -8698,4 +8698,28 @@ panner3d = function () {
   /**
    * Getter and setter methods for position coordinates
    * @method positionZ
-   * @return {Numbe
+   * @return {Number}      updated coordinate value
+   */
+  p5.Panner3D.prototype.positionX = function (xVal, time) {
+    var t = time || 0;
+    if (typeof xVal === 'number') {
+      this.panner.positionX.value = xVal;
+      this.panner.positionX.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.positionX.linearRampToValueAtTime(xVal, this.ac.currentTime + 0.02 + t);
+    } else if (xVal) {
+      xVal.connect(this.panner.positionX);
+    }
+    return this.panner.positionX.value;
+  };
+  p5.Panner3D.prototype.positionY = function (yVal, time) {
+    var t = time || 0;
+    if (typeof yVal === 'number') {
+      this.panner.positionY.value = yVal;
+      this.panner.positionY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.positionY.linearRampToValueAtTime(yVal, this.ac.currentTime + 0.02 + t);
+    } else if (yVal) {
+      yVal.connect(this.panner.positionY);
+    }
+    return this.panner.positionY.value;
+  };
+  p5.Panner3D.prototype
