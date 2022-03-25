@@ -8722,4 +8722,35 @@ panner3d = function () {
     }
     return this.panner.positionY.value;
   };
-  p5.Panner3D.prototype
+  p5.Panner3D.prototype.positionZ = function (zVal, time) {
+    var t = time || 0;
+    if (typeof zVal === 'number') {
+      this.panner.positionZ.value = zVal;
+      this.panner.positionZ.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.positionZ.linearRampToValueAtTime(zVal, this.ac.currentTime + 0.02 + t);
+    } else if (zVal) {
+      zVal.connect(this.panner.positionZ);
+    }
+    return this.panner.positionZ.value;
+  };
+  /**
+   * Set the X,Y,Z position of the Panner
+   * @method  orient
+   * @param  {Number} xVal
+   * @param  {Number} yVal
+   * @param  {Number} zVal
+   * @param  {Number} time
+   * @return {Array}      Updated x, y, z values as an array
+   */
+  p5.Panner3D.prototype.orient = function (xVal, yVal, zVal, time) {
+    this.orientX(xVal, time);
+    this.orientY(yVal, time);
+    this.orientZ(zVal, time);
+    return [
+      this.panner.orientationX.value,
+      this.panner.orientationY.value,
+      this.panner.orientationZ.value
+    ];
+  };
+  /**
+   * Getter and setter meth
