@@ -8753,4 +8753,32 @@ panner3d = function () {
     ];
   };
   /**
-   * Getter and setter meth
+   * Getter and setter methods for orient coordinates
+   * @method orientX
+   * @return {Number}      updated coordinate value
+   */
+  /**
+   * Getter and setter methods for orient coordinates
+   * @method orientY
+   * @return {Number}      updated coordinate value
+   */
+  /**
+   * Getter and setter methods for orient coordinates
+   * @method orientZ
+   * @return {Number}      updated coordinate value
+   */
+  p5.Panner3D.prototype.orientX = function (xVal, time) {
+    var t = time || 0;
+    if (typeof xVal === 'number') {
+      this.panner.orientationX.value = xVal;
+      this.panner.orientationX.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.orientationX.linearRampToValueAtTime(xVal, this.ac.currentTime + 0.02 + t);
+    } else if (xVal) {
+      xVal.connect(this.panner.orientationX);
+    }
+    return this.panner.orientationX.value;
+  };
+  p5.Panner3D.prototype.orientY = function (yVal, time) {
+    var t = time || 0;
+    if (typeof yVal === 'number') {
+      this.panner.orientationY.val
