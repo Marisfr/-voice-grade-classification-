@@ -8781,4 +8781,29 @@ panner3d = function () {
   p5.Panner3D.prototype.orientY = function (yVal, time) {
     var t = time || 0;
     if (typeof yVal === 'number') {
-      this.panner.orientationY.val
+      this.panner.orientationY.value = yVal;
+      this.panner.orientationY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.orientationY.linearRampToValueAtTime(yVal, this.ac.currentTime + 0.02 + t);
+    } else if (yVal) {
+      yVal.connect(this.panner.orientationY);
+    }
+    return this.panner.orientationY.value;
+  };
+  p5.Panner3D.prototype.orientZ = function (zVal, time) {
+    var t = time || 0;
+    if (typeof zVal === 'number') {
+      this.panner.orientationZ.value = zVal;
+      this.panner.orientationZ.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.panner.orientationZ.linearRampToValueAtTime(zVal, this.ac.currentTime + 0.02 + t);
+    } else if (zVal) {
+      zVal.connect(this.panner.orientationZ);
+    }
+    return this.panner.orientationZ.value;
+  };
+  /**
+   * Set the rolloff factor and max distance
+   * @method  setFalloff
+   * @param {Number} [maxDistance]
+   * @param {Number} [rolloffFactor]
+   */
+  p5.Panner3D.prototype.setFalloff = f
