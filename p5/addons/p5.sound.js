@@ -8806,4 +8806,37 @@ panner3d = function () {
    * @param {Number} [maxDistance]
    * @param {Number} [rolloffFactor]
    */
-  p5.Panner3D.prototype.setFalloff = f
+  p5.Panner3D.prototype.setFalloff = function (maxDistance, rolloffFactor) {
+    this.maxDist(maxDistance);
+    this.rolloff(rolloffFactor);
+  };
+  /**
+   * Maxium distance between the source and the listener
+   * @method  maxDist
+   * @param  {Number} maxDistance
+   * @return {Number} updated value
+   */
+  p5.Panner3D.prototype.maxDist = function (maxDistance) {
+    if (typeof maxDistance === 'number') {
+      this.panner.maxDistance = maxDistance;
+    }
+    return this.panner.maxDistance;
+  };
+  /**
+   * How quickly the volume is reduced as the source moves away from the listener
+   * @method  rollof
+   * @param  {Number} rolloffFactor
+   * @return {Number} updated value
+   */
+  p5.Panner3D.prototype.rolloff = function (rolloffFactor) {
+    if (typeof rolloffFactor === 'number') {
+      this.panner.rolloffFactor = rolloffFactor;
+    }
+    return this.panner.rolloffFactor;
+  };
+  p5.Panner3D.dispose = function () {
+    Effect.prototype.dispose.apply(this);
+    this.panner.disconnect();
+    delete this.panner;
+  };
+  return p5.P
