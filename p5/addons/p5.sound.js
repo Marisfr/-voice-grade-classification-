@@ -8839,4 +8839,29 @@ panner3d = function () {
     this.panner.disconnect();
     delete this.panner;
   };
-  return p5.P
+  return p5.Panner3D;
+}(master, effect);
+var listener3d;
+'use strict';
+listener3d = function () {
+  var p5sound = master;
+  var Effect = effect;
+  //  /**
+  //   * listener is a class that can construct both a Spatial Panner
+  //   * and a Spatial Listener. The panner is based on the
+  //   * Web Audio Spatial Panner Node
+  //   * https://www.w3.org/TR/webaudio/#the-listenernode-interface
+  //   * This panner is a spatial processing node that allows audio to be positioned
+  //   * and oriented in 3D space.
+  //   *
+  //   * The Listener modifies the properties of the Audio Context Listener.
+  //   * Both objects types use the same methods. The default is a spatial panner.
+  //   *
+  //   * <code>p5.Panner3D</code> - Constructs a Spatial Panner<br/>
+  //   * <code>p5.Listener3D</code> - Constructs a Spatial Listener<br/>
+  //   *
+  //   * @class listener
+  //   * @constructor
+  //   * @return {Object} p5.Listener3D Object
+  //   *
+  //   * @param {Web Audio Node} listener Web Audio Spati
