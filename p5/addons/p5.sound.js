@@ -8864,4 +8864,30 @@ listener3d = function () {
   //   * @constructor
   //   * @return {Object} p5.Listener3D Object
   //   *
-  //   * @param {Web Audio Node} listener Web Audio Spati
+  //   * @param {Web Audio Node} listener Web Audio Spatial Panning Node
+  //   * @param {AudioParam} listener.panningModel "equal power" or "HRTF"
+  //   * @param {AudioParam} listener.distanceModel "linear", "inverse", or "exponential"
+  //   * @param {String} [type] [Specify construction of a spatial panner or listener]
+  //   */
+  p5.Listener3D = function (type) {
+    this.ac = p5sound.audiocontext;
+    this.listener = this.ac.listener;
+  };
+  //  /**
+  //   * Connect an audio sorce
+  //   * @param  {Object} src Input source
+  //   */
+  p5.Listener3D.prototype.process = function (src) {
+    src.connect(this.input);
+  };
+  //  /**
+  //   * Set the X,Y,Z position of the Panner
+  //   * @param  {[Number]} xVal
+  //   * @param  {[Number]} yVal
+  //   * @param  {[Number]} zVal
+  //   * @param  {[Number]} time
+  //   * @return {[Array]}      [Updated x, y, z values as an array]
+  //   */
+  p5.Listener3D.prototype.position = function (xVal, yVal, zVal, time) {
+    this.positionX(xVal, time);
+    this.posit
