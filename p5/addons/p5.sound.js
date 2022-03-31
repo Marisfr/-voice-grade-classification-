@@ -8890,4 +8890,31 @@ listener3d = function () {
   //   */
   p5.Listener3D.prototype.position = function (xVal, yVal, zVal, time) {
     this.positionX(xVal, time);
-    this.posit
+    this.positionY(yVal, time);
+    this.positionZ(zVal, time);
+    return [
+      this.listener.positionX.value,
+      this.listener.positionY.value,
+      this.listener.positionZ.value
+    ];
+  };
+  //  /**
+  //   * Getter and setter methods for position coordinates
+  //   * @return {Number}      [updated coordinate value]
+  //   */
+  p5.Listener3D.prototype.positionX = function (xVal, time) {
+    var t = time || 0;
+    if (typeof xVal === 'number') {
+      this.listener.positionX.value = xVal;
+      this.listener.positionX.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.positionX.linearRampToValueAtTime(xVal, this.ac.currentTime + 0.02 + t);
+    } else if (xVal) {
+      xVal.connect(this.listener.positionX);
+    }
+    return this.listener.positionX.value;
+  };
+  p5.Listener3D.prototype.positionY = function (yVal, time) {
+    var t = time || 0;
+    if (typeof yVal === 'number') {
+      this.listener.positionY.value = yVal;
+      this.listener.positionY.cancelScheduledValues(this.ac.currentTime + 0.01 + t
