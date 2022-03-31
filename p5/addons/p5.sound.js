@@ -8917,4 +8917,26 @@ listener3d = function () {
     var t = time || 0;
     if (typeof yVal === 'number') {
       this.listener.positionY.value = yVal;
-      this.listener.positionY.cancelScheduledValues(this.ac.currentTime + 0.01 + t
+      this.listener.positionY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.positionY.linearRampToValueAtTime(yVal, this.ac.currentTime + 0.02 + t);
+    } else if (yVal) {
+      yVal.connect(this.listener.positionY);
+    }
+    return this.listener.positionY.value;
+  };
+  p5.Listener3D.prototype.positionZ = function (zVal, time) {
+    var t = time || 0;
+    if (typeof zVal === 'number') {
+      this.listener.positionZ.value = zVal;
+      this.listener.positionZ.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.positionZ.linearRampToValueAtTime(zVal, this.ac.currentTime + 0.02 + t);
+    } else if (zVal) {
+      zVal.connect(this.listener.positionZ);
+    }
+    return this.listener.positionZ.value;
+  };
+  // cannot define method when class definition is commented
+  //  /**
+  //   * Overrides the listener orient() method because Listener has slightly
+  //   * different params. In human terms, Forward vectors are the direction the
+  //   * nose is pointing. Up vectors are the direction of the top of 
