@@ -8939,4 +8939,26 @@ listener3d = function () {
   //  /**
   //   * Overrides the listener orient() method because Listener has slightly
   //   * different params. In human terms, Forward vectors are the direction the
-  //   * nose is pointing. Up vectors are the direction of the top of 
+  //   * nose is pointing. Up vectors are the direction of the top of the head.
+  //   *
+  //   * @method orient
+  //   * @param  {Number} xValF  Forward vector X direction
+  //   * @param  {Number} yValF  Forward vector Y direction
+  //   * @param  {Number} zValF  Forward vector Z direction
+  //   * @param  {Number} xValU  Up vector X direction
+  //   * @param  {Number} yValU  Up vector Y direction
+  //   * @param  {Number} zValU  Up vector Z direction
+  //   * @param  {Number} time
+  //   * @return {Array}       All orienation params
+  //   */
+  p5.Listener3D.prototype.orient = function (xValF, yValF, zValF, xValU, yValU, zValU, time) {
+    if (arguments.length === 3 || arguments.length === 4) {
+      time = arguments[3];
+      this.orientForward(xValF, yValF, zValF, time);
+    } else if (arguments.length === 6 || arguments === 7) {
+      this.orientForward(xValF, yValF, zValF);
+      this.orientUp(xValU, yValU, zValU, time);
+    }
+    return [
+      this.listener.forwardX.value,
+      this.listener.forw
