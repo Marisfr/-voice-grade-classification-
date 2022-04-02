@@ -8961,4 +8961,38 @@ listener3d = function () {
     }
     return [
       this.listener.forwardX.value,
-      this.listener.forw
+      this.listener.forwardY.value,
+      this.listener.forwardZ.value,
+      this.listener.upX.value,
+      this.listener.upY.value,
+      this.listener.upZ.value
+    ];
+  };
+  p5.Listener3D.prototype.orientForward = function (xValF, yValF, zValF, time) {
+    this.forwardX(xValF, time);
+    this.forwardY(yValF, time);
+    this.forwardZ(zValF, time);
+    return [
+      this.listener.forwardX,
+      this.listener.forwardY,
+      this.listener.forwardZ
+    ];
+  };
+  p5.Listener3D.prototype.orientUp = function (xValU, yValU, zValU, time) {
+    this.upX(xValU, time);
+    this.upY(yValU, time);
+    this.upZ(zValU, time);
+    return [
+      this.listener.upX,
+      this.listener.upY,
+      this.listener.upZ
+    ];
+  };
+  //  /**
+  //   * Getter and setter methods for orient coordinates
+  //   * @return {Number}      [updated coordinate value]
+  //   */
+  p5.Listener3D.prototype.forwardX = function (xVal, time) {
+    var t = time || 0;
+    if (typeof xVal === 'number') {
+      this.listener.for
