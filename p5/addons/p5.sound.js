@@ -8995,4 +8995,27 @@ listener3d = function () {
   p5.Listener3D.prototype.forwardX = function (xVal, time) {
     var t = time || 0;
     if (typeof xVal === 'number') {
-      this.listener.for
+      this.listener.forwardX.value = xVal;
+      this.listener.forwardX.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.forwardX.linearRampToValueAtTime(xVal, this.ac.currentTime + 0.02 + t);
+    } else if (xVal) {
+      xVal.connect(this.listener.forwardX);
+    }
+    return this.listener.forwardX.value;
+  };
+  p5.Listener3D.prototype.forwardY = function (yVal, time) {
+    var t = time || 0;
+    if (typeof yVal === 'number') {
+      this.listener.forwardY.value = yVal;
+      this.listener.forwardY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.forwardY.linearRampToValueAtTime(yVal, this.ac.currentTime + 0.02 + t);
+    } else if (yVal) {
+      yVal.connect(this.listener.forwardY);
+    }
+    return this.listener.forwardY.value;
+  };
+  p5.Listener3D.prototype.forwardZ = function (zVal, time) {
+    var t = time || 0;
+    if (typeof zVal === 'number') {
+      this.listener.forwardZ.value = zVal;
+      this.listener.forwardZ.cancelSchedule
