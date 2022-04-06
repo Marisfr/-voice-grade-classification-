@@ -9018,4 +9018,27 @@ listener3d = function () {
     var t = time || 0;
     if (typeof zVal === 'number') {
       this.listener.forwardZ.value = zVal;
-      this.listener.forwardZ.cancelSchedule
+      this.listener.forwardZ.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.forwardZ.linearRampToValueAtTime(zVal, this.ac.currentTime + 0.02 + t);
+    } else if (zVal) {
+      zVal.connect(this.listener.forwardZ);
+    }
+    return this.listener.forwardZ.value;
+  };
+  p5.Listener3D.prototype.upX = function (xVal, time) {
+    var t = time || 0;
+    if (typeof xVal === 'number') {
+      this.listener.upX.value = xVal;
+      this.listener.upX.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.upX.linearRampToValueAtTime(xVal, this.ac.currentTime + 0.02 + t);
+    } else if (xVal) {
+      xVal.connect(this.listener.upX);
+    }
+    return this.listener.upX.value;
+  };
+  p5.Listener3D.prototype.upY = function (yVal, time) {
+    var t = time || 0;
+    if (typeof yVal === 'number') {
+      this.listener.upY.value = yVal;
+      this.listener.upY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener
