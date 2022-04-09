@@ -9041,4 +9041,31 @@ listener3d = function () {
     if (typeof yVal === 'number') {
       this.listener.upY.value = yVal;
       this.listener.upY.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
-      this.listener
+      this.listener.upY.linearRampToValueAtTime(yVal, this.ac.currentTime + 0.02 + t);
+    } else if (yVal) {
+      yVal.connect(this.listener.upY);
+    }
+    return this.listener.upY.value;
+  };
+  p5.Listener3D.prototype.upZ = function (zVal, time) {
+    var t = time || 0;
+    if (typeof zVal === 'number') {
+      this.listener.upZ.value = zVal;
+      this.listener.upZ.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.listener.upZ.linearRampToValueAtTime(zVal, this.ac.currentTime + 0.02 + t);
+    } else if (zVal) {
+      zVal.connect(this.listener.upZ);
+    }
+    return this.listener.upZ.value;
+  };
+  return p5.Listener3D;
+}(master, effect);
+var delay;
+'use strict';
+delay = function () {
+  var Filter = filter;
+  var Effect = effect;
+  /**
+   *  Delay is an echo effect. It processes an existing sound source,
+   *  and outputs a delayed version of that sound. The p5.Delay can
+   *  produce different effects depending on the delayTime,
