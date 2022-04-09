@@ -9068,4 +9068,28 @@ delay = function () {
   /**
    *  Delay is an echo effect. It processes an existing sound source,
    *  and outputs a delayed version of that sound. The p5.Delay can
-   *  produce different effects depending on the delayTime,
+   *  produce different effects depending on the delayTime, feedback,
+   *  filter, and type. In the example below, a feedback of 0.5 (the
+   *  defaul value) will produce a looping delay that decreases in
+   *  volume by 50% each repeat. A filter will cut out the high
+   *  frequencies so that the delay does not sound as piercing as the
+   *  original source.
+   *
+   *
+   *  This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
+   *  Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
+   *  <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
+   *  <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *  @class p5.Delay
+   *  @extends p5.Effect
+   *  @constructor
+   *  @example
+   *  <div><code>
+   *  var noise, env, delay;
+   *
+   *  function setup() {
+   *    background(0);
+   *    noStroke();
+   *    fill(255);
+   *    textAlign(CENTER);
+   *    text('click to play', width/2, heigh
