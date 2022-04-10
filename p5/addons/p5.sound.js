@@ -9092,4 +9092,36 @@ delay = function () {
    *    noStroke();
    *    fill(255);
    *    textAlign(CENTER);
-   *    text('click to play', width/2, heigh
+   *    text('click to play', width/2, height/2);
+   *
+   *    noise = new p5.Noise('brown');
+   *    noise.amp(0);
+   *    noise.start();
+   *
+   *    delay = new p5.Delay();
+   *
+   *    // delay.process() accepts 4 parameters:
+   *    // source, delayTime, feedback, filter frequency
+   *    // play with these numbers!!
+   *    delay.process(noise, .12, .7, 2300);
+   *
+   *    // play the noise with an envelope,
+   *    // a series of fades ( time / value pairs )
+   *    env = new p5.Env(.01, 0.2, .2, .1);
+   *  }
+   *
+   *  // mouseClick triggers envelope
+   *  function mouseClicked() {
+   *    // is mouse over canvas?
+   *    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+   *      env.play(noise);
+   *    }
+   *  }
+   *  </code></div>
+   */
+  p5.Delay = function () {
+    Effect.call(this);
+    this._split = this.ac.createChannelSplitter(2);
+    this._merge = this.ac.createChannelMerger(2);
+    this._leftGain = this.ac.createGain();
+    this._rightGain = this.ac.creat
