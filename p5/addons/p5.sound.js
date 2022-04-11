@@ -9148,4 +9148,28 @@ delay = function () {
     this._leftFilter.biquad.frequency.setValueAtTime(1200, this.ac.currentTime);
     this._rightFilter.biquad.frequency.setValueAtTime(1200, this.ac.currentTime);
     this._leftFilter.biquad.Q.setValueAtTime(0.3, this.ac.currentTime);
-    this._rightFilter.biquad.Q.set
+    this._rightFilter.biquad.Q.setValueAtTime(0.3, this.ac.currentTime);
+    // graph routing
+    this.input.connect(this._split);
+    this.leftDelay.connect(this._leftGain);
+    this.rightDelay.connect(this._rightGain);
+    this._leftGain.connect(this._leftFilter.input);
+    this._rightGain.connect(this._rightFilter.input);
+    this._merge.connect(this.wet);
+    this._leftFilter.biquad.gain.setValueAtTime(1, this.ac.currentTime);
+    this._rightFilter.biquad.gain.setValueAtTime(1, this.ac.currentTime);
+    // default routing
+    this.setType(0);
+    this._maxDelay = this.leftDelay.delayTime.maxValue;
+    // set initial feedback to 0.5
+    this.feedback(0.5);
+  };
+  p5.Delay.prototype = Object.create(Effect.prototype);
+  /**
+   *  Add delay to an audio signal according to a set
+   *  of delay parameters.
+   *
+   *  @method  process
+   *  @param  {Object} Signal  An object that outputs audio
+   *  @param  {Number} [delayTime] Time (in seconds) of the delay/echo.
+   *                               Some
