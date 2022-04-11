@@ -9124,4 +9124,28 @@ delay = function () {
     this._split = this.ac.createChannelSplitter(2);
     this._merge = this.ac.createChannelMerger(2);
     this._leftGain = this.ac.createGain();
-    this._rightGain = this.ac.creat
+    this._rightGain = this.ac.createGain();
+    /**
+     *  The p5.Delay is built with two
+     *  <a href="http://www.w3.org/TR/webaudio/#DelayNode">
+     *  Web Audio Delay Nodes</a>, one for each stereo channel.
+     *
+     *  @property {DelayNode} leftDelay
+     */
+    this.leftDelay = this.ac.createDelay();
+    /**
+     *  The p5.Delay is built with two
+     *  <a href="http://www.w3.org/TR/webaudio/#DelayNode">
+     *  Web Audio Delay Nodes</a>, one for each stereo channel.
+     *
+     *  @property {DelayNode} rightDelay
+     */
+    this.rightDelay = this.ac.createDelay();
+    this._leftFilter = new Filter();
+    this._rightFilter = new Filter();
+    this._leftFilter.disconnect();
+    this._rightFilter.disconnect();
+    this._leftFilter.biquad.frequency.setValueAtTime(1200, this.ac.currentTime);
+    this._rightFilter.biquad.frequency.setValueAtTime(1200, this.ac.currentTime);
+    this._leftFilter.biquad.Q.setValueAtTime(0.3, this.ac.currentTime);
+    this._rightFilter.biquad.Q.set
