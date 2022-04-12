@@ -9172,4 +9172,24 @@ delay = function () {
    *  @method  process
    *  @param  {Object} Signal  An object that outputs audio
    *  @param  {Number} [delayTime] Time (in seconds) of the delay/echo.
-   *                               Some
+   *                               Some browsers limit delayTime to
+   *                               1 second.
+   *  @param  {Number} [feedback]  sends the delay back through itself
+   *                               in a loop that decreases in volume
+   *                               each time.
+   *  @param  {Number} [lowPass]   Cutoff frequency. Only frequencies
+   *                               below the lowPass will be part of the
+   *                               delay.
+   */
+  p5.Delay.prototype.process = function (src, _delayTime, _feedback, _filter) {
+    var feedback = _feedback || 0;
+    var delayTime = _delayTime || 0;
+    if (feedback >= 1) {
+      throw new Error('Feedback value will force a positive feedback loop.');
+    }
+    if (delayTime >= this._maxDelay) {
+      throw new Error('Delay Time exceeds maximum delay time of ' + this._maxDelay + ' second.');
+    }
+    src.connect(this.input);
+    this.leftDelay.delayTime.setValueAtTime(delayTime, this.ac.currentTime);
+    thi
