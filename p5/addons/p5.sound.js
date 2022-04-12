@@ -9192,4 +9192,28 @@ delay = function () {
     }
     src.connect(this.input);
     this.leftDelay.delayTime.setValueAtTime(delayTime, this.ac.currentTime);
-    thi
+    this.rightDelay.delayTime.setValueAtTime(delayTime, this.ac.currentTime);
+    this._leftGain.gain.value = feedback;
+    this._rightGain.gain.value = feedback;
+    if (_filter) {
+      this._leftFilter.freq(_filter);
+      this._rightFilter.freq(_filter);
+    }
+  };
+  /**
+   *  Set the delay (echo) time, in seconds. Usually this value will be
+   *  a floating point number between 0.0 and 1.0.
+   *
+   *  @method  delayTime
+   *  @param {Number} delayTime Time (in seconds) of the delay
+   */
+  p5.Delay.prototype.delayTime = function (t) {
+    // if t is an audio node...
+    if (typeof t !== 'number') {
+      t.connect(this.leftDelay.delayTime);
+      t.connect(this.rightDelay.delayTime);
+    } else {
+      this.leftDelay.delayTime.cancelScheduledValues(this.ac.currentTime);
+      this.rightDelay.delayTime.cancelScheduledValues(this.ac.currentTime);
+      this.leftDelay.delayTime.linearRampToValueAtTime(t, this.ac.currentTime);
+      this.righ
