@@ -9216,4 +9216,27 @@ delay = function () {
       this.leftDelay.delayTime.cancelScheduledValues(this.ac.currentTime);
       this.rightDelay.delayTime.cancelScheduledValues(this.ac.currentTime);
       this.leftDelay.delayTime.linearRampToValueAtTime(t, this.ac.currentTime);
-      this.righ
+      this.rightDelay.delayTime.linearRampToValueAtTime(t, this.ac.currentTime);
+    }
+  };
+  /**
+   *  Feedback occurs when Delay sends its signal back through its input
+   *  in a loop. The feedback amount determines how much signal to send each
+   *  time through the loop. A feedback greater than 1.0 is not desirable because
+   *  it will increase the overall output each time through the loop,
+   *  creating an infinite feedback loop. The default value is 0.5
+   *
+   *  @method  feedback
+   *  @param {Number|Object} feedback 0.0 to 1.0, or an object such as an
+   *                                  Oscillator that can be used to
+   *                                  modulate this param
+   *  @returns {Number} Feedback value
+   *
+   */
+  p5.Delay.prototype.feedback = function (f) {
+    // if f is an audio node...
+    if (f && typeof f !== 'number') {
+      f.connect(this._leftGain.gain);
+      f.connect(this._rightGain.gain);
+    } else if (f >= 1) {
+      throw 
