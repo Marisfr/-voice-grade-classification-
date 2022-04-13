@@ -9239,4 +9239,23 @@ delay = function () {
       f.connect(this._leftGain.gain);
       f.connect(this._rightGain.gain);
     } else if (f >= 1) {
-      throw 
+      throw new Error('Feedback value will force a positive feedback loop.');
+    } else if (typeof f === 'number') {
+      this._leftGain.gain.value = f;
+      this._rightGain.gain.value = f;
+    }
+    // return value of feedback
+    return this._leftGain.gain.value;
+  };
+  /**
+   *  Set a lowpass filter frequency for the delay. A lowpass filter
+   *  will cut off any frequencies higher than the filter frequency.
+   *
+   *  @method  filter
+   *  @param {Number|Object} cutoffFreq  A lowpass filter will cut off any
+   *                              frequencies higher than the filter frequency.
+   *  @param {Number|Object} res  Resonance of the filter frequency
+   *                              cutoff, or an object (i.e. a p5.Oscillator)
+   *                              that can be used to modulate this parameter.
+   *                              High numbers (i.e. 15) will produce a resonance,
+   *                              low 
