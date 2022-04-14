@@ -9285,4 +9285,37 @@ delay = function () {
     case 'pingPong':
       this._rightFilter.setType(this._leftFilter.biquad.type);
       this._leftFilter.output.connect(this._merge, 0, 0);
-      this._rightFilter.output.connect(this._merge, 0,
+      this._rightFilter.output.connect(this._merge, 0, 1);
+      this._leftFilter.output.connect(this.rightDelay);
+      this._rightFilter.output.connect(this.leftDelay);
+      break;
+    default:
+      this._leftFilter.output.connect(this._merge, 0, 0);
+      this._rightFilter.output.connect(this._merge, 0, 1);
+      this._leftFilter.output.connect(this.leftDelay);
+      this._rightFilter.output.connect(this.rightDelay);
+    }
+  };
+  // DocBlocks for methods inherited from p5.Effect
+  /**
+   *  Set the output level of the delay effect.
+   *
+   *  @method  amp
+   *  @param  {Number} volume amplitude between 0 and 1.0
+   *  @param {Number} [rampTime] create a fade that lasts rampTime
+   *  @param {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   */
+  /**
+   *  Send output to a p5.sound or web audio object
+   *
+   *  @method  connect
+   *  @param  {Object} unit
+   */
+  /**
+   *  Disconnect all output.
+   *
+   *  @method disconnect
+   */
+  p5.Delay.prototype.dispose = function () {
+    Effect.prototype.dispo
