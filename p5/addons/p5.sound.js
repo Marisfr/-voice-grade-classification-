@@ -9258,4 +9258,31 @@ delay = function () {
    *                              cutoff, or an object (i.e. a p5.Oscillator)
    *                              that can be used to modulate this parameter.
    *                              High numbers (i.e. 15) will produce a resonance,
-   *                              low 
+   *                              low numbers (i.e. .2) will produce a slope.
+   */
+  p5.Delay.prototype.filter = function (freq, q) {
+    this._leftFilter.set(freq, q);
+    this._rightFilter.set(freq, q);
+  };
+  /**
+   *  Choose a preset type of delay. 'pingPong' bounces the signal
+   *  from the left to the right channel to produce a stereo effect.
+   *  Any other parameter will revert to the default delay setting.
+   *
+   *  @method  setType
+   *  @param {String|Number} type 'pingPong' (1) or 'default' (0)
+   */
+  p5.Delay.prototype.setType = function (t) {
+    if (t === 1) {
+      t = 'pingPong';
+    }
+    this._split.disconnect();
+    this._leftFilter.disconnect();
+    this._rightFilter.disconnect();
+    this._split.connect(this.leftDelay, 0);
+    this._split.connect(this.rightDelay, 1);
+    switch (t) {
+    case 'pingPong':
+      this._rightFilter.setType(this._leftFilter.biquad.type);
+      this._leftFilter.output.connect(this._merge, 0, 0);
+      this._rightFilter.output.connect(this._merge, 0,
