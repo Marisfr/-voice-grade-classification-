@@ -9318,4 +9318,33 @@ delay = function () {
    *  @method disconnect
    */
   p5.Delay.prototype.dispose = function () {
-    Effect.prototype.dispo
+    Effect.prototype.dispose.apply(this);
+    this._split.disconnect();
+    this._leftFilter.dispose();
+    this._rightFilter.dispose();
+    this._merge.disconnect();
+    this._leftGain.disconnect();
+    this._rightGain.disconnect();
+    this.leftDelay.disconnect();
+    this.rightDelay.disconnect();
+    this._split = undefined;
+    this._leftFilter = undefined;
+    this._rightFilter = undefined;
+    this._merge = undefined;
+    this._leftGain = undefined;
+    this._rightGain = undefined;
+    this.leftDelay = undefined;
+    this.rightDelay = undefined;
+  };
+}(filter, effect);
+var reverb;
+'use strict';
+reverb = function () {
+  var CustomError = errorHandler;
+  var Effect = effect;
+  /**
+   *  Reverb adds depth to a sound through a large number of decaying
+   *  echoes. It creates the perception that sound is occurring in a
+   *  physical space. The p5.Reverb has paramters for Time (how long does the
+   *  reverb last) and decayRate (how much the sound decays with each echo)
+   *  that can be set with the .s
