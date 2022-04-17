@@ -9347,4 +9347,27 @@ reverb = function () {
    *  echoes. It creates the perception that sound is occurring in a
    *  physical space. The p5.Reverb has paramters for Time (how long does the
    *  reverb last) and decayRate (how much the sound decays with each echo)
-   *  that can be set with the .s
+   *  that can be set with the .set() or .process() methods. The p5.Convolver
+   *  extends p5.Reverb allowing you to recreate the sound of actual physical
+   *  spaces through convolution.
+   *
+   *  This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
+   *  Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
+   *  <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
+   *  <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *
+   *  @class p5.Reverb
+   *  @extends p5.Effect
+   *  @constructor
+   *  @example
+   *  <div><code>
+   *  var soundFile, reverb;
+   *  function preload() {
+   *    soundFile = loadSound('assets/Damscray_DancingTiger.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    reverb = new p5.Reverb();
+   *    soundFile.disconnect(); // so we'll only hear reverb...
+   *
+   *    // connect soundFi
