@@ -9370,4 +9370,32 @@ reverb = function () {
    *    reverb = new p5.Reverb();
    *    soundFile.disconnect(); // so we'll only hear reverb...
    *
-   *    // connect soundFi
+   *    // connect soundFile to reverb, process w/
+   *    // 3 second reverbTime, decayRate of 2%
+   *    reverb.process(soundFile, 3, 2);
+   *    soundFile.play();
+   *  }
+   *  </code></div>
+   */
+  p5.Reverb = function () {
+    Effect.call(this);
+    this.convolverNode = this.ac.createConvolver();
+    // otherwise, Safari distorts
+    this.input.gain.value = 0.5;
+    this.input.connect(this.convolverNode);
+    this.convolverNode.connect(this.wet);
+    // default params
+    this._seconds = 3;
+    this._decay = 2;
+    this._reverse = false;
+    this._buildImpulse();
+  };
+  p5.Reverb.prototype = Object.create(Effect.prototype);
+  /**
+   *  Connect a source to the reverb, and assign reverb parameters.
+   *
+   *  @method  process
+   *  @param  {Object} src     p5.sound / Web Audio object with a sound
+   *                           output.
+   *  @param  {Number} [seconds] Duration of the reverb, in seconds.
+   *                           Min: 0, Max: 10. Defaults
