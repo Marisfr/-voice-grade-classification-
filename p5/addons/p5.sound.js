@@ -9428,4 +9428,38 @@ reverb = function () {
    *  @param  {Number} [seconds] Duration of the reverb, in seconds.
    *                           Min: 0, Max: 10. Defaults to 3.
    *  @param  {Number} [decayRate] Percentage of decay with each echo.
-   *                
+   *                            Min: 0, Max: 100. Defaults to 2.
+   *  @param  {Boolean} [reverse] Play the reverb backwards or forwards.
+   */
+  p5.Reverb.prototype.set = function (seconds, decayRate, reverse) {
+    var rebuild = false;
+    if (seconds) {
+      this._seconds = seconds;
+      rebuild = true;
+    }
+    if (decayRate) {
+      this._decay = decayRate;
+    }
+    if (reverse) {
+      this._reverse = reverse;
+    }
+    if (rebuild) {
+      this._buildImpulse();
+    }
+  };
+  // DocBlocks for methods inherited from p5.Effect
+  /**
+   *  Set the output level of the reverb effect.
+   *
+   *  @method  amp
+   *  @param  {Number} volume amplitude between 0 and 1.0
+   *  @param  {Number} [rampTime] create a fade that lasts rampTime
+   *  @param  {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   */
+  /**
+   *  Send output to a p5.sound or web audio object
+   *
+   *  @method  connect
+   *  @param  {Object} unit
+ 
