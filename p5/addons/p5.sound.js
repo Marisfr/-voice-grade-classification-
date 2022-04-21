@@ -9462,4 +9462,35 @@ reverb = function () {
    *
    *  @method  connect
    *  @param  {Object} unit
- 
+   */
+  /**
+   *  Disconnect all output.
+   *
+   *  @method disconnect
+   */
+  /**
+   *  Inspired by Simple Reverb by Jordan Santell
+   *  https://github.com/web-audio-components/simple-reverb/blob/master/index.js
+   *
+   *  Utility function for building an impulse response
+   *  based on the module parameters.
+   *
+   *  @private
+   */
+  p5.Reverb.prototype._buildImpulse = function () {
+    var rate = this.ac.sampleRate;
+    var length = rate * this._seconds;
+    var decay = this._decay;
+    var impulse = this.ac.createBuffer(2, length, rate);
+    var impulseL = impulse.getChannelData(0);
+    var impulseR = impulse.getChannelData(1);
+    var n, i;
+    for (i = 0; i < length; i++) {
+      n = this._reverse ? length - i : i;
+      impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+      impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+    }
+    this.convolverNode.buffer = impulse;
+  };
+  p5.Reverb.prototype.dispose = function () {
+    Effect
