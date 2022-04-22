@@ -9493,4 +9493,23 @@ reverb = function () {
     this.convolverNode.buffer = impulse;
   };
   p5.Reverb.prototype.dispose = function () {
-    Effect
+    Effect.prototype.dispose.apply(this);
+    if (this.convolverNode) {
+      this.convolverNode.buffer = null;
+      this.convolverNode = null;
+    }
+  };
+  // =======================================================================
+  //                          *** p5.Convolver ***
+  // =======================================================================
+  /**
+   *  <p>p5.Convolver extends p5.Reverb. It can emulate the sound of real
+   *  physical spaces through a process called <a href="
+   *  https://en.wikipedia.org/wiki/Convolution_reverb#Real_space_simulation">
+   *  convolution</a>.</p>
+   *
+   *  <p>Convolution multiplies any audio input by an "impulse response"
+   *  to simulate the dispersion of sound over time. The impulse response is
+   *  generated from an audio file that you provide. One way to
+   *  generate an impulse response is to pop a balloon in a reverberant space
+   *  and record the echo. Convolution can also be use
