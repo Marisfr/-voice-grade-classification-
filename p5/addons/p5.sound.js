@@ -9512,4 +9512,26 @@ reverb = function () {
    *  to simulate the dispersion of sound over time. The impulse response is
    *  generated from an audio file that you provide. One way to
    *  generate an impulse response is to pop a balloon in a reverberant space
-   *  and record the echo. Convolution can also be use
+   *  and record the echo. Convolution can also be used to experiment with
+   *  sound.</p>
+   *
+   *  <p>Use the method <code>createConvolution(path)</code> to instantiate a
+   *  p5.Convolver with a path to your impulse response audio file.</p>
+   *
+   *  @class p5.Convolver
+   *  @extends p5.Effect
+   *  @constructor
+   *  @param  {String}   path     path to a sound file
+   *  @param  {Function} [callback] function to call when loading succeeds
+   *  @param  {Function} [errorCallback] function to call if loading fails.
+   *                                     This function will receive an error or
+   *                                     XMLHttpRequest object with information
+   *                                     about what went wrong.
+   *  @example
+   *  <div><code>
+   *  var cVerb, sound;
+   *  function preload() {
+   *    // We have both MP3 and OGG versions of all sound assets
+   *    soundFormats('ogg', 'mp3');
+   *
+   *    // Try replacing '
