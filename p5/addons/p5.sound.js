@@ -9564,4 +9564,32 @@ reverb = function () {
      *
      *  @property {ConvolverNode} convolverNod
      */
-    this.convolverNode = this.ac.createConv
+    this.convolverNode = this.ac.createConvolver();
+    // otherwise, Safari distorts
+    this.input.gain.value = 0.5;
+    this.input.connect(this.convolverNode);
+    this.convolverNode.connect(this.wet);
+    if (path) {
+      this.impulses = [];
+      this._loadBuffer(path, callback, errorCallback);
+    } else {
+      // parameters
+      this._seconds = 3;
+      this._decay = 2;
+      this._reverse = false;
+      this._buildImpulse();
+    }
+  };
+  p5.Convolver.prototype = Object.create(p5.Reverb.prototype);
+  p5.prototype.registerPreloadMethod('createConvolver', p5.prototype);
+  /**
+   *  Create a p5.Convolver. Accepts a path to a soundfile
+   *  that will be used to generate an impulse response.
+   *
+   *  @method  createConvolver
+   *  @param  {String}   path     path to a sound file
+   *  @param  {Function} [callback] function to call if loading is successful.
+   *                                The object will be passed in as the argument
+   *                                to the callback function.
+   *  @param  {Function} [errorCallback] function to call if loading is not successful.
+   
