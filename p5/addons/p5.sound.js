@@ -9592,4 +9592,29 @@ reverb = function () {
    *                                The object will be passed in as the argument
    *                                to the callback function.
    *  @param  {Function} [errorCallback] function to call if loading is not successful.
-   
+   *                                A custom error will be passed in as the argument
+   *                                to the callback function.
+   *  @return {p5.Convolver}
+   *  @example
+   *  <div><code>
+   *  var cVerb, sound;
+   *  function preload() {
+   *    // We have both MP3 and OGG versions of all sound assets
+   *    soundFormats('ogg', 'mp3');
+   *
+   *    // Try replacing 'bx-spring' with other soundfiles like
+   *    // 'concrete-tunnel' 'small-plate' 'drum' 'beatbox'
+   *    cVerb = createConvolver('assets/bx-spring.mp3');
+   *
+   *    // Try replacing 'Damscray_DancingTiger' with
+   *    // 'beat', 'doorbell', lucky_dragons'
+   *    sound = loadSound('assets/Damscray_DancingTiger.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    // disconnect from master output...
+   *    sound.disconnect();
+   *
+   *    // ...and process with cVerb
+   *    // so that we only hear the convolution
+   *    cVerb.process(sound);
