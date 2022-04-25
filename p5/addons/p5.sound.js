@@ -9618,3 +9618,31 @@ reverb = function () {
    *    // ...and process with cVerb
    *    // so that we only hear the convolution
    *    cVerb.process(sound);
+   *
+   *    sound.play();
+   *  }
+   *  </code></div>
+   */
+  p5.prototype.createConvolver = function (path, callback, errorCallback) {
+    // if loading locally without a server
+    if (window.location.origin.indexOf('file://') > -1 && window.cordova === 'undefined') {
+      alert('This sketch may require a server to load external files. Please see http://bit.ly/1qcInwS');
+    }
+    var cReverb = new p5.Convolver(path, callback, errorCallback);
+    cReverb.impulses = [];
+    return cReverb;
+  };
+  /**
+   *  Private method to load a buffer as an Impulse Response,
+   *  assign it to the convolverNode, and add to the Array of .impulses.
+   *
+   *  @param   {String}   path
+   *  @param   {Function} callback
+   *  @param   {Function} errorCallback
+   *  @private
+   */
+  p5.Convolver.prototype._loadBuffer = function (path, callback, errorCallback) {
+    var path = p5.prototype._checkFileFormats(path);
+    var self = this;
+    var errorTrace = new Error().stack;
+    var ac =
