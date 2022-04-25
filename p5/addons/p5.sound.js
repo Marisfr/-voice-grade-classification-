@@ -9645,4 +9645,29 @@ reverb = function () {
     var path = p5.prototype._checkFileFormats(path);
     var self = this;
     var errorTrace = new Error().stack;
-    var ac =
+    var ac = p5.prototype.getAudioContext();
+    var request = new XMLHttpRequest();
+    request.open('GET', path, true);
+    request.responseType = 'arraybuffer';
+    request.onload = function () {
+      if (request.status === 200) {
+        // on success loading file:
+        ac.decodeAudioData(request.response, function (buff) {
+          var buffer = {};
+          var chunks = path.split('/');
+          buffer.name = chunks[chunks.length - 1];
+          buffer.audioBuffer = buff;
+          self.impulses.push(buffer);
+          self.convolverNode.buffer = buffer.audioBuffer;
+          if (callback) {
+            callback(buffer);
+          }
+        }, // error decoding buffer. "e" is undefined in Chrome 11/22/2015
+        function () {
+          var err = new CustomError('decodeAudioData', errorTrace, self.url);
+          var msg = 'AudioContext error at decodeAudioData for ' + self.url;
+          if (errorCallback) {
+            err.msg = msg;
+            errorCallback(err);
+          } else {
+            conso
