@@ -9692,4 +9692,43 @@ reverb = function () {
         err.message = msg;
         errorCallback(err);
       } else {
-        console.error(msg + '\n The error stack t
+        console.error(msg + '\n The error stack trace includes: \n' + err.stack);
+      }
+    };
+    request.send();
+  };
+  p5.Convolver.prototype.set = null;
+  /**
+   *  Connect a source to the reverb, and assign reverb parameters.
+   *
+   *  @method  process
+   *  @param  {Object} src     p5.sound / Web Audio object with a sound
+   *                           output.
+   *  @example
+   *  <div><code>
+   *  var cVerb, sound;
+   *  function preload() {
+   *    soundFormats('ogg', 'mp3');
+   *
+   *    cVerb = createConvolver('assets/concrete-tunnel.mp3');
+   *
+   *    sound = loadSound('assets/beat.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    // disconnect from master output...
+   *    sound.disconnect();
+   *
+   *    // ...and process with (i.e. connect to) cVerb
+   *    // so that we only hear the convolution
+   *    cVerb.process(sound);
+   *
+   *    sound.play();
+   *  }
+   *  </code></div>
+   */
+  p5.Convolver.prototype.process = function (src) {
+    src.connect(this.input);
+  };
+  /**
+   *  If you load multiple i
