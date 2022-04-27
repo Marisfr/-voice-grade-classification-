@@ -9731,4 +9731,25 @@ reverb = function () {
     src.connect(this.input);
   };
   /**
-   *  If you load multiple i
+   *  If you load multiple impulse files using the .addImpulse method,
+   *  they will be stored as Objects in this Array. Toggle between them
+   *  with the <code>toggleImpulse(id)</code> method.
+   *
+   *  @property {Array} impulses
+   */
+  p5.Convolver.prototype.impulses = [];
+  /**
+   *  Load and assign a new Impulse Response to the p5.Convolver.
+   *  The impulse is added to the <code>.impulses</code> array. Previous
+   *  impulses can be accessed with the <code>.toggleImpulse(id)</code>
+   *  method.
+   *
+   *  @method  addImpulse
+   *  @param  {String}   path     path to a sound file
+   *  @param  {Function} callback function (optional)
+   *  @param  {Function} errorCallback function (optional)
+   */
+  p5.Convolver.prototype.addImpulse = function (path, callback, errorCallback) {
+    // if loading locally without a server
+    if (window.location.origin.indexOf('file://') > -1 && window.cordova === 'undefined') {
+      ale
