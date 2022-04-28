@@ -9752,4 +9752,25 @@ reverb = function () {
   p5.Convolver.prototype.addImpulse = function (path, callback, errorCallback) {
     // if loading locally without a server
     if (window.location.origin.indexOf('file://') > -1 && window.cordova === 'undefined') {
-      ale
+      alert('This sketch may require a server to load external files. Please see http://bit.ly/1qcInwS');
+    }
+    this._loadBuffer(path, callback, errorCallback);
+  };
+  /**
+   *  Similar to .addImpulse, except that the <code>.impulses</code>
+   *  Array is reset to save memory. A new <code>.impulses</code>
+   *  array is created with this impulse as the only item.
+   *
+   *  @method  resetImpulse
+   *  @param  {String}   path     path to a sound file
+   *  @param  {Function} callback function (optional)
+   *  @param  {Function} errorCallback function (optional)
+   */
+  p5.Convolver.prototype.resetImpulse = function (path, callback, errorCallback) {
+    // if loading locally without a server
+    if (window.location.origin.indexOf('file://') > -1 && window.cordova === 'undefined') {
+      alert('This sketch may require a server to load external files. Please see http://bit.ly/1qcInwS');
+    }
+    this.impulses = [];
+    this._loadBuffer(path, callback, errorCallback);
+  
