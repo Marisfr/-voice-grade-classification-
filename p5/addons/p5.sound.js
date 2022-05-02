@@ -9773,4 +9773,22 @@ reverb = function () {
     }
     this.impulses = [];
     this._loadBuffer(path, callback, errorCallback);
-  
+  };
+  /**
+   *  If you have used <code>.addImpulse()</code> to add multiple impulses
+   *  to a p5.Convolver, then you can use this method to toggle between
+   *  the items in the <code>.impulses</code> Array. Accepts a parameter
+   *  to identify which impulse you wish to use, identified either by its
+   *  original filename (String) or by its position in the <code>.impulses
+   *  </code> Array (Number).<br/>
+   *  You can access the objects in the .impulses Array directly. Each
+   *  Object has two attributes: an <code>.audioBuffer</code> (type:
+   *  Web Audio <a href="
+   *  http://webaudio.github.io/web-audio-api/#the-audiobuffer-interface">
+   *  AudioBuffer)</a> and a <code>.name</code>, a String that corresponds
+   *  with the original filename.
+   *
+   *  @method toggleImpulse
+   *  @param {String|Number} id Identify the impulse by its original filename
+   *                            (String), or by its position in the
+   *                            <code>.impulses</code> Arr
