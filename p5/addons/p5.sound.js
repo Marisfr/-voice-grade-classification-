@@ -9822,4 +9822,36 @@ reverb = function () {
 var Tone_core_TimelineState;
 Tone_core_TimelineState = function (Tone) {
   'use strict';
-  Tone
+  Tone.TimelineState = function (initial) {
+    Tone.Timeline.call(this);
+    this._initial = initial;
+  };
+  Tone.extend(Tone.TimelineState, Tone.Timeline);
+  Tone.TimelineState.prototype.getValueAtTime = function (time) {
+    var event = this.get(time);
+    if (event !== null) {
+      return event.state;
+    } else {
+      return this._initial;
+    }
+  };
+  Tone.TimelineState.prototype.setStateAtTime = function (state, time) {
+    this.add({
+      'state': state,
+      'time': time
+    });
+  };
+  return Tone.TimelineState;
+}(Tone_core_Tone, Tone_core_Timeline);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_Clock;
+Tone_core_Clock = function (Tone) {
+  'use strict';
+  Tone.Clock = function () {
+    Tone.Emitter.call(this);
+    var options = this.optionsObject(arguments, [
+      'callback',
+      'frequency'
+    ], Tone.Clock.defaults);
+    this.callback = options.callback;
+    t
