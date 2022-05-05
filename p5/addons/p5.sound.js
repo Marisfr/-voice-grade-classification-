@@ -9791,4 +9791,35 @@ reverb = function () {
    *  @method toggleImpulse
    *  @param {String|Number} id Identify the impulse by its original filename
    *                            (String), or by its position in the
-   *                            <code>.impulses</code> Arr
+   *                            <code>.impulses</code> Array (Number).
+   */
+  p5.Convolver.prototype.toggleImpulse = function (id) {
+    if (typeof id === 'number' && id < this.impulses.length) {
+      this.convolverNode.buffer = this.impulses[id].audioBuffer;
+    }
+    if (typeof id === 'string') {
+      for (var i = 0; i < this.impulses.length; i++) {
+        if (this.impulses[i].name === id) {
+          this.convolverNode.buffer = this.impulses[i].audioBuffer;
+          break;
+        }
+      }
+    }
+  };
+  p5.Convolver.prototype.dispose = function () {
+    Effect.prototype.dispose.apply(this);
+    // remove all the Impulse Response buffers
+    for (var i in this.impulses) {
+      if (this.impulses[i]) {
+        this.impulses[i] = null;
+      }
+    }
+    this.convolverNode.disconnect();
+    this.concolverNode = null;
+  };
+}(errorHandler, effect, sndcore);
+/** Tone.js module by Yotam Mann, MIT License 2016  http://opensource.org/licenses/MIT **/
+var Tone_core_TimelineState;
+Tone_core_TimelineState = function (Tone) {
+  'use strict';
+  Tone
