@@ -9854,4 +9854,35 @@ Tone_core_Clock = function (Tone) {
       'frequency'
     ], Tone.Clock.defaults);
     this.callback = options.callback;
-    t
+    this._nextTick = 0;
+    this._lastState = Tone.State.Stopped;
+    this.frequency = new Tone.TimelineSignal(options.frequency, Tone.Type.Frequency);
+    this._readOnly('frequency');
+    this.ticks = 0;
+    this._state = new Tone.TimelineState(Tone.State.Stopped);
+    this._boundLoop = this._loop.bind(this);
+    this.context.on('tick', this._boundLoop);
+  };
+  Tone.extend(Tone.Clock, Tone.Emitter);
+  Tone.Clock.defaults = {
+    'callback': Tone.noOp,
+    'frequency': 1,
+    'lookAhead': 'auto'
+  };
+  Object.defineProperty(Tone.Clock.prototype, 'state', {
+    get: function () {
+      return this._state.getValueAtTime(this.now());
+    }
+  });
+  Tone.Clock.prototype.start = function (time, offset) {
+    time = this.toSeconds(time);
+    if (this._state.getValueAtTime(time) !== Tone.State.Started) {
+      this._state.add({
+        'state': Tone.State.Started,
+        'time': time,
+        'offset': offset
+      });
+    }
+    return this;
+  };
+  Tone.Clock.prototype.stop = fu
