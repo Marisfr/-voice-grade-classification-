@@ -9885,4 +9885,29 @@ Tone_core_Clock = function (Tone) {
     }
     return this;
   };
-  Tone.Clock.prototype.stop = fu
+  Tone.Clock.prototype.stop = function (time) {
+    time = this.toSeconds(time);
+    this._state.cancel(time);
+    this._state.setStateAtTime(Tone.State.Stopped, time);
+    return this;
+  };
+  Tone.Clock.prototype.pause = function (time) {
+    time = this.toSeconds(time);
+    if (this._state.getValueAtTime(time) === Tone.State.Started) {
+      this._state.setStateAtTime(Tone.State.Paused, time);
+    }
+    return this;
+  };
+  Tone.Clock.prototype._loop = function () {
+    var now = this.now();
+    var lookAhead = this.context.lookAhead;
+    var updateInterval = this.context.updateInterval;
+    var lagCompensation = this.context.lag * 2;
+    var loopInterval = now + lookAhead + updateInterval + lagCompensation;
+    while (loopInterval > this._nextTick && this._state) {
+      var currentState = this._state.getValueAtTime(this._nextTick);
+      if (currentState !== this._lastState) {
+        this._lastState = currentState;
+        var event = this._state.get(this._nextTick);
+        if (currentState === Tone.State.Started) {
+          this._nextTick = 
