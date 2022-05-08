@@ -9939,4 +9939,35 @@ Tone_core_Clock = function (Tone) {
   Tone.Clock.prototype.dispose = function () {
     Tone.Emitter.prototype.dispose.call(this);
     this.context.off('tick', this._boundLoop);
-    
+    this._writable('frequency');
+    this.frequency.dispose();
+    this.frequency = null;
+    this._boundLoop = null;
+    this._nextTick = Infinity;
+    this.callback = null;
+    this._state.dispose();
+    this._state = null;
+  };
+  return Tone.Clock;
+}(Tone_core_Tone, Tone_signal_TimelineSignal, Tone_core_TimelineState, Tone_core_Emitter);
+var metro;
+'use strict';
+metro = function () {
+  var p5sound = master;
+  // requires the Tone.js library's Clock (MIT license, Yotam Mann)
+  // https://github.com/TONEnoTONE/Tone.js/
+  var Clock = Tone_core_Clock;
+  p5.Metro = function () {
+    this.clock = new Clock({ 'callback': this.ontick.bind(this) });
+    this.syncedParts = [];
+    this.bpm = 120;
+    // gets overridden by p5.Part
+    this._init();
+    this.prevTick = 0;
+    this.tatumTime = 0;
+    this.tickCallback = function () {
+    };
+  };
+  p5.Metro.prototype.ontick = function (tickTime) {
+    var elapsedTime = tickTime - this.prevTick;
+  
