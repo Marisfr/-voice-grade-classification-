@@ -10020,4 +10020,42 @@ metro = function () {
   };
   p5.Metro.prototype.start = function (timeFromNow) {
     var t = timeFromNow || 0;
-    var now = p5sound.audiocontext.curren
+    var now = p5sound.audiocontext.currentTime;
+    this.clock.start(now + t);
+    this.setBPM(this.bpm);
+  };
+  p5.Metro.prototype.stop = function (timeFromNow) {
+    var t = timeFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    this.clock.stop(now + t);
+  };
+  p5.Metro.prototype.beatLength = function (tatums) {
+    this.tatums = 1 / tatums / 4;
+  };
+}(master, Tone_core_Clock);
+var looper;
+'use strict';
+looper = function () {
+  var p5sound = master;
+  var BPM = 120;
+  /**
+   *  Set the global tempo, in beats per minute, for all
+   *  p5.Parts. This method will impact all active p5.Parts.
+   *
+   *  @method setBPM
+   *  @param {Number} BPM      Beats Per Minute
+   *  @param {Number} rampTime Seconds from now
+   */
+  p5.prototype.setBPM = function (bpm, rampTime) {
+    BPM = bpm;
+    for (var i in p5sound.parts) {
+      if (p5sound.parts[i]) {
+        p5sound.parts[i].setBPM(bpm, rampTime);
+      }
+    }
+  };
+  /**
+   *  <p>A phrase is a pattern of musical events over time, i.e.
+   *  a series of notes and rests.</p>
+   *
+   *  <p>Phrases mu
