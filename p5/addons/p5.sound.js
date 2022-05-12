@@ -9993,4 +9993,31 @@ metro = function () {
       });
       this.metroTicks += 1;
       this.tickCallback(secondsFromNow);
- 
+    }
+  };
+  p5.Metro.prototype.setBPM = function (bpm, rampTime) {
+    var beatTime = 60 / (bpm * this.tatums);
+    var now = p5sound.audiocontext.currentTime;
+    this.tatumTime = beatTime;
+    var rampTime = rampTime || 0;
+    this.clock.frequency.setValueAtTime(this.clock.frequency.value, now);
+    this.clock.frequency.linearRampToValueAtTime(bpm, now + rampTime);
+    this.bpm = bpm;
+  };
+  p5.Metro.prototype.getBPM = function () {
+    return this.clock.getRate() / this.tatums * 60;
+  };
+  p5.Metro.prototype._init = function () {
+    this.metroTicks = 0;
+  };
+  // clear existing synced parts, add only this one
+  p5.Metro.prototype.resetSync = function (part) {
+    this.syncedParts = [part];
+  };
+  // push a new synced part to the array
+  p5.Metro.prototype.pushSync = function (part) {
+    this.syncedParts.push(part);
+  };
+  p5.Metro.prototype.start = function (timeFromNow) {
+    var t = timeFromNow || 0;
+    var now = p5sound.audiocontext.curren
