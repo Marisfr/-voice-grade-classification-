@@ -10058,4 +10058,22 @@ looper = function () {
    *  <p>A phrase is a pattern of musical events over time, i.e.
    *  a series of notes and rests.</p>
    *
-   *  <p>Phrases mu
+   *  <p>Phrases must be added to a p5.Part for playback, and
+   *  each part can play multiple phrases at the same time.
+   *  For example, one Phrase might be a kick drum, another
+   *  could be a snare, and another could be the bassline.</p>
+   *
+   *  <p>The first parameter is a name so that the phrase can be
+   *  modified or deleted later. The callback is a a function that
+   *  this phrase will call at every step—for example it might be
+   *  called <code>playNote(value){}</code>. The array determines
+   *  which value is passed into the callback at each step of the
+   *  phrase. It can be numbers, an object with multiple numbers,
+   *  or a zero (0) indicates a rest so the callback won't be called).</p>
+   *
+   *  @class p5.Phrase
+   *  @constructor
+   *  @param {String}   name     Name so that you can access the Phrase.
+   *  @param {Function} callback The name of a function that this phrase
+   *                             will call. Typically it will play a sound,
+   *                        
