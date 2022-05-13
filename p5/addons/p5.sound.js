@@ -10076,4 +10076,29 @@ looper = function () {
    *  @param {String}   name     Name so that you can access the Phrase.
    *  @param {Function} callback The name of a function that this phrase
    *                             will call. Typically it will play a sound,
-   *                        
+   *                             and accept two parameters: a time at which
+   *                             to play the sound (in seconds from now),
+   *                             and a value from the sequence array. The
+   *                             time should be passed into the play() or
+   *                             start() method to ensure precision.
+   *  @param {Array}   sequence    Array of values to pass into the callback
+   *                            at each step of the phrase.
+   *  @example
+   *  <div><code>
+   *  var mySound, myPhrase, myPart;
+   *  var pattern = [1,0,0,2,0,2,0,0];
+   *  var msg = 'click to play';
+   *
+   *  function preload() {
+   *    mySound = loadSound('assets/beatbox.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    noStroke();
+   *    fill(255);
+   *    textAlign(CENTER);
+   *    masterVolume(0.1);
+   *
+   *    myPhrase = new p5.Phrase('bbox', makeSound, pattern);
+   *    myPart = new p5.Part();
+   *    myPart.addPhrase(myPhras
