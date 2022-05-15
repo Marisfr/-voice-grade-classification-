@@ -10101,4 +10101,43 @@ looper = function () {
    *
    *    myPhrase = new p5.Phrase('bbox', makeSound, pattern);
    *    myPart = new p5.Part();
-   *    myPart.addPhrase(myPhras
+   *    myPart.addPhrase(myPhrase);
+   *    myPart.setBPM(60);
+   *  }
+   *
+   *  function draw() {
+   *    background(0);
+   *    text(msg, width/2, height/2);
+   *  }
+   *
+   *  function makeSound(time, playbackRate) {
+   *    mySound.rate(playbackRate);
+   *    mySound.play(time);
+   *  }
+   *
+   *  function mouseClicked() {
+   *    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+   *      myPart.start();
+   *      msg = 'playing pattern';
+   *    }
+   *  }
+   *
+   *  </code></div>
+   */
+  p5.Phrase = function (name, callback, sequence) {
+    this.phraseStep = 0;
+    this.name = name;
+    this.callback = callback;
+    /**
+     * Array of values to pass into the callback
+     * at each step of the phrase. Depending on the callback
+     * function's requirements, these values may be numbers,
+     * strings, or an object with multiple parameters.
+     * Zero (0) indicates a rest.
+     *
+     * @property {Array} sequence
+     */
+    this.sequence = sequence;
+  };
+  /**
+   *  <p>A p5.Part plays back one or mo
