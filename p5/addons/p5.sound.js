@@ -10140,4 +10140,35 @@ looper = function () {
     this.sequence = sequence;
   };
   /**
-   *  <p>A p5.Part plays back one or mo
+   *  <p>A p5.Part plays back one or more p5.Phrases. Instantiate a part
+   *  with steps and tatums. By default, each step represents 1/16th note.</p>
+   *
+   *  <p>See p5.Phrase for more about musical timing.</p>
+   *
+   *  @class p5.Part
+   *  @constructor
+   *  @param {Number} [steps]   Steps in the part
+   *  @param {Number} [tatums] Divisions of a beat (default is 1/16, a quarter note)
+   *  @example
+   *  <div><code>
+   *  var box, drum, myPart;
+   *  var boxPat = [1,0,0,2,0,2,0,0];
+   *  var drumPat = [0,1,1,0,2,0,1,0];
+   *  var msg = 'click to play';
+   *
+   *  function preload() {
+   *    box = loadSound('assets/beatbox.mp3');
+   *    drum = loadSound('assets/drum.mp3');
+   *  }
+   *
+   *  function setup() {
+   *    noStroke();
+   *    fill(255);
+   *    textAlign(CENTER);
+   *    masterVolume(0.1);
+   *
+   *    var boxPhrase = new p5.Phrase('box', playBox, boxPat);
+   *    var drumPhrase = new p5.Phrase('drum', playDrum, drumPat);
+   *    myPart = new p5.Part();
+   *    myPart.addPhrase(boxPhrase);
+   *    myPart.a
