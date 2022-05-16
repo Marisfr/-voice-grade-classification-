@@ -10171,4 +10171,43 @@ looper = function () {
    *    var drumPhrase = new p5.Phrase('drum', playDrum, drumPat);
    *    myPart = new p5.Part();
    *    myPart.addPhrase(boxPhrase);
-   *    myPart.a
+   *    myPart.addPhrase(drumPhrase);
+   *    myPart.setBPM(60);
+   *    masterVolume(0.1);
+   *  }
+   *
+   *  function draw() {
+   *    background(0);
+   *    text(msg, width/2, height/2);
+   *  }
+   *
+   *  function playBox(time, playbackRate) {
+   *    box.rate(playbackRate);
+   *    box.play(time);
+   *  }
+   *
+   *  function playDrum(time, playbackRate) {
+   *    drum.rate(playbackRate);
+   *    drum.play(time);
+   *  }
+   *
+   *  function mouseClicked() {
+   *    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+   *      myPart.start();
+   *      msg = 'playing part';
+   *    }
+   *  }
+   *  </code></div>
+   */
+  p5.Part = function (steps, bLength) {
+    this.length = steps || 0;
+    // how many beats
+    this.partStep = 0;
+    this.phrases = [];
+    this.isPlaying = false;
+    this.noLoop();
+    this.tatums = bLength || 0.0625;
+    // defaults to quarter note
+    this.metro = new p5.Metro();
+    this.metro._init();
+    this.metro.beatLength(th
