@@ -10210,4 +10210,43 @@ looper = function () {
     // defaults to quarter note
     this.metro = new p5.Metro();
     this.metro._init();
-    this.metro.beatLength(th
+    this.metro.beatLength(this.tatums);
+    this.metro.setBPM(BPM);
+    p5sound.parts.push(this);
+    this.callback = function () {
+    };
+  };
+  /**
+   *  Set the tempo of this part, in Beats Per Minute.
+   *
+   *  @method  setBPM
+   *  @param {Number} BPM      Beats Per Minute
+   *  @param {Number} [rampTime] Seconds from now
+   */
+  p5.Part.prototype.setBPM = function (tempo, rampTime) {
+    this.metro.setBPM(tempo, rampTime);
+  };
+  /**
+   *  Returns the Beats Per Minute of this currently part.
+   *
+   *  @method getBPM
+   *  @return {Number}
+   */
+  p5.Part.prototype.getBPM = function () {
+    return this.metro.getBPM();
+  };
+  /**
+   *  Start playback of this part. It will play
+   *  through all of its phrases at a speed
+   *  determined by setBPM.
+   *
+   *  @method  start
+   *  @param  {Number} [time] seconds from now
+   */
+  p5.Part.prototype.start = function (time) {
+    if (!this.isPlaying) {
+      this.isPlaying = true;
+      this.metro.resetSync(this);
+      var t = time || 0;
+      this.metro.start(t);
+  
