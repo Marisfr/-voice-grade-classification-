@@ -10295,4 +10295,36 @@ looper = function () {
    *  from the current step.
    *
    *  @method  pause
-   *  @param  {Numb
+   *  @param  {Number} time seconds from now
+   */
+  p5.Part.prototype.pause = function (time) {
+    this.isPlaying = false;
+    var t = time || 0;
+    this.metro.stop(t);
+  };
+  /**
+   *  Add a p5.Phrase to this Part.
+   *
+   *  @method  addPhrase
+   *  @param {p5.Phrase}   phrase   reference to a p5.Phrase
+   */
+  p5.Part.prototype.addPhrase = function (name, callback, array) {
+    var p;
+    if (arguments.length === 3) {
+      p = new p5.Phrase(name, callback, array);
+    } else if (arguments[0] instanceof p5.Phrase) {
+      p = arguments[0];
+    } else {
+      throw 'invalid input. addPhrase accepts name, callback, array or a p5.Phrase';
+    }
+    this.phrases.push(p);
+    // reset the length if phrase is longer than part's existing length
+    if (p.sequence.length > this.length) {
+      this.length = p.sequence.length;
+    }
+  };
+  /**
+   *  Remove a phrase from this part, based on the name it was
+   *  given when it was created.
+   *
+   *  @method  
