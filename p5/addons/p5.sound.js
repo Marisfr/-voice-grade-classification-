@@ -10249,4 +10249,50 @@ looper = function () {
       this.metro.resetSync(this);
       var t = time || 0;
       this.metro.start(t);
-  
+    }
+  };
+  /**
+   *  Loop playback of this part. It will begin
+   *  looping through all of its phrases at a speed
+   *  determined by setBPM.
+   *
+   *  @method  loop
+   *  @param  {Number} [time] seconds from now
+   */
+  p5.Part.prototype.loop = function (time) {
+    this.looping = true;
+    // rest onended function
+    this.onended = function () {
+      this.partStep = 0;
+    };
+    var t = time || 0;
+    this.start(t);
+  };
+  /**
+   *  Tell the part to stop looping.
+   *
+   *  @method  noLoop
+   */
+  p5.Part.prototype.noLoop = function () {
+    this.looping = false;
+    // rest onended function
+    this.onended = function () {
+      this.stop();
+    };
+  };
+  /**
+   *  Stop the part and cue it to step 0.
+   *
+   *  @method  stop
+   *  @param  {Number} [time] seconds from now
+   */
+  p5.Part.prototype.stop = function (time) {
+    this.partStep = 0;
+    this.pause(time);
+  };
+  /**
+   *  Pause the part. Playback will resume
+   *  from the current step.
+   *
+   *  @method  pause
+   *  @param  {Numb
