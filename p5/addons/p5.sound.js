@@ -10360,4 +10360,38 @@ looper = function () {
    *  @param  {Array} sequence  Array of values to pass into the callback
    *                            at each step of the phrase.
    */
-  p5.Pa
+  p5.Part.prototype.replaceSequence = function (name, array) {
+    for (var i in this.phrases) {
+      if (this.phrases[i].name === name) {
+        this.phrases[i].sequence = array;
+      }
+    }
+  };
+  p5.Part.prototype.incrementStep = function (time) {
+    if (this.partStep < this.length - 1) {
+      this.callback(time);
+      this.partStep += 1;
+    } else {
+      if (!this.looping && this.partStep === this.length - 1) {
+        console.log('done');
+        // this.callback(time);
+        this.onended();
+      }
+    }
+  };
+  /**
+   *  Fire a callback function at every step.
+   *
+   *  @method onStep
+   *  @param  {Function} callback The name of the callback
+   *                              you want to fire
+   *                              on every beat/tatum.
+   */
+  p5.Part.prototype.onStep = function (callback) {
+    this.callback = callback;
+  };
+  // ===============
+  // p5.Score
+  // ===============
+  /**
+   *  A Score consists of a series of Parts. T
