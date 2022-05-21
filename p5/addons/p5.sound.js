@@ -10327,4 +10327,37 @@ looper = function () {
    *  Remove a phrase from this part, based on the name it was
    *  given when it was created.
    *
-   *  @method  
+   *  @method  removePhrase
+   *  @param  {String} phraseName
+   */
+  p5.Part.prototype.removePhrase = function (name) {
+    for (var i in this.phrases) {
+      if (this.phrases[i].name === name) {
+        this.phrases.splice(i, 1);
+      }
+    }
+  };
+  /**
+   *  Get a phrase from this part, based on the name it was
+   *  given when it was created. Now you can modify its array.
+   *
+   *  @method  getPhrase
+   *  @param  {String} phraseName
+   */
+  p5.Part.prototype.getPhrase = function (name) {
+    for (var i in this.phrases) {
+      if (this.phrases[i].name === name) {
+        return this.phrases[i];
+      }
+    }
+  };
+  /**
+   *  Get a phrase from this part, based on the name it was
+   *  given when it was created. Now you can modify its array.
+   *
+   *  @method  replaceSequence
+   *  @param  {String} phraseName
+   *  @param  {Array} sequence  Array of values to pass into the callback
+   *                            at each step of the phrase.
+   */
+  p5.Pa
