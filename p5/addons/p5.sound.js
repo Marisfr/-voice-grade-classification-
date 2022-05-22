@@ -10394,4 +10394,35 @@ looper = function () {
   // p5.Score
   // ===============
   /**
-   *  A Score consists of a series of Parts. T
+   *  A Score consists of a series of Parts. The parts will
+   *  be played back in order. For example, you could have an
+   *  A part, a B part, and a C part, and play them back in this order
+   *  <code>new p5.Score(a, a, b, a, c)</code>
+   *
+   *  @class p5.Score
+   *  @constructor
+   *  @param {p5.Part} [...parts] One or multiple parts, to be played in sequence.
+   */
+  p5.Score = function () {
+    // for all of the arguments
+    this.parts = [];
+    this.currentPart = 0;
+    var thisScore = this;
+    for (var i in arguments) {
+      if (arguments[i] && this.parts[i]) {
+        this.parts[i] = arguments[i];
+        this.parts[i].nextPart = this.parts[i + 1];
+        this.parts[i].onended = function () {
+          thisScore.resetPart(i);
+          playNextPart(thisScore);
+        };
+      }
+    }
+    this.looping = false;
+  };
+  p5.Score.prototype.onended = function () {
+    if (this.looping) {
+      // this.resetParts();
+      this.parts[0].start();
+    } else {
+      this.parts[this.parts.length - 1].onended =
