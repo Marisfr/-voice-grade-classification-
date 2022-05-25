@@ -10425,4 +10425,49 @@ looper = function () {
       // this.resetParts();
       this.parts[0].start();
     } else {
-      this.parts[this.parts.length - 1].onended =
+      this.parts[this.parts.length - 1].onended = function () {
+        this.stop();
+        this.resetParts();
+      };
+    }
+    this.currentPart = 0;
+  };
+  /**
+   *  Start playback of the score.
+   *
+   *  @method  start
+   */
+  p5.Score.prototype.start = function () {
+    this.parts[this.currentPart].start();
+    this.scoreStep = 0;
+  };
+  /**
+   *  Stop playback of the score.
+   *
+   *  @method  stop
+   */
+  p5.Score.prototype.stop = function () {
+    this.parts[this.currentPart].stop();
+    this.currentPart = 0;
+    this.scoreStep = 0;
+  };
+  /**
+   *  Pause playback of the score.
+   *
+   *  @method  pause
+   */
+  p5.Score.prototype.pause = function () {
+    this.parts[this.currentPart].stop();
+  };
+  /**
+   *  Loop playback of the score.
+   *
+   *  @method  loop
+   */
+  p5.Score.prototype.loop = function () {
+    this.looping = true;
+    this.start();
+  };
+  /**
+   *  Stop looping playback of the score. If it
+   *  is currently 
