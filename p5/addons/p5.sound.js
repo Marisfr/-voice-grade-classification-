@@ -10470,4 +10470,42 @@ looper = function () {
   };
   /**
    *  Stop looping playback of the score. If it
-   *  is currently 
+   *  is currently playing, this will go into effect
+   *  after the current round of playback completes.
+   *
+   *  @method  noLoop
+   */
+  p5.Score.prototype.noLoop = function () {
+    this.looping = false;
+  };
+  p5.Score.prototype.resetParts = function () {
+    var self = this;
+    this.parts.forEach(function (part) {
+      self.resetParts[part];
+    });
+  };
+  p5.Score.prototype.resetPart = function (i) {
+    this.parts[i].stop();
+    this.parts[i].partStep = 0;
+    for (var p in this.parts[i].phrases) {
+      if (this.parts[i]) {
+        this.parts[i].phrases[p].phraseStep = 0;
+      }
+    }
+  };
+  /**
+   *  Set the tempo for all parts in the score
+   *
+   *  @method setBPM
+   *  @param {Number} BPM      Beats Per Minute
+   *  @param {Number} rampTime Seconds from now
+   */
+  p5.Score.prototype.setBPM = function (bpm, rampTime) {
+    for (var i in this.parts) {
+      if (this.parts[i]) {
+        this.parts[i].setBPM(bpm, rampTime);
+      }
+    }
+  };
+  function playNextPart(aScore) {
+   
