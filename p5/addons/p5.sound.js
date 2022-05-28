@@ -10508,4 +10508,41 @@ looper = function () {
     }
   };
   function playNextPart(aScore) {
-   
+    aScore.currentPart++;
+    if (aScore.currentPart >= aScore.parts.length) {
+      aScore.scoreStep = 0;
+      aScore.onended();
+    } else {
+      aScore.scoreStep = 0;
+      aScore.parts[aScore.currentPart - 1].stop();
+      aScore.parts[aScore.currentPart].start();
+    }
+  }
+}(master);
+var soundloop;
+'use strict';
+soundloop = function () {
+  var p5sound = master;
+  var Clock = Tone_core_Clock;
+  /**
+   * SoundLoop
+   *
+   * @class p5.SoundLoop
+   * @constructor
+   *
+   * @param {Function} callback this function will be called on each iteration of theloop
+   * @param {Number|String} [interval] amount of time or beats for each iteration of the loop
+   *                                       defaults to 1
+   *
+   * @example
+   * <div><code>
+   * var click;
+   * var looper1;
+   *
+   * function preload() {
+   *   click = loadSound('assets/drum.mp3');
+   * }
+   *
+   * function setup() {
+   *   //the looper's callback is passed the timeFromNow
+   *   //this value should be u
