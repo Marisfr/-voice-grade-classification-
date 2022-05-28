@@ -10545,4 +10545,35 @@ soundloop = function () {
    *
    * function setup() {
    *   //the looper's callback is passed the timeFromNow
-   *   //this value should be u
+   *   //this value should be used as a reference point from
+   *   //which to schedule sounds
+   *   looper1 = new p5.SoundLoop(function(timeFromNow){
+   *     click.play(timeFromNow);
+   *     background(255 * (looper1.iterations % 2));
+   *     }, 2);
+   *
+   *   //stop after 10 iteratios;
+   *   looper1.maxIterations = 10;
+   *   //start the loop
+   *   looper1.start();
+   * }
+   * </code></div>
+   */
+  p5.SoundLoop = function (callback, interval) {
+    this.callback = callback;
+    /**
+       * musicalTimeMode uses <a href = "https://github.com/Tonejs/Tone.js/wiki/Time">Tone.Time</a> convention
+    * true if string, false if number
+       * @property {Boolean} musicalTimeMode
+       */
+    this.musicalTimeMode = typeof this._interval === 'number' ? false : true;
+    this._interval = interval || 1;
+    /**
+     * musicalTimeMode variables
+     * modify these only when the interval is specified in musicalTime format as a string
+     */
+    this._timeSignature = 4;
+    this._bpm = 60;
+    this.isPlaying = false;
+    /**
+     * S
