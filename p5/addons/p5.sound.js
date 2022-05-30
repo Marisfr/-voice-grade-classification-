@@ -10576,4 +10576,32 @@ soundloop = function () {
     this._bpm = 60;
     this.isPlaying = false;
     /**
-     * S
+     * Set a limit to the number of loops to play. defaults to Infinity
+     * @property {Number} maxIterations
+     */
+    this.maxIterations = Infinity;
+    var self = this;
+    this.clock = new Clock({
+      'callback': function (time) {
+        var timeFromNow = time - p5sound.audiocontext.currentTime;
+        /**
+         * Do not initiate the callback if timeFromNow is < 0
+         * This ususually occurs for a few milliseconds when the page
+         * is not fully loaded
+         *
+         * The callback should only be called until maxIterations is reached
+         */
+        if (timeFromNow > 0 && self.iterations <= self.maxIterations) {
+          self.callback(timeFromNow);
+        }
+      },
+      'frequency': this._calcFreq()
+    });
+  };
+  /**
+   * Start the loop
+   * @method  start
+   * @param  {Number} [timeFromNow] schedule a starting time
+   */
+  p5.SoundLoop.prototype.start = function (timeFromNow) {
+    var t = time
