@@ -10604,4 +10604,39 @@ soundloop = function () {
    * @param  {Number} [timeFromNow] schedule a starting time
    */
   p5.SoundLoop.prototype.start = function (timeFromNow) {
-    var t = time
+    var t = timeFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    if (!this.isPlaying) {
+      this.clock.start(now + t);
+      this.isPlaying = true;
+    }
+  };
+  /**
+   * Stop the loop
+   * @method  stop
+   * @param  {Number} [timeFromNow] schedule a stopping time
+   */
+  p5.SoundLoop.prototype.stop = function (timeFromNow) {
+    var t = timeFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    if (this.isPlaying) {
+      this.clock.stop(now + t);
+      this.isPlaying = false;
+    }
+  };
+  /**
+   * Pause the loop
+   * @method pause
+   * @param  {Number} [timeFromNow] schedule a pausing time
+   */
+  p5.SoundLoop.prototype.pause = function (timeFromNow) {
+    var t = timeFromNow || 0;
+    if (this.isPlaying) {
+      this.clock.pause(t);
+      this.isPlaying = false;
+    }
+  };
+  /**
+   * Synchronize loops. Use this method to start two more more loops in synchronization
+   * or to start a loop in synchronization with a loop that is already playing
+   * This method will schedule the implicit
