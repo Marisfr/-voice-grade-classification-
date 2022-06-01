@@ -10666,4 +10666,28 @@ soundloop = function () {
    * @method  _update
    */
   p5.SoundLoop.prototype._update = function () {
-    this.clock.frequency
+    this.clock.frequency.value = this._calcFreq();
+  };
+  /**
+   * Calculate the frequency of the clock's callback based on bpm, interval, and timesignature
+   * @private
+   * @method  _calcFreq
+   * @return {Number} new clock frequency value
+   */
+  p5.SoundLoop.prototype._calcFreq = function () {
+    //Seconds mode, bpm / timesignature has no effect
+    if (typeof this._interval === 'number') {
+      this.musicalTimeMode = false;
+      return 1 / this._interval;
+    } else if (typeof this._interval === 'string') {
+      this.musicalTimeMode = true;
+      return this._bpm / 60 / this._convertNotation(this._interval) * (this._timeSignature / 4);
+    }
+  };
+  /**
+   * Convert notation from musical time format to seconds
+   * Uses <a href = "https://github.com/Tonejs/Tone.js/wiki/Time">Tone.Time</a> convention
+   * @private
+   * @method _convertNotation
+   * @param  {String} value value to be converted
+   * @return {Number}       converted value in s
