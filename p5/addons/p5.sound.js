@@ -10639,4 +10639,31 @@ soundloop = function () {
   /**
    * Synchronize loops. Use this method to start two more more loops in synchronization
    * or to start a loop in synchronization with a loop that is already playing
-   * This method will schedule the implicit
+   * This method will schedule the implicit loop in sync with the explicit master loop
+   * i.e. loopToStart.syncedStart(loopToSyncWith)
+   *
+   * @method  syncedStart
+   * @param  {Object} otherLoop   a p5.SoundLoop to sync with
+   * @param  {Number} [timeFromNow] Start the loops in sync after timeFromNow seconds
+   */
+  p5.SoundLoop.prototype.syncedStart = function (otherLoop, timeFromNow) {
+    var t = timeFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    if (!otherLoop.isPlaying) {
+      otherLoop.clock.start(now + t);
+      otherLoop.isPlaying = true;
+      this.clock.start(now + t);
+      this.isPlaying = true;
+    } else if (otherLoop.isPlaying) {
+      var time = otherLoop.clock._nextTick - p5sound.audiocontext.currentTime;
+      this.clock.start(now + time);
+      this.isPlaying = true;
+    }
+  };
+  /**
+   * Updates frequency value, reflected in next callback
+   * @private
+   * @method  _update
+   */
+  p5.SoundLoop.prototype._update = function () {
+    this.clock.frequency
