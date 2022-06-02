@@ -10690,4 +10690,34 @@ soundloop = function () {
    * @private
    * @method _convertNotation
    * @param  {String} value value to be converted
-   * @return {Number}       converted value in s
+   * @return {Number}       converted value in seconds
+   */
+  p5.SoundLoop.prototype._convertNotation = function (value) {
+    var type = value.slice(-1);
+    value = Number(value.slice(0, -1));
+    switch (type) {
+    case 'm':
+      return this._measure(value);
+    case 'n':
+      return this._note(value);
+    default:
+      console.warn('Specified interval is not formatted correctly. See Tone.js ' + 'timing reference for more info: https://github.com/Tonejs/Tone.js/wiki/Time');
+    }
+  };
+  /**
+   * Helper conversion methods of measure and note
+   * @private
+   * @method  _measure
+   * @private
+   * @method  _note
+   */
+  p5.SoundLoop.prototype._measure = function (value) {
+    return value * this._timeSignature;
+  };
+  p5.SoundLoop.prototype._note = function (value) {
+    return this._timeSignature / value;
+  };
+  /**
+   * Getters and Setters, setting any paramter will result in a change in the clock's
+   * frequency, that will be reflected after the next callback
+   * beats per minute (defau
