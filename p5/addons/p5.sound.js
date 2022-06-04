@@ -10720,4 +10720,29 @@ soundloop = function () {
   /**
    * Getters and Setters, setting any paramter will result in a change in the clock's
    * frequency, that will be reflected after the next callback
-   * beats per minute (defau
+   * beats per minute (defaults to 60)
+   * @property {Number} bpm
+   */
+  Object.defineProperty(p5.SoundLoop.prototype, 'bpm', {
+    get: function () {
+      return this._bpm;
+    },
+    set: function (bpm) {
+      if (!this.musicalTimeMode) {
+        console.warn('Changing the BPM in "seconds" mode has no effect. ' + 'BPM is only relevant in musicalTimeMode ' + 'when the interval is specified as a string ' + '("2n", "4n", "1m"...etc)');
+      }
+      this._bpm = bpm;
+      this._update();
+    }
+  });
+  /**
+   * number of quarter notes in a measure (defaults to 4)
+   * @property {Number} timeSignature
+   */
+  Object.defineProperty(p5.SoundLoop.prototype, 'timeSignature', {
+    get: function () {
+      return this._timeSignature;
+    },
+    set: function (timeSig) {
+      if (!this.musicalTimeMode) {
+        console.warn('Changing the timeSignature in "seconds" mode has no effect. ' + 'BPM is only relevant in musicalTimeMode ' + 'when the interval is specified as a string ' + '("2n", "
