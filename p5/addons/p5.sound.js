@@ -10784,4 +10784,24 @@ compressor = function () {
   var Effect = effect;
   var CustomError = errorHandler;
   /**
-   * Compressor is an audio effect class that performs dynamics com
+   * Compressor is an audio effect class that performs dynamics compression
+   * on an audio input source. This is a very commonly used technique in music
+   * and sound production. Compression creates an overall louder, richer,
+   * and fuller sound by lowering the volume of louds and raising that of softs.
+   * Compression can be used to avoid clipping (sound distortion due to
+   * peaks in volume) and is especially useful when many sounds are played
+   * at once. Compression can be used on indivudal sound sources in addition
+   * to the master output.
+   *
+   * This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
+   * Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
+   * <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
+   * <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *
+   * @class p5.Compressor
+   * @constructor
+   * @extends p5.Effect
+   *
+   *
+   */
+  p5.Comp
