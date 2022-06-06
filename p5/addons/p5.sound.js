@@ -10745,4 +10745,43 @@ soundloop = function () {
     },
     set: function (timeSig) {
       if (!this.musicalTimeMode) {
-        console.warn('Changing the timeSignature in "seconds" mode has no effect. ' + 'BPM is only relevant in musicalTimeMode ' + 'when the interval is specified as a string ' + '("2n", "
+        console.warn('Changing the timeSignature in "seconds" mode has no effect. ' + 'BPM is only relevant in musicalTimeMode ' + 'when the interval is specified as a string ' + '("2n", "4n", "1m"...etc)');
+      }
+      this._timeSignature = timeSig;
+      this._update();
+    }
+  });
+  /**
+   * length of the loops interval
+   * @property {Number|String} interval
+   */
+  Object.defineProperty(p5.SoundLoop.prototype, 'interval', {
+    get: function () {
+      return this._interval;
+    },
+    set: function (interval) {
+      this.musicalTimeMode = typeof interval === 'Number' ? false : true;
+      this._interval = interval;
+      this._update();
+    }
+  });
+  /**
+   * how many times the callback has been called so far
+   * @property {Number} iterations
+   * @readonly
+   */
+  Object.defineProperty(p5.SoundLoop.prototype, 'iterations', {
+    get: function () {
+      return this.clock.ticks;
+    }
+  });
+  return p5.SoundLoop;
+}(master, Tone_core_Clock);
+var compressor;
+compressor = function () {
+  'use strict';
+  var p5sound = master;
+  var Effect = effect;
+  var CustomError = errorHandler;
+  /**
+   * Compressor is an audio effect class that performs dynamics com
