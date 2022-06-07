@@ -10804,4 +10804,26 @@ compressor = function () {
    *
    *
    */
-  p5.Comp
+  p5.Compressor = function () {
+    Effect.call(this);
+    /**
+       * The p5.Compressor is built with a <a href="https://www.w3.org/TR/webaudio/#the-dynamicscompressornode-interface"
+     *   target="_blank" title="W3 spec for Dynamics Compressor Node">Web Audio Dynamics Compressor Node
+     *   </a>
+       * @property {AudioNode} compressor
+       */
+    this.compressor = this.ac.createDynamicsCompressor();
+    this.input.connect(this.compressor);
+    this.compressor.connect(this.wet);
+  };
+  p5.Compressor.prototype = Object.create(Effect.prototype);
+  /**
+  * Performs the same function as .connect, but also accepts
+  * optional parameters to set compressor's audioParams
+  * @method process
+  *
+  * @param {Object} src         Sound source to be connected
+  *
+  * @param {Number} [attack]     The amount of time (in seconds) to reduce the gain by 10dB,
+  *                            default = .003, range 0 - 1
+  * @param {Number} [knee]       A decibel 
