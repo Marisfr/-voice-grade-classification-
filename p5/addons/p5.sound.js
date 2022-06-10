@@ -10862,4 +10862,29 @@ compressor = function () {
     if (typeof knee !== 'undefined') {
       this.knee(knee);
     }
-    i
+    if (typeof ratio !== 'undefined') {
+      this.ratio(ratio);
+    }
+    if (typeof threshold !== 'undefined') {
+      this.threshold(threshold);
+    }
+    if (typeof release !== 'undefined') {
+      this.release(release);
+    }
+  };
+  /**
+   * Get current attack or set value w/ time ramp
+   *
+   *
+   * @method attack
+   * @param {Number} [attack] Attack is the amount of time (in seconds) to reduce the gain by 10dB,
+   *                          default = .003, range 0 - 1
+   * @param {Number} [time]  Assign time value to schedule the change in value
+   */
+  p5.Compressor.prototype.attack = function (attack, time) {
+    var t = time || 0;
+    if (typeof attack == 'number') {
+      this.compressor.attack.value = attack;
+      this.compressor.attack.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.compressor.attack.linearRampToValueAtTime(attack, this.ac.currentTime + 0.02 + t);
+    } else if (typeof attack !== 'undefined') 
