@@ -10844,4 +10844,22 @@ compressor = function () {
    * Set the paramters of a compressor.
    * @method  set
    * @param {Number} attack     The amount of time (in seconds) to reduce the gain by 10dB,
-   *                        
+   *                            default = .003, range 0 - 1
+   * @param {Number} knee       A decibel value representing the range above the
+   *                            threshold where the curve smoothly transitions to the "ratio" portion.
+   *                            default = 30, range 0 - 40
+   * @param {Number} ratio      The amount of dB change in input for a 1 dB change in output
+   *                            default = 12, range 1 - 20
+   * @param {Number} threshold  The decibel value above which the compression will start taking effect
+   *                            default = -24, range -100 - 0
+   * @param {Number} release    The amount of time (in seconds) to increase the gain by 10dB
+   *                            default = .25, range 0 - 1
+   */
+  p5.Compressor.prototype.set = function (attack, knee, ratio, threshold, release) {
+    if (typeof attack !== 'undefined') {
+      this.attack(attack);
+    }
+    if (typeof knee !== 'undefined') {
+      this.knee(knee);
+    }
+    i
