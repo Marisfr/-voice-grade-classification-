@@ -10887,4 +10887,31 @@ compressor = function () {
       this.compressor.attack.value = attack;
       this.compressor.attack.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
       this.compressor.attack.linearRampToValueAtTime(attack, this.ac.currentTime + 0.02 + t);
-    } else if (typeof attack !== 'undefined') 
+    } else if (typeof attack !== 'undefined') {
+      attack.connect(this.compressor.attack);
+    }
+    return this.compressor.attack.value;
+  };
+  /**
+   * Get current knee or set value w/ time ramp
+   *
+   * @method knee
+   * @param {Number} [knee] A decibel value representing the range above the
+   *                        threshold where the curve smoothly transitions to the "ratio" portion.
+   *                        default = 30, range 0 - 40
+   * @param {Number} [time]  Assign time value to schedule the change in value
+   */
+  p5.Compressor.prototype.knee = function (knee, time) {
+    var t = time || 0;
+    if (typeof knee == 'number') {
+      this.compressor.knee.value = knee;
+      this.compressor.knee.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.compressor.knee.linearRampToValueAtTime(knee, this.ac.currentTime + 0.02 + t);
+    } else if (typeof knee !== 'undefined') {
+      knee.connect(this.compressor.knee);
+    }
+    return this.compressor.knee.value;
+  };
+  /**
+   * Get current ratio or set value w/ time ramp
+ 
