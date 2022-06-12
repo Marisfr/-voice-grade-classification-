@@ -10914,4 +10914,26 @@ compressor = function () {
   };
   /**
    * Get current ratio or set value w/ time ramp
- 
+   * @method ratio
+   *
+   * @param {Number} [ratio]      The amount of dB change in input for a 1 dB change in output
+   *                            default = 12, range 1 - 20
+   * @param {Number} [time]  Assign time value to schedule the change in value
+   */
+  p5.Compressor.prototype.ratio = function (ratio, time) {
+    var t = time || 0;
+    if (typeof ratio == 'number') {
+      this.compressor.ratio.value = ratio;
+      this.compressor.ratio.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.compressor.ratio.linearRampToValueAtTime(ratio, this.ac.currentTime + 0.02 + t);
+    } else if (typeof ratio !== 'undefined') {
+      ratio.connect(this.compressor.ratio);
+    }
+    return this.compressor.ratio.value;
+  };
+  /**
+   * Get current threshold or set value w/ time ramp
+   * @method threshold
+   *
+   * @param {Number} threshold  The decibel value above which the compression will start taking effect
+   *      
