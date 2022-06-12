@@ -10936,4 +10936,26 @@ compressor = function () {
    * @method threshold
    *
    * @param {Number} threshold  The decibel value above which the compression will start taking effect
-   *      
+   *                            default = -24, range -100 - 0
+   * @param {Number} [time]  Assign time value to schedule the change in value
+   */
+  p5.Compressor.prototype.threshold = function (threshold, time) {
+    var t = time || 0;
+    if (typeof threshold == 'number') {
+      this.compressor.threshold.value = threshold;
+      this.compressor.threshold.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.compressor.threshold.linearRampToValueAtTime(threshold, this.ac.currentTime + 0.02 + t);
+    } else if (typeof threshold !== 'undefined') {
+      threshold.connect(this.compressor.threshold);
+    }
+    return this.compressor.threshold.value;
+  };
+  /**
+   * Get current release or set value w/ time ramp
+   * @method release
+   *
+   * @param {Number} release    The amount of time (in seconds) to increase the gain by 10dB
+   *                            default = .25, range 0 - 1
+   *
+   * @param {Number} [time]  Assign time value to schedule the change in value
+   */
