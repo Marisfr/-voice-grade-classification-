@@ -10959,3 +10959,30 @@ compressor = function () {
    *
    * @param {Number} [time]  Assign time value to schedule the change in value
    */
+  p5.Compressor.prototype.release = function (release, time) {
+    var t = time || 0;
+    if (typeof release == 'number') {
+      this.compressor.release.value = release;
+      this.compressor.release.cancelScheduledValues(this.ac.currentTime + 0.01 + t);
+      this.compressor.release.linearRampToValueAtTime(release, this.ac.currentTime + 0.02 + t);
+    } else if (typeof number !== 'undefined') {
+      release.connect(this.compressor.release);
+    }
+    return this.compressor.release.value;
+  };
+  /**
+   * Return the current reduction value
+   *
+   * @method reduction
+   * @return {Number} Value of the amount of gain reduction that is applied to the signal
+   */
+  p5.Compressor.prototype.reduction = function () {
+    return this.compressor.reduction.value;
+  };
+  p5.Compressor.prototype.dispose = function () {
+    Effect.prototype.dispose.apply(this);
+    this.compressor.disconnect();
+    this.compressor = undefined;
+  };
+  return p5.Compressor;
+}(master, effect, errorHandle
