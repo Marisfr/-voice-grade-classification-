@@ -10985,4 +10985,32 @@ compressor = function () {
     this.compressor = undefined;
   };
   return p5.Compressor;
-}(master, effect, errorHandle
+}(master, effect, errorHandler);
+var soundRecorder;
+'use strict';
+soundRecorder = function () {
+  var p5sound = master;
+  var ac = p5sound.audiocontext;
+  /**
+   *  <p>Record sounds for playback and/or to save as a .wav file.
+   *  The p5.SoundRecorder records all sound output from your sketch,
+   *  or can be assigned a specific source with setInput().</p>
+   *  <p>The record() method accepts a p5.SoundFile as a parameter.
+   *  When playback is stopped (either after the given amount of time,
+   *  or with the stop() method), the p5.SoundRecorder will send its
+   *  recording to that p5.SoundFile for playback.</p>
+   *
+   *  @class p5.SoundRecorder
+   *  @constructor
+   *  @example
+   *  <div><code>
+   *  var mic, recorder, soundFile;
+   *  var state = 0;
+   *
+   *  function setup() {
+   *    background(200);
+   *    // create an audio in
+   *    mic = new p5.AudioIn();
+   *
+   *    // prompts user to enable their browser mic
+   *   
