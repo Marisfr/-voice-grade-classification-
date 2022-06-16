@@ -11051,4 +11051,37 @@ soundRecorder = function () {
    *    }
    *
    *    else if (state === 2) {
-   *      soundFile.play(); // pl
+   *      soundFile.play(); // play the result!
+   *      save(soundFile, 'mySound.wav');
+   *      state++;
+   *    }
+   *  }
+   *  </div></code>
+   */
+  p5.SoundRecorder = function () {
+    this.input = ac.createGain();
+    this.output = ac.createGain();
+    this.recording = false;
+    this.bufferSize = 1024;
+    this._channels = 2;
+    // stereo (default)
+    this._clear();
+    // initialize variables
+    this._jsNode = ac.createScriptProcessor(this.bufferSize, this._channels, 2);
+    this._jsNode.onaudioprocess = this._audioprocess.bind(this);
+    /**
+     *  callback invoked when the recording is over
+     *  @private
+     *  @type Function(Float32Array)
+     */
+    this._callback = function () {
+    };
+    // connections
+    this._jsNode.connect(p5.soundOut._silentNode);
+    this.setInput();
+    // add this p5.SoundFile to the soundArray
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Connect a specific device to the p5.SoundRecorder.
+   *  If no parameter is given, p5
