@@ -11110,4 +11110,33 @@ soundRecorder = function () {
    *  recording is complete. Optional parameters include duration
    *  (in seconds) of the recording, and a callback function that
    *  will be called once the complete recording has been
-   *  transfered to the p5.SoundF
+   *  transfered to the p5.SoundFile.
+   *
+   *  @method  record
+   *  @param  {p5.SoundFile}   soundFile    p5.SoundFile
+   *  @param  {Number}   [duration] Time (in seconds)
+   *  @param  {Function} [callback] The name of a function that will be
+   *                                called once the recording completes
+   */
+  p5.SoundRecorder.prototype.record = function (sFile, duration, callback) {
+    this.recording = true;
+    if (duration) {
+      this.sampleLimit = Math.round(duration * ac.sampleRate);
+    }
+    if (sFile && callback) {
+      this._callback = function () {
+        this.buffer = this._getBuffer();
+        sFile.setBuffer(this.buffer);
+        callback();
+      };
+    } else if (sFile) {
+      this._callback = function () {
+        this.buffer = this._getBuffer();
+        sFile.setBuffer(this.buffer);
+      };
+    }
+  };
+  /**
+   *  Stop the recording. Once the recording is stopped,
+   *  the results will be sent to the p5.SoundFile that
+   *  was given on .record()
