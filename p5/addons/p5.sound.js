@@ -11084,4 +11084,30 @@ soundRecorder = function () {
   };
   /**
    *  Connect a specific device to the p5.SoundRecorder.
-   *  If no parameter is given, p5
+   *  If no parameter is given, p5.SoundRecorer will record
+   *  all audible p5.sound from your sketch.
+   *
+   *  @method  setInput
+   *  @param {Object} [unit] p5.sound object or a web audio unit
+   *                         that outputs sound
+   */
+  p5.SoundRecorder.prototype.setInput = function (unit) {
+    this.input.disconnect();
+    this.input = null;
+    this.input = ac.createGain();
+    this.input.connect(this._jsNode);
+    this.input.connect(this.output);
+    if (unit) {
+      unit.connect(this.input);
+    } else {
+      p5.soundOut.output.connect(this.input);
+    }
+  };
+  /**
+   *  Start recording. To access the recording, provide
+   *  a p5.SoundFile as the first parameter. The p5.SoundRecorder
+   *  will send its recording to that p5.SoundFile for playback once
+   *  recording is complete. Optional parameters include duration
+   *  (in seconds) of the recording, and a callback function that
+   *  will be called once the complete recording has been
+   *  transfered to the p5.SoundF
