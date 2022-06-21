@@ -11139,4 +11139,36 @@ soundRecorder = function () {
   /**
    *  Stop the recording. Once the recording is stopped,
    *  the results will be sent to the p5.SoundFile that
-   *  was given on .record()
+   *  was given on .record(), and if a callback function
+   *  was provided on record, that function will be called.
+   *
+   *  @method  stop
+   */
+  p5.SoundRecorder.prototype.stop = function () {
+    this.recording = false;
+    this._callback();
+    this._clear();
+  };
+  p5.SoundRecorder.prototype._clear = function () {
+    this._leftBuffers = [];
+    this._rightBuffers = [];
+    this.recordedSamples = 0;
+    this.sampleLimit = null;
+  };
+  /**
+   *  internal method called on audio process
+   *
+   *  @private
+   *  @param   {AudioProcessorEvent} event
+   */
+  p5.SoundRecorder.prototype._audioprocess = function (event) {
+    if (this.recording === false) {
+      return;
+    } else if (this.recording === true) {
+      // if we are past the duration, then stop... else:
+      if (this.sampleLimit && this.recordedSamples >= this.sampleLimit) {
+        this.stop();
+      } else {
+        // get channel data
+        var left = event.inputBuffer.getChannelData(0);
+        var right = event.inputBuffer.getChannelData
