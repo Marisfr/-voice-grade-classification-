@@ -11171,4 +11171,35 @@ soundRecorder = function () {
       } else {
         // get channel data
         var left = event.inputBuffer.getChannelData(0);
-        var right = event.inputBuffer.getChannelData
+        var right = event.inputBuffer.getChannelData(1);
+        // clone the samples
+        this._leftBuffers.push(new Float32Array(left));
+        this._rightBuffers.push(new Float32Array(right));
+        this.recordedSamples += this.bufferSize;
+      }
+    }
+  };
+  p5.SoundRecorder.prototype._getBuffer = function () {
+    var buffers = [];
+    buffers.push(this._mergeBuffers(this._leftBuffers));
+    buffers.push(this._mergeBuffers(this._rightBuffers));
+    return buffers;
+  };
+  p5.SoundRecorder.prototype._mergeBuffers = function (channelBuffer) {
+    var result = new Float32Array(this.recordedSamples);
+    var offset = 0;
+    var lng = channelBuffer.length;
+    for (var i = 0; i < lng; i++) {
+      var buffer = channelBuffer[i];
+      result.set(buffer, offset);
+      offset += buffer.length;
+    }
+    return result;
+  };
+  p5.SoundRecorder.prototype.dispose = function () {
+    this._clear();
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this._callback = function () {
+ 
