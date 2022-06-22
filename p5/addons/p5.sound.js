@@ -11202,4 +11202,32 @@ soundRecorder = function () {
     var index = p5sound.soundArray.indexOf(this);
     p5sound.soundArray.splice(index, 1);
     this._callback = function () {
- 
+    };
+    if (this.input) {
+      this.input.disconnect();
+    }
+    this.input = null;
+    this._jsNode = null;
+  };
+  /**
+   *  Save a p5.SoundFile as a .wav audio file.
+   *
+   *  @method saveSound
+   *  @param  {p5.SoundFile} soundFile p5.SoundFile that you wish to save
+   *  @param  {String} name      name of the resulting .wav file.
+   */
+  p5.prototype.saveSound = function (soundFile, name) {
+    var leftChannel, rightChannel;
+    leftChannel = soundFile.buffer.getChannelData(0);
+    // handle mono files
+    if (soundFile.buffer.numberOfChannels > 1) {
+      rightChannel = soundFile.buffer.getChannelData(1);
+    } else {
+      rightChannel = leftChannel;
+    }
+    var interleaved = interleave(leftChannel, rightChannel);
+    // create the buffer and view to create the .WAV file
+    var buffer = new window.ArrayBuffer(44 + interleaved.length * 2);
+    var view = new window.DataView(buffer);
+    // write the WAV container,
+    // check spe
