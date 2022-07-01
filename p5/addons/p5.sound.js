@@ -11258,4 +11258,35 @@ soundRecorder = function () {
     }
     p5.prototype.writeFile([view], name, 'wav');
   };
-  // helper methods 
+  // helper methods to save waves
+  function interleave(leftChannel, rightChannel) {
+    var length = leftChannel.length + rightChannel.length;
+    var result = new Float32Array(length);
+    var inputIndex = 0;
+    for (var index = 0; index < length;) {
+      result[index++] = leftChannel[inputIndex];
+      result[index++] = rightChannel[inputIndex];
+      inputIndex++;
+    }
+    return result;
+  }
+  function writeUTFBytes(view, offset, string) {
+    var lng = string.length;
+    for (var i = 0; i < lng; i++) {
+      view.setUint8(offset + i, string.charCodeAt(i));
+    }
+  }
+}(sndcore, master);
+var peakdetect;
+'use strict';
+peakdetect = function () {
+  /**
+   *  <p>PeakDetect works in conjunction with p5.FFT to
+   *  look for onsets in some or all of the frequency spectrum.
+   *  </p>
+   *  <p>
+   *  To use p5.PeakDetect, call <code>update</code> in the draw loop
+   *  and pass in a p5.FFT object.
+   *  </p>
+   *  <p>
+   *  You can listen for a specific part of the 
