@@ -11289,4 +11289,30 @@ peakdetect = function () {
    *  and pass in a p5.FFT object.
    *  </p>
    *  <p>
-   *  You can listen for a specific part of the 
+   *  You can listen for a specific part of the frequency spectrum by
+   *  setting the range between <code>freq1</code> and <code>freq2</code>.
+   *  </p>
+   *
+   *  <p><code>threshold</code> is the threshold for detecting a peak,
+   *  scaled between 0 and 1. It is logarithmic, so 0.1 is half as loud
+   *  as 1.0.</p>
+   *
+   *  <p>
+   *  The update method is meant to be run in the draw loop, and
+   *  <b>frames</b> determines how many loops must pass before
+   *  another peak can be detected.
+   *  For example, if the frameRate() = 60, you could detect the beat of a
+   *  120 beat-per-minute song with this equation:
+   *  <code> framesPerPeak = 60 / (estimatedBPM / 60 );</code>
+   *  </p>
+   *
+   *  <p>
+   *  Based on example contribtued by @b2renger, and a simple beat detection
+   *  explanation by <a
+   *  href="http://www.airtightinteractive.com/2013/10/making-audio-reactive-visuals/"
+   *  target="_blank">Felix Turner</a>.
+   *  </p>
+   *
+   *  @class  p5.PeakDetect
+   *  @constructor
+   *  @param {Numbe
