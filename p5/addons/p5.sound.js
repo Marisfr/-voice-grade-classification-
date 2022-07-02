@@ -11345,4 +11345,36 @@ peakdetect = function () {
    *    background(0);
    *    text('click to play/pause', width/2, height/2);
    *
-   *   
+   *    // peakDetect accepts an fft post-analysis
+   *    fft.analyze();
+   *    peakDetect.update(fft);
+   *
+   *    if ( peakDetect.isDetected ) {
+   *      ellipseWidth = 50;
+   *    } else {
+   *      ellipseWidth *= 0.95;
+   *    }
+   *
+   *    ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
+   *  }
+   *
+   *  // toggle play/stop when canvas is clicked
+   *  function mouseClicked() {
+   *    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+   *      if (soundFile.isPlaying() ) {
+   *        soundFile.stop();
+   *      } else {
+   *        soundFile.play();
+   *      }
+   *    }
+   *  }
+   *  </code></div>
+   */
+  p5.PeakDetect = function (freq1, freq2, threshold, _framesPerPeak) {
+    // framesPerPeak determines how often to look for a beat.
+    // If a beat is provided, try to look for a beat based on bpm
+    this.framesPerPeak = _framesPerPeak || 20;
+    this.framesSinceLastPeak = 0;
+    this.decayRate = 0.95;
+    this.threshold = threshold || 0.35;
+    this.cutoff =
