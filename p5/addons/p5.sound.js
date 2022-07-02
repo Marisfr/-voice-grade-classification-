@@ -11315,4 +11315,34 @@ peakdetect = function () {
    *
    *  @class  p5.PeakDetect
    *  @constructor
-   *  @param {Numbe
+   *  @param {Number} [freq1]     lowFrequency - defaults to 20Hz
+   *  @param {Number} [freq2]     highFrequency - defaults to 20000 Hz
+   *  @param {Number} [threshold] Threshold for detecting a beat between 0 and 1
+   *                            scaled logarithmically where 0.1 is 1/2 the loudness
+   *                            of 1.0. Defaults to 0.35.
+   *  @param {Number} [framesPerPeak]     Defaults to 20.
+   *  @example
+   *  <div><code>
+   *
+   *  var cnv, soundFile, fft, peakDetect;
+   *  var ellipseWidth = 10;
+   *
+   *  function setup() {
+   *    background(0);
+   *    noStroke();
+   *    fill(255);
+   *    textAlign(CENTER);
+   *
+   *    soundFile = loadSound('assets/beat.mp3');
+   *
+   *    // p5.PeakDetect requires a p5.FFT
+   *    fft = new p5.FFT();
+   *    peakDetect = new p5.PeakDetect();
+   *
+   *  }
+   *
+   *  function draw() {
+   *    background(0);
+   *    text('click to play/pause', width/2, height/2);
+   *
+   *   
