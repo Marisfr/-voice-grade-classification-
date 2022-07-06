@@ -11549,4 +11549,34 @@ gain = function () {
    *   background(180);
    *
    *   // calculate the horizontal distance beetween the mouse and the right of the screen
-   *   var d = dist(mous
+   *   var d = dist(mouseX,0,width,0);
+   *
+   *   // map the horizontal position of the mouse to values useable for volume control of sound1
+   *   var vol1 = map(mouseX,0,width,0,1);
+   *   var vol2 = 1-vol1; // when sound1 is loud, sound2 is quiet and vice versa
+   *
+   *   gain1.amp(vol1,0.5,0);
+   *   gain2.amp(vol2,0.5,0);
+   *
+   *   // map the vertical position of the mouse to values useable for 'master volume control'
+   *   var vol3 = map(mouseY,0,height,0,1);
+   *   gain3.amp(vol3,0.5,0);
+   * }
+   *</code></div>
+   *
+   */
+  p5.Gain = function () {
+    this.ac = p5sound.audiocontext;
+    this.input = this.ac.createGain();
+    this.output = this.ac.createGain();
+    // otherwise, Safari distorts
+    this.input.gain.value = 0.5;
+    this.input.connect(this.output);
+    // add  to the soundArray
+    p5sound.soundArray.push(this);
+  };
+  /**
+   *  Connect a source to the gain node.
+   *
+   *  @method  setInput
+   *  @param  {Object} src     p5.sound / Web Audio object with
