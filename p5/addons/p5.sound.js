@@ -11472,4 +11472,47 @@ peakdetect = function () {
    *    ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
    *  }
    *
-   *  // this function is 
+   *  // this function is called by peakDetect.onPeak
+   *  function triggerBeat() {
+   *    ellipseWidth = 50;
+   *  }
+   *
+   *  // mouseclick starts/stops sound
+   *  function setupSound() {
+   *    cnv.mouseClicked( function() {
+   *      if (soundFile.isPlaying() ) {
+   *        soundFile.stop();
+   *      } else {
+   *        soundFile.play();
+   *      }
+   *    });
+   *  }
+   *  </code></div>
+   */
+  p5.PeakDetect.prototype.onPeak = function (callback, val) {
+    var self = this;
+    self._onPeak = function () {
+      callback(self.energy, val);
+    };
+  };
+}();
+var gain;
+'use strict';
+gain = function () {
+  var p5sound = master;
+  /**
+   *  A gain node is usefull to set the relative volume of sound.
+   *  It's typically used to build mixers.
+   *
+   *  @class p5.Gain
+   *  @constructor
+   *  @example
+   *  <div><code>
+   *
+   * // load two soundfile and crossfade beetween them
+   * var sound1,sound2;
+   * var gain1, gain2, gain3;
+   *
+   * function preload(){
+   *   soundFormats('ogg', 'mp3');
+   *   sound1 = loadSound('../_fil
