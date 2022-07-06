@@ -11579,4 +11579,39 @@ gain = function () {
    *  Connect a source to the gain node.
    *
    *  @method  setInput
-   *  @param  {Object} src     p5.sound / Web Audio object with
+   *  @param  {Object} src     p5.sound / Web Audio object with a sound
+   *                           output.
+   */
+  p5.Gain.prototype.setInput = function (src) {
+    src.connect(this.input);
+  };
+  /**
+   *  Send output to a p5.sound or web audio object
+   *
+   *  @method  connect
+   *  @param  {Object} unit
+   */
+  p5.Gain.prototype.connect = function (unit) {
+    var u = unit || p5.soundOut.input;
+    this.output.connect(u.input ? u.input : u);
+  };
+  /**
+   *  Disconnect all output.
+   *
+   *  @method disconnect
+   */
+  p5.Gain.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  /**
+   *  Set the output level of the gain node.
+   *
+   *  @method  amp
+   *  @param  {Number} volume amplitude between 0 and 1.0
+   *  @param  {Number} [rampTime] create a fade that lasts rampTime
+   *  @param  {Number} [timeFromNow] schedule this event to happen
+   *                                seconds from now
+   */
+  p5.Gain.prototype.amp = function (vol, rampTime, tFromNow) {
+    var rampTime = rampTime || 0;
+    v
