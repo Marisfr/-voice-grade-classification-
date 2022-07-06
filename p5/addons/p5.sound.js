@@ -11515,4 +11515,38 @@ gain = function () {
    *
    * function preload(){
    *   soundFormats('ogg', 'mp3');
-   *   sound1 = loadSound('../_fil
+   *   sound1 = loadSound('../_files/Damscray_01');
+   *   sound2 = loadSound('../_files/beat.mp3');
+   * }
+   *
+   * function setup() {
+   *   createCanvas(400,200);
+   *
+   *   // create a 'master' gain to which we will connect both soundfiles
+   *   gain3 = new p5.Gain();
+   *   gain3.connect();
+   *
+   *   // setup first sound for playing
+   *   sound1.rate(1);
+   *   sound1.loop();
+   *   sound1.disconnect(); // diconnect from p5 output
+   *
+   *   gain1 = new p5.Gain(); // setup a gain node
+   *   gain1.setInput(sound1); // connect the first sound to its input
+   *   gain1.connect(gain3); // connect its output to the 'master'
+   *
+   *   sound2.rate(1);
+   *   sound2.disconnect();
+   *   sound2.loop();
+   *
+   *   gain2 = new p5.Gain();
+   *   gain2.setInput(sound2);
+   *   gain2.connect(gain3);
+   *
+   * }
+   *
+   * function draw(){
+   *   background(180);
+   *
+   *   // calculate the horizontal distance beetween the mouse and the right of the screen
+   *   var d = dist(mous
