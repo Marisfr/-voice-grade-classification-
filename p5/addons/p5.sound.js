@@ -11377,4 +11377,36 @@ peakdetect = function () {
     this.framesSinceLastPeak = 0;
     this.decayRate = 0.95;
     this.threshold = threshold || 0.35;
-    this.cutoff =
+    this.cutoff = 0;
+    // how much to increase the cutoff
+    // TO DO: document this / figure out how to make it accessible
+    this.cutoffMult = 1.5;
+    this.energy = 0;
+    this.penergy = 0;
+    // TO DO: document this property / figure out how to make it accessible
+    this.currentValue = 0;
+    /**
+     *  isDetected is set to true when a peak is detected.
+     *
+     *  @attribute isDetected {Boolean}
+     *  @default  false
+     */
+    this.isDetected = false;
+    this.f1 = freq1 || 40;
+    this.f2 = freq2 || 20000;
+    // function to call when a peak is detected
+    this._onPeak = function () {
+    };
+  };
+  /**
+   *  The update method is run in the draw loop.
+   *
+   *  Accepts an FFT object. You must call .analyze()
+   *  on the FFT object prior to updating the peakDetect
+   *  because it relies on a completed FFT analysis.
+   *
+   *  @method  update
+   *  @param  {p5.FFT} fftObject A p5.FFT object
+   */
+  p5.PeakDetect.prototype.update = function (fftObject) {
+    var nrg = this.energy = fftObje
