@@ -11409,4 +11409,31 @@ peakdetect = function () {
    *  @param  {p5.FFT} fftObject A p5.FFT object
    */
   p5.PeakDetect.prototype.update = function (fftObject) {
-    var nrg = this.energy = fftObje
+    var nrg = this.energy = fftObject.getEnergy(this.f1, this.f2) / 255;
+    if (nrg > this.cutoff && nrg > this.threshold && nrg - this.penergy > 0) {
+      // trigger callback
+      this._onPeak();
+      this.isDetected = true;
+      // debounce
+      this.cutoff = nrg * this.cutoffMult;
+      this.framesSinceLastPeak = 0;
+    } else {
+      this.isDetected = false;
+      if (this.framesSinceLastPeak <= this.framesPerPeak) {
+        this.framesSinceLastPeak++;
+      } else {
+        this.cutoff *= this.decayRate;
+        this.cutoff = Math.max(this.cutoff, this.threshold);
+      }
+    }
+    this.currentValue = nrg;
+    this.penergy = nrg;
+  };
+  /**
+   *  onPeak accepts two arguments: a function to call when
+   *  a peak is detected. The value of the peak,
+   *  between 0.0 and 1.0, is passed to the callback.
+   *
+   *  @method  onPeak
+   *  @param  {Function} callback Name of a function that will
+   *                              be called when a peak i
