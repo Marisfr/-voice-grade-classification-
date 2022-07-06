@@ -11436,4 +11436,40 @@ peakdetect = function () {
    *
    *  @method  onPeak
    *  @param  {Function} callback Name of a function that will
-   *                              be called when a peak i
+   *                              be called when a peak is
+   *                              detected.
+   *  @param  {Object}   [val]    Optional value to pass
+   *                              into the function when
+   *                              a peak is detected.
+   *  @example
+   *  <div><code>
+   *  var cnv, soundFile, fft, peakDetect;
+   *  var ellipseWidth = 0;
+   *
+   *  function setup() {
+   *    cnv = createCanvas(100,100);
+   *    textAlign(CENTER);
+   *
+   *    soundFile = loadSound('assets/beat.mp3');
+   *    fft = new p5.FFT();
+   *    peakDetect = new p5.PeakDetect();
+   *
+   *    setupSound();
+   *
+   *    // when a beat is detected, call triggerBeat()
+   *    peakDetect.onPeak(triggerBeat);
+   *  }
+   *
+   *  function draw() {
+   *    background(0);
+   *    fill(255);
+   *    text('click to play', width/2, height/2);
+   *
+   *    fft.analyze();
+   *    peakDetect.update(fft);
+   *
+   *    ellipseWidth *= 0.95;
+   *    ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
+   *  }
+   *
+   *  // this function is 
