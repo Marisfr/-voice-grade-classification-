@@ -11766,4 +11766,23 @@ monosynth = function () {
    *  @param {String | Number} note the note you want to play, specified as a
    *                                 frequency in Hertz (Number) or as a midi
    *                                 value in Note/Octave format ("C4", "Eb3"...etc")
-   *                                 See
+   *                                 See <a href = "https://github.com/Tonejs/Tone.js/wiki/Instruments">
+   *                                 Tone</a>. Defaults to 440 hz.
+   *  @param  {Number} [velocity] velocity of the note to play (ranging from 0 to 1)
+   *  @param  {Number} [secondsFromNow]  time from now (in seconds) at which to play
+   *  @param  {Number} [sustainTime] time to sustain before releasing the envelope
+   *
+   */
+  p5.MonoSynth.prototype.play = function (note, velocity, secondsFromNow, susTime) {
+    // set range of env (TO DO: allow this to be scheduled in advance)
+    var susTime = susTime || this.sustain;
+    this.susTime = susTime;
+    this.triggerAttack(note, velocity, secondsFromNow);
+    this.triggerRelease(secondsFromNow + susTime);
+  };
+  /**
+   *  Trigger the Attack, and Decay portion of the Envelope.
+   *  Similar to holding down a key on a piano, but it will
+   *  hold the sustain level until you let go.
+   *
+   *  @param {String | Number} note the note you want to pla
