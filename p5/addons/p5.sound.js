@@ -11614,4 +11614,31 @@ gain = function () {
    */
   p5.Gain.prototype.amp = function (vol, rampTime, tFromNow) {
     var rampTime = rampTime || 0;
-    v
+    var tFromNow = tFromNow || 0;
+    var now = p5sound.audiocontext.currentTime;
+    var currentVol = this.output.gain.value;
+    this.output.gain.cancelScheduledValues(now);
+    this.output.gain.linearRampToValueAtTime(currentVol, now + tFromNow);
+    this.output.gain.linearRampToValueAtTime(vol, now + tFromNow + rampTime);
+  };
+  p5.Gain.prototype.dispose = function () {
+    // remove reference from soundArray
+    var index = p5sound.soundArray.indexOf(this);
+    p5sound.soundArray.splice(index, 1);
+    this.output.disconnect();
+    this.input.disconnect();
+    this.output = undefined;
+    this.input = undefined;
+  };
+}(master, sndcore);
+var audioVoice;
+'use strict';
+audioVoice = function () {
+  var p5sound = master;
+  /**
+   * Base class for monophonic synthesizers. Any extensions of this class
+   * should follow the API and implement the methods below in order to
+   * remain compatible with p5.PolySynth();
+   *
+   * @class p5.AudioVoice
+   * @const
