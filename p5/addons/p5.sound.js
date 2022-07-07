@@ -11710,4 +11710,38 @@ monosynth = function () {
   var AudioVoice = audioVoice;
   /**
   *  An MonoSynth is used as a single voice for sound synthesis.
-  * 
+  *  This is a class to be used in conjonction with the PolySynth
+  *  class. Custom synthetisers should be built inheriting from
+  *  this class.
+  *
+  *  @class p5.MonoSynth
+  *  @constructor
+  *  @example
+  *  <div><code>
+  *  var monosynth;
+  *  var x;
+  *
+  *  function setup() {
+  *    monosynth = new p5.MonoSynth();
+  *    monosynth.loadPreset('simpleBass');
+  *    monosynth.play(45,1,x=0,1);
+  *    monosynth.play(49,1,x+=1,0.25);
+  *    monosynth.play(50,1,x+=0.25,0.25);
+  *    monosynth.play(49,1,x+=0.5,0.25);
+  *    monosynth.play(50,1,x+=0.25,0.25);
+  *  }
+  *  </code></div>
+  **/
+  p5.MonoSynth = function () {
+    AudioVoice.call(this);
+    this.oscillator = new p5.Oscillator();
+    // this.oscillator.disconnect();
+    this.env = new p5.Env();
+    this.env.setRange(1, 0);
+    this.env.setExp(true);
+    //set params
+    this.setADSR(0.02, 0.25, 0.05, 0.35);
+    // filter
+    this.filter = new p5.Filter('highpass');
+    this.filter.set(5, 1);
+    // os
