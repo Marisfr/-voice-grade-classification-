@@ -11673,4 +11673,41 @@ audioVoice = function () {
     //return midi value converted to frequency
     return p5.prototype.midiToFreq(value);
   };
-  p5.AudioVoice.prototype.play = function (note, velo
+  p5.AudioVoice.prototype.play = function (note, velocity, secondsFromNow, sustime) {
+  };
+  p5.AudioVoice.prototype.triggerAttack = function (note, velocity, secondsFromNow) {
+  };
+  p5.AudioVoice.prototype.triggerRelease = function (secondsFromNow) {
+  };
+  p5.AudioVoice.prototype.amp = function (vol, rampTime) {
+  };
+  /**
+   * Connect to p5 objects or Web Audio Nodes
+   * @method  connect
+   * @param {Object} unit
+   */
+  p5.AudioVoice.prototype.connect = function (unit) {
+    var u = unit || p5sound.input;
+    this.output.connect(u.input ? u.input : u);
+  };
+  /**
+   * Disconnect from soundOut
+   * @method  disconnect
+   */
+  p5.AudioVoice.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  p5.AudioVoice.prototype.dispose = function () {
+    this.output.disconnect();
+    delete this.output;
+  };
+  return p5.AudioVoice;
+}(master);
+var monosynth;
+'use strict';
+monosynth = function () {
+  var p5sound = master;
+  var AudioVoice = audioVoice;
+  /**
+  *  An MonoSynth is used as a single voice for sound synthesis.
+  * 
