@@ -11744,4 +11744,26 @@ monosynth = function () {
     // filter
     this.filter = new p5.Filter('highpass');
     this.filter.set(5, 1);
-    // os
+    // oscillator --> env --> filter --> this.output (gain) --> p5.soundOut
+    this.oscillator.disconnect();
+    this.oscillator.connect(this.filter);
+    this.env.disconnect();
+    this.env.setInput(this.oscillator);
+    // this.env.connect(this.filter);
+    this.filter.connect(this.output);
+    this.oscillator.start();
+    this.connect();
+    //Audiovoices are connected to soundout by default
+    this._isOn = false;
+    p5sound.soundArray.push(this);
+  };
+  p5.MonoSynth.prototype = Object.create(p5.AudioVoice.prototype);
+  /**
+   *  Play tells the MonoSynth to start playing a note. This method schedules
+   *  the calling of .triggerAttack and .triggerRelease.
+   *
+   *  @method play
+   *  @param {String | Number} note the note you want to play, specified as a
+   *                                 frequency in Hertz (Number) or as a midi
+   *                                 value in Note/Octave format ("C4", "Eb3"...etc")
+   *                                 See
