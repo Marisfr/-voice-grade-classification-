@@ -11785,4 +11785,19 @@ monosynth = function () {
    *  Similar to holding down a key on a piano, but it will
    *  hold the sustain level until you let go.
    *
-   *  @param {String | Number} note the note you want to pla
+   *  @param {String | Number} note the note you want to play, specified as a
+   *                                 frequency in Hertz (Number) or as a midi
+   *                                 value in Note/Octave format ("C4", "Eb3"...etc")
+   *                                 See <a href = "https://github.com/Tonejs/Tone.js/wiki/Instruments">
+   *                                 Tone</a>. Defaults to 440 hz
+   *  @param  {Number} [velocity] velocity of the note to play (ranging from 0 to 1)
+   *  @param  {Number} [secondsFromNow]  time from now (in seconds) at which to play
+   *  @method  triggerAttack
+   */
+  p5.MonoSynth.prototype.triggerAttack = function (note, velocity, secondsFromNow) {
+    var secondsFromNow = secondsFromNow || 0;
+    //triggerAttack uses ._setNote to convert a midi string to a frequency if necessary
+    var freq = typeof note === 'string' ? this._setNote(note) : typeof note === 'number' ? note : 440;
+    var vel = velocity || 1;
+    this._isOn = true;
+    this.oscillator.freq(freq, 0, secondsF
