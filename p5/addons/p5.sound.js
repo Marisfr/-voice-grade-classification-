@@ -11800,4 +11800,30 @@ monosynth = function () {
     var freq = typeof note === 'string' ? this._setNote(note) : typeof note === 'number' ? note : 440;
     var vel = velocity || 1;
     this._isOn = true;
-    this.oscillator.freq(freq, 0, secondsF
+    this.oscillator.freq(freq, 0, secondsFromNow);
+    this.env.ramp(this.output, secondsFromNow, vel);
+  };
+  /**
+   *  Trigger the release of the Envelope. This is similar to releasing
+   *  the key on a piano and letting the sound fade according to the
+   *  release level and release time.
+   *
+   *  @param  {Number} secondsFromNow time to trigger the release
+   *  @method  triggerRelease
+   */
+  p5.MonoSynth.prototype.triggerRelease = function (secondsFromNow) {
+    var secondsFromNow = secondsFromNow || 0;
+    this.env.ramp(this.output, secondsFromNow, 0);
+    this._isOn = false;
+  };
+  /**
+   *  Set values like a traditional
+   *  <a href="https://en.wikipedia.org/wiki/Synthesizer#/media/File:ADSR_parameter.svg">
+   *  ADSR envelope
+   *  </a>.
+   *
+   *  @method  setADSR
+   *  @param {Number} attackTime    Time (in seconds before envelope
+   *                                reaches Attack Level
+   *  @param {Number} [decayTime]    Time (in seconds) before envelope
+   *      
