@@ -11879,4 +11879,41 @@ monosynth = function () {
       }
     },
     'release': {
-      get
+      get: function () {
+        return this.env.rTime;
+      },
+      set: function (release) {
+        this.env.setADSR(this.env.aTime, this.env.dTime, this.env.sPercent, release);
+      }
+    }
+  });
+  /**
+   * MonoSynth amp
+   * @method  amp
+   * @param  {Number} vol      desired volume
+   * @param  {Number} [rampTime] Time to reach new volume
+   * @return {Number}          new volume value
+   */
+  p5.MonoSynth.prototype.amp = function (vol, rampTime) {
+    var t = rampTime || 0;
+    if (typeof vol !== 'undefined') {
+      this.oscillator.amp(vol, t);
+    }
+    return this.oscillator.amp().value;
+  };
+  /**
+   *  Connect to a p5.sound / Web Audio object.
+   *
+   *  @method  connect
+   *  @param  {Object} unit A p5.sound or Web Audio object
+   */
+  p5.MonoSynth.prototype.connect = function (unit) {
+    var u = unit || p5sound.input;
+    this.output.connect(u.input ? u.input : u);
+  };
+  /**
+   *  Disconnect all outputs
+   *
+   *  @method  disconnect
+   */
+  p5.MonoSynth.prototype.dis
