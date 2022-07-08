@@ -11838,4 +11838,45 @@ monosynth = function () {
    *  @param {Number} [releaseTime]   Time in seconds from now (defaults to 0)
    */
   p5.MonoSynth.prototype.setADSR = function (attack, decay, sustain, release) {
-    t
+    this.env.setADSR(attack, decay, sustain, release);
+  };
+  /**
+   * Getters and Setters
+   * @property {Number} attack
+   */
+  /**
+   * @property {Number} decay
+   */
+  /**
+   * @property {Number} sustain
+   */
+  /**
+   * @property {Number} release
+   */
+  Object.defineProperties(p5.MonoSynth.prototype, {
+    'attack': {
+      get: function () {
+        return this.env.aTime;
+      },
+      set: function (attack) {
+        this.env.setADSR(attack, this.env.dTime, this.env.sPercent, this.env.rTime);
+      }
+    },
+    'decay': {
+      get: function () {
+        return this.env.dTime;
+      },
+      set: function (decay) {
+        this.env.setADSR(this.env.aTime, decay, this.env.sPercent, this.env.rTime);
+      }
+    },
+    'sustain': {
+      get: function () {
+        return this.env.sPercent;
+      },
+      set: function (sustain) {
+        this.env.setADSR(this.env.aTime, this.env.dTime, sustain, this.env.rTime);
+      }
+    },
+    'release': {
+      get
