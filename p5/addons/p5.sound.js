@@ -11916,4 +11916,38 @@ monosynth = function () {
    *
    *  @method  disconnect
    */
-  p5.MonoSynth.prototype.dis
+  p5.MonoSynth.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  /**
+   *  Get rid of the MonoSynth and free up its resources / memory.
+   *
+   *  @method  dispose
+   */
+  p5.MonoSynth.prototype.dispose = function () {
+    AudioVoice.prototype.dispose.apply(this);
+    this.filter.dispose();
+    this.env.dispose();
+    try {
+      this.oscillator.dispose();
+    } catch (e) {
+      console.error('mono synth default oscillator already disposed');
+    }
+  };
+}(master, audioVoice);
+var polysynth;
+'use strict';
+polysynth = function () {
+  var p5sound = master;
+  var TimelineSignal = Tone_signal_TimelineSignal;
+  /**
+  *  An AudioVoice is used as a single voice for sound synthesis.
+  *  The PolySynth class holds an array of AudioVoice, and deals
+  *  with voices allocations, with setting notes to be played, and
+  *  parameters to be set.
+  *
+  *  @class p5.PolySynth
+  *  @constructor
+  *
+  *  @param {Number} [synthVoice]   A monophonic synth voice inheriting
+  *                                 the AudioVoice class. Defa
