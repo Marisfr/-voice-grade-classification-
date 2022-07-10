@@ -12003,4 +12003,27 @@ polysynth = function () {
     this._voicesInUse = new TimelineSignal(0);
     this.output = p5sound.audiocontext.createGain();
     this.connect();
-    //Construct the
+    //Construct the appropriate number of audiovoices
+    this._allocateVoices();
+    p5sound.soundArray.push(this);
+  };
+  /**
+   * Construct the appropriate number of audiovoices
+   * @private
+   * @method  _allocateVoices
+   */
+  p5.PolySynth.prototype._allocateVoices = function () {
+    for (var i = 0; i < this.polyValue; i++) {
+      this.audiovoices.push(new this.AudioVoice());
+      this.audiovoices[i].disconnect();
+      this.audiovoices[i].connect(this.output);
+    }
+  };
+  /**
+   *  Play a note by triggering noteAttack and noteRelease with sustain time
+   *
+   *  @method  play
+   *  @param  {Number} [note] midi note to play (ranging from 0 to 127 - 60 being a middle C)
+   *  @param  {Number} [velocity] velocity of the note to play (ranging from 0 to 1)
+   *  @param  {Number} [secondsFromNow]  time from now (in seconds) at which to play
+   *  @param  {Number} [sustainTime] time to sustain before releasing t
