@@ -11976,4 +11976,31 @@ polysynth = function () {
      * which notes are currently being played. New notes are added as keys
      * on the fly. While a note has been attacked, but not released, the value of the
      * key is the audiovoice which is generating that note. When notes are released,
-     * the value of the key beco
+     * the value of the key becomes undefined.
+     * @property notes
+     */
+    this.notes = {};
+    //indices of the most recently used, and least recently used audiovoice
+    this._newest = 0;
+    this._oldest = 0;
+    /**
+     * A PolySynth must have at least 1 voice, defaults to 8
+     * @property polyvalue
+     */
+    this.polyValue = polyValue || 8;
+    /**
+     * Monosynth that generates the sound for each note that is triggered. The
+     * p5.PolySynth defaults to using the p5.MonoSynth as its voice.
+     * @property AudioVoice
+     */
+    this.AudioVoice = audioVoice === undefined ? p5.MonoSynth : audioVoice;
+    /**
+       * This value must only change as a note is attacked or released. Due to delay
+       * and sustain times, Tone.TimelineSignal is required to schedule the change in value.
+    * @private
+       * @property {Tone.TimelineSignal} _voicesInUse
+       */
+    this._voicesInUse = new TimelineSignal(0);
+    this.output = p5sound.audiocontext.createGain();
+    this.connect();
+    //Construct the
