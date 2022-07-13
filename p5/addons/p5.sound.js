@@ -12045,4 +12045,16 @@ polysynth = function () {
    *                                reaches Attack Level
    *  @param {Number} [decayTime]   Time (in seconds) before envelope
    *                                reaches Decay/Sustain Level
-   *  @param {Number} [susRatio]    Ratio
+   *  @param {Number} [susRatio]    Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,
+   *                                where 1.0 = attackLevel, 0.0 = releaseLevel.
+   *                                The susRatio determines the decayLevel and the level at which the
+   *                                sustain portion of the envelope will sustain.
+   *                                For example, if attackLevel is 0.4, releaseLevel is 0,
+   *                                and susAmt is 0.5, the decayLevel would be 0.2. If attackLevel is
+   *                                increased to 1.0 (using <code>setRange</code>),
+   *                                then decayLevel would increase proportionally, to become 0.5.
+   *  @param {Number} [releaseTime]   Time in seconds from now (defaults to 0)
+   **/
+  p5.PolySynth.prototype.noteADSR = function (note, a, d, s, r, timeFromNow) {
+    var now = p5sound.audiocontext.currentTime;
+    var timeFromNow = timeFromNow || 0;
