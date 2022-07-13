@@ -12026,4 +12026,23 @@ polysynth = function () {
    *  @param  {Number} [note] midi note to play (ranging from 0 to 127 - 60 being a middle C)
    *  @param  {Number} [velocity] velocity of the note to play (ranging from 0 to 1)
    *  @param  {Number} [secondsFromNow]  time from now (in seconds) at which to play
-   *  @param  {Number} [sustainTime] time to sustain before releasing t
+   *  @param  {Number} [sustainTime] time to sustain before releasing the envelope
+   */
+  p5.PolySynth.prototype.play = function (note, velocity, secondsFromNow, susTime) {
+    var susTime = susTime || 1;
+    this.noteAttack(note, velocity, secondsFromNow);
+    this.noteRelease(note, secondsFromNow + susTime);
+  };
+  /**
+   *  noteADSR sets the envelope for a specific note that has just been triggered.
+   *  Using this method modifies the envelope of whichever audiovoice is being used
+   *  to play the desired note. The envelope should be reset before noteRelease is called
+   *  in order to prevent the modified envelope from being used on other notes.
+   *
+   *  @method  noteADSR
+   *  @param {Number} [note]        Midi note on which ADSR should be set.
+   *  @param {Number} [attackTime]  Time (in seconds before envelope
+   *                                reaches Attack Level
+   *  @param {Number} [decayTime]   Time (in seconds) before envelope
+   *                                reaches Decay/Sustain Level
+   *  @param {Number} [susRatio]    Ratio
