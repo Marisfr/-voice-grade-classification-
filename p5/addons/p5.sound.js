@@ -12112,4 +12112,20 @@ polysynth = function () {
     if (this.notes[note] !== undefined && this.notes[note].getValueAtTime(t) !== null) {
       this.noteRelease(note, 0);
     }
-    //Check to see h
+    //Check to see how many voices are in use at the time the note will start
+    if (this._voicesInUse.getValueAtTime(t) < this.polyValue) {
+      currentVoice = this._voicesInUse.getValueAtTime(t);
+    } else {
+      currentVoice = this._oldest;
+      var oldestNote = p5.prototype.freqToMidi(this.audiovoices[this._oldest].oscillator.freq().value);
+      this.noteRelease(oldestNote);
+      this._oldest = (this._oldest + 1) % (this.polyValue - 1);
+    }
+    //Overrite the entry in the notes object. A note (frequency value)
+    //corresponds to the index of the audiovoice that is playing it
+    this.notes[note] = new TimelineSignal();
+    this.notes[note].setValueAtTime(currentVoice, t);
+    //Find the scheduled change in this._voicesInUse that will be previous to this new note
+    //Add 1 and schedule this value at time 't', when this note will start playing
+    var previousVal = this._voicesInUse._searchBefore(t) === null ? 0 : this._voicesInUse._searchBefore(t).value;
+    this._voicesInUs
