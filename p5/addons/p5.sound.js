@@ -12187,3 +12187,42 @@ polysynth = function () {
       this.audiovoices[this.notes[note].getValueAtTime(t)].triggerRelease(tFromNow);
       this.notes[note].setValueAtTime(null, t);
       this._newest = this._newest === 0 ? 0 : (this._newest - 1) % (this.polyValue - 1);
+    }
+  };
+  /**
+  *  Connect to a p5.sound / Web Audio object.
+  *
+  *  @method  connect
+  *  @param  {Object} unit A p5.sound or Web Audio object
+  */
+  p5.PolySynth.prototype.connect = function (unit) {
+    var u = unit || p5sound.input;
+    this.output.connect(u.input ? u.input : u);
+  };
+  /**
+  *  Disconnect all outputs
+  *
+  *  @method  disconnect
+  */
+  p5.PolySynth.prototype.disconnect = function () {
+    this.output.disconnect();
+  };
+  /**
+  *  Get rid of the MonoSynth and free up its resources / memory.
+  *
+  *  @method  dispose
+  */
+  p5.PolySynth.prototype.dispose = function () {
+    this.audiovoices.forEach(function (voice) {
+      voice.dispose();
+    });
+    this.output.disconnect();
+    delete this.output;
+  };
+}(master, Tone_signal_TimelineSignal, sndcore);
+var distortion;
+'use strict';
+distortion = function () {
+  var Effect = effect;
+  /*
+   * Adapted from [Kevin Ennis on StackOverflow](http://stackoverflow.com/questions/22312841/waveshaper-node-in-webaudio-how-to-emu
