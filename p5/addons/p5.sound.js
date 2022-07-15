@@ -12128,4 +12128,27 @@ polysynth = function () {
     //Find the scheduled change in this._voicesInUse that will be previous to this new note
     //Add 1 and schedule this value at time 't', when this note will start playing
     var previousVal = this._voicesInUse._searchBefore(t) === null ? 0 : this._voicesInUse._searchBefore(t).value;
-    this._voicesInUs
+    this._voicesInUse.setValueAtTime(previousVal + 1, t);
+    //Then update all scheduled values that follow to increase by 1
+    this._updateAfter(t, 1);
+    this._newest = currentVoice;
+    //The audiovoice handles the actual scheduling of the note
+    if (typeof velocity === 'number') {
+      var maxRange = 1 / this._voicesInUse.getValueAtTime(t) * 2;
+      velocity = velocity > maxRange ? maxRange : velocity;
+    }
+    this.audiovoices[currentVoice].triggerAttack(note, velocity, tFromNow);
+  };
+  /**
+   * Private method to ensure accurate values of this._voicesInUse
+   * Any time a new value is scheduled, it is necessary to increment all subsequent
+   * scheduledValues after attack, and decrement all subsequent
+   * scheduledValues after release
+   *
+   * @private
+   * @param  {[type]} time  [description]
+   * @param  {[type]} value [description]
+   * @return {[type]}       [description]
+   */
+  p5.PolySynth.prototype._updateAfter = function (time, value) {
+    if (this._voic
