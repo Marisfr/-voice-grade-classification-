@@ -12093,4 +12093,23 @@ polysynth = function () {
    *
    *  @method  noteAttack
    *  @param  {Number} [note]           midi note on which attack should be triggered.
-   *  @param  {Number} [velocity]       velocity of 
+   *  @param  {Number} [velocity]       velocity of the note to play (ranging from 0 to 1)/
+   *  @param  {Number} [secondsFromNow] time from now (in seconds)
+   *
+   */
+  p5.PolySynth.prototype.noteAttack = function (_note, _velocity, secondsFromNow) {
+    var now = p5sound.audiocontext.currentTime;
+    //this value goes to the audiovoices which handle their own scheduling
+    var tFromNow = secondsFromNow || 0;
+    //this value is used by this._voicesInUse
+    var t = now + tFromNow;
+    //Convert note to frequency if necessary. This is because entries into this.notes
+    //should be based on frequency for the sake of consistency.
+    var note = typeof _note === 'string' ? this.AudioVoice.prototype._setNote(_note) : typeof _note === 'number' ? _note : 440;
+    var velocity = _velocity === undefined ? 1 : _velocity;
+    var currentVoice;
+    //Release the note if it is already playing
+    if (this.notes[note] !== undefined && this.notes[note].getValueAtTime(t) !== null) {
+      this.noteRelease(note, 0);
+    }
+    //Check to see h
