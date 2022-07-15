@@ -12151,4 +12151,25 @@ polysynth = function () {
    * @return {[type]}       [description]
    */
   p5.PolySynth.prototype._updateAfter = function (time, value) {
-    if (this._voic
+    if (this._voicesInUse._searchAfter(time) === null) {
+      return;
+    } else {
+      this._voicesInUse._searchAfter(time).value += value;
+      var nextTime = this._voicesInUse._searchAfter(time).time;
+      this._updateAfter(nextTime, value);
+    }
+  };
+  /**
+   *  Trigger the Release of an AudioVoice note. This is similar to releasing
+   *  the key on a piano and letting the sound fade according to the
+   *  release level and release time.
+   *
+   *  @method  noteRelease
+   *  @param  {Number} [note]           midi note on which attack should be triggered.
+   *  @param  {Number} [secondsFromNow] time to trigger the release
+   *
+   */
+  p5.PolySynth.prototype.noteRelease = function (_note, secondsFromNow) {
+    //Make sure note is in frequency inorder to query the this.notes object
+    var note = typeof _note === 'string' ? this.AudioVoice.prototype._setNote(_note) : typeof _note === 'number' ? _note : this.audiovoices[this._newest].oscillator.freq().value;
+    var no
