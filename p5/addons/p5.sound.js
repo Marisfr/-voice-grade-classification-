@@ -12058,3 +12058,20 @@ polysynth = function () {
   p5.PolySynth.prototype.noteADSR = function (note, a, d, s, r, timeFromNow) {
     var now = p5sound.audiocontext.currentTime;
     var timeFromNow = timeFromNow || 0;
+    var t = now + timeFromNow;
+    this.audiovoices[this.notes[note].getValueAtTime(t)].setADSR(a, d, s, r);
+  };
+  /**
+   * Set the PolySynths global envelope. This method modifies the envelopes of each
+   * monosynth so that all notes are played with this envelope.
+   *
+   *  @method  setADSR
+   *  @param {Number} [note]        Midi note on which ADSR should be set.
+   *  @param {Number} [attackTime]  Time (in seconds before envelope
+   *                                reaches Attack Level
+   *  @param {Number} [decayTime]   Time (in seconds) before envelope
+   *                                reaches Decay/Sustain Level
+   *  @param {Number} [susRatio]    Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,
+   *                                where 1.0 = attackLevel, 0.0 = releaseLevel.
+   *                                The susRatio determines the decayLevel and the level at which the
+   *                                sustain portion
