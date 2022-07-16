@@ -12248,4 +12248,36 @@ distortion = function () {
    * This class extends <a href = "/reference/#/p5.Effect">p5.Effect</a>.
    * Methods <a href = "/reference/#/p5.Effect/amp">amp()</a>, <a href = "/reference/#/p5.Effect/chain">chain()</a>,
    * <a href = "/reference/#/p5.Effect/drywet">drywet()</a>, <a href = "/reference/#/p5.Effect/connect">connect()</a>, and
-   * <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are av
+   * <a href = "/reference/#/p5.Effect/disconnect">disconnect()</a> are available.
+   *
+   * @class p5.Distortion
+   * @extends p5.Effect
+   * @constructor
+   * @param {Number} [amount=0.25] Unbounded distortion amount.
+   *                                Normal values range from 0-1.
+   * @param {String} [oversample='none'] 'none', '2x', or '4x'.
+   *
+   */
+  p5.Distortion = function (amount, oversample) {
+    Effect.call(this);
+    if (typeof amount === 'undefined') {
+      amount = 0.25;
+    }
+    if (typeof amount !== 'number') {
+      throw new Error('amount must be a number');
+    }
+    if (typeof oversample === 'undefined') {
+      oversample = '2x';
+    }
+    if (typeof oversample !== 'string') {
+      throw new Error('oversample must be a String');
+    }
+    var curveAmount = p5.prototype.map(amount, 0, 1, 0, 2000);
+    /**
+     *  The p5.Distortion is built with a
+     *  <a href="http://www.w3.org/TR/webaudio/#WaveShaperNode">
+     *  Web Audio WaveShaper Node</a>.
+     *
+     *  @property {AudioNode} WaveShaperNode
+     */
+    this.waveShaper
