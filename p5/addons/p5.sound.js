@@ -12280,4 +12280,29 @@ distortion = function () {
      *
      *  @property {AudioNode} WaveShaperNode
      */
-    this.waveShaper
+    this.waveShaperNode = this.ac.createWaveShaper();
+    this.amount = curveAmount;
+    this.waveShaperNode.curve = makeDistortionCurve(curveAmount);
+    this.waveShaperNode.oversample = oversample;
+    this.input.connect(this.waveShaperNode);
+    this.waveShaperNode.connect(this.wet);
+  };
+  p5.Distortion.prototype = Object.create(Effect.prototype);
+  /**
+   * Process a sound source, optionally specify amount and oversample values.
+   *
+   * @method process
+   * @param {Number} [amount=0.25] Unbounded distortion amount.
+   *                                Normal values range from 0-1.
+   * @param {String} [oversample='none'] 'none', '2x', or '4x'.
+   */
+  p5.Distortion.prototype.process = function (src, amount, oversample) {
+    src.connect(this.input);
+    this.set(amount, oversample);
+  };
+  /**
+   * Set the amount and oversample of the waveshaper distortion.
+   *
+   * @method set
+   * @param {Number} [amount=0.25] Unbounded distortion amount.
+   *                  
