@@ -12305,4 +12305,35 @@ distortion = function () {
    *
    * @method set
    * @param {Number} [amount=0.25] Unbounded distortion amount.
-   *                  
+   *                                Normal values range from 0-1.
+   * @param {String} [oversample='none'] 'none', '2x', or '4x'.
+   */
+  p5.Distortion.prototype.set = function (amount, oversample) {
+    if (amount) {
+      var curveAmount = p5.prototype.map(amount, 0, 1, 0, 2000);
+      this.amount = curveAmount;
+      this.waveShaperNode.curve = makeDistortionCurve(curveAmount);
+    }
+    if (oversample) {
+      this.waveShaperNode.oversample = oversample;
+    }
+  };
+  /**
+   *  Return the distortion amount, typically between 0-1.
+   *
+   *  @method  getAmount
+   *  @return {Number} Unbounded distortion amount.
+   *                   Normal values range from 0-1.
+   */
+  p5.Distortion.prototype.getAmount = function () {
+    return this.amount;
+  };
+  /**
+   *  Return the oversampling.
+   *
+   *  @method getOversample
+   *
+   *  @return {String} Oversample can either be 'none', '2x', or '4x'.
+   */
+  p5.Distortion.prototype.getOversample = function () {
+    return this.waveShaperNode
