@@ -12336,4 +12336,18 @@ distortion = function () {
    *  @return {String} Oversample can either be 'none', '2x', or '4x'.
    */
   p5.Distortion.prototype.getOversample = function () {
-    return this.waveShaperNode
+    return this.waveShaperNode.oversample;
+  };
+  p5.Distortion.prototype.dispose = function () {
+    Effect.prototype.dispose.apply(this);
+    this.waveShaperNode.disconnect();
+    this.waveShaperNode = null;
+  };
+}(effect);
+var src_app;
+'use strict';
+src_app = function () {
+  var p5SOUND = sndcore;
+  return p5SOUND;
+}(sndcore, master, helpers, errorHandler, panner, soundfile, amplitude, fft, signal, oscillator, env, pulse, noise, audioin, filter, eq, panner3d, listener3d, delay, reverb, metro, looper, soundloop, compressor, soundRecorder, peakdetect, gain, monosynth, polysynth, distortion, audioVoice, monosynth, polysynth);
+}));
