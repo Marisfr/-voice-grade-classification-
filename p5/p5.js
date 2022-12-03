@@ -2426,3 +2426,1033 @@ module.exports={
             "line": 2426,
             "description": "<p>FFT (Fast Fourier Transform) is an analysis algorithm that\nisolates individual\n<a href=\"https://en.wikipedia.org/wiki/Audio_frequency\">\naudio frequencies</a> within a waveform.</p>\n\n<p>Once instantiated, a p5.FFT object can return an array based on\ntwo types of analyses: <br> • <code>FFT.waveform()</code> computes\namplitude values along the time domain. The array indices correspond\nto samples across a brief moment in time. Each value represents\namplitude of the waveform at that sample of time.<br>\n• <code>FFT.analyze() </code> computes amplitude values along the\nfrequency domain. The array indices correspond to frequencies (i.e.\npitches), from the lowest to the highest that humans can hear. Each\nvalue represents amplitude at that slice of the frequency spectrum.\nUse with <code>getEnergy()</code> to measure amplitude at specific\nfrequencies, or within a range of frequencies. </p>\n\n<p>FFT analyzes a very short snapshot of sound called a sample\nbuffer. It returns an array of amplitude measurements, referred\nto as <code>bins</code>. The array is 1024 bins long by default.\nYou can change the bin array length, but it must be a power of 2\nbetween 16 and 1024 in order for the FFT algorithm to function\ncorrectly. The actual size of the FFT buffer is twice the\nnumber of bins, so given a standard sample rate, the buffer is\n2048/44100 seconds long.</p>",
             "is_constructor": 1,
+            "params": [
+                {
+                    "name": "smoothing",
+                    "description": "<p>Smooth results of Freq Spectrum.\n                              0.0 &lt; smoothing &lt; 1.0.\n                              Defaults to 0.8.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "bins",
+                    "description": "<p>Length of resulting array.\n                          Must be a power of two between\n                          16 and 1024. Defaults to 1024.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nfunction preload(){\n  sound = loadSound('assets/Damscray_DancingTiger.mp3');\n}\n\nfunction setup(){\n  var cnv = createCanvas(100,100);\n  cnv.mouseClicked(togglePlay);\n  fft = new p5.FFT();\n  sound.amp(0.2);\n}\n\nfunction draw(){\n  background(0);\n\n  var spectrum = fft.analyze();\n  noStroke();\n  fill(0,255,0); // spectrum is green\n  for (var i = 0; i< spectrum.length; i++){\n    var x = map(i, 0, spectrum.length, 0, width);\n    var h = -height + map(spectrum[i], 0, 255, height, 0);\n    rect(x, height, width / spectrum.length, h )\n  }\n\n  var waveform = fft.waveform();\n  noFill();\n  beginShape();\n  stroke(255,0,0); // waveform is red\n  strokeWeight(1);\n  for (var i = 0; i< waveform.length; i++){\n    var x = map(i, 0, waveform.length, 0, width);\n    var y = map( waveform[i], -1, 1, 0, height);\n    vertex(x,y);\n  }\n  endShape();\n\n  text('click to play/pause', 4, 10);\n}\n\n// fade sound if mouse is over canvas\nfunction togglePlay() {\n  if (sound.isPlaying()) {\n    sound.pause();\n  } else {\n    sound.loop();\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.Signal": {
+            "name": "p5.Signal",
+            "shortname": "p5.Signal",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 4828,
+            "description": "<p>p5.Signal is a constant audio-rate signal used by p5.Oscillator\nand p5.Envelope for modulation math.</p>\n\n<p>This is necessary because Web Audio is processed on a seprate clock.\nFor example, the p5 draw loop runs about 60 times per second. But\nthe audio clock must process samples 44100 times per second. If we\nwant to add a value to each of those samples, we can&#39;t do it in the\ndraw loop, but we can do it by adding a constant-rate audio signal.</p.\n\n<p>This class mostly functions behind the scenes in p5.sound, and returns\na Tone.Signal from the Tone.js library by Yotam Mann.\nIf you want to work directly with audio signals for modular\nsynthesis, check out\n<a href='http://bit.ly/1oIoEng' target=_'blank'>tone.js.</a></p>",
+            "is_constructor": 1,
+            "return": {
+                "description": "A Signal object from the Tone.js library",
+                "type": "Tone.Signal"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  carrier = new p5.Oscillator('sine');\n  carrier.amp(1); // set amplitude\n  carrier.freq(220); // set frequency\n  carrier.start(); // start oscillating\n\n  modulator = new p5.Oscillator('sawtooth');\n  modulator.disconnect();\n  modulator.amp(1);\n  modulator.freq(4);\n  modulator.start();\n\n  // Modulator's default amplitude range is -1 to 1.\n  // Multiply it by -200, so the range is -200 to 200\n  // then add 220 so the range is 20 to 420\n  carrier.freq( modulator.mult(-200).add(220) );\n}\n</code></div>"
+            ]
+        },
+        "p5.Oscillator": {
+            "name": "p5.Oscillator",
+            "shortname": "p5.Oscillator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 4974,
+            "description": "<p>Creates a signal that oscillates between -1.0 and 1.0.\nBy default, the oscillation takes the form of a sinusoidal\nshape (&#39;sine&#39;). Additional types include &#39;triangle&#39;,\n&#39;sawtooth&#39; and &#39;square&#39;. The frequency defaults to\n440 oscillations per second (440Hz, equal to the pitch of an\n&#39;A&#39; note).</p>\n\n<p>Set the type of oscillation with setType(), or by instantiating a\nspecific oscillator: <a href=\"/reference/#/p5.SinOsc\">p5.SinOsc</a>, <a\nhref=\"/reference/#/p5.TriOsc\">p5.TriOsc</a>, <a\nhref=\"/reference/#/p5.SqrOsc\">p5.SqrOsc</a>, or <a\nhref=\"/reference/#/p5.SawOsc\">p5.SawOsc</a>.\n</p>",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>frequency defaults to 440Hz</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "type",
+                    "description": "<p>type of oscillator. Options:\n                       &#39;sine&#39; (default), &#39;triangle&#39;,\n                       &#39;sawtooth&#39;, &#39;square&#39;</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar osc;\nvar playing = false;\n\nfunction setup() {\n  backgroundColor = color(255,0,255);\n  textAlign(CENTER);\n\n  osc = new p5.Oscillator();\n  osc.setType('sine');\n  osc.freq(240);\n  osc.amp(0);\n  osc.start();\n}\n\nfunction draw() {\n  background(backgroundColor)\n  text('click to play', width/2, height/2);\n}\n\nfunction mouseClicked() {\n  if (mouseX > 0 && mouseX < width && mouseY < height && mouseY > 0) {\n    if (!playing) {\n      // ramp amplitude to 0.5 over 0.05 seconds\n      osc.amp(0.5, 0.05);\n      playing = true;\n      backgroundColor = color(0,255,255);\n    } else {\n      // ramp amplitude to 0 over 0.5 seconds\n      osc.amp(0, 0.5);\n      playing = false;\n      backgroundColor = color(255,0,255);\n    }\n  }\n}\n</code> </div>"
+            ]
+        },
+        "p5.SinOsc": {
+            "name": "p5.SinOsc",
+            "shortname": "p5.SinOsc",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 5409,
+            "description": "<p>Constructor: <code>new p5.SinOsc()</code>.\nThis creates a Sine Wave Oscillator and is\nequivalent to <code> new p5.Oscillator(&#39;sine&#39;)\n</code> or creating a p5.Oscillator and then calling\nits method <code>setType(&#39;sine&#39;)</code>.\nSee p5.Oscillator for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Oscillator",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Set the frequency</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "p5.TriOsc": {
+            "name": "p5.TriOsc",
+            "shortname": "p5.TriOsc",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 5426,
+            "description": "<p>Constructor: <code>new p5.TriOsc()</code>.\nThis creates a Triangle Wave Oscillator and is\nequivalent to <code>new p5.Oscillator(&#39;triangle&#39;)\n</code> or creating a p5.Oscillator and then calling\nits method <code>setType(&#39;triangle&#39;)</code>.\nSee p5.Oscillator for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Oscillator",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Set the frequency</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "p5.SawOsc": {
+            "name": "p5.SawOsc",
+            "shortname": "p5.SawOsc",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 5443,
+            "description": "<p>Constructor: <code>new p5.SawOsc()</code>.\nThis creates a SawTooth Wave Oscillator and is\nequivalent to <code> new p5.Oscillator(&#39;sawtooth&#39;)\n</code> or creating a p5.Oscillator and then calling\nits method <code>setType(&#39;sawtooth&#39;)</code>.\nSee p5.Oscillator for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Oscillator",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Set the frequency</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "p5.SqrOsc": {
+            "name": "p5.SqrOsc",
+            "shortname": "p5.SqrOsc",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 5460,
+            "description": "<p>Constructor: <code>new p5.SqrOsc()</code>.\nThis creates a Square Wave Oscillator and is\nequivalent to <code> new p5.Oscillator(&#39;square&#39;)\n</code> or creating a p5.Oscillator and then calling\nits method <code>setType(&#39;square&#39;)</code>.\nSee p5.Oscillator for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Oscillator",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Set the frequency</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "p5.Env": {
+            "name": "p5.Env",
+            "shortname": "p5.Env",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 5917,
+            "description": "<p>Envelopes are pre-defined amplitude distribution over time.\nTypically, envelopes are used to control the output volume\nof an object, a series of fades referred to as Attack, Decay,\nSustain and Release (\n<a href=\"https://upload.wikimedia.org/wikipedia/commons/e/ea/ADSR_parameter.svg\">ADSR</a>\n). Envelopes can also control other Web Audio Parameters—for example, a p5.Env can\ncontrol an Oscillator&#39;s frequency like this: <code>osc.freq(env)</code>.</p>\n<p>Use <code><a href=\"#/p5.Env/setRange\">setRange</a></code> to change the attack/release level.\nUse <code><a href=\"#/p5.Env/setADSR\">setADSR</a></code> to change attackTime, decayTime, sustainPercent and releaseTime.</p>\n<p>Use the <code><a href=\"#/p5.Env/play\">play</a></code> method to play the entire envelope,\nthe <code><a href=\"#/p5.Env/ramp\">ramp</a></code> method for a pingable trigger,\nor <code><a href=\"#/p5.Env/triggerAttack\">triggerAttack</a></code>/\n<code><a href=\"#/p5.Env/triggerRelease\">triggerRelease</a></code> to trigger noteOn/noteOff.</p>",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.2;\nvar susPercent = 0.2;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(playEnv);\n}\n\nfunction playEnv(){\n  env.play();\n}\n</code></div>"
+            ]
+        },
+        "p5.Pulse": {
+            "name": "p5.Pulse",
+            "shortname": "p5.Pulse",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 6709,
+            "description": "<p>Creates a Pulse object, an oscillator that implements\nPulse Width Modulation.\nThe pulse is created with two oscillators.\nAccepts a parameter for frequency, and to set the\nwidth between the pulses. See <a href=\"\nhttp://p5js.org/reference/#/p5.Oscillator\">\n<code>p5.Oscillator</code> for a full list of methods.</p>\n",
+            "extends": "p5.Oscillator",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Frequency in oscillations per second (Hz)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "<p>Width between the pulses (0 to 1.0,\n                       defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar pulse;\nfunction setup() {\n  background(0);\n\n  // Create and start the pulse wave oscillator\n  pulse = new p5.Pulse();\n  pulse.amp(0.5);\n  pulse.freq(220);\n  pulse.start();\n}\n\nfunction draw() {\n  var w = map(mouseX, 0, width, 0, 1);\n  w = constrain(w, 0, 1);\n  pulse.width(w)\n}\n</code></div>"
+            ]
+        },
+        "p5.Noise": {
+            "name": "p5.Noise",
+            "shortname": "p5.Noise",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 6886,
+            "description": "<p>Noise is a type of oscillator that generates a buffer with random values.</p>\n",
+            "extends": "p5.Oscillator",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>Type of noise can be &#39;white&#39; (default),\n                     &#39;brown&#39; or &#39;pink&#39;.</p>\n",
+                    "type": "String"
+                }
+            ]
+        },
+        "p5.AudioIn": {
+            "name": "p5.AudioIn",
+            "shortname": "p5.AudioIn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 7075,
+            "description": "<p>Get audio from an input, i.e. your computer&#39;s microphone.</p>\n\n<p>Turn the mic on/off with the start() and stop() methods. When the mic\nis on, its volume can be measured with getLevel or by connecting an\nFFT object.</p>\n\n<p>If you want to hear the AudioIn, use the .connect() method.\nAudioIn does not connect to p5.sound output by default to prevent\nfeedback.</p>\n\n<p><em>Note: This uses the <a href=\"http://caniuse.com/stream\">getUserMedia/\nStream</a> API, which is not supported by certain browsers. Access in Chrome browser\nis limited to localhost and https, but access over http may be limited.</em></p>",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "errorCallback",
+                    "description": "<p>A function to call if there is an error\n                                  accessing the AudioIn. For example,\n                                  Safari and iOS devices do not\n                                  currently allow microphone access.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar mic;\nfunction setup(){\n  mic = new p5.AudioIn()\n  mic.start();\n}\nfunction draw(){\n  background(0);\n  micLevel = mic.getLevel();\n  ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);\n}\n</code></div>"
+            ]
+        },
+        "p5.Effect": {
+            "name": "p5.Effect",
+            "shortname": "p5.Effect",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 7970,
+            "description": "<p>Effect is a base class for audio effects in p5. <br>\nThis module handles the nodes and methods that are\ncommon and useful for current and future effects.</p>\n<p>This class is extended by <a href=\"reference/#/p5.Distortion\">p5.Distortion</a>,\n<a href=\"reference/#/p5.Compressor\">p5.Compressor</a>,\n<a href=\"reference/#/p5.Delay\">p5.Delay</a>,\n<a href=\"reference/#/p5.Filter\">p5.Filter</a>,\n<a href=\"reference/#/p5.Reverb\">p5.Reverb</a>.</p>\n",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "ac",
+                    "description": "<p>Reference to the audio context of the p5 object</p>\n",
+                    "type": "Object",
+                    "optional": true
+                },
+                {
+                    "name": "input",
+                    "description": "<p>Gain Node effect wrapper</p>\n",
+                    "type": "AudioNode",
+                    "optional": true
+                },
+                {
+                    "name": "output",
+                    "description": "<p>Gain Node effect wrapper</p>\n",
+                    "type": "AudioNode",
+                    "optional": true
+                },
+                {
+                    "name": "_drywet",
+                    "description": "<p>Tone.JS CrossFade node (defaults to value: 1)</p>\n",
+                    "type": "Object",
+                    "optional": true
+                },
+                {
+                    "name": "wet",
+                    "description": "<p>Effects that extend this class should connect\n                             to the wet signal to this gain node, so that dry and wet\n                             signals are mixed properly.</p>\n",
+                    "type": "AudioNode",
+                    "optional": true
+                }
+            ]
+        },
+        "p5.Filter": {
+            "name": "p5.Filter",
+            "shortname": "p5.Filter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8102,
+            "description": "<p><p>A p5.Filter uses a Web Audio Biquad Filter to filter\nthe frequency response of an input source. Subclasses\ninclude:</p></p>\n<ul>\n<li><a href=\"/reference/#/p5.LowPass\"><code>p5.LowPass</code></a>:\nAllows frequencies below the cutoff frequency to pass through,\nand attenuates frequencies above the cutoff.<br/></li>\n<li><a href=\"/reference/#/p5.HighPass\"><code>p5.HighPass</code></a>:\nThe opposite of a lowpass filter. <br/></li>\n<li><a href=\"/reference/#/p5.BandPass\"><code>p5.BandPass</code></a>:\nAllows a range of frequencies to pass through and attenuates\nthe frequencies below and above this frequency range.<br/></li>\n</ul>\n<p>The <code>.res()</code> method controls either width of the\nbandpass, or resonance of the low/highpass cutoff frequency.</p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "extends": "p5.Effect",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>&#39;lowpass&#39; (default), &#39;highpass&#39;, &#39;bandpass&#39;</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar fft, noise, filter;\n\nfunction setup() {\n  fill(255, 40, 255);\n\n  filter = new p5.BandPass();\n\n  noise = new p5.Noise();\n  // disconnect unfiltered noise,\n  // and connect to filter\n  noise.disconnect();\n  noise.connect(filter);\n  noise.start();\n\n  fft = new p5.FFT();\n}\n\nfunction draw() {\n  background(30);\n\n  // set the BandPass frequency based on mouseX\n  var freq = map(mouseX, 0, width, 20, 10000);\n  filter.freq(freq);\n  // give the filter a narrow band (lower res = wider bandpass)\n  filter.res(50);\n\n  // draw filtered spectrum\n  var spectrum = fft.analyze();\n  noStroke();\n  for (var i = 0; i < spectrum.length; i++) {\n    var x = map(i, 0, spectrum.length, 0, width);\n    var h = -height + map(spectrum[i], 0, 255, height, 0);\n    rect(x, height, width/spectrum.length, h);\n  }\n\n  isMouseOverCanvas();\n}\n\nfunction isMouseOverCanvas() {\n  var mX = mouseX, mY = mouseY;\n  if (mX > 0 && mX < width && mY < height && mY > 0) {\n    noise.amp(0.5, 0.2);\n  } else {\n    noise.amp(0, 0.2);\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.LowPass": {
+            "name": "p5.LowPass",
+            "shortname": "p5.LowPass",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8332,
+            "description": "<p>Constructor: <code>new p5.LowPass()</code> Filter.\nThis is the same as creating a p5.Filter and then calling\nits method <code>setType(&#39;lowpass&#39;)</code>.\nSee p5.Filter for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Filter"
+        },
+        "p5.HighPass": {
+            "name": "p5.HighPass",
+            "shortname": "p5.HighPass",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8346,
+            "description": "<p>Constructor: <code>new p5.HighPass()</code> Filter.\nThis is the same as creating a p5.Filter and then calling\nits method <code>setType(&#39;highpass&#39;)</code>.\nSee p5.Filter for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Filter"
+        },
+        "p5.BandPass": {
+            "name": "p5.BandPass",
+            "shortname": "p5.BandPass",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8360,
+            "description": "<p>Constructor: <code>new p5.BandPass()</code> Filter.\nThis is the same as creating a p5.Filter and then calling\nits method <code>setType(&#39;bandpass&#39;)</code>.\nSee p5.Filter for methods.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Filter"
+        },
+        "p5.EQ": {
+            "name": "p5.EQ",
+            "shortname": "p5.EQ",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8429,
+            "description": "<p>p5.EQ is an audio effect that performs the function of a multiband\naudio equalizer. Equalization is used to adjust the balance of\nfrequency compoenents of an audio signal. This process is commonly used\nin sound production and recording to change the waveform before it reaches\na sound output device. EQ can also be used as an audio effect to create\ninteresting distortions by filtering out parts of the spectrum. p5.EQ is\nbuilt using a chain of Web Audio Biquad Filter Nodes and can be\ninstantiated with 3 or 8 bands. Bands can be added or removed from\nthe EQ by directly modifying p5.EQ.bands (the array that stores filters).</p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Effect",
+            "params": [
+                {
+                    "name": "_eqsize",
+                    "description": "<p>Constructor will accept 3 or 8, defaults to 3</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "p5.EQ object",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div><code>\nvar eq;\nvar band_names;\nvar band_index;\n\nvar soundFile, play;\n\nfunction preload() {\n  soundFormats('mp3', 'ogg');\n  soundFile = loadSound('assets/beat');\n}\n\nfunction setup() {\n  eq = new p5.EQ(3);\n  soundFile.disconnect();\n  eq.process(soundFile);\n\n  band_names = ['lows','mids','highs'];\n  band_index = 0;\n  play = false;\n  textAlign(CENTER);\n}\n\nfunction draw() {\n  background(30);\n  noStroke();\n  fill(255);\n  text('click to kill',50,25);\n\n  fill(255, 40, 255);\n  textSize(26);\n  text(band_names[band_index],50,55);\n\n  fill(255);\n  textSize(9);\n  text('space = play/pause',50,80);\n}\n\n//If mouse is over canvas, cycle to the next band and kill the frequency\nfunction mouseClicked() {\n  for (var i = 0; i < eq.bands.length; i++) {\n    eq.bands[i].gain(0);\n  }\n  eq.bands[band_index].gain(-40);\n  if (mouseX > 0 && mouseX < width && mouseY < height && mouseY > 0) {\n    band_index === 2 ? band_index = 0 : band_index++;\n  }\n}\n\n//use space bar to trigger play / pause\nfunction keyPressed() {\n  if (key===' ') {\n    play = !play\n    play ? soundFile.loop() : soundFile.pause();\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.Panner3D": {
+            "name": "p5.Panner3D",
+            "shortname": "p5.Panner3D",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 8619,
+            "description": "<p>Panner3D is based on the <a title=\"Web Audio Panner docs\"  href=\n\"https://developer.mozilla.org/en-US/docs/Web/API/PannerNode\">\nWeb Audio Spatial Panner Node</a>.\nThis panner is a spatial processing node that allows audio to be positioned\nand oriented in 3D space.</p>\n<p>The position is relative to an <a title=\"Web Audio Listener docs\" href=\n\"https://developer.mozilla.org/en-US/docs/Web/API/AudioListener\">\nAudio Context Listener</a>, which can be accessed\nby <code>p5.soundOut.audiocontext.listener</code></p>\n",
+            "is_constructor": 1
+        },
+        "p5.Delay": {
+            "name": "p5.Delay",
+            "shortname": "p5.Delay",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 9068,
+            "description": "<p>Delay is an echo effect. It processes an existing sound source,\nand outputs a delayed version of that sound. The p5.Delay can\nproduce different effects depending on the delayTime, feedback,\nfilter, and type. In the example below, a feedback of 0.5 (the\ndefaul value) will produce a looping delay that decreases in\nvolume by 50% each repeat. A filter will cut out the high\nfrequencies so that the delay does not sound as piercing as the\noriginal source.</p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "extends": "p5.Effect",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\nvar noise, env, delay;\n\nfunction setup() {\n  background(0);\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  noise = new p5.Noise('brown');\n  noise.amp(0);\n  noise.start();\n\n  delay = new p5.Delay();\n\n  // delay.process() accepts 4 parameters:\n  // source, delayTime, feedback, filter frequency\n  // play with these numbers!!\n  delay.process(noise, .12, .7, 2300);\n\n  // play the noise with an envelope,\n  // a series of fades ( time / value pairs )\n  env = new p5.Env(.01, 0.2, .2, .1);\n}\n\n// mouseClick triggers envelope\nfunction mouseClicked() {\n  // is mouse over canvas?\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    env.play(noise);\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.Reverb": {
+            "name": "p5.Reverb",
+            "shortname": "p5.Reverb",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 9345,
+            "description": "<p>Reverb adds depth to a sound through a large number of decaying\nechoes. It creates the perception that sound is occurring in a\nphysical space. The p5.Reverb has paramters for Time (how long does the\nreverb last) and decayRate (how much the sound decays with each echo)\nthat can be set with the .set() or .process() methods. The p5.Convolver\nextends p5.Reverb allowing you to recreate the sound of actual physical\nspaces through convolution.</p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "extends": "p5.Effect",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\nvar soundFile, reverb;\nfunction preload() {\n  soundFile = loadSound('assets/Damscray_DancingTiger.mp3');\n}\n\nfunction setup() {\n  reverb = new p5.Reverb();\n  soundFile.disconnect(); // so we'll only hear reverb...\n\n  // connect soundFile to reverb, process w/\n  // 3 second reverbTime, decayRate of 2%\n  reverb.process(soundFile, 3, 2);\n  soundFile.play();\n}\n</code></div>"
+            ]
+        },
+        "p5.Convolver": {
+            "name": "p5.Convolver",
+            "shortname": "p5.Convolver",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 9505,
+            "description": "<p>p5.Convolver extends p5.Reverb. It can emulate the sound of real\nphysical spaces through a process called <a href=\"\nhttps://en.wikipedia.org/wiki/Convolution_reverb#Real_space_simulation\">\nconvolution</a>.</p>\n\n<p>Convolution multiplies any audio input by an &quot;impulse response&quot;\nto simulate the dispersion of sound over time. The impulse response is\ngenerated from an audio file that you provide. One way to\ngenerate an impulse response is to pop a balloon in a reverberant space\nand record the echo. Convolution can also be used to experiment with\nsound.</p>\n\n<p>Use the method <code>createConvolution(path)</code> to instantiate a\np5.Convolver with a path to your impulse response audio file.</p>",
+            "extends": "p5.Effect",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>path to a sound file</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to call when loading succeeds</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to call if loading fails.\n                                   This function will receive an error or\n                                   XMLHttpRequest object with information\n                                   about what went wrong.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar cVerb, sound;\nfunction preload() {\n  // We have both MP3 and OGG versions of all sound assets\n  soundFormats('ogg', 'mp3');\n\n  // Try replacing 'bx-spring' with other soundfiles like\n  // 'concrete-tunnel' 'small-plate' 'drum' 'beatbox'\n  cVerb = createConvolver('assets/bx-spring.mp3');\n\n  // Try replacing 'Damscray_DancingTiger' with\n  // 'beat', 'doorbell', lucky_dragons'\n  sound = loadSound('assets/Damscray_DancingTiger.mp3');\n}\n\nfunction setup() {\n  // disconnect from master output...\n  sound.disconnect();\n\n  // ...and process with cVerb\n  // so that we only hear the convolution\n  cVerb.process(sound);\n\n  sound.play();\n}\n</code></div>"
+            ]
+        },
+        "p5.Phrase": {
+            "name": "p5.Phrase",
+            "shortname": "p5.Phrase",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10057,
+            "description": "<p>A phrase is a pattern of musical events over time, i.e.\na series of notes and rests.</p>\n\n<p>Phrases must be added to a p5.Part for playback, and\neach part can play multiple phrases at the same time.\nFor example, one Phrase might be a kick drum, another\ncould be a snare, and another could be the bassline.</p>\n\n<p>The first parameter is a name so that the phrase can be\nmodified or deleted later. The callback is a a function that\nthis phrase will call at every step—for example it might be\ncalled <code>playNote(value){}</code>. The array determines\nwhich value is passed into the callback at each step of the\nphrase. It can be numbers, an object with multiple numbers,\nor a zero (0) indicates a rest so the callback won&#39;t be called).</p>",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>Name so that you can access the Phrase.</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>The name of a function that this phrase\n                           will call. Typically it will play a sound,\n                           and accept two parameters: a time at which\n                           to play the sound (in seconds from now),\n                           and a value from the sequence array. The\n                           time should be passed into the play() or\n                           start() method to ensure precision.</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "sequence",
+                    "description": "<p>Array of values to pass into the callback\n                          at each step of the phrase.</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar mySound, myPhrase, myPart;\nvar pattern = [1,0,0,2,0,2,0,0];\nvar msg = 'click to play';\n\nfunction preload() {\n  mySound = loadSound('assets/beatbox.mp3');\n}\n\nfunction setup() {\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n  masterVolume(0.1);\n\n  myPhrase = new p5.Phrase('bbox', makeSound, pattern);\n  myPart = new p5.Part();\n  myPart.addPhrase(myPhrase);\n  myPart.setBPM(60);\n}\n\nfunction draw() {\n  background(0);\n  text(msg, width/2, height/2);\n}\n\nfunction makeSound(time, playbackRate) {\n  mySound.rate(playbackRate);\n  mySound.play(time);\n}\n\nfunction mouseClicked() {\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    myPart.start();\n    msg = 'playing pattern';\n  }\n}\n\n</code></div>"
+            ]
+        },
+        "p5.Part": {
+            "name": "p5.Part",
+            "shortname": "p5.Part",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10142,
+            "description": "<p>A p5.Part plays back one or more p5.Phrases. Instantiate a part\nwith steps and tatums. By default, each step represents 1/16th note.</p>\n\n<p>See p5.Phrase for more about musical timing.</p>",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "steps",
+                    "description": "<p>Steps in the part</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "tatums",
+                    "description": "<p>Divisions of a beat (default is 1/16, a quarter note)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar box, drum, myPart;\nvar boxPat = [1,0,0,2,0,2,0,0];\nvar drumPat = [0,1,1,0,2,0,1,0];\nvar msg = 'click to play';\n\nfunction preload() {\n  box = loadSound('assets/beatbox.mp3');\n  drum = loadSound('assets/drum.mp3');\n}\n\nfunction setup() {\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n  masterVolume(0.1);\n\n  var boxPhrase = new p5.Phrase('box', playBox, boxPat);\n  var drumPhrase = new p5.Phrase('drum', playDrum, drumPat);\n  myPart = new p5.Part();\n  myPart.addPhrase(boxPhrase);\n  myPart.addPhrase(drumPhrase);\n  myPart.setBPM(60);\n  masterVolume(0.1);\n}\n\nfunction draw() {\n  background(0);\n  text(msg, width/2, height/2);\n}\n\nfunction playBox(time, playbackRate) {\n  box.rate(playbackRate);\n  box.play(time);\n}\n\nfunction playDrum(time, playbackRate) {\n  drum.rate(playbackRate);\n  drum.play(time);\n}\n\nfunction mouseClicked() {\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    myPart.start();\n    msg = 'playing part';\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.Score": {
+            "name": "p5.Score",
+            "shortname": "p5.Score",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10396,
+            "description": "<p>A Score consists of a series of Parts. The parts will\nbe played back in order. For example, you could have an\nA part, a B part, and a C part, and play them back in this order\n<code>new p5.Score(a, a, b, a, c)</code></p>\n",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "parts",
+                    "description": "<p>One or multiple parts, to be played in sequence.</p>\n",
+                    "type": "p5.Part",
+                    "optional": true,
+                    "multiple": true
+                }
+            ]
+        },
+        "p5.SoundLoop": {
+            "name": "p5.SoundLoop",
+            "shortname": "p5.SoundLoop",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10527,
+            "description": "<p>SoundLoop</p>\n",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>this function will be called on each iteration of theloop</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "interval",
+                    "description": "<p>amount of time or beats for each iteration of the loop\n                                      defaults to 1</p>\n",
+                    "type": "Number|String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar click;\nvar looper1;\n\nfunction preload() {\n  click = loadSound('assets/drum.mp3');\n}\n\nfunction setup() {\n  //the looper's callback is passed the timeFromNow\n  //this value should be used as a reference point from\n  //which to schedule sounds\n  looper1 = new p5.SoundLoop(function(timeFromNow){\n    click.play(timeFromNow);\n    background(255 * (looper1.iterations % 2));\n    }, 2);\n\n  //stop after 10 iteratios;\n  looper1.maxIterations = 10;\n  //start the loop\n  looper1.start();\n}\n</code></div>"
+            ]
+        },
+        "p5.Compressor": {
+            "name": "p5.Compressor",
+            "shortname": "p5.Compressor",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10786,
+            "description": "<p>Compressor is an audio effect class that performs dynamics compression\non an audio input source. This is a very commonly used technique in music\nand sound production. Compression creates an overall louder, richer,\nand fuller sound by lowering the volume of louds and raising that of softs.\nCompression can be used to avoid clipping (sound distortion due to\npeaks in volume) and is especially useful when many sounds are played\nat once. Compression can be used on indivudal sound sources in addition\nto the master output.</p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "is_constructor": 1,
+            "extends": "p5.Effect"
+        },
+        "p5.SoundRecorder": {
+            "name": "p5.SoundRecorder",
+            "shortname": "p5.SoundRecorder",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 10994,
+            "description": "<p>Record sounds for playback and/or to save as a .wav file.\nThe p5.SoundRecorder records all sound output from your sketch,\nor can be assigned a specific source with setInput().</p>\n<p>The record() method accepts a p5.SoundFile as a parameter.\nWhen playback is stopped (either after the given amount of time,\nor with the stop() method), the p5.SoundRecorder will send its\nrecording to that p5.SoundFile for playback.</p>",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\nvar mic, recorder, soundFile;\nvar state = 0;\n\nfunction setup() {\n  background(200);\n  // create an audio in\n  mic = new p5.AudioIn();\n\n  // prompts user to enable their browser mic\n  mic.start();\n\n  // create a sound recorder\n  recorder = new p5.SoundRecorder();\n\n  // connect the mic to the recorder\n  recorder.setInput(mic);\n\n  // this sound file will be used to\n  // playback & save the recording\n  soundFile = new p5.SoundFile();\n\n  text('keyPress to record', 20, 20);\n}\n\nfunction keyPressed() {\n  // make sure user enabled the mic\n  if (state === 0 && mic.enabled) {\n\n    // record to our p5.SoundFile\n    recorder.record(soundFile);\n\n    background(255,0,0);\n    text('Recording!', 20, 20);\n    state++;\n  }\n  else if (state === 1) {\n    background(0,255,0);\n\n    // stop recorder and\n    // send result to soundFile\n    recorder.stop();\n\n    text('Stopped', 20, 20);\n    state++;\n  }\n\n  else if (state === 2) {\n    soundFile.play(); // play the result!\n    save(soundFile, 'mySound.wav');\n    state++;\n  }\n}\n</div></code>"
+            ]
+        },
+        "p5.PeakDetect": {
+            "name": "p5.PeakDetect",
+            "shortname": "p5.PeakDetect",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 11283,
+            "description": "<p>PeakDetect works in conjunction with p5.FFT to\nlook for onsets in some or all of the frequency spectrum.\n</p>\n<p>\nTo use p5.PeakDetect, call <code>update</code> in the draw loop\nand pass in a p5.FFT object.\n</p>\n<p>\nYou can listen for a specific part of the frequency spectrum by\nsetting the range between <code>freq1</code> and <code>freq2</code>.\n</p>\n\n<p><code>threshold</code> is the threshold for detecting a peak,\nscaled between 0 and 1. It is logarithmic, so 0.1 is half as loud\nas 1.0.</p>\n\n<p>\nThe update method is meant to be run in the draw loop, and\n<b>frames</b> determines how many loops must pass before\nanother peak can be detected.\nFor example, if the frameRate() = 60, you could detect the beat of a\n120 beat-per-minute song with this equation:\n<code> framesPerPeak = 60 / (estimatedBPM / 60 );</code>\n</p>\n\n<p>\nBased on example contribtued by @b2renger, and a simple beat detection\nexplanation by <a href=\"a\nhref=&quot;http://www.airtightinteractive.com/2013/10/making-audio-reactive-visuals/&quot;\ntarget=&quot;_blank&quot;\">a\nhref=&quot;http://www.airtightinteractive.com/2013/10/making-audio-reactive-visuals/&quot;\ntarget=&quot;_blank&quot;</a>Felix Turner</a>.\n</p>",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "freq1",
+                    "description": "<p>lowFrequency - defaults to 20Hz</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "freq2",
+                    "description": "<p>highFrequency - defaults to 20000 Hz</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "threshold",
+                    "description": "<p>Threshold for detecting a beat between 0 and 1\n                          scaled logarithmically where 0.1 is 1/2 the loudness\n                          of 1.0. Defaults to 0.35.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "framesPerPeak",
+                    "description": "<p>Defaults to 20.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\n\nvar cnv, soundFile, fft, peakDetect;\nvar ellipseWidth = 10;\n\nfunction setup() {\n  background(0);\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n\n  soundFile = loadSound('assets/beat.mp3');\n\n  // p5.PeakDetect requires a p5.FFT\n  fft = new p5.FFT();\n  peakDetect = new p5.PeakDetect();\n\n}\n\nfunction draw() {\n  background(0);\n  text('click to play/pause', width/2, height/2);\n\n  // peakDetect accepts an fft post-analysis\n  fft.analyze();\n  peakDetect.update(fft);\n\n  if ( peakDetect.isDetected ) {\n    ellipseWidth = 50;\n  } else {\n    ellipseWidth *= 0.95;\n  }\n\n  ellipse(width/2, height/2, ellipseWidth, ellipseWidth);\n}\n\n// toggle play/stop when canvas is clicked\nfunction mouseClicked() {\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    if (soundFile.isPlaying() ) {\n      soundFile.stop();\n    } else {\n      soundFile.play();\n    }\n  }\n}\n</code></div>"
+            ]
+        },
+        "p5.Gain": {
+            "name": "p5.Gain",
+            "shortname": "p5.Gain",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 11503,
+            "description": "<p>A gain node is usefull to set the relative volume of sound.\nIt&#39;s typically used to build mixers.</p>\n",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\n\n // load two soundfile and crossfade beetween them\n var sound1,sound2;\n var gain1, gain2, gain3;\n\n function preload(){\n soundFormats('ogg', 'mp3');\n sound1 = loadSound('../_files/Damscray_01');\n sound2 = loadSound('../_files/beat.mp3');\n }\n\n function setup() {\n createCanvas(400,200);\n\n // create a 'master' gain to which we will connect both soundfiles\n gain3 = new p5.Gain();\n gain3.connect();\n\n // setup first sound for playing\n sound1.rate(1);\n sound1.loop();\n sound1.disconnect(); // diconnect from p5 output\n\n gain1 = new p5.Gain(); // setup a gain node\n gain1.setInput(sound1); // connect the first sound to its input\n gain1.connect(gain3); // connect its output to the 'master'\n\n sound2.rate(1);\n sound2.disconnect();\n sound2.loop();\n\n gain2 = new p5.Gain();\n gain2.setInput(sound2);\n gain2.connect(gain3);\n\n }\n\n function draw(){\n background(180);\n\n // calculate the horizontal distance beetween the mouse and the right of the screen\n var d = dist(mouseX,0,width,0);\n\n // map the horizontal position of the mouse to values useable for volume control of sound1\n var vol1 = map(mouseX,0,width,0,1);\n var vol2 = 1-vol1; // when sound1 is loud, sound2 is quiet and vice versa\n\n gain1.amp(vol1,0.5,0);\n gain2.amp(vol2,0.5,0);\n\n // map the vertical position of the mouse to values useable for 'master volume control'\n var vol3 = map(mouseY,0,height,0,1);\n gain3.amp(vol3,0.5,0);\n }\n</code></div>\n"
+            ]
+        },
+        "p5.AudioVoice": {
+            "name": "p5.AudioVoice",
+            "shortname": "p5.AudioVoice",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 11638,
+            "description": "<p>Base class for monophonic synthesizers. Any extensions of this class\nshould follow the API and implement the methods below in order to\nremain compatible with p5.PolySynth();</p>\n",
+            "is_constructor": 1
+        },
+        "p5.MonoSynth": {
+            "name": "p5.MonoSynth",
+            "shortname": "p5.MonoSynth",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 11711,
+            "description": "<p>An MonoSynth is used as a single voice for sound synthesis.\nThis is a class to be used in conjonction with the PolySynth\nclass. Custom synthetisers should be built inheriting from\nthis class.</p>\n",
+            "is_constructor": 1,
+            "example": [
+                "\n<div><code>\nvar monosynth;\nvar x;\n\nfunction setup() {\n  monosynth = new p5.MonoSynth();\n  monosynth.loadPreset('simpleBass');\n  monosynth.play(45,1,x=0,1);\n  monosynth.play(49,1,x+=1,0.25);\n  monosynth.play(50,1,x+=0.25,0.25);\n  monosynth.play(49,1,x+=0.5,0.25);\n  monosynth.play(50,1,x+=0.25,0.25);\n}\n</code></div>"
+            ]
+        },
+        "p5.PolySynth": {
+            "name": "p5.PolySynth",
+            "shortname": "p5.PolySynth",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 11943,
+            "description": "<p>An AudioVoice is used as a single voice for sound synthesis.\nThe PolySynth class holds an array of AudioVoice, and deals\nwith voices allocations, with setting notes to be played, and\nparameters to be set.</p>\n",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "synthVoice",
+                    "description": "<p>A monophonic synth voice inheriting\n                               the AudioVoice class. Defaults to p5.MonoSynth</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "polyValue",
+                    "description": "<p>Number of voices, defaults to 8;</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar polysynth;\nfunction setup() {\n  polysynth = new p5.PolySynth();\n  polysynth.play(53,1,0,3);\n  polysynth.play(60,1,0,2.9);\n  polysynth.play(69,1,0,3);\n  polysynth.play(71,1,0,3);\n  polysynth.play(74,1,0,3);\n}\n</code></div>\n"
+            ]
+        },
+        "p5.Distortion": {
+            "name": "p5.Distortion",
+            "shortname": "p5.Distortion",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "p5.sound",
+            "submodule": "p5.sound",
+            "namespace": "",
+            "file": "lib/addons/p5.sound.js",
+            "line": 12243,
+            "description": "<p>A Distortion effect created with a Waveshaper Node,\nwith an approach adapted from\n<a href=\"http://stackoverflow.com/questions/22312841/waveshaper-node-in-webaudio-how-to-emulate-distortion\">Kevin Ennis</a></p>\n<p>This class extends <a href = \"/reference/#/p5.Effect\">p5.Effect</a>.\nMethods <a href = \"/reference/#/p5.Effect/amp\">amp()</a>, <a href = \"/reference/#/p5.Effect/chain\">chain()</a>,\n<a href = \"/reference/#/p5.Effect/drywet\">drywet()</a>, <a href = \"/reference/#/p5.Effect/connect\">connect()</a>, and\n<a href = \"/reference/#/p5.Effect/disconnect\">disconnect()</a> are available.</p>\n",
+            "extends": "p5.Effect",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "amount",
+                    "description": "<p>Unbounded distortion amount.\n                               Normal values range from 0-1.</p>\n",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0.25"
+                },
+                {
+                    "name": "oversample",
+                    "description": "<p>&#39;none&#39;, &#39;2x&#39;, or &#39;4x&#39;.</p>\n",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "'none'"
+                }
+            ]
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 10,
+            "description": "<p>Conversions adapted from <a href=\"http://www.easyrgb.com/math.html\">http://www.easyrgb.com/math.html</a>.</p>\n<p>In these functions, hue is always in the range [0,1); all other components\nare in the range [0,1]. &#39;Brightness&#39; and &#39;value&#39; are used interchangeably.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 20,
+            "description": "<p>Convert an HSBA array to HSLA.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 46,
+            "description": "<p>Convert an HSBA array to RGBA.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 101,
+            "description": "<p>Convert an HSLA array to HSBA.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 124,
+            "description": "<p>Convert an HSLA array to RGBA.</p>\n<p>We need to change basis from HSLA to something that can be more easily be\nprojected onto RGBA. We will choose hue and brightness as our first two\ncomponents, and pick a convenient third one (&#39;zest&#39;) so that we don&#39;t need\nto calculate formal HSBA saturation.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 188,
+            "description": "<p>Convert an RGBA array to HSBA.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/color_conversion.js",
+            "line": 227,
+            "description": "<p>Convert an RGBA array to HSLA.</p>\n",
+            "class": "p5",
+            "module": "Conversion",
+            "submodule": "Color Conversion"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 16,
+            "description": "<p>Extracts the alpha value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "alpha",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the alpha value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\nvar c = color(0, 126, 255, 102);\nfill(c);\nrect(15, 15, 35, 70);\nvar value = alpha(c); // Sets 'value' to 102\nfill(value);\nrect(50, 15, 35, 70);\n</code>\n</div>"
+            ],
+            "alt": "Left half of canvas light blue and right half light charcoal grey.\nLeft half of canvas light purple and right half a royal blue.\nLeft half of canvas salmon pink and the right half white.\nYellow rect in middle right of canvas, with 55 pixel width and height.\nYellow ellipse in top left canvas, black ellipse in bottom right,both 80x80.\nBright fuschia rect in middle of canvas, 60 pixel width and height.\nTwo bright green rects on opposite sides of the canvas, both 45x80.\nFour blue rects in each corner of the canvas, each are 35x35.\nBright sea green rect on left and darker rect on right of canvas, both 45x80.\nDark green rect on left and light green rect on right of canvas, both 45x80.\nDark blue rect on left and light teal rect on right of canvas, both 45x80.\nblue rect on left and green on right, both with black outlines & 35x60.\nsalmon pink rect on left and black on right, both 35x60.\n4 rects, tan, brown, brownish purple and purple, with white outlines & 20x60.\nlight pastel green rect on left and dark grey rect on right, both 35x60.\nyellow rect on left and red rect on right, both with black outlines & 35x60.\ngrey canvas\ndeep pink rect on left and grey rect on right, both 35x60.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 61,
+            "description": "<p>Extracts the blue value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "blue",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the blue value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar c = color(175, 100, 220); // Define color 'c'\nfill(c); // Use color variable 'c' as fill color\nrect(15, 20, 35, 60); // Draw left rectangle\n\nvar blueValue = blue(c); // Get blue in 'c'\nprint(blueValue); // Prints \"220.0\"\nfill(0, 0, blueValue); // Use 'blueValue' in new fill\nrect(50, 20, 35, 60); // Draw right rectangle\n</code>\n</div>"
+            ],
+            "alt": "Left half of canvas light purple and right half a royal blue.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 91,
+            "description": "<p>Extracts the HSB brightness value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "brightness",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the brightness value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\ncolorMode(HSB, 255);\nvar c = color(0, 126, 255);\nfill(c);\nrect(15, 20, 35, 60);\nvar value = brightness(c); // Sets 'value' to 255\nfill(value);\nrect(50, 20, 35, 60);\n</code>\n</div>"
+            ],
+            "alt": "Left half of canvas salmon pink and the right half white.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 121,
+            "description": "<p>Creates colors for storing in variables of the color datatype. The\nparameters are interpreted as RGB or HSB values depending on the\ncurrent colorMode(). The default mode is RGB values from 0 to 255\nand, therefore, the function call color(255, 204, 0) will return a\nbright yellow color.\n<br><br>\nNote that if only one value is provided to color(), it will be interpreted\nas a grayscale value. Add a second value, and it will be used for alpha\ntransparency. When three values are specified, they are interpreted as\neither RGB or HSB values. Adding a fourth value applies alpha\ntransparency.\n<br><br>\nIf a single string argument is provided, RGB, RGBA and Hex CSS color\nstrings and all named color strings are supported. In this case, an alpha\nnumber value as a second argument is not supported, the RGBA form should be\nused.</p>\n",
+            "itemtype": "method",
+            "name": "color",
+            "return": {
+                "description": "resulting color",
+                "type": "p5.Color"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar c = color(255, 204, 0); // Define color 'c'\nfill(c); // Use color variable 'c' as fill color\nnoStroke(); // Don't draw a stroke around shapes\nrect(30, 20, 55, 55); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\nvar c = color(255, 204, 0); // Define color 'c'\nfill(c); // Use color variable 'c' as fill color\nnoStroke(); // Don't draw a stroke around shapes\nellipse(25, 25, 80, 80); // Draw left circle\n\n// Using only one value with color()\n// generates a grayscale value.\nc = color(65); // Update 'c' with grayscale value\nfill(c); // Use updated 'c' as fill color\nellipse(75, 75, 80, 80); // Draw right circle\n</code>\n</div>\n\n<div>\n<code>\n// Named SVG & CSS colors may be used,\nvar c = color('magenta');\nfill(c); // Use 'c' as fill color\nnoStroke(); // Don't draw a stroke around shapes\nrect(20, 20, 60, 60); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\n// as can hex color codes:\nnoStroke(); // Don't draw a stroke around shapes\nvar c = color('#0f0');\nfill(c); // Use 'c' as fill color\nrect(0, 10, 45, 80); // Draw rectangle\n\nc = color('#00ff00');\nfill(c); // Use updated 'c' as fill color\nrect(55, 10, 45, 80); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\n// RGB and RGBA color strings are also supported:\n// these all set to the same color (solid blue)\nvar c;\nnoStroke(); // Don't draw a stroke around shapes\nc = color('rgb(0,0,255)');\nfill(c); // Use 'c' as fill color\nrect(10, 10, 35, 35); // Draw rectangle\n\nc = color('rgb(0%, 0%, 100%)');\nfill(c); // Use updated 'c' as fill color\nrect(55, 10, 35, 35); // Draw rectangle\n\nc = color('rgba(0, 0, 255, 1)');\nfill(c); // Use updated 'c' as fill color\nrect(10, 55, 35, 35); // Draw rectangle\n\nc = color('rgba(0%, 0%, 100%, 1)');\nfill(c); // Use updated 'c' as fill color\nrect(55, 55, 35, 35); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\n// HSL color is also supported and can be specified\n// by value\nvar c;\nnoStroke(); // Don't draw a stroke around shapes\nc = color('hsl(160, 100%, 50%)');\nfill(c); // Use 'c' as fill color\nrect(0, 10, 45, 80); // Draw rectangle\n\nc = color('hsla(160, 100%, 50%, 0.5)');\nfill(c); // Use updated 'c' as fill color\nrect(55, 10, 45, 80); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\n// HSB color is also supported and can be specified\n// by value\nvar c;\nnoStroke(); // Don't draw a stroke around shapes\nc = color('hsb(160, 100%, 50%)');\nfill(c); // Use 'c' as fill color\nrect(0, 10, 45, 80); // Draw rectangle\n\nc = color('hsba(160, 100%, 50%, 0.5)');\nfill(c); // Use updated 'c' as fill color\nrect(55, 10, 45, 80); // Draw rectangle\n</code>\n</div>\n\n<div>\n<code>\nvar c; // Declare color 'c'\nnoStroke(); // Don't draw a stroke around shapes\n\n// If no colorMode is specified, then the\n// default of RGB with scale of 0-255 is used.\nc = color(50, 55, 100); // Create a color for 'c'\nfill(c); // Use color variable 'c' as fill color\nrect(0, 10, 45, 80); // Draw left rect\n\ncolorMode(HSB, 100); // Use HSB with scale of 0-100\nc = color(50, 55, 100); // Update 'c' with new color\nfill(c); // Use updated 'c' as fill color\nrect(55, 10, 45, 80); // Draw right rect\n</code>\n</div>"
+            ],
+            "alt": "Yellow rect in middle right of canvas, with 55 pixel width and height.\nYellow ellipse in top left of canvas, black ellipse in bottom right,both 80x80.\nBright fuschia rect in middle of canvas, 60 pixel width and height.\nTwo bright green rects on opposite sides of the canvas, both 45x80.\nFour blue rects in each corner of the canvas, each are 35x35.\nBright sea green rect on left and darker rect on right of canvas, both 45x80.\nDark green rect on left and lighter green rect on right of canvas, both 45x80.\nDark blue rect on left and light teal rect on right of canvas, both 45x80.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading",
+            "overloads": [
+                {
+                    "line": 121,
+                    "params": [
+                        {
+                            "name": "gray",
+                            "description": "<p>number specifying value between white\n                                and black.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "<p>alpha value relative to current color range\n                                (default is 0-255)</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "resulting color",
+                        "type": "p5.Color"
+                    }
