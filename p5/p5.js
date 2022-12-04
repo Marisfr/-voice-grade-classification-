@@ -3456,3 +3456,954 @@ module.exports={
                         "description": "resulting color",
                         "type": "p5.Color"
                     }
+                },
+                {
+                    "line": 280,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value relative to\n                                the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Color"
+                    }
+                },
+                {
+                    "line": 292,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>a color string</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Color"
+                    }
+                },
+                {
+                    "line": 298,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Color"
+                    }
+                },
+                {
+                    "line": 304,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "type": "p5.Color"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Color"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 320,
+            "description": "<p>Extracts the green value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "green",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the green value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar c = color(20, 75, 200); // Define color 'c'\nfill(c); // Use color variable 'c' as fill color\nrect(15, 20, 35, 60); // Draw left rectangle\n\nvar greenValue = green(c); // Get green in 'c'\nprint(greenValue); // Print \"75.0\"\nfill(0, greenValue, 0); // Use 'greenValue' in new fill\nrect(50, 20, 35, 60); // Draw right rectangle\n</code>\n</div>"
+            ],
+            "alt": "blue rect on left and green on right, both with black outlines & 35x60.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 351,
+            "description": "<p>Extracts the hue value from a color or pixel array.</p>\n<p>Hue exists in both HSB and HSL. This function will return the\nHSB-normalized hue when supplied with an HSB color object (or when supplied\nwith a pixel array while the color mode is HSB), but will default to the\nHSL-normalized hue otherwise. (The values will only be different if the\nmaximum hue setting for each system is different.)</p>\n",
+            "itemtype": "method",
+            "name": "hue",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the hue",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\ncolorMode(HSB, 255);\nvar c = color(0, 126, 255);\nfill(c);\nrect(15, 20, 35, 60);\nvar value = hue(c); // Sets 'value' to \"0\"\nfill(value);\nrect(50, 20, 35, 60);\n</code>\n</div>"
+            ],
+            "alt": "salmon pink rect on left and black on right, both 35x60.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 388,
+            "description": "<p>Blends two colors to find a third color somewhere between them. The amt\nparameter is the amount to interpolate between the two values where 0.0\nequal to the first color, 0.1 is very near the first color, 0.5 is halfway\nin between, etc. An amount below 0 will be treated as 0. Likewise, amounts\nabove 1 will be capped at 1. This is different from the behavior of lerp(),\nbut necessary because otherwise numbers outside the range will produce\nstrange and unexpected colors.\n<br><br>\nThe way that colours are interpolated depends on the current color mode.</p>\n",
+            "itemtype": "method",
+            "name": "lerpColor",
+            "params": [
+                {
+                    "name": "c1",
+                    "description": "<p>interpolate from this color</p>\n",
+                    "type": "p5.Color"
+                },
+                {
+                    "name": "c2",
+                    "description": "<p>interpolate to this color</p>\n",
+                    "type": "p5.Color"
+                },
+                {
+                    "name": "amt",
+                    "description": "<p>number between 0 and 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "interpolated color",
+                "type": "p5.Color"
+            },
+            "example": [
+                "\n<div>\n<code>\ncolorMode(RGB);\nstroke(255);\nbackground(51);\nvar from = color(218, 165, 32);\nvar to = color(72, 61, 139);\ncolorMode(RGB); // Try changing to HSB.\nvar interA = lerpColor(from, to, 0.33);\nvar interB = lerpColor(from, to, 0.66);\nfill(from);\nrect(10, 20, 20, 60);\nfill(interA);\nrect(30, 20, 20, 60);\nfill(interB);\nrect(50, 20, 20, 60);\nfill(to);\nrect(70, 20, 20, 60);\n</code>\n</div>"
+            ],
+            "alt": "4 rects one tan, brown, brownish purple, purple, with white outlines & 20x60",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 485,
+            "description": "<p>Extracts the HSL lightness value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "lightness",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the lightness",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\ncolorMode(HSL);\nvar c = color(156, 100, 50, 1);\nfill(c);\nrect(15, 20, 35, 60);\nvar value = lightness(c); // Sets 'value' to 50\nfill(value);\nrect(50, 20, 35, 60);\n</code>\n</div>"
+            ],
+            "alt": "light pastel green rect on left and dark grey rect on right, both 35x60.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 515,
+            "description": "<p>Extracts the red value from a color or pixel array.</p>\n",
+            "itemtype": "method",
+            "name": "red",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the red value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar c = color(255, 204, 0); // Define color 'c'\nfill(c); // Use color variable 'c' as fill color\nrect(15, 20, 35, 60); // Draw left rectangle\n\nvar redValue = red(c); // Get red in 'c'\nprint(redValue); // Print \"255.0\"\nfill(redValue, 0, 0); // Use 'redValue' in new fill\nrect(50, 20, 35, 60); // Draw right rectangle\n</code>\n</div>\n\n<div>\n<code>\ncolorMode(RGB, 255);\nvar c = color(127, 255, 0);\ncolorMode(RGB, 1);\nvar myColor = red(c);\nprint(myColor);\n</code>\n</div>"
+            ],
+            "alt": "yellow rect on left and red rect on right, both with black outlines and 35x60.\ngrey canvas",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/creating_reading.js",
+            "line": 555,
+            "description": "<p>Extracts the saturation value from a color or pixel array.</p>\n<p>Saturation is scaled differently in HSB and HSL. This function will return\nthe HSB saturation when supplied with an HSB color object (or when supplied\nwith a pixel array while the color mode is HSB), but will default to the\nHSL saturation otherwise.</p>\n",
+            "itemtype": "method",
+            "name": "saturation",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "<p>p5.Color object, color components,\n                                        or CSS color</p>\n",
+                    "type": "p5.Color|Number[]|String"
+                }
+            ],
+            "return": {
+                "description": "the saturation value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\ncolorMode(HSB, 255);\nvar c = color(0, 126, 255);\nfill(c);\nrect(15, 20, 35, 60);\nvar value = saturation(c); // Sets 'value' to 126\nfill(value);\nrect(50, 20, 35, 60);\n</code>\n</div>"
+            ],
+            "alt": "deep pink rect on left and grey rect on right, both 35x60.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 54,
+            "itemtype": "method",
+            "name": "toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar myColor;\nfunction setup() {\n  createCanvas(200, 200);\n  stroke(255);\n  myColor = color(100, 100, 250);\n  fill(myColor);\n}\n\nfunction draw() {\n  text(myColor.toString(), 10, 10);\n}\n</code>\n</div>"
+            ],
+            "alt": "canvas with text representation of color",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 83,
+            "itemtype": "method",
+            "name": "setRed",
+            "params": [
+                {
+                    "name": "red",
+                    "description": "<p>the new red value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar backgroundColor;\n\nfunction setup() {\n  backgroundColor = color(100, 50, 150);\n}\n\nfunction draw() {\n  backgroundColor.setRed(128 + 128 * sin(millis() / 1000));\n  background(backgroundColor);\n}\n</code>\n</div>"
+            ],
+            "alt": "canvas with gradually changing background color",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 110,
+            "itemtype": "method",
+            "name": "setGreen",
+            "params": [
+                {
+                    "name": "green",
+                    "description": "<p>the new green value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar backgroundColor;\n\nfunction setup() {\n  backgroundColor = color(100, 50, 150);\n}\n\nfunction draw() {\n  backgroundColor.setGreen(128 + 128 * sin(millis() / 1000));\n  background(backgroundColor);\n}\n</code>\n</div>"
+            ],
+            "alt": "canvas with gradually changing background color",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 137,
+            "itemtype": "method",
+            "name": "setBlue",
+            "params": [
+                {
+                    "name": "blue",
+                    "description": "<p>the new blue value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar backgroundColor;\n\nfunction setup() {\n  backgroundColor = color(100, 50, 150);\n}\n\nfunction draw() {\n  backgroundColor.setBlue(128 + 128 * sin(millis() / 1000));\n  background(backgroundColor);\n}\n</code>\n</div>"
+            ],
+            "alt": "canvas with gradually changing background color",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 164,
+            "itemtype": "method",
+            "name": "setAlpha",
+            "params": [
+                {
+                    "name": "alpha",
+                    "description": "<p>the new alpha value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar squareColor;\n\nfunction setup() {\n  ellipseMode(CORNERS);\n  strokeWeight(4);\n  squareColor = color(100, 50, 150);\n}\n\nfunction draw() {\n  background(255);\n\n  noFill();\n  stroke(0);\n  ellipse(10, 10, width - 10, height - 10);\n\n  squareColor.setAlpha(128 + 128 * sin(millis() / 1000));\n  fill(squareColor);\n  noStroke();\n  rect(13, 13, width - 26, height - 26);\n}\n</code>\n</div>"
+            ],
+            "alt": "circle behind a square with gradually changing opacity",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 242,
+            "description": "<p>Hue is the same in HSB and HSL, but the maximum value may be different.\nThis function will return the HSB-normalized saturation when supplied with\nan HSB color object, but will default to the HSL-normalized saturation\notherwise.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 273,
+            "description": "<p>Saturation is scaled differently in HSB and HSL. This function will return\nthe HSB saturation when supplied with an HSB color object, but will default\nto the HSL saturation otherwise.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 292,
+            "description": "<p>CSS named colors.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 445,
+            "description": "<p>These regular expressions are used to build up the patterns for matching\nviable CSS color strings: fragmenting the regexes in this way increases the\nlegibility and comprehensibility of the code.</p>\n<p>Note that RGB values of .9 are not parsed by IE, but are supported here for\ncolor string consistency.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 458,
+            "description": "<p>Full color string patterns. The capture groups are necessary.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/p5.Color.js",
+            "line": 812,
+            "description": "<p>For HSB and HSL, interpret the gray level as a brightness/lightness\nvalue (they are equivalent when chroma is zero). For RGB, normalize the\ngray level according to the blue maximum.</p>\n",
+            "class": "p5.Color",
+            "module": "Color",
+            "submodule": "Creating & Reading"
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 15,
+            "description": "<p>The background() function sets the color used for the background of the\np5.js canvas. The default background is light gray. This function is\ntypically used within draw() to clear the display window at the beginning\nof each frame, but it can be used inside setup() to set the background on\nthe first frame of animation or if the background need only be set once.\n<br><br>\nThe color is either specified in terms of the RGB, HSB, or HSL color\ndepending on the current colorMode. (The default color space is RGB, with\neach value in the range from 0 to 255). The alpha range by default is also 0 to 255.\n<br><br>\nIf a single string argument is provided, RGB, RGBA and Hex CSS color strings\nand all named color strings are supported. In this case, an alpha number\nvalue as a second argument is not supported, the RGBA form should be used.\n<br><br>\nA p5.Color object can also be provided to set the background color.\n<br><br>\nA p5.Image can also be provided to set the background iamge.</p>\n",
+            "itemtype": "method",
+            "name": "background",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Grayscale integer value\nbackground(51);\n</code>\n</div>\n\n<div>\n<code>\n// R, G & B integer values\nbackground(255, 204, 0);\n</code>\n</div>\n\n<div>\n<code>\n// H, S & B integer values\ncolorMode(HSB);\nbackground(255, 204, 100);\n</code>\n</div>\n\n<div>\n<code>\n// Named SVG/CSS color string\nbackground('red');\n</code>\n</div>\n\n<div>\n<code>\n// three-digit hexadecimal RGB notation\nbackground('#fae');\n</code>\n</div>\n\n<div>\n<code>\n// six-digit hexadecimal RGB notation\nbackground('#222222');\n</code>\n</div>\n\n<div>\n<code>\n// integer RGB notation\nbackground('rgb(0,255,0)');\n</code>\n</div>\n\n<div>\n<code>\n// integer RGBA notation\nbackground('rgba(0,255,0, 0.25)');\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGB notation\nbackground('rgb(100%,0%,10%)');\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGBA notation\nbackground('rgba(100%,0%,100%,0.5)');\n</code>\n</div>\n\n<div>\n<code>\n// p5 Color object\nbackground(color(0, 0, 255));\n</code>\n</div>"
+            ],
+            "alt": "canvas with darkest charcoal grey background.\ncanvas with yellow background.\ncanvas with royal blue background.\ncanvas with red background.\ncanvas with pink background.\ncanvas with black background.\ncanvas with bright green background.\ncanvas with soft green background.\ncanvas with red background.\ncanvas with light purple background.\ncanvas with blue background.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting",
+            "overloads": [
+                {
+                    "line": 15,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>any value created by the color() function</p>\n",
+                            "type": "p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 131,
+                    "params": [
+                        {
+                            "name": "colorstring",
+                            "description": "<p>color string, possible formats include: integer\n                        rgb() or rgba(), percentage rgb() or rgba(),\n                        3-digit hex, 6-digit hex</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "a",
+                            "description": "<p>opacity of the background relative to current\n                            color range (default is 0-255)</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 141,
+                    "params": [
+                        {
+                            "name": "gray",
+                            "description": "<p>specifies a value between white and black</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "a",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 148,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value (depending on the current color\n                       mode)</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value (depending on the current\n                       color mode)</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value (depending on the current\n                       color mode)</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "a",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 160,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 167,
+                    "params": [
+                        {
+                            "name": "image",
+                            "description": "<p>image created with loadImage() or createImage(),\n                            to set as background\n                            (must be same size as the sketch window)</p>\n",
+                            "type": "p5.Image"
+                        },
+                        {
+                            "name": "a",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 185,
+            "description": "<p>Clears the pixels within a buffer. This function only works on p5.Canvas\nobjects created with the createCanvas() function; it won&#39;t work with the\nmain display window. Unlike the main graphics context, pixels in\nadditional graphics areas created with createGraphics() can be entirely\nor partially transparent. This function clears everything to make all of\nthe pixels 100% transparent.</p>\n",
+            "itemtype": "method",
+            "name": "clear",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Clear the screen on mouse press.\nfunction setup() {\n  createCanvas(100, 100);\n}\n\nfunction draw() {\n  ellipse(mouseX, mouseY, 20, 20);\n}\n\nfunction mousePressed() {\n  clear();\n}\n</code>\n</div>"
+            ],
+            "alt": "20x20 white ellipses are continually drawn at mouse x and y coordinates.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting"
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 223,
+            "description": "<p>colorMode() changes the way p5.js interprets color data. By default, the\nparameters for fill(), stroke(), background(), and color() are defined by\nvalues between 0 and 255 using the RGB color model. This is equivalent to\nsetting colorMode(RGB, 255). Setting colorMode(HSB) lets you use the HSB\nsystem instead. By default, this is colorMode(HSB, 360, 100, 100, 1). You\ncan also use HSL.\n<br><br>\nNote: existing color objects remember the mode that they were created in,\nso you can change modes as you like without affecting their appearance.</p>\n",
+            "itemtype": "method",
+            "name": "colorMode",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\ncolorMode(RGB, 100);\nfor (var i = 0; i < 100; i++) {\n  for (var j = 0; j < 100; j++) {\n    stroke(i, j, 0);\n    point(i, j);\n  }\n}\n</code>\n</div>\n\n<div>\n<code>\nnoStroke();\ncolorMode(HSB, 100);\nfor (var i = 0; i < 100; i++) {\n  for (var j = 0; j < 100; j++) {\n    stroke(i, j, 100);\n    point(i, j);\n  }\n}\n</code>\n</div>\n\n<div>\n<code>\ncolorMode(RGB, 255);\nvar c = color(127, 255, 0);\n\ncolorMode(RGB, 1);\nvar myColor = c._getRed();\ntext(myColor, 10, 10, 80, 80);\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\ncolorMode(RGB, 255, 255, 255, 1);\nbackground(255);\n\nstrokeWeight(4);\nstroke(255, 0, 10, 0.3);\nellipse(40, 40, 50, 50);\nellipse(50, 50, 40, 40);\n</code>\n</div>"
+            ],
+            "alt": "Green to red gradient from bottom L to top R. shading originates from top left.\nRainbow gradient from left to right. Brightness increasing to white at top.\nunknown image.\n50x50 ellipse at middle L & 40x40 ellipse at center. Transluscent pink outlines.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting",
+            "overloads": [
+                {
+                    "line": 223,
+                    "params": [
+                        {
+                            "name": "mode",
+                            "description": "<p>either RGB, HSB or HSL, corresponding to\n                         Red/Green/Blue and Hue/Saturation/Brightness\n                         (or Lightness)</p>\n",
+                            "type": "Constant"
+                        },
+                        {
+                            "name": "max",
+                            "description": "<p>range for all values</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 300,
+                    "params": [
+                        {
+                            "name": "mode",
+                            "description": "",
+                            "type": "Constant"
+                        },
+                        {
+                            "name": "max1",
+                            "description": "<p>range for the red or hue depending on the\n                             current color mode</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "max2",
+                            "description": "<p>range for the green or saturation depending\n                             on the current color mode</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "max3",
+                            "description": "<p>range for the blue or brightness/lighntess\n                             depending on the current color mode</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "maxA",
+                            "description": "<p>range for the alpha</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 344,
+            "description": "<p>Sets the color used to fill shapes. For example, if you run\nfill(204, 102, 0), all subsequent shapes will be filled with orange. This\ncolor is either specified in terms of the RGB or HSB color depending on\nthe current colorMode(). (The default color space is RGB, with each value\nin the range from 0 to 255). The alpha range by default is also 0 to 255.\n<br><br>\nIf a single string argument is provided, RGB, RGBA and Hex CSS color strings\nand all named color strings are supported. In this case, an alpha number\nvalue as a second argument is not supported, the RGBA form should be used.\n<br><br>\nA p5 Color object can also be provided to set the fill color.</p>\n",
+            "itemtype": "method",
+            "name": "fill",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Grayscale integer value\nfill(51);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// R, G & B integer values\nfill(255, 204, 0);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// H, S & B integer values\ncolorMode(HSB);\nfill(255, 204, 100);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// Named SVG/CSS color string\nfill('red');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// three-digit hexadecimal RGB notation\nfill('#fae');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// six-digit hexadecimal RGB notation\nfill('#222222');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// integer RGB notation\nfill('rgb(0,255,0)');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// integer RGBA notation\nfill('rgba(0,255,0, 0.25)');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGB notation\nfill('rgb(100%,0%,10%)');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGBA notation\nfill('rgba(100%,0%,100%,0.5)');\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// p5 Color object\nfill(color(0, 0, 255));\nrect(20, 20, 60, 60);\n</code>\n</div>"
+            ],
+            "alt": "60x60 dark charcoal grey rect with black outline in center of canvas.\n60x60 yellow rect with black outline in center of canvas.\n60x60 royal blue rect with black outline in center of canvas.\n60x60 red rect with black outline in center of canvas.\n60x60 pink rect with black outline in center of canvas.\n60x60 black rect with black outline in center of canvas.\n60x60 light green rect with black outline in center of canvas.\n60x60 soft green rect with black outline in center of canvas.\n60x60 red rect with black outline in center of canvas.\n60x60 dark fushcia rect with black outline in center of canvas.\n60x60 blue rect with black outline in center of canvas.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting",
+            "overloads": [
+                {
+                    "line": 344,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value relative to\n                                the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 469,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>a color string</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 476,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 483,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>the fill color</p>\n",
+                            "type": "p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 495,
+            "description": "<p>Disables filling geometry. If both noStroke() and noFill() are called,\nnothing will be drawn to the screen.</p>\n",
+            "itemtype": "method",
+            "name": "noFill",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nrect(15, 10, 55, 55);\nnoFill();\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(0);\n  noFill();\n  stroke(100, 100, 240);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  box(45, 45, 45);\n}\n</code>\n</div>"
+            ],
+            "alt": "white rect top middle and noFill rect center. Both 60x60 with black outlines.\nblack canvas with purple cube wireframe spinning",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting"
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 536,
+            "description": "<p>Disables drawing the stroke (outline). If both noStroke() and noFill()\nare called, nothing will be drawn to the screen.</p>\n",
+            "itemtype": "method",
+            "name": "noStroke",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoStroke();\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(0);\n  noStroke();\n  fill(240, 150, 150);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  box(45, 45, 45);\n}\n</code>\n</div>"
+            ],
+            "alt": "60x60 white rect at center. no outline.\nblack canvas with pink cube spinning",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting"
+        },
+        {
+            "file": "src/color/setting.js",
+            "line": 576,
+            "description": "<p>Sets the color used to draw lines and borders around shapes. This color\nis either specified in terms of the RGB or HSB color depending on the\ncurrent colorMode() (the default color space is RGB, with each value in\nthe range from 0 to 255). The alpha range by default is also 0 to 255.\n<br><br>\nIf a single string argument is provided, RGB, RGBA and Hex CSS color\nstrings and all named color strings are supported. In this case, an alpha\nnumber value as a second argument is not supported, the RGBA form should be\nused.\n<br><br>\nA p5 Color object can also be provided to set the stroke color.</p>\n",
+            "itemtype": "method",
+            "name": "stroke",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Grayscale integer value\nstrokeWeight(4);\nstroke(51);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// R, G & B integer values\nstroke(255, 204, 0);\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// H, S & B integer values\ncolorMode(HSB);\nstrokeWeight(4);\nstroke(255, 204, 100);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// Named SVG/CSS color string\nstroke('red');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// three-digit hexadecimal RGB notation\nstroke('#fae');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// six-digit hexadecimal RGB notation\nstroke('#222222');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// integer RGB notation\nstroke('rgb(0,255,0)');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// integer RGBA notation\nstroke('rgba(0,255,0,0.25)');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGB notation\nstroke('rgb(100%,0%,10%)');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// percentage RGBA notation\nstroke('rgba(100%,0%,100%,0.5)');\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>\n\n<div>\n<code>\n// p5 Color object\nstroke(color(0, 0, 255));\nstrokeWeight(4);\nrect(20, 20, 60, 60);\n</code>\n</div>"
+            ],
+            "alt": "60x60 white rect at center. Dark charcoal grey outline.\n60x60 white rect at center. Yellow outline.\n60x60 white rect at center. Royal blue outline.\n60x60 white rect at center. Red outline.\n60x60 white rect at center. Pink outline.\n60x60 white rect at center. Black outline.\n60x60 white rect at center. Bright green outline.\n60x60 white rect at center. Soft green outline.\n60x60 white rect at center. Red outline.\n60x60 white rect at center. Dark fushcia outline.\n60x60 white rect at center. Blue outline.",
+            "class": "p5",
+            "module": "Color",
+            "submodule": "Setting",
+            "overloads": [
+                {
+                    "line": 576,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value relative to\n                                the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 715,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>a color string</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 722,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 729,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>the stroke color</p>\n",
+                            "type": "p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 16,
+            "description": "<p>Draw an arc to the screen. If called with only x, y, w, h, start, and\nstop, the arc will be drawn and filled as an open pie segment. If a mode parameter is provided, the arc\nwill be filled like an open semi-circle (OPEN) , a closed semi-circle (CHORD), or as a closed pie segment (PIE). The\norigin may be changed with the ellipseMode() function.<br><br>\nNote that drawing a full circle (ex: 0 to TWO_PI) will appear blank\nbecause 0 and TWO_PI are the same position on the unit circle. The\nbest way to handle this is by using the ellipse() function instead\nto create a closed ellipse, and to use the arc() function\nonly to draw parts of an ellipse.</p>\n",
+            "itemtype": "method",
+            "name": "arc",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the arc&#39;s ellipse</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the arc&#39;s ellipse</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "w",
+                    "description": "<p>width of the arc&#39;s ellipse by default</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of the arc&#39;s ellipse by default</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "start",
+                    "description": "<p>angle to start the arc, specified in radians</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "stop",
+                    "description": "<p>angle to stop the arc, specified in radians</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "mode",
+                    "description": "<p>optional parameter to determine the way of drawing\n                        the arc. either CHORD, PIE or OPEN</p>\n",
+                    "type": "Constant",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\narc(50, 55, 50, 50, 0, HALF_PI);\nnoFill();\narc(50, 55, 60, 60, HALF_PI, PI);\narc(50, 55, 70, 70, PI, PI + QUARTER_PI);\narc(50, 55, 80, 80, PI + QUARTER_PI, TWO_PI);\n</code>\n</div>\n\n<div>\n<code>\narc(50, 50, 80, 80, 0, PI + QUARTER_PI);\n</code>\n</div>\n\n<div>\n<code>\narc(50, 50, 80, 80, 0, PI + QUARTER_PI, OPEN);\n</code>\n</div>\n\n<div>\n<code>\narc(50, 50, 80, 80, 0, PI + QUARTER_PI, CHORD);\n</code>\n</div>\n\n<div>\n<code>\narc(50, 50, 80, 80, 0, PI + QUARTER_PI, PIE);\n</code>\n</div>"
+            ],
+            "alt": "shattered outline of an ellipse with a quarter of a white circle bottom-right.\nwhite ellipse with top right quarter missing.\nwhite ellipse with black outline with top right missing.\nwhite ellipse with top right missing with black outline around shape.\nwhite ellipse with top right quarter missing with black outline around the shape.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives"
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 134,
+            "description": "<p>Draws an ellipse (oval) to the screen. An ellipse with equal width and\nheight is a circle. By default, the first two parameters set the location,\nand the third and fourth parameters set the shape&#39;s width and height. If\nno height is specified, the value of width is used for both the width and\nheight. If a negative height or width is specified, the absolute value is taken.\nThe origin may be changed with the ellipseMode() function.</p>\n",
+            "itemtype": "method",
+            "name": "ellipse",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nellipse(56, 46, 55, 55);\n</code>\n</div>"
+            ],
+            "alt": "white ellipse with black outline in middle-right of canvas that is 55x55.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives",
+            "overloads": [
+                {
+                    "line": 134,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>x-coordinate of the ellipse.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y-coordinate of the ellipse.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "w",
+                            "description": "<p>width of the ellipse.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "h",
+                            "description": "<p>height of the ellipse.</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 159,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "w",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "h",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "detailX",
+                            "description": "<p>number of segments in the x-direction</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "detailY",
+                            "description": "<p>number of segments in the y-direction</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 190,
+            "description": "<p>Draws a line (a direct path between two points) to the screen. The version\nof line() with four parameters draws the line in 2D. To color a line, use\nthe stroke() function. A line cannot be filled, therefore the fill()\nfunction will not affect the color of a line. 2D lines are drawn with a\nwidth of one pixel by default, but this can be changed with the\nstrokeWeight() function.</p>\n",
+            "itemtype": "method",
+            "name": "line",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nline(30, 20, 85, 75);\n</code>\n</div>\n\n<div>\n<code>\nline(30, 20, 85, 20);\nstroke(126);\nline(85, 20, 85, 75);\nstroke(255);\nline(85, 75, 30, 75);\n</code>\n</div>"
+            ],
+            "alt": "line 78 pixels long running from mid-top to bottom-right of canvas.\n3 lines of various stroke sizes. Form top, bottom and right sides of a square.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives",
+            "overloads": [
+                {
+                    "line": 190,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "<p>the x-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "<p>the y-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "<p>the x-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "<p>the y-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        }
