@@ -4407,3 +4407,939 @@ module.exports={
                             "description": "<p>the y-coordinate of the second point</p>\n",
                             "type": "Number"
                         }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 226,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z1",
+                            "description": "<p>the z-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z2",
+                            "description": "<p>the z-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 246,
+            "description": "<p>Draws a point, a coordinate in space at the dimension of one pixel.\nThe first parameter is the horizontal value for the point, the second\nvalue is the vertical value for the point. The color of the point is\ndetermined by the current stroke.</p>\n",
+            "itemtype": "method",
+            "name": "point",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>the x-coordinate</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>the y-coordinate</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "<p>the z-coordinate (for WEBGL mode)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\npoint(30, 20);\npoint(85, 20);\npoint(85, 75);\npoint(30, 75);\n</code>\n</div>"
+            ],
+            "alt": "4 points centered in the middle-right of the canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives"
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 281,
+            "description": "<p>Draw a quad. A quad is a quadrilateral, a four sided polygon. It is\nsimilar to a rectangle, but the angles between its edges are not\nconstrained to ninety degrees. The first pair of parameters (x1,y1)\nsets the first vertex and the subsequent pairs should proceed\nclockwise or counter-clockwise around the defined shape.</p>\n",
+            "itemtype": "method",
+            "name": "quad",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nquad(38, 31, 86, 20, 69, 63, 30, 76);\n</code>\n</div>"
+            ],
+            "alt": "irregular white quadrilateral shape with black outline mid-right of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives",
+            "overloads": [
+                {
+                    "line": 281,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "<p>the x-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "<p>the y-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "<p>the x-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "<p>the y-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "<p>the x-coordinate of the third point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "<p>the y-coordinate of the third point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "<p>the x-coordinate of the fourth point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "<p>the y-coordinate of the fourth point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 309,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z4",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 335,
+            "description": "<p>Draws a rectangle to the screen. A rectangle is a four-sided shape with\nevery angle at ninety degrees. By default, the first two parameters set\nthe location of the upper-left corner, the third sets the width, and the\nfourth sets the height. The way these parameters are interpreted, however,\nmay be changed with the rectMode() function.\n<br><br>\nThe fifth, sixth, seventh and eighth parameters, if specified,\ndetermine corner radius for the top-right, top-left, lower-right and\nlower-left corners, respectively. An omitted corner radius parameter is set\nto the value of the previously specified radius value in the parameter list.</p>\n",
+            "itemtype": "method",
+            "name": "rect",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Draw a rectangle at location (30, 20) with a width and height of 55.\nrect(30, 20, 55, 55);\n</code>\n</div>\n\n<div>\n<code>\n// Draw a rectangle with rounded corners, each having a radius of 20.\nrect(30, 20, 55, 55, 20);\n</code>\n</div>\n\n<div>\n<code>\n// Draw a rectangle with rounded corners having the following radii:\n// top-left = 20, top-right = 15, bottom-right = 10, bottom-left = 5.\nrect(30, 20, 55, 55, 20, 15, 10, 5);\n</code>\n</div>"
+            ],
+            "alt": "55x55 white rect with black outline in mid-right of canvas.\n55x55 white rect with black outline and rounded edges in mid-right of canvas.\n55x55 white rect with black outline and rounded edges of different radii.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives",
+            "overloads": [
+                {
+                    "line": 335,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>x-coordinate of the rectangle.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y-coordinate of the rectangle.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "w",
+                            "description": "<p>width of the rectangle.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "h",
+                            "description": "<p>height of the rectangle.</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "tl",
+                            "description": "<p>optional radius of top-left corner.</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "tr",
+                            "description": "<p>optional radius of top-right corner.</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "br",
+                            "description": "<p>optional radius of bottom-right corner.</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "bl",
+                            "description": "<p>optional radius of bottom-left corner.</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 385,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "w",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "h",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "detailX",
+                            "description": "<p>number of segments in the x-direction</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "detailY",
+                            "description": "<p>number of segments in the y-direction</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/2d_primitives.js",
+            "line": 406,
+            "description": "<p>A triangle is a plane created by connecting three points. The first two\narguments specify the first point, the middle two arguments specify the\nsecond point, and the last two arguments specify the third point.</p>\n",
+            "itemtype": "method",
+            "name": "triangle",
+            "params": [
+                {
+                    "name": "x1",
+                    "description": "<p>x-coordinate of the first point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y1",
+                    "description": "<p>y-coordinate of the first point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x2",
+                    "description": "<p>x-coordinate of the second point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y2",
+                    "description": "<p>y-coordinate of the second point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x3",
+                    "description": "<p>x-coordinate of the third point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y3",
+                    "description": "<p>y-coordinate of the third point</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntriangle(30, 75, 58, 20, 86, 75);\n</code>\n</div>"
+            ],
+            "alt": "white triangle with black outline in mid-right of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "2D Primitives"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 14,
+            "description": "<p>Modifies the location from which ellipses are drawn by changing the way\nin which parameters given to ellipse() are interpreted.\n<br><br>\nThe default mode is ellipseMode(CENTER), which interprets the first two\nparameters of ellipse() as the shape&#39;s center point, while the third and\nfourth parameters are its width and height.\n<br><br>\nellipseMode(RADIUS) also uses the first two parameters of ellipse() as\nthe shape&#39;s center point, but uses the third and fourth parameters to\nspecify half of the shapes&#39;s width and height.\n<br><br>\nellipseMode(CORNER) interprets the first two parameters of ellipse() as\nthe upper-left corner of the shape, while the third and fourth parameters\nare its width and height.\n<br><br>\nellipseMode(CORNERS) interprets the first two parameters of ellipse() as\nthe location of one corner of the ellipse&#39;s bounding box, and the third\nand fourth parameters as the location of the opposite corner.\n<br><br>\nThe parameter must be written in ALL CAPS because Javascript is a\ncase-sensitive language.</p>\n",
+            "itemtype": "method",
+            "name": "ellipseMode",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>either CENTER, RADIUS, CORNER, or CORNERS</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nellipseMode(RADIUS); // Set ellipseMode to RADIUS\nfill(255); // Set fill to white\nellipse(50, 50, 30, 30); // Draw white ellipse using RADIUS mode\n\nellipseMode(CENTER); // Set ellipseMode to CENTER\nfill(100); // Set fill to gray\nellipse(50, 50, 30, 30); // Draw gray ellipse using CENTER mode\n</code>\n</div>\n\n<div>\n<code>\nellipseMode(CORNER); // Set ellipseMode is CORNER\nfill(255); // Set fill to white\nellipse(25, 25, 50, 50); // Draw white ellipse using CORNER mode\n\nellipseMode(CORNERS); // Set ellipseMode to CORNERS\nfill(100); // Set fill to gray\nellipse(25, 25, 50, 50); // Draw gray ellipse using CORNERS mode\n</code>\n</div>"
+            ],
+            "alt": "60x60 white ellipse and 30x30 grey ellipse with black outlines at center.\n60x60 white ellipse @center and 30x30 grey ellipse top-right, black outlines.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 83,
+            "description": "<p>Draws all geometry with jagged (aliased) edges. Note that smooth() is\nactive by default, so it is necessary to call noSmooth() to disable\nsmoothing of geometry, images, and fonts.</p>\n",
+            "itemtype": "method",
+            "name": "noSmooth",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbackground(0);\nnoStroke();\nsmooth();\nellipse(30, 48, 36, 36);\nnoSmooth();\nellipse(70, 48, 36, 36);\n</code>\n</div>"
+            ],
+            "alt": "2 pixelated 36x36 white ellipses to left & right of center, black background",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 111,
+            "description": "<p>Modifies the location from which rectangles are drawn by changing the way\nin which parameters given to rect() are interpreted.\n<br><br>\nThe default mode is rectMode(CORNER), which interprets the first two\nparameters of rect() as the upper-left corner of the shape, while the\nthird and fourth parameters are its width and height.\n<br><br>\nrectMode(CORNERS) interprets the first two parameters of rect() as the\nlocation of one corner, and the third and fourth parameters as the\nlocation of the opposite corner.\n<br><br>\nrectMode(CENTER) interprets the first two parameters of rect() as the\nshape&#39;s center point, while the third and fourth parameters are its\nwidth and height.\n<br><br>\nrectMode(RADIUS) also uses the first two parameters of rect() as the\nshape&#39;s center point, but uses the third and fourth parameters to specify\nhalf of the shapes&#39;s width and height.\n<br><br>\nThe parameter must be written in ALL CAPS because Javascript is a\ncase-sensitive language.</p>\n",
+            "itemtype": "method",
+            "name": "rectMode",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>either CORNER, CORNERS, CENTER, or RADIUS</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nrectMode(CORNER); // Default rectMode is CORNER\nfill(255); // Set fill to white\nrect(25, 25, 50, 50); // Draw white rect using CORNER mode\n\nrectMode(CORNERS); // Set rectMode to CORNERS\nfill(100); // Set fill to gray\nrect(25, 25, 50, 50); // Draw gray rect using CORNERS mode\n</code>\n</div>\n\n<div>\n<code>\nrectMode(RADIUS); // Set rectMode to RADIUS\nfill(255); // Set fill to white\nrect(50, 50, 30, 30); // Draw white rect using RADIUS mode\n\nrectMode(CENTER); // Set rectMode to CENTER\nfill(100); // Set fill to gray\nrect(50, 50, 30, 30); // Draw gray rect using CENTER mode\n</code>\n</div>"
+            ],
+            "alt": "50x50 white rect at center and 25x25 grey rect in the top left of the other.\n50x50 white rect at center and 25x25 grey rect in the center of the other.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 180,
+            "description": "<p>Draws all geometry with smooth (anti-aliased) edges. smooth() will also\nimprove image quality of resized images. Note that smooth() is active by\ndefault; noSmooth() can be used to disable smoothing of geometry,\nimages, and fonts.</p>\n",
+            "itemtype": "method",
+            "name": "smooth",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbackground(0);\nnoStroke();\nsmooth();\nellipse(30, 48, 36, 36);\nnoSmooth();\nellipse(70, 48, 36, 36);\n</code>\n</div>"
+            ],
+            "alt": "2 pixelated 36x36 white ellipses one left one right of center. On black.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 209,
+            "description": "<p>Sets the style for rendering line endings. These ends are either squared,\nextended, or rounded, each of which specified with the corresponding\nparameters: SQUARE, PROJECT, and ROUND. The default cap is ROUND.</p>\n",
+            "itemtype": "method",
+            "name": "strokeCap",
+            "params": [
+                {
+                    "name": "cap",
+                    "description": "<p>either SQUARE, PROJECT, or ROUND</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nstrokeWeight(12.0);\nstrokeCap(ROUND);\nline(20, 30, 80, 30);\nstrokeCap(SQUARE);\nline(20, 50, 80, 50);\nstrokeCap(PROJECT);\nline(20, 70, 80, 70);\n</code>\n</div>"
+            ],
+            "alt": "3 lines. Top line: rounded ends, mid: squared, bottom:longer squared ends.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 246,
+            "description": "<p>Sets the style of the joints which connect line segments. These joints\nare either mitered, beveled, or rounded and specified with the\ncorresponding parameters MITER, BEVEL, and ROUND. The default joint is\nMITER.</p>\n",
+            "itemtype": "method",
+            "name": "strokeJoin",
+            "params": [
+                {
+                    "name": "join",
+                    "description": "<p>either MITER, BEVEL, ROUND</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nstrokeWeight(10.0);\nstrokeJoin(MITER);\nbeginShape();\nvertex(35, 20);\nvertex(65, 50);\nvertex(35, 80);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nstrokeWeight(10.0);\nstrokeJoin(BEVEL);\nbeginShape();\nvertex(35, 20);\nvertex(65, 50);\nvertex(35, 80);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nstrokeWeight(10.0);\nstrokeJoin(ROUND);\nbeginShape();\nvertex(35, 20);\nvertex(65, 50);\nvertex(35, 80);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "Right-facing arrowhead shape with pointed tip in center of canvas.\nRight-facing arrowhead shape with flat tip in center of canvas.\nRight-facing arrowhead shape with rounded tip in center of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/attributes.js",
+            "line": 313,
+            "description": "<p>Sets the width of the stroke used for lines, points, and the border\naround shapes. All widths are set in units of pixels.</p>\n",
+            "itemtype": "method",
+            "name": "strokeWeight",
+            "params": [
+                {
+                    "name": "weight",
+                    "description": "<p>the weight (in pixels) of the stroke</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nstrokeWeight(1); // Default\nline(20, 20, 80, 20);\nstrokeWeight(4); // Thicker\nline(20, 40, 80, 40);\nstrokeWeight(10); // Beastly\nline(20, 70, 80, 70);\n</code>\n</div>"
+            ],
+            "alt": "3 horizontal black lines. Top line: thin, mid: medium, bottom:thick.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/core/canvas.js",
+            "line": 1,
+            "requires": [
+                "constants"
+            ],
+            "class": "p5",
+            "module": "Shape"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 13,
+            "itemtype": "property",
+            "name": "P2D",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 18,
+            "itemtype": "property",
+            "name": "WEBGL",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 34,
+            "description": "<p>HALF_PI is a mathematical constant with the value\n1.57079632679489661923. It is half the ratio of the\ncircumference of a circle to its diameter. It is useful in\ncombination with the trigonometric functions sin() and cos().</p>\n",
+            "itemtype": "property",
+            "name": "HALF_PI",
+            "type": "Number",
+            "final": 1,
+            "example": [
+                "\n<div><code>\narc(50, 50, 80, 80, 0, HALF_PI);\n</code></div>"
+            ],
+            "alt": "80x80 white quarter-circle with curve toward bottom right of canvas.",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 53,
+            "description": "<p>PI is a mathematical constant with the value\n3.14159265358979323846. It is the ratio of the circumference\nof a circle to its diameter. It is useful in combination with\nthe trigonometric functions sin() and cos().</p>\n",
+            "itemtype": "property",
+            "name": "PI",
+            "type": "Number",
+            "final": 1,
+            "example": [
+                "\n<div><code>\narc(50, 50, 80, 80, 0, PI);\n</code></div>"
+            ],
+            "alt": "white half-circle with curve toward bottom of canvas.",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 72,
+            "description": "<p>QUARTER_PI is a mathematical constant with the value 0.7853982.\nIt is one quarter the ratio of the circumference of a circle to\nits diameter. It is useful in combination with the trigonometric\nfunctions sin() and cos().</p>\n",
+            "itemtype": "property",
+            "name": "QUARTER_PI",
+            "type": "Number",
+            "final": 1,
+            "example": [
+                "\n<div><code>\narc(50, 50, 80, 80, 0, QUARTER_PI);\n</code></div>"
+            ],
+            "alt": "white eighth-circle rotated about 40 degrees with curve bottom right canvas.",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 91,
+            "description": "<p>TAU is an alias for TWO_PI, a mathematical constant with the\nvalue 6.28318530717958647693. It is twice the ratio of the\ncircumference of a circle to its diameter. It is useful in\ncombination with the trigonometric functions sin() and cos().</p>\n",
+            "itemtype": "property",
+            "name": "TAU",
+            "type": "Number",
+            "final": 1,
+            "example": [
+                "\n<div><code>\narc(50, 50, 80, 80, 0, TAU);\n</code></div>"
+            ],
+            "alt": "80x80 white ellipse shape in center of canvas.",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 110,
+            "description": "<p>TWO_PI is a mathematical constant with the value\n6.28318530717958647693. It is twice the ratio of the\ncircumference of a circle to its diameter. It is useful in\ncombination with the trigonometric functions sin() and cos().</p>\n",
+            "itemtype": "property",
+            "name": "TWO_PI",
+            "type": "Number",
+            "final": 1,
+            "example": [
+                "\n<div><code>\narc(50, 50, 80, 80, 0, TWO_PI);\n</code></div>"
+            ],
+            "alt": "80x80 white ellipse shape in center of canvas.",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 129,
+            "description": "<p>Constant to be used with angleMode() function, to set the mode which\np5.js interprates and calculates angles (either DEGREES or RADIANS).</p>\n",
+            "itemtype": "property",
+            "name": "DEGREES",
+            "type": "String",
+            "final": 1,
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  angleMode(DEGREES);\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 143,
+            "description": "<p>Constant to be used with angleMode() function, to set the mode which\np5.js interprates and calculates angles (either RADIANS or DEGREES).</p>\n",
+            "itemtype": "property",
+            "name": "RADIANS",
+            "type": "String",
+            "final": 1,
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  angleMode(RADIANS);\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 161,
+            "itemtype": "property",
+            "name": "CORNER",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 166,
+            "itemtype": "property",
+            "name": "CORNERS",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 171,
+            "itemtype": "property",
+            "name": "RADIUS",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 176,
+            "itemtype": "property",
+            "name": "RIGHT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 181,
+            "itemtype": "property",
+            "name": "LEFT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 186,
+            "itemtype": "property",
+            "name": "CENTER",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 191,
+            "itemtype": "property",
+            "name": "TOP",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 196,
+            "itemtype": "property",
+            "name": "BOTTOM",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 201,
+            "itemtype": "property",
+            "name": "BASELINE",
+            "type": "String",
+            "final": 1,
+            "default": "alphabetic",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 207,
+            "itemtype": "property",
+            "name": "POINTS",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0000",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 213,
+            "itemtype": "property",
+            "name": "LINES",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0001",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 219,
+            "itemtype": "property",
+            "name": "LINE_STRIP",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0003",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 225,
+            "itemtype": "property",
+            "name": "LINE_LOOP",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0002",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 231,
+            "itemtype": "property",
+            "name": "TRIANGLES",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0004",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 237,
+            "itemtype": "property",
+            "name": "TRIANGLE_FAN",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0006",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 243,
+            "itemtype": "property",
+            "name": "TRIANGLE_STRIP",
+            "type": "Number",
+            "final": 1,
+            "default": "0x0005",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 249,
+            "itemtype": "property",
+            "name": "QUADS",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 254,
+            "itemtype": "property",
+            "name": "QUAD_STRIP",
+            "type": "String",
+            "final": 1,
+            "default": "quad_strip",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 260,
+            "itemtype": "property",
+            "name": "CLOSE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 265,
+            "itemtype": "property",
+            "name": "OPEN",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 270,
+            "itemtype": "property",
+            "name": "CHORD",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 275,
+            "itemtype": "property",
+            "name": "PIE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 280,
+            "itemtype": "property",
+            "name": "PROJECT",
+            "type": "String",
+            "final": 1,
+            "default": "square",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 286,
+            "itemtype": "property",
+            "name": "SQUARE",
+            "type": "String",
+            "final": 1,
+            "default": "butt",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 292,
+            "itemtype": "property",
+            "name": "ROUND",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 297,
+            "itemtype": "property",
+            "name": "BEVEL",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 302,
