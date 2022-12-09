@@ -5343,3 +5343,1007 @@ module.exports={
         {
             "file": "src/core/constants.js",
             "line": 302,
+            "itemtype": "property",
+            "name": "MITER",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 309,
+            "itemtype": "property",
+            "name": "RGB",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 314,
+            "itemtype": "property",
+            "name": "HSB",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 319,
+            "itemtype": "property",
+            "name": "HSL",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 345,
+            "itemtype": "property",
+            "name": "BLEND",
+            "type": "String",
+            "final": 1,
+            "default": "source-over",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 351,
+            "itemtype": "property",
+            "name": "ADD",
+            "type": "String",
+            "final": 1,
+            "default": "lighter",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 359,
+            "itemtype": "property",
+            "name": "DARKEST",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 364,
+            "itemtype": "property",
+            "name": "LIGHTEST",
+            "type": "String",
+            "final": 1,
+            "default": "lighten",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 370,
+            "itemtype": "property",
+            "name": "DIFFERENCE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 375,
+            "itemtype": "property",
+            "name": "EXCLUSION",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 380,
+            "itemtype": "property",
+            "name": "MULTIPLY",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 385,
+            "itemtype": "property",
+            "name": "SCREEN",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 390,
+            "itemtype": "property",
+            "name": "REPLACE",
+            "type": "String",
+            "final": 1,
+            "default": "copy",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 396,
+            "itemtype": "property",
+            "name": "OVERLAY",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 401,
+            "itemtype": "property",
+            "name": "HARD_LIGHT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 406,
+            "itemtype": "property",
+            "name": "SOFT_LIGHT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 411,
+            "itemtype": "property",
+            "name": "DODGE",
+            "type": "String",
+            "final": 1,
+            "default": "color-dodge",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 417,
+            "itemtype": "property",
+            "name": "BURN",
+            "type": "String",
+            "final": 1,
+            "default": "color-burn",
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 425,
+            "itemtype": "property",
+            "name": "THRESHOLD",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 430,
+            "itemtype": "property",
+            "name": "GRAY",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 435,
+            "itemtype": "property",
+            "name": "OPAQUE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 440,
+            "itemtype": "property",
+            "name": "INVERT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 445,
+            "itemtype": "property",
+            "name": "POSTERIZE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 450,
+            "itemtype": "property",
+            "name": "DILATE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 455,
+            "itemtype": "property",
+            "name": "ERODE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 460,
+            "itemtype": "property",
+            "name": "BLUR",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 467,
+            "itemtype": "property",
+            "name": "NORMAL",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 472,
+            "itemtype": "property",
+            "name": "ITALIC",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 477,
+            "itemtype": "property",
+            "name": "BOLD",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 501,
+            "itemtype": "property",
+            "name": "LANDSCAPE",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/constants.js",
+            "line": 506,
+            "itemtype": "property",
+            "name": "PORTRAIT",
+            "type": "String",
+            "final": 1,
+            "class": "p5",
+            "module": "Constants",
+            "submodule": "Constants"
+        },
+        {
+            "file": "src/core/core.js",
+            "line": 49,
+            "description": "<p>Called directly before setup(), the preload() function is used to handle\nasynchronous loading of external files. If a preload function is\ndefined, setup() will wait until any load calls within have finished.\nNothing besides load calls should be inside preload (loadImage,\nloadJSON, loadFont, loadStrings, etc).<br><br>\nBy default the text &quot;loading...&quot; will be displayed. To make your own\nloading page, include an HTML element with id &quot;p5_loading&quot; in your\npage. More information <a href=\"http://bit.ly/2kQ6Nio\">here</a>.</p>\n",
+            "itemtype": "method",
+            "name": "preload",
+            "example": [
+                "\n<div><code>\nvar img;\nvar c;\nfunction preload() {\n // preload() runs once\n  img = loadImage('assets/laDefense.jpg');\n}\n\nfunction setup() {\n // setup() waits until preload() is done\n  img.loadPixels();\n  // get color of middle pixel\n  c = img.get(img.width / 2, img.height / 2);\n}\n\nfunction draw() {\n  background(c);\n  image(img, 25, 25, 50, 50);\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/core.js",
+            "line": 87,
+            "description": "<p>The setup() function is called once when the program starts. It&#39;s used to\ndefine initial environment properties such as screen size and background\ncolor and to load media such as images and fonts as the program starts.\nThere can only be one setup() function for each program and it shouldn&#39;t\nbe called again after its initial execution.\n<br><br>\nNote: Variables declared within setup() are not accessible within other\nfunctions, including draw().</p>\n",
+            "itemtype": "method",
+            "name": "setup",
+            "example": [
+                "\n<div><code>\nvar a = 0;\n\nfunction setup() {\n  background(0);\n  noStroke();\n  fill(102);\n}\n\nfunction draw() {\n  rect(a++ % width, 10, 2, 80);\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/core.js",
+            "line": 118,
+            "description": "<p>Called directly after setup(), the draw() function continuously executes\nthe lines of code contained inside its block until the program is stopped\nor noLoop() is called. Note if noLoop() is called in setup(), draw() will\nstill be executed once before stopping. draw() is called automatically and\nshould never be called explicitly.\n<br><br>\nIt should always be controlled with noLoop(), redraw() and loop(). After\nnoLoop() stops the code in draw() from executing, redraw() causes the\ncode inside draw() to execute once, and loop() will cause the code\ninside draw() to resume executing continuously.\n<br><br>\nThe number of times draw() executes in each second may be controlled with\nthe frameRate() function.\n<br><br>\nThere can only be one draw() function for each sketch, and draw() must\nexist if you want the code to run continuously, or to process events such\nas mousePressed(). Sometimes, you might have an empty call to draw() in\nyour program, as shown in the above example.\n<br><br>\nIt is important to note that the drawing coordinate system will be reset\nat the beginning of each draw() call. If any transformations are performed\nwithin draw() (ex: scale, rotate, translate, their effects will be\nundone at the beginning of draw(), so transformations will not accumulate\nover time. On the other hand, styling applied (ex: fill, stroke, etc) will\nremain in effect.</p>\n",
+            "itemtype": "method",
+            "name": "draw",
+            "example": [
+                "\n<div><code>\nvar yPos = 0;\nfunction setup() {\n // setup() runs once\n  frameRate(30);\n}\nfunction draw() {\n // draw() loops forever, until stopped\n  background(204);\n  yPos = yPos - 1;\n  if (yPos < 0) {\n    yPos = height;\n  }\n  line(0, yPos, width, yPos);\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/core.js",
+            "line": 401,
+            "description": "<p>Removes the entire p5 sketch. This will remove the canvas and any\nelements created by p5.js. It will also stop the draw loop and unbind\nany properties or methods from the window global scope. It will\nleave a variable p5 in case you wanted to create a new p5 sketch.\nIf you like, you can set p5 = null to erase it. While all functions and\nvariables and objects created by the p5 library will be removed, any\nother global variables created by your code will remain.</p>\n",
+            "itemtype": "method",
+            "name": "remove",
+            "example": [
+                "\n<div class='norender'><code>\nfunction draw() {\n  ellipse(50, 50, 10, 10);\n}\n\nfunction mousePressed() {\n  remove(); // remove whole sketch on mouse press\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 13,
+            "description": "<p>Draws a cubic Bezier curve on the screen. These curves are defined by a\nseries of anchor and control points. The first two parameters specify\nthe first anchor point and the last two parameters specify the other\nanchor point, which become the first and last points on the curve. The\nmiddle parameters specify the two control points which define the shape\nof the curve. Approximately speaking, control points &quot;pull&quot; the curve\ntowards them.<br /><br />Bezier curves were developed by French\nautomotive engineer Pierre Bezier, and are commonly used in computer\ngraphics to define gently sloping curves. See also curve().</p>\n",
+            "itemtype": "method",
+            "name": "bezier",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nstroke(255, 102, 0);\nline(85, 20, 10, 10);\nline(90, 90, 15, 80);\nstroke(0, 0, 0);\nbezier(85, 20, 10, 10, 90, 90, 15, 80);\n</code>\n</div>\n\n<div>\n<code>\nbackground(0, 0, 0);\nnoFill();\nstroke(255);\nbezier(250, 250, 0, 100, 100, 0, 100, 0, 0, 0, 100, 0);\n</code>\n</div>"
+            ],
+            "alt": "stretched black s-shape in center with orange lines extending from end points.\nstretched black s-shape with 10 5x5 white ellipses along the shape.\nstretched black s-shape with 7 5x5 ellipses and orange lines along the shape.\nstretched black s-shape with 17 small orange lines extending from under shape.\nhorseshoe shape with orange ends facing left and black curved center.\nhorseshoe shape with orange ends facing left and black curved center.\nLine shaped like right-facing arrow,points move with mouse-x and warp shape.\nhorizontal line that hooks downward on the right and 13 5x5 ellipses along it.\nright curving line mid-right of canvas with 7 short lines radiating from it.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves",
+            "overloads": [
+                {
+                    "line": 13,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "<p>x-coordinate for the first anchor point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "<p>y-coordinate for the first anchor point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "<p>x-coordinate for the first control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "<p>y-coordinate for the first control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "<p>x-coordinate for the second control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "<p>y-coordinate for the second control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "<p>x-coordinate for the second anchor point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "<p>y-coordinate for the second anchor point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 66,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z1",
+                            "description": "<p>z-coordinate for the first anchor point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z2",
+                            "description": "<p>z-coordinate for the first control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z3",
+                            "description": "<p>z-coordinate for the second control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z4",
+                            "description": "<p>z-coordinate for the second anchor point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 92,
+            "description": "<p>Sets the resolution at which Beziers display.</p>\n<p>The default value is 20.</p>\n",
+            "itemtype": "method",
+            "name": "bezierDetail",
+            "params": [
+                {
+                    "name": "detail",
+                    "description": "<p>resolution of the curves</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbackground(204);\nbezierDetail(50);\nbezier(85, 20, 10, 10, 90, 90, 15, 80);\n</code>\n</div>"
+            ],
+            "alt": "stretched black s-shape with 7 5x5 ellipses and orange lines along the shape.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 119,
+            "description": "<p>Evaluates the Bezier at position t for points a, b, c, d.\nThe parameters a and d are the first and last points\non the curve, and b and c are the control points.\nThe final parameter t varies between 0 and 1.\nThis can be done once with the x coordinates and a second time\nwith the y coordinates to get the location of a bezier curve at t.</p>\n",
+            "itemtype": "method",
+            "name": "bezierPoint",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>coordinate of first point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>coordinate of first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>coordinate of second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "d",
+                    "description": "<p>coordinate of second point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "t",
+                    "description": "<p>value between 0 and 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the value of the Bezier at position t",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nvar x1 = 85,\n x2 = 10,\n x3 = 90,\n x4 = 15;\nvar y1 = 20,\n y2 = 10,\n y3 = 90,\n y4 = 80;\nbezier(x1, y1, x2, y2, x3, y3, x4, y4);\nfill(255);\nvar steps = 10;\nfor (var i = 0; i <= steps; i++) {\n  var t = i / steps;\n  var x = bezierPoint(x1, x2, x3, x4, t);\n  var y = bezierPoint(y1, y2, y3, y4, t);\n  ellipse(x, y, 5, 5);\n}\n</code>\n</div>"
+            ],
+            "alt": "stretched black s-shape with 17 small orange lines extending from under shape.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 174,
+            "description": "<p>Evaluates the tangent to the Bezier at position t for points a, b, c, d.\nThe parameters a and d are the first and last points\non the curve, and b and c are the control points.\nThe final parameter t varies between 0 and 1.</p>\n",
+            "itemtype": "method",
+            "name": "bezierTangent",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>coordinate of first point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>coordinate of first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>coordinate of second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "d",
+                    "description": "<p>coordinate of second point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "t",
+                    "description": "<p>value between 0 and 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the tangent at position t",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nbezier(85, 20, 10, 10, 90, 90, 15, 80);\nvar steps = 6;\nfill(255);\nfor (var i = 0; i <= steps; i++) {\n  var t = i / steps;\n  // Get the location of the point\n  var x = bezierPoint(85, 10, 90, 15, t);\n  var y = bezierPoint(20, 10, 90, 80, t);\n  // Get the tangent points\n  var tx = bezierTangent(85, 10, 90, 15, t);\n  var ty = bezierTangent(20, 10, 90, 80, t);\n  // Calculate an angle from the tangent points\n  var a = atan2(ty, tx);\n  a += PI;\n  stroke(255, 102, 0);\n  line(x, y, cos(a) * 30 + x, sin(a) * 30 + y);\n  // The following line of code makes a line\n  // inverse of the above line\n  //line(x, y, cos(a)*-30 + x, sin(a)*-30 + y);\n  stroke(0);\n  ellipse(x, y, 5, 5);\n}\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nbezier(85, 20, 10, 10, 90, 90, 15, 80);\nstroke(255, 102, 0);\nvar steps = 16;\nfor (var i = 0; i <= steps; i++) {\n  var t = i / steps;\n  var x = bezierPoint(85, 10, 90, 15, t);\n  var y = bezierPoint(20, 10, 90, 80, t);\n  var tx = bezierTangent(85, 10, 90, 15, t);\n  var ty = bezierTangent(20, 10, 90, 80, t);\n  var a = atan2(ty, tx);\n  a -= HALF_PI;\n  line(x, y, cos(a) * 8 + x, sin(a) * 8 + y);\n}\n</code>\n</div>"
+            ],
+            "alt": "s-shaped line with 17 short orange lines extending from underside of shape",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 253,
+            "description": "<p>Draws a curved line on the screen between two points, given as the\nmiddle four parameters. The first two parameters are a control point, as\nif the curve came from this point even though it&#39;s not drawn. The last\ntwo parameters similarly describe the other control point. <br /><br />\nLonger curves can be created by putting a series of curve() functions\ntogether or using curveVertex(). An additional function called\ncurveTightness() provides control for the visual quality of the curve.\nThe curve() function is an implementation of Catmull-Rom splines.</p>\n",
+            "itemtype": "method",
+            "name": "curve",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nstroke(255, 102, 0);\ncurve(5, 26, 5, 26, 73, 24, 73, 61);\nstroke(0);\ncurve(5, 26, 73, 24, 73, 61, 15, 65);\nstroke(255, 102, 0);\ncurve(73, 24, 73, 61, 15, 65, 15, 65);\n</code>\n</div>\n<div>\n<code>\n// Define the curve points as JavaScript objects\nvar p1 = { x: 5, y: 26 },\n p2 = { x: 73, y: 24 };\nvar p3 = { x: 73, y: 61 },\n p4 = { x: 15, y: 65 };\nnoFill();\nstroke(255, 102, 0);\ncurve(p1.x, p1.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);\nstroke(0);\ncurve(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y);\nstroke(255, 102, 0);\ncurve(p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, p4.x, p4.y);\n</code>\n</div>\n<div>\n<code>\nnoFill();\nstroke(255, 102, 0);\ncurve(5, 26, 0, 5, 26, 0, 73, 24, 0, 73, 61, 0);\nstroke(0);\ncurve(5, 26, 0, 73, 24, 0, 73, 61, 0, 15, 65, 0);\nstroke(255, 102, 0);\ncurve(73, 24, 0, 73, 61, 0, 15, 65, 0, 15, 65, 0);\n</code>\n</div>"
+            ],
+            "alt": "horseshoe shape with orange ends facing left and black curved center.\nhorseshoe shape with orange ends facing left and black curved center.\ncurving black and orange lines.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves",
+            "overloads": [
+                {
+                    "line": 253,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "<p>x-coordinate for the beginning control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "<p>y-coordinate for the beginning control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "<p>x-coordinate for the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "<p>y-coordinate for the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "<p>x-coordinate for the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "<p>y-coordinate for the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "<p>x-coordinate for the ending control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "<p>y-coordinate for the ending control point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 318,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z1",
+                            "description": "<p>z-coordinate for the beginning control point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z2",
+                            "description": "<p>z-coordinate for the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z3",
+                            "description": "<p>z-coordinate for the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y4",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z4",
+                            "description": "<p>z-coordinate for the ending control point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 344,
+            "description": "<p>Sets the resolution at which curves display.</p>\n<p>The default value is 20.</p>\n",
+            "itemtype": "method",
+            "name": "curveDetail",
+            "params": [
+                {
+                    "name": "resolution",
+                    "description": "<p>of the curves</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbackground(204);\ncurveDetail(20);\ncurve(5, 26, 5, 26, 73, 24, 73, 61);\n</code>\n</div>"
+            ],
+            "alt": "white arch shape in top-mid canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 371,
+            "description": "<p>Modifies the quality of forms created with curve() and curveVertex().\nThe parameter tightness determines how the curve fits to the vertex\npoints. The value 0.0 is the default value for tightness (this value\ndefines the curves to be Catmull-Rom splines) and the value 1.0 connects\nall the points with straight lines. Values within the range -5.0 and 5.0\nwill deform the curves but will leave them recognizable and as values\nincrease in magnitude, they will continue to deform.</p>\n",
+            "itemtype": "method",
+            "name": "curveTightness",
+            "params": [
+                {
+                    "name": "amount",
+                    "description": "<p>of deformation from the original vertices</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Move the mouse left and right to see the curve change\n\nfunction setup() {\n  createCanvas(100, 100);\n  noFill();\n}\n\nfunction draw() {\n  background(204);\n  var t = map(mouseX, 0, width, -5, 5);\n  curveTightness(t);\n  beginShape();\n  curveVertex(10, 26);\n  curveVertex(10, 26);\n  curveVertex(83, 24);\n  curveVertex(83, 61);\n  curveVertex(25, 65);\n  curveVertex(25, 65);\n  endShape();\n}\n</code>\n</div>"
+            ],
+            "alt": "Line shaped like right-facing arrow,points move with mouse-x and warp shape.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 417,
+            "description": "<p>Evaluates the curve at position t for points a, b, c, d.\nThe parameter t varies between 0 and 1, a and d are points\non the curve, and b and c are the control points.\nThis can be done once with the x coordinates and a second time\nwith the y coordinates to get the location of a curve at t.</p>\n",
+            "itemtype": "method",
+            "name": "curvePoint",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>coordinate of first point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>coordinate of first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>coordinate of second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "d",
+                    "description": "<p>coordinate of second point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "t",
+                    "description": "<p>value between 0 and 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "bezier value at position t",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoFill();\ncurve(5, 26, 5, 26, 73, 24, 73, 61);\ncurve(5, 26, 73, 24, 73, 61, 15, 65);\nfill(255);\nellipseMode(CENTER);\nvar steps = 6;\nfor (var i = 0; i <= steps; i++) {\n  var t = i / steps;\n  var x = curvePoint(5, 5, 73, 73, t);\n  var y = curvePoint(26, 26, 24, 61, t);\n  ellipse(x, y, 5, 5);\n  x = curvePoint(5, 73, 73, 15, t);\n  y = curvePoint(26, 24, 61, 65, t);\n  ellipse(x, y, 5, 5);\n}\n</code>\n</div>\n\nline hooking down to right-bottom with 13 5x5 white ellipse points"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/curves.js",
+            "line": 466,
+            "description": "<p>Evaluates the tangent to the curve at position t for points a, b, c, d.\nThe parameter t varies between 0 and 1, a and d are points on the curve,\nand b and c are the control points.</p>\n",
+            "itemtype": "method",
+            "name": "curveTangent",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>coordinate of first point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>coordinate of first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>coordinate of second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "d",
+                    "description": "<p>coordinate of second point on the curve</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "t",
+                    "description": "<p>value between 0 and 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the tangent at position t",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nnoFill();\ncurve(5, 26, 73, 24, 73, 61, 15, 65);\nvar steps = 6;\nfor (var i = 0; i <= steps; i++) {\n  var t = i / steps;\n  var x = curvePoint(5, 73, 73, 15, t);\n  var y = curvePoint(26, 24, 61, 65, t);\n  //ellipse(x, y, 5, 5);\n  var tx = curveTangent(5, 73, 73, 15, t);\n  var ty = curveTangent(26, 24, 61, 65, t);\n  var a = atan2(ty, tx);\n  a -= PI / 2.0;\n  line(x, y, cos(a) * 8 + x, sin(a) * 8 + y);\n}\n</code>\n</div>"
+            ],
+            "alt": "right curving line mid-right of canvas with 7 short lines radiating from it.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Curves"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 22,
+            "description": "<p>The print() function writes to the console area of your browser.\nThis function is often helpful for looking at the data a program is\nproducing. This function creates a new line of text for each call to\nthe function. Individual elements can be\nseparated with quotes (&quot;&quot;) and joined with the addition operator (+).</p>\n",
+            "itemtype": "method",
+            "name": "print",
+            "params": [
+                {
+                    "name": "contents",
+                    "description": "<p>any combination of Number, String, Object, Boolean,\n                      Array to print</p>\n",
+                    "type": "Any"
+                }
+            ],
+            "example": [
+                "\n<div><code class='norender'>\nvar x = 10;\nprint('The value of x is ' + x);\n// prints \"The value of x is 10\"\n</code></div>"
+            ],
+            "alt": "default grey canvas",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 49,
+            "description": "<p>The system variable frameCount contains the number of frames that have\nbeen displayed since the program started. Inside setup() the value is 0,\nafter the first iteration of draw it is 1, etc.</p>\n",
+            "itemtype": "property",
+            "name": "frameCount",
+            "type": "Integer",
+            "readonly": "",
+            "example": [
+                "\n  <div><code>\nfunction setup() {\n  frameRate(30);\n  textSize(20);\n  textSize(30);\n  textAlign(CENTER);\n}\n\nfunction draw() {\n  background(200);\n  text(frameCount, width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "alt": "numbers rapidly counting upward with frame count set to 30.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 77,
+            "description": "<p>Confirms if the window a p5.js program is in is &quot;focused,&quot; meaning that\nthe sketch will accept mouse or keyboard input. This variable is\n&quot;true&quot; if the window is focused and &quot;false&quot; if not.</p>\n",
+            "itemtype": "property",
+            "name": "focused",
+            "type": "Boolean",
+            "readonly": "",
+            "example": [
+                "\n<div><code>\n// To demonstrate, put two windows side by side.\n// Click on the window that the p5 sketch isn't in!\nfunction draw() {\n  background(200);\n  noStroke();\n  fill(0, 200, 0);\n  ellipse(25, 25, 50, 50);\n\n  if (!focused) {\n   // or \"if (focused === false)\"\n    stroke(200, 0, 0);\n    line(0, 0, 100, 100);\n    line(100, 0, 0, 100);\n  }\n}\n</code></div>"
+            ],
+            "alt": "green 50x50 ellipse at top left. Red X covers canvas when page focus changes",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 109,
+            "description": "<p>Sets the cursor to a predefined symbol or an image, or makes it visible\nif already hidden. If you are trying to set an image as the cursor, the\nrecommended size is 16x16 or 32x32 pixels. It is not possible to load an\nimage as the cursor if you are exporting your program for the Web, and not\nall MODES work with all browsers. The values for parameters x and y must\nbe less than the dimensions of the image.</p>\n",
+            "itemtype": "method",
+            "name": "cursor",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>either ARROW, CROSS, HAND, MOVE, TEXT, or\n                              WAIT, or path for image</p>\n",
+                    "type": "String|Constant"
+                },
+                {
+                    "name": "x",
+                    "description": "<p>the horizontal active spot of the cursor</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>the vertical active spot of the cursor</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\n// Move the mouse left and right across the image\n// to see the cursor change from a cross to a hand\nfunction draw() {\n  line(width / 2, 0, width / 2, height);\n  if (mouseX < 50) {\n    cursor(CROSS);\n  } else {\n    cursor(HAND);\n  }\n}\n</code></div>"
+            ],
+            "alt": "horizontal line divides canvas. cursor on left is a cross, right is hand.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 170,
+            "description": "<p>Specifies the number of frames to be displayed every second. For example,\nthe function call frameRate(30) will attempt to refresh 30 times a second.\nIf the processor is not fast enough to maintain the specified rate, the\nframe rate will not be achieved. Setting the frame rate within setup() is\nrecommended. The default rate is 60 frames per second. This is the same as\nsetFrameRate(val).\n<br><br>\nCalling frameRate() with no arguments returns the current framerate. The\ndraw function must run at least once before it will return a value. This\nis the same as getFrameRate().\n<br><br>\nCalling frameRate() with arguments that are not of the type numbers\nor are non positive also returns current framerate.</p>\n",
+            "itemtype": "method",
+            "name": "frameRate",
+            "chainable": 1,
+            "example": [
+                "\n\n<div><code>\nvar rectX = 0;\nvar fr = 30; //starting FPS\nvar clr;\n\nfunction setup() {\n  background(200);\n  frameRate(fr); // Attempt to refresh at starting FPS\n  clr = color(255, 0, 0);\n}\n\nfunction draw() {\n  background(200);\n  rectX = rectX += 1; // Move Rectangle\n\n  if (rectX >= width) {\n   // If you go off screen.\n    if (fr === 30) {\n      clr = color(0, 0, 255);\n      fr = 10;\n      frameRate(fr); // make frameRate 10 FPS\n    } else {\n      clr = color(255, 0, 0);\n      fr = 30;\n      frameRate(fr); // make frameRate 30 FPS\n    }\n    rectX = 0;\n  }\n  fill(clr);\n  rect(rectX, 40, 20, 20);\n}\n</code></div>"
+            ],
+            "alt": "blue rect moves left to right, followed by red rect moving faster. Loops.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment",
+            "overloads": [
