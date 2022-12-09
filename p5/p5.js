@@ -6347,3 +6347,993 @@ module.exports={
             "module": "Environment",
             "submodule": "Environment",
             "overloads": [
+                {
+                    "line": 170,
+                    "params": [
+                        {
+                            "name": "fps",
+                            "description": "<p>number of frames to be displayed every second</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 228,
+                    "params": [],
+                    "return": {
+                        "description": "current frameRate",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 268,
+            "description": "<p>Hides the cursor from view.</p>\n",
+            "itemtype": "method",
+            "name": "noCursor",
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  noCursor();\n}\n\nfunction draw() {\n  background(200);\n  ellipse(mouseX, mouseY, 10, 10);\n}\n</code></div>"
+            ],
+            "alt": "cursor becomes 10x 10 white ellipse the moves with mouse x and y.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 293,
+            "description": "<p>System variable that stores the width of the entire screen display. This\nis used to run a full-screen program on any display size.</p>\n",
+            "itemtype": "property",
+            "name": "displayWidth",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div class=\"norender\"><code>\ncreateCanvas(displayWidth, displayHeight);\n</code></div>"
+            ],
+            "alt": "cursor becomes 10x 10 white ellipse the moves with mouse x and y.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 310,
+            "description": "<p>System variable that stores the height of the entire screen display. This\nis used to run a full-screen program on any display size.</p>\n",
+            "itemtype": "property",
+            "name": "displayHeight",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div class=\"norender\"><code>\ncreateCanvas(displayWidth, displayHeight);\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 327,
+            "description": "<p>System variable that stores the width of the inner window, it maps to\nwindow.innerWidth.</p>\n",
+            "itemtype": "property",
+            "name": "windowWidth",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div class=\"norender\"><code>\ncreateCanvas(windowWidth, windowHeight);\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 343,
+            "description": "<p>System variable that stores the height of the inner window, it maps to\nwindow.innerHeight.</p>\n",
+            "itemtype": "property",
+            "name": "windowHeight",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div class=\"norender\"><code>\ncreateCanvas(windowWidth, windowHeight);\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 359,
+            "description": "<p>The windowResized() function is called once every time the browser window\nis resized. This is a good place to resize the canvas or do any other\nadjustments to accommodate the new window size.</p>\n",
+            "itemtype": "method",
+            "name": "windowResized",
+            "example": [
+                "\n<div class=\"norender\"><code>\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(0, 100, 200);\n}\n\nfunction windowResized() {\n  resizeCanvas(windowWidth, windowHeight);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 413,
+            "description": "<p>System variable that stores the width of the drawing canvas. This value\nis set by the first parameter of the createCanvas() function.\nFor example, the function call createCanvas(320, 240) sets the width\nvariable to the value 320. The value of width defaults to 100 if\ncreateCanvas() is not used in a program.</p>\n",
+            "itemtype": "property",
+            "name": "width",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 425,
+            "description": "<p>System variable that stores the height of the drawing canvas. This value\nis set by the second parameter of the createCanvas() function. For\nexample, the function call createCanvas(320, 240) sets the height\nvariable to the value 240. The value of height defaults to 100 if\ncreateCanvas() is not used in a program.</p>\n",
+            "itemtype": "property",
+            "name": "height",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 437,
+            "description": "<p>If argument is given, sets the sketch to fullscreen or not based on the\nvalue of the argument. If no argument is given, returns the current\nfullscreen state. Note that due to browser restrictions this can only\nbe called on user input, for example, on mouse press like the example\nbelow.</p>\n",
+            "itemtype": "method",
+            "name": "fullscreen",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "<p>whether the sketch should be in fullscreen mode\nor not</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "current fullscreen state",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n<div>\n<code>\n// Clicking in the box toggles fullscreen on and off.\nfunction setup() {\n  background(200);\n}\nfunction mousePressed() {\n  if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 100) {\n    var fs = fullscreen();\n    fullscreen(!fs);\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 488,
+            "description": "<p>Sets the pixel scaling for high pixel density displays. By default\npixel density is set to match display density, call pixelDensity(1)\nto turn this off. Calling pixelDensity() with no arguments returns\nthe current pixel density of the sketch.</p>\n",
+            "itemtype": "method",
+            "name": "pixelDensity",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "<p>whether or how much the sketch should scale</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "current pixel density of the sketch",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  pixelDensity(1);\n  createCanvas(100, 100);\n  background(200);\n  ellipse(width / 2, height / 2, 50, 50);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  pixelDensity(3.0);\n  createCanvas(100, 100);\n  background(200);\n  ellipse(width / 2, height / 2, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "fuzzy 50x50 white ellipse with black outline in center of canvas.\nsharp 50x50 white ellipse with black outline in center of canvas.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 534,
+            "description": "<p>Returns the pixel density of the current display the sketch is running on.</p>\n",
+            "itemtype": "method",
+            "name": "displayDensity",
+            "return": {
+                "description": "current pixel density of the display",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  var density = displayDensity();\n  pixelDensity(density);\n  createCanvas(100, 100);\n  background(200);\n  ellipse(width / 2, height / 2, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 white ellipse with black outline in center of canvas.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 591,
+            "description": "<p>Gets the current URL.</p>\n",
+            "itemtype": "method",
+            "name": "getURL",
+            "return": {
+                "description": "url",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar url;\nvar x = 100;\n\nfunction setup() {\n  fill(0);\n  noStroke();\n  url = getURL();\n}\n\nfunction draw() {\n  background(200);\n  text(url, x, height / 2);\n  x--;\n}\n</code>\n</div>"
+            ],
+            "alt": "current url (http://p5js.org/reference/#/p5/getURL) moves right to left.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 622,
+            "description": "<p>Gets the current URL path as an array.</p>\n",
+            "itemtype": "method",
+            "name": "getURLPath",
+            "return": {
+                "description": "path components",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  var urlPath = getURLPath();\n  for (var i = 0; i < urlPath.length; i++) {\n    text(urlPath[i], 10, i * 20 + 20);\n  }\n}\n</code></div>"
+            ],
+            "alt": "no display",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/environment.js",
+            "line": 645,
+            "description": "<p>Gets the current URL params as an Object.</p>\n",
+            "itemtype": "method",
+            "name": "getURLParams",
+            "return": {
+                "description": "URL params",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div class='norender'>\n<code>\n// Example: http://p5js.org?year=2014&month=May&day=15\n\nfunction setup() {\n  var params = getURLParams();\n  text(params.day, 10, 20);\n  text(params.month, 10, 40);\n  text(params.year, 10, 60);\n}\n</code>\n</div>"
+            ],
+            "alt": "no display.",
+            "class": "p5",
+            "module": "Environment",
+            "submodule": "Environment"
+        },
+        {
+            "file": "src/core/error_helpers.js",
+            "line": 1,
+            "requires": [
+                "core"
+            ],
+            "class": "p5",
+            "module": "Environment"
+        },
+        {
+            "file": "src/core/error_helpers.js",
+            "line": 397,
+            "description": "<p>Validates parameters\nparam  {String}               func    the name of the function\nparam  {Array}                args    user input arguments</p>\n<p>example:\n var a;\n ellipse(10,10,a,5);\nconsole ouput:\n &quot;It looks like ellipse received an empty variable in spot #2.&quot;</p>\n<p>example:\n ellipse(10,&quot;foo&quot;,5,5);\nconsole output:\n &quot;ellipse was expecting a number for parameter #1,\n          received &quot;foo&quot; instead.&quot;</p>\n",
+            "class": "p5",
+            "module": "Environment"
+        },
+        {
+            "file": "src/core/error_helpers.js",
+            "line": 449,
+            "description": "<p>Prints out all the colors in the color pallete with white text.\nFor color blindness testing.</p>\n",
+            "class": "p5",
+            "module": "Environment"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 27,
+            "description": "<p>Underlying HTML element. All normal HTML methods can be called on this.</p>\n",
+            "example": [
+                "\n<div>\n<code>\ncreateCanvas(300, 500);\nbackground(0, 0, 0, 0);\nvar input = createInput();\ninput.position(20, 225);\nvar inputElem = new p5.Element(input.elt);\ninputElem.style('width:450px;');\ninputElem.value('some string');\n</code>\n</div>"
+            ],
+            "itemtype": "property",
+            "name": "elt",
+            "readonly": "",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 53,
+            "description": "<p>Attaches the element to the parent specified. A way of setting\n the container for the element. Accepts either a string ID, DOM\n node, or p5.Element. If no arguments given, parent node is returned.\n For more ways to position the canvas, see the\n <a href='https://github.com/processing/p5.js/wiki/Positioning-your-canvas'>\n positioning the canvas</a> wiki page.</p>\n",
+            "itemtype": "method",
+            "name": "parent",
+            "chainable": 1,
+            "example": [
+                "\n <div class=\"norender\"><code>\n // in the html file:\n // &lt;div id=\"myContainer\">&lt;/div>\n// in the js file:\n var cnv = createCanvas(100, 100);\n cnv.parent('myContainer');\n </code></div>\n <div class='norender'><code>\n var div0 = createDiv('this is the parent');\n var div1 = createDiv('this is the child');\n div1.parent(div0); // use p5.Element\n </code></div>\n <div class='norender'><code>\n var div0 = createDiv('this is the parent');\n div0.id('apples');\n var div1 = createDiv('this is the child');\n div1.parent('apples'); // use id\n </code></div>\n <div class='norender'><code>\n var elt = document.getElementById('myParentDiv');\n var div1 = createDiv('this is the child');\n div1.parent(elt); // use element from page\n </code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM",
+            "overloads": [
+                {
+                    "line": 53,
+                    "params": [
+                        {
+                            "name": "parent",
+                            "description": "<p>the ID, DOM node, or p5.Element\n                         of desired parent element</p>\n",
+                            "type": "String|p5.Element|Object"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 96,
+                    "params": [],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Element"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 118,
+            "description": "<p>Sets the ID of the element. If no ID argument is passed in, it instead\n returns the current ID of the element.</p>\n",
+            "itemtype": "method",
+            "name": "id",
+            "chainable": 1,
+            "example": [
+                "\n <div class='norender'><code>\n function setup() {\n   var cnv = createCanvas(100, 100);\n   // Assigns a CSS selector ID to\n   // the canvas element.\n   cnv.id('mycanvas');\n }\n </code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM",
+            "overloads": [
+                {
+                    "line": 118,
+                    "params": [
+                        {
+                            "name": "id",
+                            "description": "<p>ID of the element</p>\n",
+                            "type": "String"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 140,
+                    "params": [],
+                    "return": {
+                        "description": "the id of the element",
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 155,
+            "description": "<p>Adds given class to the element. If no class argument is passed in, it\n instead returns a string containing the current class(es) of the element.</p>\n",
+            "itemtype": "method",
+            "name": "class",
+            "chainable": 1,
+            "example": [
+                "\n <div class='norender'><code>\n function setup() {\n   var cnv = createCanvas(100, 100);\n   // Assigns a CSS selector class 'small'\n   // to the canvas element.\n   cnv.class('small');\n }\n </code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM",
+            "overloads": [
+                {
+                    "line": 155,
+                    "params": [
+                        {
+                            "name": "class",
+                            "description": "<p>class to add</p>\n",
+                            "type": "String"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 177,
+                    "params": [],
+                    "return": {
+                        "description": "the class of the element",
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 190,
+            "description": "<p>The .mousePressed() function is called once after every time a\nmouse button is pressed over the element. This can be used to\nattach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "mousePressed",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when mouse is\n                               pressed over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mousePressed(changeGray); // attach listener for\n  // canvas click only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires with any click anywhere\nfunction mousePressed() {\n  d = d + 10;\n}\n\n// this function fires only when cnv is clicked\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 240,
+            "description": "<p>The .doubleClicked() function is called once after every time a\nmouse button is pressed twice over the element. This can be used to\nattach element and action specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "doubleClicked",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when mouse is\n                               double clicked over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.doubleClicked(changeGray); // attach listener for\n  // canvas double click only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires with any double click anywhere\nfunction doubleClicked() {\n  d = d + 10;\n}\n\n// this function fires only when cnv is double clicked\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 289,
+            "description": "<p>The .mouseWheel() function is called once after every time a\nmouse wheel is scrolled over the element. This can be used to\nattach element specific event listeners.\n<br><br>\nThe function accepts a callback function as argument which will be executed\nwhen the <code>wheel</code> event is triggered on the element, the callback function is\npassed one argument <code>event</code>. The <code>event.deltaY</code> property returns negative\nvalues if the mouse wheel is rotated up or away from the user and positive\nin the other direction. The <code>event.deltaX</code> does the same as <code>event.deltaY</code>\nexcept it reads the horizontal wheel scroll of the mouse wheel.\n<br><br>\nOn OS X with &quot;natural&quot; scrolling enabled, the <code>event.deltaY</code> values are\nreversed.</p>\n",
+            "itemtype": "method",
+            "name": "mouseWheel",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when mouse is\n                               scrolled over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseWheel(changeSize); // attach listener for\n  // activity on canvas only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires with mousewheel movement\n// anywhere on screen\nfunction mouseWheel() {\n  g = g + 10;\n}\n\n// this function fires with mousewheel movement\n// over canvas only\nfunction changeSize(event) {\n  if (event.deltaY > 0) {\n    d = d + 10;\n  } else {\n    d = d - 10;\n  }\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 355,
+            "description": "<p>The .mouseReleased() function is called once after every time a\nmouse button is released over the element. This can be used to\nattach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "mouseReleased",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when mouse is\n                               released over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseReleased(changeGray); // attach listener for\n  // activity on canvas only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires after the mouse has been\n// released\nfunction mouseReleased() {\n  d = d + 10;\n}\n\n// this function fires after the mouse has been\n// released while on canvas\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 408,
+            "description": "<p>The .mouseClicked() function is called once after a mouse button is\npressed and released over the element. This can be used to\nattach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "mouseClicked",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when mouse is\n                               clicked over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar cnv;\nvar d;\nvar g;\n\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseClicked(changeGray); // attach listener for\n  // activity on canvas only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires after the mouse has been\n// clicked anywhere\nfunction mouseClicked() {\n  d = d + 10;\n}\n\n// this function fires after the mouse has been\n// clicked on canvas\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code>\n</div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 462,
+            "description": "<p>The .mouseMoved() function is called once every time a\nmouse moves over the element. This can be used to attach an\nelement specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "mouseMoved",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a mouse moves\n                               over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d = 30;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseMoved(changeSize); // attach listener for\n  // activity on canvas only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  fill(200);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires when mouse moves anywhere on\n// page\nfunction mouseMoved() {\n  g = g + 5;\n  if (g > 255) {\n    g = 0;\n  }\n}\n\n// this function fires when mouse moves over canvas\nfunction changeSize() {\n  d = d + 2;\n  if (d > 100) {\n    d = 0;\n  }\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 521,
+            "description": "<p>The .mouseOver() function is called once after every time a\nmouse moves onto the element. This can be used to attach an\nelement specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "mouseOver",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a mouse moves\n                               onto the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseOver(changeGray);\n  d = 10;\n}\n\nfunction draw() {\n  ellipse(width / 2, height / 2, d, d);\n}\n\nfunction changeGray() {\n  d = d + 10;\n  if (d > 100) {\n    d = 0;\n  }\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 564,
+            "description": "<p>The .changed() function is called when the value of an\nelement changes.\nThis can be used to attach an element specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "changed",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when the value of\n                               an element changes.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div><code>\nvar sel;\n\nfunction setup() {\n  textAlign(CENTER);\n  background(200);\n  sel = createSelect();\n  sel.position(10, 10);\n  sel.option('pear');\n  sel.option('kiwi');\n  sel.option('grape');\n  sel.changed(mySelectEvent);\n}\n\nfunction mySelectEvent() {\n  var item = sel.value();\n  background(200);\n  text(\"it's a \" + item + '!', 50, 50);\n}\n</code></div>\n<div><code>\nvar checkbox;\nvar cnv;\n\nfunction setup() {\n  checkbox = createCheckbox(' fill');\n  checkbox.changed(changeFill);\n  cnv = createCanvas(100, 100);\n  cnv.position(0, 30);\n  noFill();\n}\n\nfunction draw() {\n  background(200);\n  ellipse(50, 50, 50, 50);\n}\n\nfunction changeFill() {\n  if (checkbox.checked()) {\n    fill(0);\n  } else {\n    noFill();\n  }\n}\n</code></div>"
+            ],
+            "alt": "dropdown: pear, kiwi, grape. When selected text \"its a\" + selection shown.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 631,
+            "description": "<p>The .input() function is called when any user input is\ndetected with an element. The input event is often used\nto detect keystrokes in a input element, or changes on a\nslider element. This can be used to attach an element specific\nevent listener.</p>\n",
+            "itemtype": "method",
+            "name": "input",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when any user input is\n                               detected within the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\n// Open your console to see the output\nfunction setup() {\n  var inp = createInput('');\n  inp.input(myInputEvent);\n}\n\nfunction myInputEvent() {\n  console.log('you are typing: ', this.value());\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 666,
+            "description": "<p>The .mouseOut() function is called once after every time a\nmouse moves off the element. This can be used to attach an\nelement specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "mouseOut",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a mouse\n                               moves off of an element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.mouseOut(changeGray);\n  d = 10;\n}\n\nfunction draw() {\n  ellipse(width / 2, height / 2, d, d);\n}\n\nfunction changeGray() {\n  d = d + 10;\n  if (d > 100) {\n    d = 0;\n  }\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 708,
+            "description": "<p>The .touchStarted() function is called once after every time a touch is\nregistered. This can be used to attach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "touchStarted",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a touch\n                               starts over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.touchStarted(changeGray); // attach listener for\n  // canvas click only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires with any touch anywhere\nfunction touchStarted() {\n  d = d + 10;\n}\n\n// this function fires only when cnv is clicked\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 757,
+            "description": "<p>The .touchMoved() function is called once after every time a touch move is\nregistered. This can be used to attach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "touchMoved",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a touch moves over\n                               the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.touchMoved(changeGray); // attach listener for\n  // canvas click only\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n}\n\n// this function fires only when cnv is clicked\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 798,
+            "description": "<p>The .touchEnded() function is called once after every time a touch is\nregistered. This can be used to attach element specific event listeners.</p>\n",
+            "itemtype": "method",
+            "name": "touchEnded",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a touch ends\n                               over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class='norender'><code>\nvar cnv;\nvar d;\nvar g;\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  cnv.touchEnded(changeGray); // attach listener for\n  // canvas click only\n  d = 10;\n  g = 100;\n}\n\nfunction draw() {\n  background(g);\n  ellipse(width / 2, height / 2, d, d);\n}\n\n// this function fires with any touch anywhere\nfunction touchEnded() {\n  d = d + 10;\n}\n\n// this function fires only when cnv is clicked\nfunction changeGray() {\n  g = random(0, 255);\n}\n</code></div>"
+            ],
+            "alt": "no display.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 848,
+            "description": "<p>The .dragOver() function is called once after every time a\nfile is dragged over the element. This can be used to attach an\nelement specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "dragOver",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a file is\n                               dragged over the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div><code>\n// To test this sketch, simply drag a\n// file over the canvas\nfunction setup() {\n  var c = createCanvas(100, 100);\n  background(200);\n  textAlign(CENTER);\n  text('Drag file', width / 2, height / 2);\n  c.dragOver(dragOverCallback);\n}\n\n// This function will be called whenever\n// a file is dragged over the canvas\nfunction dragOverCallback() {\n  background(240);\n  text('Dragged over', width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 886,
+            "description": "<p>The .dragLeave() function is called once after every time a\ndragged file leaves the element area. This can be used to attach an\nelement specific event listener.</p>\n",
+            "itemtype": "method",
+            "name": "dragLeave",
+            "params": [
+                {
+                    "name": "fxn",
+                    "description": "<p>function to be fired when a file is\n                               dragged off the element.\n                               if <code>false</code> is passed instead, the previously\n                               firing function will no longer fire.</p>\n",
+                    "type": "Function|Boolean"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div><code>\n// To test this sketch, simply drag a file\n// over and then out of the canvas area\nfunction setup() {\n  var c = createCanvas(100, 100);\n  background(200);\n  textAlign(CENTER);\n  text('Drag file', width / 2, height / 2);\n  c.dragLeave(dragLeaveCallback);\n}\n\n// This function will be called whenever\n// a file is dragged out of the canvas\nfunction dragLeaveCallback() {\n  background(240);\n  text('Dragged off', width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "alt": "nothing displayed",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 924,
+            "description": "<p>The .drop() function is called for each file dropped on the element.\nIt requires a callback that is passed a p5.File object.  You can\noptionally pass two callbacks, the first one (required) is triggered\nfor each file dropped when the file is loaded.  The second (optional)\nis triggered just once when a file (or files) are dropped.</p>\n",
+            "itemtype": "method",
+            "name": "drop",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>callback triggered when files are dropped.</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "fxn",
+                    "description": "<p>callback to receive loaded file.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  var c = createCanvas(100, 100);\n  background(200);\n  textAlign(CENTER);\n  text('drop image', width / 2, height / 2);\n  c.drop(gotFile);\n}\n\nfunction gotFile(file) {\n  var img = createImg(file.data).hide();\n  // Draw the image onto the canvas\n  image(img, 0, 0, width, height);\n}\n</code></div>"
+            ],
+            "alt": "Canvas turns into whatever image is dragged/dropped onto it.",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Element.js",
+            "line": 1059,
+            "description": "<p>Helper fxn for sharing pixel methods</p>\n",
+            "class": "p5.Element",
+            "module": "DOM",
+            "submodule": "DOM"
+        },
+        {
+            "file": "src/core/p5.Graphics.js",
+            "line": 68,
+            "itemtype": "method",
+            "name": "remove",
+            "class": "p5.Graphics",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/p5.Renderer.js",
+            "line": 63,
+            "description": "<p>Resize our canvas element.</p>\n",
+            "class": "p5.Renderer",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/p5.Renderer.js",
+            "line": 132,
+            "description": "<p>Helper fxn to check font type (system or otf)</p>\n",
+            "class": "p5.Renderer",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/p5.Renderer.js",
+            "line": 185,
+            "description": "<p>Helper fxn to measure ascent and descent.\nAdapted from <a href=\"http://stackoverflow.com/a/25355178\">http://stackoverflow.com/a/25355178</a></p>\n",
+            "class": "p5.Renderer",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/p5.Renderer2D.js",
+            "line": 10,
+            "description": "<p>p5.Renderer2D\nThe 2D graphics canvas renderer class.\nextends p5.Renderer</p>\n",
+            "class": "p5",
+            "module": "Rendering"
+        },
+        {
+            "file": "src/core/p5.Renderer2D.js",
+            "line": 404,
+            "description": "<p>Generate a cubic Bezier representing an arc on the unit circle of total\nangle <code>size</code> radians, beginning <code>start</code> radians above the x-axis. Up to\nfour of these curves are combined to make a full arc.</p>\n<p>See www.joecridge.me/bezier.pdf for an explanation of the method.</p>\n",
+            "class": "p5",
+            "module": "Rendering"
+        },
+        {
+            "file": "src/core/rendering.js",
+            "line": 16,
+            "description": "<p>Creates a canvas element in the document, and sets the dimensions of it\nin pixels. This method should be called only once at the start of setup.\nCalling createCanvas more than once in a sketch will result in very\nunpredictable behavior. If you want more than one drawing canvas\nyou could use createGraphics (hidden by default but it can be shown).\n<br><br>\nThe system variables width and height are set by the parameters passed\nto this function. If createCanvas() is not used, the window will be\ngiven a default size of 100x100 pixels.\n<br><br>\nFor more ways to position the canvas, see the\n<a href='https://github.com/processing/p5.js/wiki/Positioning-your-canvas'>\npositioning the canvas</a> wiki page.</p>\n",
+            "itemtype": "method",
+            "name": "createCanvas",
+            "params": [
+                {
+                    "name": "w",
+                    "description": "<p>width of the canvas</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of the canvas</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "renderer",
+                    "description": "<p>either P2D or WEBGL</p>\n",
+                    "type": "Constant",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "canvas generated",
+                "type": "HTMLCanvasElement"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 50);\n  background(153);\n  line(0, 0, width, height);\n}\n</code>\n</div>"
+            ],
+            "alt": "Black line extending from top-left of canvas to bottom right.",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/rendering.js",
+            "line": 116,
+            "description": "<p>Resizes the canvas to given width and height. The canvas will be cleared\nand draw will be called immediately, allowing the sketch to re-render itself\nin the resized canvas.</p>\n",
+            "itemtype": "method",
+            "name": "resizeCanvas",
+            "params": [
+                {
+                    "name": "w",
+                    "description": "<p>width of the canvas</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of the canvas</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "noRedraw",
+                    "description": "<p>don&#39;t redraw the canvas immediately</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\"><code>\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(0, 100, 200);\n}\n\nfunction windowResized() {\n  resizeCanvas(windowWidth, windowHeight);\n}\n</code></div>"
+            ],
+            "alt": "No image displayed.",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/rendering.js",
+            "line": 169,
+            "description": "<p>Removes the default canvas for a p5 sketch that doesn&#39;t\nrequire a canvas</p>\n",
+            "itemtype": "method",
+            "name": "noCanvas",
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  noCanvas();\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/rendering.js",
+            "line": 192,
+            "description": "<p>Creates and returns a new p5.Renderer object. Use this class if you need\nto draw into an off-screen graphics buffer. The two parameters define the\nwidth and height in pixels.</p>\n",
+            "itemtype": "method",
+            "name": "createGraphics",
+            "params": [
+                {
+                    "name": "w",
+                    "description": "<p>width of the offscreen graphics buffer</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of the offscreen graphics buffer</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "renderer",
+                    "description": "<p>either P2D or WEBGL\nundefined defaults to p2d</p>\n",
+                    "type": "Constant",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "offscreen graphics buffer",
+                "type": "p5.Graphics"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar pg;\nfunction setup() {\n  createCanvas(100, 100);\n  pg = createGraphics(100, 100);\n}\nfunction draw() {\n  background(200);\n  pg.background(100);\n  pg.noStroke();\n  pg.ellipse(pg.width / 2, pg.height / 2, 50, 50);\n  image(pg, 50, 50);\n  image(pg, 0, 0, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "4 grey squares alternating light and dark grey. White quarter circle mid-left.",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/rendering.js",
+            "line": 231,
+            "description": "<p>Blends the pixels in the display window according to the defined mode.\nThere is a choice of the following modes to blend the source pixels (A)\nwith the ones of pixels already in the display window (B):</p>\n<ul>\n<li><code>BLEND</code> - linear interpolation of colours: C =\nA<em>factor + B. This is the default blending mode.</li>\n<li><code>ADD</code> - sum of A and B</li>\n<li><code>DARKEST</code> - only the darkest colour succeeds: C =\nmin(A</em>factor, B).</li>\n<li><code>LIGHTEST</code> - only the lightest colour succeeds: C =\nmax(A*factor, B).</li>\n<li><code>DIFFERENCE</code> - subtract colors from underlying image.</li>\n<li><code>EXCLUSION</code> - similar to <code>DIFFERENCE</code>, but less\nextreme.</li>\n<li><code>MULTIPLY</code> - multiply the colors, result will always be\ndarker.</li>\n<li><code>SCREEN</code> - opposite multiply, uses inverse values of the\ncolors.</li>\n<li><code>REPLACE</code> - the pixels entirely replace the others and\ndon&#39;t utilize alpha (transparency) values.</li>\n<li><code>OVERLAY</code> - mix of <code>MULTIPLY</code> and <code>SCREEN\n</code>. Multiplies dark values, and screens light values.</li>\n<li><code>HARD_LIGHT</code> - <code>SCREEN</code> when greater than 50%\ngray, <code>MULTIPLY</code> when lower.</li>\n<li><code>SOFT_LIGHT</code> - mix of <code>DARKEST</code> and\n<code>LIGHTEST</code>. Works like <code>OVERLAY</code>, but not as harsh.\n</li>\n<li><code>DODGE</code> - lightens light tones and increases contrast,\nignores darks.</li>\n<li><code>BURN</code> - darker areas are applied, increasing contrast,\nignores lights.</li>\n</ul>",
+            "itemtype": "method",
+            "name": "blendMode",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>blend mode to set for canvas.\n               either BLEND, DARKEST, LIGHTEST, DIFFERENCE, MULTIPLY,\n               EXCLUSION, SCREEN, REPLACE, OVERLAY, HARD_LIGHT,\n               SOFT_LIGHT, DODGE, BURN, ADD or NORMAL</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nblendMode(LIGHTEST);\nstrokeWeight(30);\nstroke(80, 150, 255);\nline(25, 25, 75, 75);\nstroke(255, 50, 50);\nline(75, 25, 25, 75);\n</code>\n</div>\n<div>\n<code>\nblendMode(MULTIPLY);\nstrokeWeight(30);\nstroke(80, 150, 255);\nline(25, 25, 75, 75);\nstroke(255, 50, 50);\nline(75, 25, 25, 75);\n</code>\n</div>"
+            ],
+            "alt": "translucent image thick red & blue diagonal rounded lines intersecting center\nThick red & blue diagonal rounded lines intersecting center. dark at overlap",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/core/shim.js",
+            "line": 70,
+            "description": "<p>shim for Uint8ClampedArray.slice\n(allows arrayCopy to work with pixels[])\nwith thanks to <a href=\"http://halfpapstudios.com/blog/tag/html5-canvas/\">http://halfpapstudios.com/blog/tag/html5-canvas/</a>\nEnumerable set to false to protect for...in from\nUint8ClampedArray.prototype pollution.</p>\n",
+            "class": "p5",
+            "module": "Rendering"
+        },
+        {
+            "file": "src/core/structure.js",
+            "line": 15,
+            "description": "<p>Stops p5.js from continuously executing the code within draw().\nIf loop() is called, the code in draw() begins to run continuously again.\nIf using noLoop() in setup(), it should be the last line inside the block.\n<br><br>\nWhen noLoop() is used, it&#39;s not possible to manipulate or access the\nscreen inside event handling functions such as mousePressed() or\nkeyPressed(). Instead, use those functions to call redraw() or loop(),\nwhich will run draw(), which can update the screen properly. This means\nthat when noLoop() has been called, no drawing can happen, and functions\nlike saveFrame() or loadPixels() may not be used.\n<br><br>\nNote that if the sketch is resized, redraw() will be called to update\nthe sketch, even after noLoop() has been specified. Otherwise, the sketch\nwould enter an odd state until loop() was called.</p>\n",
+            "itemtype": "method",
+            "name": "noLoop",
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  createCanvas(100, 100);\n  background(200);\n  noLoop();\n}\n\nfunction draw() {\n  line(10, 10, 90, 90);\n}\n</code></div>\n\n<div><code>\nvar x = 0;\nfunction setup() {\n  createCanvas(100, 100);\n}\n\nfunction draw() {\n  background(204);\n  x = x + 0.1;\n  if (x > width) {\n    x = 0;\n  }\n  line(x, 0, x, height);\n}\n\nfunction mousePressed() {\n  noLoop();\n}\n\nfunction mouseReleased() {\n  loop();\n}\n</code></div>"
+            ],
+            "alt": "113 pixel long line extending from top-left to bottom right of canvas.\nhorizontal line moves slowly from left. Loops but stops on mouse press.",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/structure.js",
+            "line": 77,
+            "description": "<p>By default, p5.js loops through draw() continuously, executing the code\nwithin it. However, the draw() loop may be stopped by calling noLoop().\nIn that case, the draw() loop can be resumed with loop().</p>\n",
+            "itemtype": "method",
+            "name": "loop",
+            "example": [
+                "\n<div><code>\nvar x = 0;\nfunction setup() {\n  createCanvas(100, 100);\n  noLoop();\n}\n\nfunction draw() {\n  background(204);\n  x = x + 0.1;\n  if (x > width) {\n    x = 0;\n  }\n  line(x, 0, x, height);\n}\n\nfunction mousePressed() {\n  loop();\n}\n\nfunction mouseReleased() {\n  noLoop();\n}\n</code></div>"
