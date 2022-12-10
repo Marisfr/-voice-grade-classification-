@@ -7337,3 +7337,1003 @@ module.exports={
             "name": "loop",
             "example": [
                 "\n<div><code>\nvar x = 0;\nfunction setup() {\n  createCanvas(100, 100);\n  noLoop();\n}\n\nfunction draw() {\n  background(204);\n  x = x + 0.1;\n  if (x > width) {\n    x = 0;\n  }\n  line(x, 0, x, height);\n}\n\nfunction mousePressed() {\n  loop();\n}\n\nfunction mouseReleased() {\n  noLoop();\n}\n</code></div>"
+            ],
+            "alt": "horizontal line moves slowly from left. Loops but stops on mouse press.",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/structure.js",
+            "line": 132,
+            "description": "<p>The push() function saves the current drawing style settings and\ntransformations, while pop() restores these settings. Note that these\nfunctions are always used together. They allow you to change the style\nand transformation settings and later return to what you had. When a new\nstate is started with push(), it builds on the current style and transform\ninformation. The push() and pop() functions can be embedded to provide\nmore control. (See the second example for a demonstration.)\n<br><br>\npush() stores information related to the current transformation state\nand style settings controlled by the following functions: fill(),\nstroke(), tint(), strokeWeight(), strokeCap(), strokeJoin(),\nimageMode(), rectMode(), ellipseMode(), colorMode(), textAlign(),\ntextFont(), textMode(), textSize(), textLeading().</p>\n",
+            "itemtype": "method",
+            "name": "push",
+            "example": [
+                "\n<div>\n<code>\nellipse(0, 50, 33, 33); // Left circle\n\npush(); // Start a new drawing state\nstrokeWeight(10);\nfill(204, 153, 0);\ntranslate(50, 0);\nellipse(0, 50, 33, 33); // Middle circle\npop(); // Restore original state\n\nellipse(100, 50, 33, 33); // Right circle\n</code>\n</div>\n<div>\n<code>\nellipse(0, 50, 33, 33); // Left circle\n\npush(); // Start a new drawing state\nstrokeWeight(10);\nfill(204, 153, 0);\nellipse(33, 50, 33, 33); // Left-middle circle\n\npush(); // Start another new drawing state\nstroke(0, 102, 153);\nellipse(66, 50, 33, 33); // Right-middle circle\npop(); // Restore previous state\n\npop(); // Restore original state\n\nellipse(100, 50, 33, 33); // Right circle\n</code>\n</div>"
+            ],
+            "alt": "Gold ellipse + thick black outline @center 2 white ellipses on left and right.\n2 Gold ellipses left black right blue stroke. 2 white ellipses on left+right.",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/structure.js",
+            "line": 211,
+            "description": "<p>The push() function saves the current drawing style settings and\ntransformations, while pop() restores these settings. Note that these\nfunctions are always used together. They allow you to change the style\nand transformation settings and later return to what you had. When a new\nstate is started with push(), it builds on the current style and transform\ninformation. The push() and pop() functions can be embedded to provide\nmore control. (See the second example for a demonstration.)\n<br><br>\npush() stores information related to the current transformation state\nand style settings controlled by the following functions: fill(),\nstroke(), tint(), strokeWeight(), strokeCap(), strokeJoin(),\nimageMode(), rectMode(), ellipseMode(), colorMode(), textAlign(),\ntextFont(), textMode(), textSize(), textLeading().</p>\n",
+            "itemtype": "method",
+            "name": "pop",
+            "example": [
+                "\n<div>\n<code>\nellipse(0, 50, 33, 33); // Left circle\n\npush(); // Start a new drawing state\ntranslate(50, 0);\nstrokeWeight(10);\nfill(204, 153, 0);\nellipse(0, 50, 33, 33); // Middle circle\npop(); // Restore original state\n\nellipse(100, 50, 33, 33); // Right circle\n</code>\n</div>\n<div>\n<code>\nellipse(0, 50, 33, 33); // Left circle\n\npush(); // Start a new drawing state\nstrokeWeight(10);\nfill(204, 153, 0);\nellipse(33, 50, 33, 33); // Left-middle circle\n\npush(); // Start another new drawing state\nstroke(0, 102, 153);\nellipse(66, 50, 33, 33); // Right-middle circle\npop(); // Restore previous state\n\npop(); // Restore original state\n\nellipse(100, 50, 33, 33); // Right circle\n</code>\n</div>"
+            ],
+            "alt": "Gold ellipse + thick black outline @center 2 white ellipses on left and right.\n2 Gold ellipses left black right blue stroke. 2 white ellipses on left+right.",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/structure.js",
+            "line": 282,
+            "description": "<p>Executes the code within draw() one time. This functions allows the\n program to update the display window only when necessary, for example\n when an event registered by mousePressed() or keyPressed() occurs.\n <br><br>\n In structuring a program, it only makes sense to call redraw() within\n events such as mousePressed(). This is because redraw() does not run\n draw() immediately (it only sets a flag that indicates an update is\n needed).\n <br><br>\n The redraw() function does not work properly when called inside draw().\n To enable/disable animations, use loop() and noLoop().\n <br><br>\n In addition you can set the number of redraws per method call. Just\n add an integer as single parameter for the number of redraws.</p>\n",
+            "itemtype": "method",
+            "name": "redraw",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>Redraw for n-times. The default value is 1.</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n <div><code>\n var x = 0;\nfunction setup() {\n   createCanvas(100, 100);\n   noLoop();\n }\nfunction draw() {\n   background(204);\n   line(x, 0, x, height);\n }\nfunction mousePressed() {\n   x += 1;\n   redraw();\n }\n </code></div>\n<div class='norender'><code>\n var x = 0;\nfunction setup() {\n   createCanvas(100, 100);\n   noLoop();\n }\nfunction draw() {\n   background(204);\n   x += 1;\n   line(x, 0, x, height);\n }\nfunction mousePressed() {\n   redraw(5);\n }\n </code></div>"
+            ],
+            "alt": "black line on far left of canvas\n black line on far left of canvas",
+            "class": "p5",
+            "module": "Structure",
+            "submodule": "Structure"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 14,
+            "description": "<p>Multiplies the current matrix by the one specified through the parameters.\nThis is a powerful operation that can perform the equivalent of translate,\nscale, shear and rotate all at once. You can learn more about transformation\nmatrices on <a href=\"https://en.wikipedia.org/wiki/Transformation_matrix\">\nWikipedia</a>.</p>\n<p>The naming of the arguments here follows the naming of the <a href=\n\"https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-transform\">\nWHATWG specification</a> and corresponds to a\ntransformation matrix of the\nform:</p>\n<blockquote>\n<p><img style=\"max-width: 150px\" src=\"assets/transformation-matrix.png\"\nalt=\"The transformation matrix used when applyMatrix is called\"/></p>\n</blockquote>\n",
+            "itemtype": "method",
+            "name": "applyMatrix",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "d",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "e",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "f",
+                    "description": "<p>numbers which define the 2x3 matrix to be multiplied</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  frameRate(10);\n  rectMode(CENTER);\n}\n\nfunction draw() {\n  var step = frameCount % 20;\n  background(200);\n  // Equivalent to translate(x, y);\n  applyMatrix(1, 0, 0, 1, 40 + step, 50);\n  rect(0, 0, 50, 50);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  frameRate(10);\n  rectMode(CENTER);\n}\n\nfunction draw() {\n  var step = frameCount % 20;\n  background(200);\n  translate(50, 50);\n  // Equivalent to scale(x, y);\n  applyMatrix(1 / step, 0, 0, 1 / step, 0, 0);\n  rect(0, 0, 50, 50);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  frameRate(10);\n  rectMode(CENTER);\n}\n\nfunction draw() {\n  var step = frameCount % 20;\n  var angle = map(step, 0, 20, 0, TWO_PI);\n  var cos_a = cos(angle);\n  var sin_a = sin(angle);\n  background(200);\n  translate(50, 50);\n  // Equivalent to rotate(angle);\n  applyMatrix(cos_a, sin_a, -sin_a, cos_a, 0, 0);\n  rect(0, 0, 50, 50);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  frameRate(10);\n  rectMode(CENTER);\n}\n\nfunction draw() {\n  var step = frameCount % 20;\n  var angle = map(step, 0, 20, -PI / 4, PI / 4);\n  background(200);\n  translate(50, 50);\n  // equivalent to shearX(angle);\n  var shear_factor = 1 / tan(PI / 2 - angle);\n  applyMatrix(1, 0, shear_factor, 1, 0, 0);\n  rect(0, 0, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "A rectangle translating to the right\nA rectangle shrinking to the center\nA rectangle rotating clockwise about the center\nA rectangle shearing",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 136,
+            "description": "<p>Replaces the current matrix with the identity matrix.</p>\n",
+            "itemtype": "method",
+            "name": "resetMatrix",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(50, 50);\napplyMatrix(0.5, 0.5, -0.5, 0.5, 0, 0);\nrect(0, 0, 20, 20);\n// Note that the translate is also reset.\nresetMatrix();\nrect(0, 0, 20, 20);\n</code>\n</div>"
+            ],
+            "alt": "A rotated retangle in the center with another at the top left corner",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 162,
+            "description": "<p>Rotates a shape the amount specified by the angle parameter. This\nfunction accounts for angleMode, so angles can be entered in either\nRADIANS or DEGREES.\n<br><br>\nObjects are always rotated around their relative position to the\norigin and positive numbers rotate objects in a clockwise direction.\nTransformations apply to everything that happens after and subsequent\ncalls to the function accumulates the effect. For example, calling\nrotate(HALF_PI) and then rotate(HALF_PI) is the same as rotate(PI).\nAll tranformations are reset when draw() begins again.\n<br><br>\nTechnically, rotate() multiplies the current transformation matrix\nby a rotation matrix. This function can be further controlled by\nthe push() and pop().</p>\n",
+            "itemtype": "method",
+            "name": "rotate",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the angle of rotation, specified in radians\n                       or degrees, depending on current angleMode</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "axis",
+                    "description": "<p>(in 3d) the axis to rotate around</p>\n",
+                    "type": "p5.Vector|Number[]",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(width / 2, height / 2);\nrotate(PI / 3.0);\nrect(-26, -26, 52, 52);\n</code>\n</div>"
+            ],
+            "alt": "white 52x52 rect with black outline at center rotated counter 45 degrees",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 208,
+            "description": "<p>Rotates around X axis.</p>\n",
+            "itemtype": "method",
+            "name": "rotateX",
+            "params": [
+                {
+                    "name": "rad",
+                    "description": "<p>angles in radians</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(255);\n  rotateX(millis() / 1000);\n  box();\n}\n</code>\n</div>"
+            ],
+            "alt": "3d box rotating around the x axis.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 240,
+            "description": "<p>Rotates around Y axis.</p>\n",
+            "itemtype": "method",
+            "name": "rotateY",
+            "params": [
+                {
+                    "name": "rad",
+                    "description": "<p>angles in radians</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(255);\n  rotateY(millis() / 1000);\n  box();\n}\n</code>\n</div>"
+            ],
+            "alt": "3d box rotating around the y axis.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 272,
+            "description": "<p>Rotates around Z axis. Webgl mode only.</p>\n",
+            "itemtype": "method",
+            "name": "rotateZ",
+            "params": [
+                {
+                    "name": "rad",
+                    "description": "<p>angles in radians</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(255);\n  rotateZ(millis() / 1000);\n  box();\n}\n</code>\n</div>"
+            ],
+            "alt": "3d box rotating around the z axis.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 304,
+            "description": "<p>Increases or decreases the size of a shape by expanding and contracting\nvertices. Objects always scale from their relative origin to the\ncoordinate system. Scale values are specified as decimal percentages.\nFor example, the function call scale(2.0) increases the dimension of a\nshape by 200%.\n<br><br>\nTransformations apply to everything that happens after and subsequent\ncalls to the function multiply the effect. For example, calling scale(2.0)\nand then scale(1.5) is the same as scale(3.0). If scale() is called\nwithin draw(), the transformation is reset when the loop begins again.\n<br><br>\nUsing this function with the z parameter is only available in WEBGL mode.\nThis function can be further controlled with push() and pop().</p>\n",
+            "itemtype": "method",
+            "name": "scale",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(width / 2, height / 2);\nrotate(PI / 3.0);\nrect(-26, -26, 52, 52);\n</code>\n</div>\n\n<div>\n<code>\nrect(30, 20, 50, 50);\nscale(0.5, 1.3);\nrect(30, 20, 50, 50);\n</code>\n</div>"
+            ],
+            "alt": "white 52x52 rect with black outline at center rotated counter 45 degrees\n2 white rects with black outline- 1 50x50 at center. other 25x65 bottom left",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform",
+            "overloads": [
+                {
+                    "line": 304,
+                    "params": [
+                        {
+                            "name": "s",
+                            "description": "<p>percent to scale the object, or percentage to\n                     scale the object in the x-axis if multiple arguments\n                     are given</p>\n",
+                            "type": "Number|p5.Vector|Number[]"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>percent to scale the object in the y-axis</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>percent to scale the object in the z-axis (webgl only)</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 349,
+                    "params": [
+                        {
+                            "name": "scales",
+                            "description": "<p>per-axis percents to scale the object</p>\n",
+                            "type": "p5.Vector|Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 379,
+            "description": "<p>Shears a shape around the x-axis the amount specified by the angle\nparameter. Angles should be specified in the current angleMode.\nObjects are always sheared around their relative position to the origin\nand positive numbers shear objects in a clockwise direction.\n<br><br>\nTransformations apply to everything that happens after and subsequent\ncalls to the function accumulates the effect. For example, calling\nshearX(PI/2) and then shearX(PI/2) is the same as shearX(PI).\nIf shearX() is called within the draw(), the transformation is reset when\nthe loop begins again.\n<br><br>\nTechnically, shearX() multiplies the current transformation matrix by a\nrotation matrix. This function can be further controlled by the\npush() and pop() functions.</p>\n",
+            "itemtype": "method",
+            "name": "shearX",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>angle of shear specified in radians or degrees,\n                       depending on current angleMode</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(width / 4, height / 4);\nshearX(PI / 4.0);\nrect(0, 0, 30, 30);\n</code>\n</div>"
+            ],
+            "alt": "white irregular quadrilateral with black outline at top middle.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 421,
+            "description": "<p>Shears a shape around the y-axis the amount specified by the angle\nparameter. Angles should be specified in the current angleMode. Objects\nare always sheared around their relative position to the origin and\npositive numbers shear objects in a clockwise direction.\n<br><br>\nTransformations apply to everything that happens after and subsequent\ncalls to the function accumulates the effect. For example, calling\nshearY(PI/2) and then shearY(PI/2) is the same as shearY(PI). If\nshearY() is called within the draw(), the transformation is reset when\nthe loop begins again.\n<br><br>\nTechnically, shearY() multiplies the current transformation matrix by a\nrotation matrix. This function can be further controlled by the\npush() and pop() functions.</p>\n",
+            "itemtype": "method",
+            "name": "shearY",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>angle of shear specified in radians or degrees,\n                       depending on current angleMode</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(width / 4, height / 4);\nshearY(PI / 4.0);\nrect(0, 0, 30, 30);\n</code>\n</div>"
+            ],
+            "alt": "white irregular quadrilateral with black outline at middle bottom.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/transform.js",
+            "line": 463,
+            "description": "<p>Specifies an amount to displace objects within the display window.\nThe x parameter specifies left/right translation, the y parameter\nspecifies up/down translation.\n<br><br>\nTransformations are cumulative and apply to everything that happens after\nand subsequent calls to the function accumulates the effect. For example,\ncalling translate(50, 0) and then translate(20, 0) is the same as\ntranslate(70, 0). If translate() is called within draw(), the\ntransformation is reset when the loop begins again. This function can be\nfurther controlled by using push() and pop().</p>\n",
+            "itemtype": "method",
+            "name": "translate",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>left/right translation</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>up/down translation</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "<p>forward/backward translation (webgl only)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(30, 20);\nrect(0, 0, 55, 55);\n</code>\n</div>\n\n<div>\n<code>\nrect(0, 0, 55, 55); // Draw rect at original 0,0\ntranslate(30, 20);\nrect(0, 0, 55, 55); // Draw rect at new 0,0\ntranslate(14, 14);\nrect(0, 0, 55, 55); // Draw rect at new 0,0\n</code>\n</div>"
+            ],
+            "alt": "white 55x55 rect with black outline at center right.\n3 white 55x55 rects with black outlines at top-l, center-r and bottom-r.",
+            "class": "p5",
+            "module": "Transform",
+            "submodule": "Transform"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 22,
+            "description": "<p>Use the beginContour() and endContour() functions to create negative\nshapes within shapes such as the center of the letter &#39;O&#39;. beginContour()\nbegins recording vertices for the shape and endContour() stops recording.\nThe vertices that define a negative shape must &quot;wind&quot; in the opposite\ndirection from the exterior shape. First draw vertices for the exterior\nclockwise order, then for internal shapes, draw vertices\nshape in counter-clockwise.\n<br><br>\nThese functions can only be used within a beginShape()/endShape() pair and\ntransformations such as translate(), rotate(), and scale() do not work\nwithin a beginContour()/endContour() pair. It is also not possible to use\nother shapes, such as ellipse() or rect() within.</p>\n",
+            "itemtype": "method",
+            "name": "beginContour",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(50, 50);\nstroke(255, 0, 0);\nbeginShape();\n// Exterior part of shape, clockwise winding\nvertex(-40, -40);\nvertex(40, -40);\nvertex(40, 40);\nvertex(-40, 40);\n// Interior part of shape, counter-clockwise winding\nbeginContour();\nvertex(-20, -20);\nvertex(-20, 20);\nvertex(20, 20);\nvertex(20, -20);\nendContour();\nendShape(CLOSE);\n</code>\n</div>"
+            ],
+            "alt": "white rect and smaller grey rect with red outlines in center of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 70,
+            "description": "<p>Using the beginShape() and endShape() functions allow creating more\ncomplex forms. beginShape() begins recording vertices for a shape and\nendShape() stops recording. The value of the kind parameter tells it which\ntypes of shapes to create from the provided vertices. With no mode\nspecified, the shape can be any irregular polygon.\n<br><br>\nThe parameters available for beginShape() are POINTS, LINES, TRIANGLES,\nTRIANGLE_FAN, TRIANGLE_STRIP, QUADS, and QUAD_STRIP. After calling the\nbeginShape() function, a series of vertex() commands must follow. To stop\ndrawing the shape, call endShape(). Each shape will be outlined with the\ncurrent stroke color and filled with the fill color.\n<br><br>\nTransformations such as translate(), rotate(), and scale() do not work\nwithin beginShape(). It is also not possible to use other shapes, such as\nellipse() or rect() within beginShape().</p>\n",
+            "itemtype": "method",
+            "name": "beginShape",
+            "params": [
+                {
+                    "name": "kind",
+                    "description": "<p>either POINTS, LINES, TRIANGLES, TRIANGLE_FAN\n                               TRIANGLE_STRIP, QUADS, or QUAD_STRIP</p>\n",
+                    "type": "Constant",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbeginShape();\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape(CLOSE);\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(POINTS);\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(LINES);\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nbeginShape();\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nbeginShape();\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape(CLOSE);\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(TRIANGLES);\nvertex(30, 75);\nvertex(40, 20);\nvertex(50, 75);\nvertex(60, 20);\nvertex(70, 75);\nvertex(80, 20);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(TRIANGLE_STRIP);\nvertex(30, 75);\nvertex(40, 20);\nvertex(50, 75);\nvertex(60, 20);\nvertex(70, 75);\nvertex(80, 20);\nvertex(90, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(TRIANGLE_FAN);\nvertex(57.5, 50);\nvertex(57.5, 15);\nvertex(92, 50);\nvertex(57.5, 85);\nvertex(22, 50);\nvertex(57.5, 15);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(QUADS);\nvertex(30, 20);\nvertex(30, 75);\nvertex(50, 75);\nvertex(50, 20);\nvertex(65, 20);\nvertex(65, 75);\nvertex(85, 75);\nvertex(85, 20);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape(QUAD_STRIP);\nvertex(30, 20);\nvertex(30, 75);\nvertex(50, 20);\nvertex(50, 75);\nvertex(65, 20);\nvertex(65, 75);\nvertex(85, 20);\nvertex(85, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape();\nvertex(20, 20);\nvertex(40, 20);\nvertex(40, 40);\nvertex(60, 40);\nvertex(60, 60);\nvertex(20, 60);\nendShape(CLOSE);\n</code>\n</div>"
+            ],
+            "alt": "white square-shape with black outline in middle-right of canvas.\n4 black points in a square shape in middle-right of canvas.\n2 horizontal black lines. In the top-right and bottom-right of canvas.\n3 line shape with horizontal on top, vertical in middle and horizontal bottom.\nsquare line shape in middle-right of canvas.\n2 white triangle shapes mid-right canvas. left one pointing up and right down.\n5 horizontal interlocking and alternating white triangles in mid-right canvas.\n4 interlocking white triangles in 45 degree rotated square-shape.\n2 white rectangle shapes in mid-right canvas. Both 20x55.\n3 side-by-side white rectangles center rect is smaller in mid-right canvas.\nThick white l-shape with black outline mid-top-left of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 269,
+            "description": "<p>Specifies vertex coordinates for Bezier curves. Each call to\nbezierVertex() defines the position of two control points and\none anchor point of a Bezier curve, adding a new segment to a\nline or shape.\n<br><br>\nThe first time bezierVertex() is used within a\nbeginShape() call, it must be prefaced with a call to vertex()\nto set the first anchor point. This function must be used between\nbeginShape() and endShape() and only when there is no MODE\nparameter specified to beginShape().</p>\n",
+            "itemtype": "method",
+            "name": "bezierVertex",
+            "params": [
+                {
+                    "name": "x2",
+                    "description": "<p>x-coordinate for the first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y2",
+                    "description": "<p>y-coordinate for the first control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x3",
+                    "description": "<p>x-coordinate for the second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y3",
+                    "description": "<p>y-coordinate for the second control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x4",
+                    "description": "<p>x-coordinate for the anchor point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y4",
+                    "description": "<p>y-coordinate for the anchor point</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nbeginShape();\nvertex(30, 20);\nbezierVertex(80, 0, 80, 75, 30, 75);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nbeginShape();\nvertex(30, 20);\nbezierVertex(80, 0, 80, 75, 30, 75);\nbezierVertex(50, 80, 60, 25, 30, 20);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "crescent-shaped line in middle of canvas. Points facing left.\nwhite crescent shape in middle of canvas. Points facing left.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 335,
+            "description": "<p>Specifies vertex coordinates for curves. This function may only\nbe used between beginShape() and endShape() and only when there\nis no MODE parameter specified to beginShape().\n<br><br>\nThe first and last points in a series of curveVertex() lines will be used to\nguide the beginning and end of a the curve. A minimum of four\npoints is required to draw a tiny curve between the second and\nthird points. Adding a fifth point with curveVertex() will draw\nthe curve between the second, third, and fourth points. The\ncurveVertex() function is an implementation of Catmull-Rom\nsplines.</p>\n",
+            "itemtype": "method",
+            "name": "curveVertex",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the vertex</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the vertex</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nbeginShape();\ncurveVertex(84, 91);\ncurveVertex(84, 91);\ncurveVertex(68, 19);\ncurveVertex(21, 17);\ncurveVertex(32, 100);\ncurveVertex(32, 100);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "Upside-down u-shape line, mid canvas. left point extends beyond canvas view.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 378,
+            "description": "<p>Use the beginContour() and endContour() functions to create negative\nshapes within shapes such as the center of the letter &#39;O&#39;. beginContour()\nbegins recording vertices for the shape and endContour() stops recording.\nThe vertices that define a negative shape must &quot;wind&quot; in the opposite\ndirection from the exterior shape. First draw vertices for the exterior\nclockwise order, then for internal shapes, draw vertices\nshape in counter-clockwise.\n<br><br>\nThese functions can only be used within a beginShape()/endShape() pair and\ntransformations such as translate(), rotate(), and scale() do not work\nwithin a beginContour()/endContour() pair. It is also not possible to use\nother shapes, such as ellipse() or rect() within.</p>\n",
+            "itemtype": "method",
+            "name": "endContour",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntranslate(50, 50);\nstroke(255, 0, 0);\nbeginShape();\n// Exterior part of shape, clockwise winding\nvertex(-40, -40);\nvertex(40, -40);\nvertex(40, 40);\nvertex(-40, 40);\n// Interior part of shape, counter-clockwise winding\nbeginContour();\nvertex(-20, -20);\nvertex(-20, 20);\nvertex(20, 20);\nvertex(20, -20);\nendContour();\nendShape(CLOSE);\n</code>\n</div>"
+            ],
+            "alt": "white rect and smaller grey rect with red outlines in center of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 438,
+            "description": "<p>The endShape() function is the companion to beginShape() and may only be\ncalled after beginShape(). When endshape() is called, all of image data\ndefined since the previous call to beginShape() is written into the image\nbuffer. The constant CLOSE as the value for the MODE parameter to close\nthe shape (to connect the beginning and the end).</p>\n",
+            "itemtype": "method",
+            "name": "endShape",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>use CLOSE to close the shape</p>\n",
+                    "type": "Constant",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\n\nbeginShape();\nvertex(20, 20);\nvertex(45, 20);\nvertex(45, 80);\nendShape(CLOSE);\n\nbeginShape();\nvertex(50, 20);\nvertex(75, 20);\nvertex(75, 80);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "Triangle line shape with smallest interior angle on bottom and upside-down L.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 523,
+            "description": "<p>Specifies vertex coordinates for quadratic Bezier curves. Each call to\nquadraticVertex() defines the position of one control points and one\nanchor point of a Bezier curve, adding a new segment to a line or shape.\nThe first time quadraticVertex() is used within a beginShape() call, it\nmust be prefaced with a call to vertex() to set the first anchor point.\nThis function must be used between beginShape() and endShape() and only\nwhen there is no MODE parameter specified to beginShape().</p>\n",
+            "itemtype": "method",
+            "name": "quadraticVertex",
+            "params": [
+                {
+                    "name": "cx",
+                    "description": "<p>x-coordinate for the control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "cy",
+                    "description": "<p>y-coordinate for the control point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x3",
+                    "description": "<p>x-coordinate for the anchor point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y3",
+                    "description": "<p>y-coordinate for the anchor point</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nnoFill();\nstrokeWeight(4);\nbeginShape();\nvertex(20, 20);\nquadraticVertex(80, 20, 50, 50);\nendShape();\n</code>\n</div>\n\n<div>\n<code>\nnoFill();\nstrokeWeight(4);\nbeginShape();\nvertex(20, 20);\nquadraticVertex(80, 20, 50, 50);\nquadraticVertex(20, 80, 80, 80);\nvertex(80, 60);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "arched-shaped black line with 4 pixel thick stroke weight.\nbackwards s-shaped black line with 4 pixel thick stroke weight.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex"
+        },
+        {
+            "file": "src/core/vertex.js",
+            "line": 601,
+            "description": "<p>All shapes are constructed by connecting a series of vertices. vertex()\nis used to specify the vertex coordinates for points, lines, triangles,\nquads, and polygons. It is used exclusively within the beginShape() and\nendShape() functions.</p>\n",
+            "itemtype": "method",
+            "name": "vertex",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nbeginShape(POINTS);\nvertex(30, 20);\nvertex(85, 20);\nvertex(85, 75);\nvertex(30, 75);\nendShape();\n</code>\n</div>"
+            ],
+            "alt": "4 black points in a square shape in middle-right of canvas.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "Vertex",
+            "overloads": [
+                {
+                    "line": 601,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>x-coordinate of the vertex</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y-coordinate of the vertex</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 627,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>z-coordinate of the vertex</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "u",
+                            "description": "<p>the vertex&#39;s texture u-coordinate</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "v",
+                            "description": "<p>the vertex&#39;s texture v-coordinate</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 16,
+            "description": "<p>Creates a new instance of p5.StringDict using the key, value pair\n or object you provide.</p>\n",
+            "itemtype": "method",
+            "name": "createStringDict",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "<p>or object</p>\n",
+                    "type": "String|Object"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.StringDict"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n function setup() {\n   var myDictionary = createStringDict('p5', 'js');\n   print(myDictionary.hasKey('p5')); // logs true to console\n }\n </code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 41,
+            "description": "<p>Creates a new instance of p5.NumberDict using the key, value pair\n or object you provide.</p>\n",
+            "itemtype": "method",
+            "name": "createNumberDict",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "<p>or object</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.NumberDict"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n function setup() {\n   var myDictionary = createNumberDict('p5', 42);\n   print(myDictionary.hasKey('p5')); // logs true to console\n }\n </code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 86,
+            "description": "<p>Returns the number of key-value pairs currently in Dictionary object</p>\n",
+            "itemtype": "method",
+            "name": "size",
+            "return": {
+                "description": "the number of key-value pairs in Dictionary object",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict(1, 10);\n  myDictionary.create(2, 20);\n  myDictionary.create(3, 30);\n  print(myDictionary.size()); // value of amt is 3\n}\n</code></div>\n"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 108,
+            "description": "<p>Returns true if key exists in Dictionary\notherwise returns false</p>\n",
+            "itemtype": "method",
+            "name": "hasKey",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "<p>that you want to access</p>\n",
+                    "type": "Number|String"
+                }
+            ],
+            "return": {
+                "description": "whether that key exists in Dictionary",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  print(myDictionary.hasKey('p5')); // logs true to console\n}\n</code></div>\n"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 131,
+            "description": "<p>Returns value stored at supplied key.</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "<p>that you want to access</p>\n",
+                    "type": "Number|String"
+                }
+            ],
+            "return": {
+                "description": "the value stored at that key",
+                "type": "Number|String"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  var myValue = myDictionary.get('p5');\n  print(myValue === 'js'); // logs true to console\n}\n</code></div>\n"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 158,
+            "description": "<p>Changes the value of key if in it already exists in\nin the Dictionary otherwise makes a new key-value pair</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "Number|String"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Number|String"
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  myDictionary.set('p5', 'JS');\n  myDictionary.print();\n  // above logs \"key: p5 - value: JS\" to console\n}\n</code></div>\n"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 187,
+            "description": "<p>private helper function to handle the user passing objects in\nduring construction or calls to create()</p>\n",
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 198,
+            "description": "<p>Creates a key-value pair in the Dictionary</p>\n",
+            "itemtype": "method",
+            "name": "create",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  myDictionary.create('happy', 'coding');\n  myDictionary.print();\n  // above logs \"key: p5 - value: js, key: happy - value: coding\" to console\n}\n</code></div>"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary",
+            "overloads": [
+                {
+                    "line": 198,
+                    "params": [
+                        {
+                            "name": "key",
+                            "description": "",
+                            "type": "Number|String"
+                        },
+                        {
+                            "name": "value",
+                            "description": "",
+                            "type": "Number|String"
+                        }
+                    ]
+                },
+                {
+                    "line": 216,
+                    "params": [
+                        {
+                            "name": "obj",
+                            "description": "<p>key/value pair</p>\n",
+                            "type": "Object"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 234,
+            "description": "<p>Empties Dictionary of all key-value pairs</p>\n",
+            "itemtype": "method",
+            "name": "clear",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  print(myDictionary.hasKey('p5')); // prints 'true'\n  myDictionary.clear();\n  print(myDictionary.hasKey('p5')); // prints 'false'\n}\n</code>\n</div>"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 254,
+            "description": "<p>Removes a key-value pair in the Dictionary</p>\n",
+            "itemtype": "method",
+            "name": "remove",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "<p>for the pair to remove</p>\n",
+                    "type": "Number|String"
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  myDictionary.create('happy', 'coding');\n  myDictionary.print();\n  // above logs \"key: p5 - value: js, key: happy - value: coding\" to console\n  myDictionary.remove('p5');\n  myDictionary.print();\n  // above logs \"key: happy value: coding\" to console\n}\n</code></div>\n"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 284,
+            "description": "<p>Logs the list of items currently in the Dictionary to the console</p>\n",
+            "itemtype": "method",
+            "name": "print",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var myDictionary = createStringDict('p5', 'js');\n  myDictionary.create('happy', 'coding');\n  myDictionary.print();\n  // above logs \"key: p5 - value: js, key: happy - value: coding\" to console\n}\n</code>\n</div>"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 308,
+            "description": "<p>Converts the Dictionary into a CSV file for local\nstorage.</p>\n",
+            "itemtype": "method",
+            "name": "saveTable",
+            "example": [
+                "\n<div>\n<code>\ncreateButton('save')\n  .position(10, 10)\n  .mousePressed(function() {\n    createNumberDict({\n      john: 1940,\n     paul: 1942,\n     george: 1943,\n     ringo: 1940\n    }).saveTable('beatles');\n  });\n</code>\n</div>"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 341,
+            "description": "<p>Converts the Dictionary into a JSON file for local\nstorage.</p>\n",
+            "itemtype": "method",
+            "name": "saveJSON",
+            "example": [
+                "\n<div>\n<code>\ncreateButton('save')\n  .position(10, 10)\n  .mousePressed(function() {\n    createNumberDict({\n      john: 1940,\n     paul: 1942,\n     george: 1943,\n     ringo: 1940\n    }).saveJSON('beatles');\n  });\n</code>\n</div>"
+            ],
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 367,
+            "description": "<p>private helper function to ensure that the user passed in valid\nvalues for the Dictionary type</p>\n",
+            "class": "p5.TypedDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 414,
+            "description": "<p>private helper function to ensure that the user passed in valid\nvalues for the Dictionary type</p>\n",
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 423,
+            "description": "<p>Add to a value stored at a certain key\nThe sum is stored in that location in the Dictionary.</p>\n",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "Key",
+                    "description": "<p>for value you wish to add to</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "Amount",
+                    "description": "<p>to add to the value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict(2, 5);\n  myDictionary.add(2, 2);\n  console.log(myDictionary.get(2)); // logs 7 to console.\n}\n</code></div>\n\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 451,
+            "description": "<p>Subtract from a value stored at a certain key\nThe difference is stored in that location in the Dictionary.</p>\n",
+            "itemtype": "method",
+            "name": "sub",
+            "params": [
+                {
+                    "name": "Key",
+                    "description": "<p>for value you wish to subtract from</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "Amount",
+                    "description": "<p>to subtract from the value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict(2, 5);\n  myDictionary.sub(2, 2);\n  console.log(myDictionary.get(2)); // logs 3 to console.\n}\n</code></div>\n\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 475,
+            "description": "<p>Multiply a value stored at a certain key\nThe product is stored in that location in the Dictionary.</p>\n",
+            "itemtype": "method",
+            "name": "mult",
+            "params": [
+                {
+                    "name": "Key",
+                    "description": "<p>for value you wish to multiply</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "Amount",
+                    "description": "<p>to multiply the value by</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict(2, 4);\n  myDictionary.mult(2, 2);\n  console.log(myDictionary.get(2)); // logs 8 to console.\n}\n</code></div>\n\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 503,
+            "description": "<p>Divide a value stored at a certain key\nThe quotient is stored in that location in the Dictionary.</p>\n",
+            "itemtype": "method",
+            "name": "div",
+            "params": [
+                {
+                    "name": "Key",
+                    "description": "<p>for value you wish to divide</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "Amount",
+                    "description": "<p>to divide the value by</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict(2, 8);\n  myDictionary.div(2, 2);\n  console.log(myDictionary.get(2)); // logs 4 to console.\n}\n</code></div>\n\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 531,
+            "description": "<p>private helper function for finding lowest or highest value\nthe argument &#39;flip&#39; is used to flip the comparison arrow\nfrom &#39;less than&#39; to &#39;greater than&#39;</p>\n",
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 554,
+            "description": "<p>Return the lowest value.</p>\n",
+            "itemtype": "method",
+            "name": "minValue",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict({ 2: -10, 4: 0.65, 1.2: 3 });\n  var lowestValue = myDictionary.minValue(); // value is -10\n  print(lowestValue);\n}\n</code></div>\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
