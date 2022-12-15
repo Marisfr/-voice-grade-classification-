@@ -8337,3 +8337,933 @@ module.exports={
             ],
             "class": "p5.NumberDict",
             "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 575,
+            "description": "<p>Return the highest value.</p>\n",
+            "itemtype": "method",
+            "name": "maxValue",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict({ 2: -10, 4: 0.65, 1.2: 3 });\n  var highestValue = myDictionary.maxValue(); // value is 3\n  print(highestValue);\n}\n</code></div>\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 596,
+            "description": "<p>private helper function for finding lowest or highest key\nthe argument &#39;flip&#39; is used to flip the comparison arrow\nfrom &#39;less than&#39; to &#39;greater than&#39;</p>\n",
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 619,
+            "description": "<p>Return the lowest key.</p>\n",
+            "itemtype": "method",
+            "name": "minKey",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict({ 2: 4, 4: 6, 1.2: 3 });\n  var lowestKey = myDictionary.minKey(); // value is 1.2\n  print(lowestKey);\n}\n</code></div>\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/data/p5.TypedDict.js",
+            "line": 640,
+            "description": "<p>Return the highest key.</p>\n",
+            "itemtype": "method",
+            "name": "maxKey",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'>\n<code>\nfunction setup() {\n  var myDictionary = createNumberDict({ 2: 4, 4: 6, 1.2: 3 });\n  var highestKey = myDictionary.maxKey(); // value is 4\n  print(highestKey);\n}\n</code></div>\n"
+            ],
+            "class": "p5.NumberDict",
+            "module": "Data",
+            "submodule": "Dictionary"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 12,
+            "description": "<p>The system variable deviceOrientation always contains the orientation of\nthe device. The value of this variable will either be set &#39;landscape&#39;\nor &#39;portrait&#39;. If no data is available it will be set to &#39;undefined&#39;.\neither LANDSCAPE or PORTRAIT.</p>\n",
+            "itemtype": "property",
+            "name": "deviceOrientation",
+            "type": "Constant",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 23,
+            "description": "<p>The system variable accelerationX always contains the acceleration of the\ndevice along the x axis. Value is represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "accelerationX",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 32,
+            "description": "<p>The system variable accelerationY always contains the acceleration of the\ndevice along the y axis. Value is represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "accelerationY",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 41,
+            "description": "<p>The system variable accelerationZ always contains the acceleration of the\ndevice along the z axis. Value is represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "accelerationZ",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 50,
+            "description": "<p>The system variable pAccelerationX always contains the acceleration of the\ndevice along the x axis in the frame previous to the current frame. Value\nis represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "pAccelerationX",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 60,
+            "description": "<p>The system variable pAccelerationY always contains the acceleration of the\ndevice along the y axis in the frame previous to the current frame. Value\nis represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "pAccelerationY",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 70,
+            "description": "<p>The system variable pAccelerationZ always contains the acceleration of the\ndevice along the z axis in the frame previous to the current frame. Value\nis represented as meters per second squared.</p>\n",
+            "itemtype": "property",
+            "name": "pAccelerationZ",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 91,
+            "description": "<p>The system variable rotationX always contains the rotation of the\ndevice along the x axis. Value is represented as 0 to +/-180 degrees.\n<br><br>\nNote: The order the rotations are called is important, ie. if used\ntogether, it must be called in the order Z-X-Y or there might be\nunexpected behaviour.</p>\n",
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  //rotateZ(radians(rotationZ));\n  rotateX(radians(rotationX));\n  //rotateY(radians(rotationY));\n  box(200, 200, 200);\n}\n</code>\n</div>"
+            ],
+            "itemtype": "property",
+            "name": "rotationX",
+            "type": "Number",
+            "readonly": "",
+            "alt": "red horizontal line right, green vertical line bottom. black background.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 125,
+            "description": "<p>The system variable rotationY always contains the rotation of the\ndevice along the y axis. Value is represented as 0 to +/-90 degrees.\n<br><br>\nNote: The order the rotations are called is important, ie. if used\ntogether, it must be called in the order Z-X-Y or there might be\nunexpected behaviour.</p>\n",
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  //rotateZ(radians(rotationZ));\n  //rotateX(radians(rotationX));\n  rotateY(radians(rotationY));\n  box(200, 200, 200);\n}\n</code>\n</div>"
+            ],
+            "itemtype": "property",
+            "name": "rotationY",
+            "type": "Number",
+            "readonly": "",
+            "alt": "red horizontal line right, green vertical line bottom. black background.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 158,
+            "description": "<p>The system variable rotationZ always contains the rotation of the\ndevice along the z axis. Value is represented as 0 to 359 degrees.\n<br><br>\nUnlike rotationX and rotationY, this variable is available for devices\nwith a built-in compass only.\n<br><br>\nNote: The order the rotations are called is important, ie. if used\ntogether, it must be called in the order Z-X-Y or there might be\nunexpected behaviour.</p>\n",
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateZ(radians(rotationZ));\n  //rotateX(radians(rotationX));\n  //rotateY(radians(rotationY));\n  box(200, 200, 200);\n}\n</code>\n</div>"
+            ],
+            "itemtype": "property",
+            "name": "rotationZ",
+            "type": "Number",
+            "readonly": "",
+            "alt": "red horizontal line right, green vertical line bottom. black background.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 194,
+            "description": "<p>The system variable pRotationX always contains the rotation of the\ndevice along the x axis in the frame previous to the current frame. Value\nis represented as 0 to +/-180 degrees.\n<br><br>\npRotationX can also be used with rotationX to determine the rotate\ndirection of the device along the X-axis.</p>\n",
+            "example": [
+                "\n<div class='norender'>\n<code>\n// A simple if statement looking at whether\n// rotationX - pRotationX < 0 is true or not will be\n// sufficient for determining the rotate direction\n// in most cases.\n\n// Some extra logic is needed to account for cases where\n// the angles wrap around.\nvar rotateDirection = 'clockwise';\n\n// Simple range conversion to make things simpler.\n// This is not absolutely necessary but the logic\n// will be different in that case.\n\nvar rX = rotationX + 180;\nvar pRX = pRotationX + 180;\n\nif ((rX - pRX > 0 && rX - pRX < 270) || rX - pRX < -270) {\n  rotateDirection = 'clockwise';\n} else if (rX - pRX < 0 || rX - pRX > 270) {\n  rotateDirection = 'counter-clockwise';\n}\n\nprint(rotateDirection);\n</code>\n</div>"
+            ],
+            "alt": "no image to display.",
+            "itemtype": "property",
+            "name": "pRotationX",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 239,
+            "description": "<p>The system variable pRotationY always contains the rotation of the\ndevice along the y axis in the frame previous to the current frame. Value\nis represented as 0 to +/-90 degrees.\n<br><br>\npRotationY can also be used with rotationY to determine the rotate\ndirection of the device along the Y-axis.</p>\n",
+            "example": [
+                "\n<div class='norender'>\n<code>\n// A simple if statement looking at whether\n// rotationY - pRotationY < 0 is true or not will be\n// sufficient for determining the rotate direction\n// in most cases.\n\n// Some extra logic is needed to account for cases where\n// the angles wrap around.\nvar rotateDirection = 'clockwise';\n\n// Simple range conversion to make things simpler.\n// This is not absolutely necessary but the logic\n// will be different in that case.\n\nvar rY = rotationY + 180;\nvar pRY = pRotationY + 180;\n\nif ((rY - pRY > 0 && rY - pRY < 270) || rY - pRY < -270) {\n  rotateDirection = 'clockwise';\n} else if (rY - pRY < 0 || rY - pRY > 270) {\n  rotateDirection = 'counter-clockwise';\n}\nprint(rotateDirection);\n</code>\n</div>"
+            ],
+            "alt": "no image to display.",
+            "itemtype": "property",
+            "name": "pRotationY",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 283,
+            "description": "<p>The system variable pRotationZ always contains the rotation of the\ndevice along the z axis in the frame previous to the current frame. Value\nis represented as 0 to 359 degrees.\n<br><br>\npRotationZ can also be used with rotationZ to determine the rotate\ndirection of the device along the Z-axis.</p>\n",
+            "example": [
+                "\n<div class='norender'>\n<code>\n// A simple if statement looking at whether\n// rotationZ - pRotationZ < 0 is true or not will be\n// sufficient for determining the rotate direction\n// in most cases.\n\n// Some extra logic is needed to account for cases where\n// the angles wrap around.\nvar rotateDirection = 'clockwise';\n\nif (\n  (rotationZ - pRotationZ > 0 && rotationZ - pRotationZ < 270) ||\n  rotationZ - pRotationZ < -270\n) {\n  rotateDirection = 'clockwise';\n} else if (rotationZ - pRotationZ < 0 || rotationZ - pRotationZ > 270) {\n  rotateDirection = 'counter-clockwise';\n}\nprint(rotateDirection);\n</code>\n</div>"
+            ],
+            "alt": "no image to display.",
+            "itemtype": "property",
+            "name": "pRotationZ",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 341,
+            "itemtype": "property",
+            "name": "turnAxis",
+            "type": "String",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 350,
+            "description": "<p>The setMoveThreshold() function is used to set the movement threshold for\nthe deviceMoved() function. The default threshold is set to 0.5.</p>\n",
+            "itemtype": "method",
+            "name": "setMoveThreshold",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>The threshold value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 363,
+            "description": "<p>The setShakeThreshold() function is used to set the movement threshold for\nthe deviceShaken() function. The default threshold is set to 30.</p>\n",
+            "itemtype": "method",
+            "name": "setShakeThreshold",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>The threshold value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 376,
+            "description": "<p>The deviceMoved() function is called when the device is moved by more than\nthe threshold value along X, Y or Z axis. The default threshold is set to\n0.5.</p>\n",
+            "itemtype": "method",
+            "name": "deviceMoved",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Run this example on a mobile device\n// Move the device around\n// to change the value.\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction deviceMoved() {\n  value = value + 5;\n  if (value > 255) {\n    value = 0;\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect in center of canvas. turns white on mobile when device moves",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 407,
+            "description": "<p>The deviceTurned() function is called when the device rotates by\nmore than 90 degrees continuously.\n<br><br>\nThe axis that triggers the deviceTurned() method is stored in the turnAxis\nvariable. The deviceTurned() method can be locked to trigger on any axis:\nX, Y or Z by comparing the turnAxis variable to &#39;X&#39;, &#39;Y&#39; or &#39;Z&#39;.</p>\n",
+            "itemtype": "method",
+            "name": "deviceTurned",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Run this example on a mobile device\n// Rotate the device by 90 degrees\n// to change the value.\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction deviceTurned() {\n  if (value === 0) {\n    value = 255;\n  } else if (value === 255) {\n    value = 0;\n  }\n}\n</code>\n</div>\n<div>\n<code>\n// Run this example on a mobile device\n// Rotate the device by 90 degrees in the\n// X-axis to change the value.\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction deviceTurned() {\n  if (turnAxis === 'X') {\n    if (value === 0) {\n      value = 255;\n    } else if (value === 255) {\n      value = 0;\n    }\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect in center of canvas. turns white on mobile when device turns\n50x50 black rect in center of canvas. turns white on mobile when x-axis turns",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/acceleration.js",
+            "line": 466,
+            "description": "<p>The deviceShaken() function is called when the device total acceleration\nchanges of accelerationX and accelerationY values is more than\nthe threshold value. The default threshold is set to 30.</p>\n",
+            "itemtype": "method",
+            "name": "deviceShaken",
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Run this example on a mobile device\n// Shake the device to change the value.\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction deviceShaken() {\n  value = value + 5;\n  if (value > 255) {\n    value = 0;\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect in center of canvas. turns white on mobile when device shakes",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Acceleration"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 18,
+            "description": "<p>The boolean system variable keyIsPressed is true if any key is pressed\nand false if no keys are pressed.</p>\n",
+            "itemtype": "property",
+            "name": "keyIsPressed",
+            "type": "Boolean",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  if (keyIsPressed === true) {\n    fill(0);\n  } else {\n    fill(255);\n  }\n  rect(25, 25, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 white rect that turns black on keypress.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 45,
+            "description": "<p>The system variable key always contains the value of the most recent\nkey on the keyboard that was typed. To get the proper capitalization, it\nis best to use it within keyTyped(). For non-ASCII keys, use the keyCode\nvariable.</p>\n",
+            "itemtype": "property",
+            "name": "key",
+            "type": "String",
+            "readonly": "",
+            "example": [
+                "\n<div><code>\n// Click any key to display it!\n// (Not Guaranteed to be Case Sensitive)\nfunction setup() {\n  fill(245, 123, 158);\n  textSize(50);\n}\n\nfunction draw() {\n  background(200);\n  text(key, 33, 65); // Display last key pressed.\n}\n</code></div>"
+            ],
+            "alt": "canvas displays any key value that is pressed in pink font.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 74,
+            "description": "<p>The variable keyCode is used to detect special keys such as BACKSPACE,\nDELETE, ENTER, RETURN, TAB, ESCAPE, SHIFT, CONTROL, OPTION, ALT, UP_ARROW,\nDOWN_ARROW, LEFT_ARROW, RIGHT_ARROW.\nYou can also check for custom keys by looking up the keyCode of any key\non a site like this: <a href=\"http://keycode.info/\">keycode.info</a>.</p>\n",
+            "itemtype": "property",
+            "name": "keyCode",
+            "type": "Integer",
+            "readonly": "",
+            "example": [
+                "\n<div><code>\nvar fillVal = 126;\nfunction draw() {\n  fill(fillVal);\n  rect(25, 25, 50, 50);\n}\n\nfunction keyPressed() {\n  if (keyCode === UP_ARROW) {\n    fillVal = 255;\n  } else if (keyCode === DOWN_ARROW) {\n    fillVal = 0;\n  }\n  return false; // prevent default\n}\n</code></div>"
+            ],
+            "alt": "Grey rect center. turns white when up arrow pressed and black when down",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 107,
+            "description": "<p>The keyPressed() function is called once every time a key is pressed. The\nkeyCode for the key that was pressed is stored in the keyCode variable.\n<br><br>\nFor non-ASCII keys, use the keyCode variable. You can check if the keyCode\nequals BACKSPACE, DELETE, ENTER, RETURN, TAB, ESCAPE, SHIFT, CONTROL,\nOPTION, ALT, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW.\n<br><br>\nFor ASCII keys that was pressed is stored in the key variable. However, it\ndoes not distinguish between uppercase and lowercase. For this reason, it\nis recommended to use keyTyped() to read the key variable, in which the\ncase of the variable will be distinguished.\n<br><br>\nBecause of how operating systems handle key repeats, holding down a key\nmay cause multiple calls to keyTyped() (and keyReleased() as well). The\nrate of repeat is set by the operating system and how each computer is\nconfigured.<br><br>\nBrowsers may have different default\nbehaviors attached to various key events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "keyPressed",
+            "example": [
+                "\n<div>\n<code>\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction keyPressed() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n<div>\n<code>\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction keyPressed() {\n  if (keyCode === LEFT_ARROW) {\n    value = 255;\n  } else if (keyCode === RIGHT_ARROW) {\n    value = 0;\n  }\n}\n</code>\n</div>\n<div class=\"norender\">\n<code>\nfunction keyPressed() {\n  // Do something\n  return false; // prevent any default behaviour\n}\n</code>\n</div>"
+            ],
+            "alt": "black rect center. turns white when key pressed and black when released\nblack rect center. turns white when left arrow pressed and black when right.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 198,
+            "description": "<p>The keyReleased() function is called once every time a key is released.\nSee key and keyCode for more information.<br><br>\nBrowsers may have different default\nbehaviors attached to various key events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "keyReleased",
+            "example": [
+                "\n<div>\n<code>\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction keyReleased() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n  return false; // prevent any default behavior\n}\n</code>\n</div>"
+            ],
+            "alt": "black rect center. turns white when key pressed and black when pressed again",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 254,
+            "description": "<p>The keyTyped() function is called once every time a key is pressed, but\naction keys such as Ctrl, Shift, and Alt are ignored. The most recent\nkey pressed will be stored in the key variable.\n<br><br>\nBecause of how operating systems handle key repeats, holding down a key\nwill cause multiple calls to keyTyped() (and keyReleased() as well). The\nrate of repeat is set by the operating system and how each computer is\nconfigured.<br><br>\nBrowsers may have different default behaviors attached to various key\nevents. To prevent any default behavior for this event, add &quot;return false&quot;\nto the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "keyTyped",
+            "example": [
+                "\n<div>\n<code>\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction keyTyped() {\n  if (key === 'a') {\n    value = 255;\n  } else if (key === 'b') {\n    value = 0;\n  }\n  // uncomment to prevent any default behavior\n  // return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black rect center. turns white when 'a' key typed and black when 'b' pressed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 308,
+            "description": "<p>The onblur function is called when the user is no longer focused\non the p5 element. Because the keyup events will not fire if the user is\nnot focused on the element we must assume all keys currently down have\nbeen released.</p>\n",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/keyboard.js",
+            "line": 318,
+            "description": "<p>The keyIsDown() function checks if the key is currently down, i.e. pressed.\nIt can be used if you have an object that moves, and you want several keys\nto be able to affect its behaviour simultaneously, such as moving a\nsprite diagonally. You can put in any number representing the keyCode of\nthe key, or use any of the variable keyCode names listed\n<a href=\"http://p5js.org/reference/#p5/keyCode\">here</a>.</p>\n",
+            "itemtype": "method",
+            "name": "keyIsDown",
+            "params": [
+                {
+                    "name": "code",
+                    "description": "<p>The key to check for.</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "whether key is down or not",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n<div><code>\nvar x = 100;\nvar y = 100;\n\nfunction setup() {\n  createCanvas(512, 512);\n}\n\nfunction draw() {\n  if (keyIsDown(LEFT_ARROW)) {\n    x -= 5;\n  }\n\n  if (keyIsDown(RIGHT_ARROW)) {\n    x += 5;\n  }\n\n  if (keyIsDown(UP_ARROW)) {\n    y -= 5;\n  }\n\n  if (keyIsDown(DOWN_ARROW)) {\n    y += 5;\n  }\n\n  clear();\n  fill(255, 0, 0);\n  ellipse(x, y, 50, 50);\n}\n</code></div>"
+            ],
+            "alt": "50x50 red ellipse moves left, right, up and down with arrow presses.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Keyboard"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 22,
+            "description": "<p>The system variable mouseX always contains the current horizontal\nposition of the mouse, relative to (0, 0) of the canvas. If touch is\nused instead of mouse input, mouseX will hold the x value of the most\nrecent touch point.</p>\n",
+            "itemtype": "property",
+            "name": "mouseX",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\n// Move the mouse across the canvas\nfunction draw() {\n  background(244, 248, 252);\n  line(mouseX, 0, mouseX, 100);\n}\n</code>\n</div>"
+            ],
+            "alt": "horizontal black line moves left and right with mouse x-position",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 48,
+            "description": "<p>The system variable mouseY always contains the current vertical position\nof the mouse, relative to (0, 0) of the canvas. If touch is\nused instead of mouse input, mouseY will hold the y value of the most\nrecent touch point.</p>\n",
+            "itemtype": "property",
+            "name": "mouseY",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\n// Move the mouse across the canvas\nfunction draw() {\n  background(244, 248, 252);\n  line(0, mouseY, 100, mouseY);\n}\n</code>\n</div>"
+            ],
+            "alt": "vertical black line moves up and down with mouse y-position",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 74,
+            "description": "<p>The system variable pmouseX always contains the horizontal position of\nthe mouse or finger in the frame previous to the current frame, relative to\n(0, 0) of the canvas.</p>\n",
+            "itemtype": "property",
+            "name": "pmouseX",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\n// Move the mouse across the canvas to leave a trail\nfunction setup() {\n  //slow down the frameRate to make it more visible\n  frameRate(10);\n}\n\nfunction draw() {\n  background(244, 248, 252);\n  line(mouseX, mouseY, pmouseX, pmouseY);\n  print(pmouseX + ' -> ' + mouseX);\n}\n</code>\n</div>"
+            ],
+            "alt": "line trail is created from cursor movements. faster movement make longer line.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 105,
+            "description": "<p>The system variable pmouseY always contains the vertical position of the\nmouse or finger in the frame previous to the current frame, relative to\n(0, 0) of the canvas.</p>\n",
+            "itemtype": "property",
+            "name": "pmouseY",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n  //draw a square only if the mouse is not moving\n  if (mouseY === pmouseY && mouseX === pmouseX) {\n    rect(20, 20, 60, 60);\n  }\n\n  print(pmouseY + ' -> ' + mouseY);\n}\n</code>\n</div>"
+            ],
+            "alt": "60x60 black rect center, fuschia background. rect flickers on mouse movement",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 135,
+            "description": "<p>The system variable winMouseX always contains the current horizontal\nposition of the mouse, relative to (0, 0) of the window.</p>\n",
+            "itemtype": "property",
+            "name": "winMouseX",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nvar myCanvas;\n\nfunction setup() {\n  //use a variable to store a pointer to the canvas\n  myCanvas = createCanvas(100, 100);\n}\n\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n\n  //move the canvas to the horizontal mouse position\n  //rela                    tive to the window\n  myCanvas.position(winMouseX + 1, windowHeight / 2);\n\n  //the y of the square is relative to the canvas\n  rect(20, mouseY, 60, 60);\n}\n</code>\n</div>"
+            ],
+            "alt": "60x60 black rect y moves with mouse y and fuschia canvas moves with mouse x",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 172,
+            "description": "<p>The system variable winMouseY always contains the current vertical\nposition of the mouse, relative to (0, 0) of the window.</p>\n",
+            "itemtype": "property",
+            "name": "winMouseY",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nvar myCanvas;\n\nfunction setup() {\n  //use a variable to store a pointer to the canvas\n  myCanvas = createCanvas(100, 100);\n}\n\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n\n  //move the canvas to the vertical mouse position\n  //rel                    ative to the window\n  myCanvas.position(windowWidth / 2, winMouseY + 1);\n\n  //the x of the square is relative to the canvas\n  rect(mouseX, 20, 60, 60);\n}\n</code>\n</div>"
+            ],
+            "alt": "60x60 black rect x moves with mouse x and fuschia canvas y moves with mouse y",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 209,
+            "description": "<p>The system variable pwinMouseX always contains the horizontal position\nof the mouse in the frame previous to the current frame, relative to\n(0, 0) of the window.</p>\n",
+            "itemtype": "property",
+            "name": "pwinMouseX",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nvar myCanvas;\n\nfunction setup() {\n  //use a variable to store a pointer to the canvas\n  myCanvas = createCanvas(100, 100);\n  noStroke();\n  fill(237, 34, 93);\n}\n\nfunction draw() {\n  clear();\n  //the difference between previous and\n  //current x position is the horizontal mouse speed\n  var speed = abs(winMouseX - pwinMouseX);\n  //change the size of the circle\n  //according to the horizontal speed\n  ellipse(50, 50, 10 + speed * 5, 10 + speed * 5);\n  //move the canvas to the mouse position\n  myCanvas.position(winMouseX + 1, winMouseY + 1);\n}\n</code>\n</div>"
+            ],
+            "alt": "fuschia ellipse moves with mouse x and y. Grows and shrinks with mouse speed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 249,
+            "description": "<p>The system variable pwinMouseY always contains the vertical position of\nthe mouse in the frame previous to the current frame, relative to (0, 0)\nof the window.</p>\n",
+            "itemtype": "property",
+            "name": "pwinMouseY",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nvar myCanvas;\n\nfunction setup() {\n  //use a variable to store a pointer to the canvas\n  myCanvas = createCanvas(100, 100);\n  noStroke();\n  fill(237, 34, 93);\n}\n\nfunction draw() {\n  clear();\n  //the difference between previous and\n  //current y position is the vertical mouse speed\n  var speed = abs(winMouseY - pwinMouseY);\n  //change the size of the circle\n  //according to the vertical speed\n  ellipse(50, 50, 10 + speed * 5, 10 + speed * 5);\n  //move the canvas to the mouse position\n  myCanvas.position(winMouseX + 1, winMouseY + 1);\n}\n</code>\n</div>"
+            ],
+            "alt": "fuschia ellipse moves with mouse x and y. Grows and shrinks with mouse speed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 290,
+            "description": "<p>Processing automatically tracks if the mouse button is pressed and which\nbutton is pressed. The value of the system variable mouseButton is either\nLEFT, RIGHT, or CENTER depending on which button was pressed last.\nWarning: different browsers may track mouseButton differently.</p>\n",
+            "itemtype": "property",
+            "name": "mouseButton",
+            "type": "Constant",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n\n  if (mouseIsPressed) {\n    if (mouseButton === LEFT) {\n      ellipse(50, 50, 50, 50);\n    }\n    if (mouseButton === RIGHT) {\n      rect(25, 25, 50, 50);\n    }\n    if (mouseButton === CENTER) {\n      triangle(23, 75, 50, 20, 78, 75);\n    }\n  }\n\n  print(mouseButton);\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black ellipse appears on center of fuschia canvas on mouse click/press.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 329,
+            "description": "<p>The boolean system variable mouseIsPressed is true if the mouse is pressed\nand false if not.</p>\n",
+            "itemtype": "property",
+            "name": "mouseIsPressed",
+            "type": "Boolean",
+            "readonly": "",
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n\n  if (mouseIsPressed) {\n    ellipse(50, 50, 50, 50);\n  } else {\n    rect(25, 25, 50, 50);\n  }\n\n  print(mouseIsPressed);\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect becomes ellipse with mouse click/press. fuschia background.",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 418,
+            "description": "<p>The mouseMoved() function is called every time the mouse moves and a mouse\nbutton is not pressed.<br><br>\nBrowsers may have different default\nbehaviors attached to various mouse events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "mouseMoved",
+            "example": [
+                "\n<div>\n<code>\n// Move the mouse across the page\n// to change its value\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction mouseMoved() {\n  value = value + 5;\n  if (value > 255) {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction mouseMoved() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect becomes lighter with mouse movements until white then resets\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 462,
+            "description": "<p>The mouseDragged() function is called once every time the mouse moves and\na mouse button is pressed. If no mouseDragged() function is defined, the\ntouchMoved() function will be called instead if it is defined.<br><br>\nBrowsers may have different default\nbehaviors attached to various mouse events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "mouseDragged",
+            "example": [
+                "\n<div>\n<code>\n// Drag the mouse across the page\n// to change its value\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction mouseDragged() {\n  value = value + 5;\n  if (value > 255) {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction mouseDragged() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect turns lighter with mouse click and drag until white, resets\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 532,
+            "description": "<p>The mousePressed() function is called once after every time a mouse button\nis pressed. The mouseButton variable (see the related reference entry)\ncan be used to determine which button has been pressed. If no\nmousePressed() function is defined, the touchStarted() function will be\ncalled instead if it is defined.<br><br>\nBrowsers may have different default\nbehaviors attached to various mouse events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "mousePressed",
+            "example": [
+                "\n<div>\n<code>\n// Click within the image to change\n// the value of the rectangle\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction mousePressed() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction mousePressed() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect turns white with mouse click/press.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 598,
+            "description": "<p>The mouseReleased() function is called every time a mouse button is\nreleased. If no mouseReleased() function is defined, the touchEnded()\nfunction will be called instead if it is defined.<br><br>\nBrowsers may have different default\nbehaviors attached to various mouse events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "mouseReleased",
+            "example": [
+                "\n<div>\n<code>\n// Click within the image to change\n// the value of the rectangle\n// after the mouse has been clicked\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction mouseReleased() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction mouseReleased() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect turns white with mouse click/press.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 665,
+            "description": "<p>The mouseClicked() function is called once after a mouse button has been\npressed and then released.<br><br>\nBrowsers handle clicks differently, so this function is only guaranteed to be\nrun when the left mouse button is clicked. To handle other mouse buttons\nbeing pressed or released, see mousePressed() or mouseReleased().<br><br>\nBrowsers may have different default\nbehaviors attached to various mouse events. To prevent any default\nbehavior for this event, add &quot;return false&quot; to the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "mouseClicked",
+            "example": [
+                "\n<div>\n<code>\n// Click within the image to change\n// the value of the rectangle\n// after the mouse has been clicked\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\n\nfunction mouseClicked() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction mouseClicked() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect turns white with mouse click/press.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 724,
+            "description": "<p>The doubleClicked() function is executed every time a event\nlistener has detected a dblclick event which is a part of the\nDOM L3 specification. The doubleClicked event is fired when a\npointing device button (usually a mouse&#39;s primary button)\nis clicked twice on a single element. For more info on the\ndblclick event refer to mozilla&#39;s documentation here:\n<a href=\"https://developer.mozilla.org/en-US/docs/Web/Events/dblclick\">https://developer.mozilla.org/en-US/docs/Web/Events/dblclick</a></p>\n",
+            "itemtype": "method",
+            "name": "doubleClicked",
+            "example": [
+                "\n<div>\n<code>\n// Click within the image to change\n// the value of the rectangle\n// after the mouse has been double clicked\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\n\nfunction doubleClicked() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction doubleClicked() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect turns white with mouse doubleClick/press.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/mouse.js",
+            "line": 782,
+            "description": "<p>The function mouseWheel() is executed every time a vertical mouse wheel\nevent is detected either triggered by an actual mouse wheel or by a\ntouchpad.<br><br>\nThe event.delta property returns the amount the mouse wheel\nhave scrolled. The values can be positive or negative depending on the\nscroll direction (on OS X with &quot;natural&quot; scrolling enabled, the signs\nare inverted).<br><br>\nBrowsers may have different default behaviors attached to various\nmouse events. To prevent any default behavior for this event, add\n&quot;return false&quot; to the end of the method.<br><br>\nDue to the current support of the &quot;wheel&quot; event on Safari, the function\nmay only work as expected if &quot;return false&quot; is included while using Safari.</p>\n",
+            "itemtype": "method",
+            "name": "mouseWheel",
+            "example": [
+                "\n<div>\n<code>\nvar pos = 25;\n\nfunction draw() {\n  background(237, 34, 93);\n  fill(0);\n  rect(25, pos, 50, 50);\n}\n\nfunction mouseWheel(event) {\n  print(event.delta);\n  //move the square according to the vertical scroll amount\n  pos += event.delta;\n  //uncomment to block page scrolling\n  //return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "black 50x50 rect moves up and down with vertical scroll. fuschia background",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Mouse"
+        },
+        {
+            "file": "src/events/touch.js",
+            "line": 12,
+            "description": "<p>The system variable touches[] contains an array of the positions of all\ncurrent touch points, relative to (0, 0) of the canvas, and IDs identifying a\nunique touch as it moves. Each element in the array is an object with x, y,\nand id properties.</p>\n<p>The touches[] array is not supported on Safari and IE on touch-based\ndesktops (laptops).</p>\n",
+            "itemtype": "property",
+            "name": "touches",
+            "type": "Object[]",
+            "readonly": "",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Touch"
+        },
+        {
+            "file": "src/events/touch.js",
+            "line": 57,
+            "description": "<p>The touchStarted() function is called once after every time a touch is\nregistered. If no touchStarted() function is defined, the mousePressed()\nfunction will be called instead if it is defined.<br><br>\nBrowsers may have different default behaviors attached to various touch\nevents. To prevent any default behavior for this event, add &quot;return false&quot;\nto the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "touchStarted",
+            "example": [
+                "\n<div>\n<code>\n// Touch within the image to change\n// the value of the rectangle\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction touchStarted() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction touchStarted() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect turns white with touch event.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Touch"
+        },
+        {
+            "file": "src/events/touch.js",
+            "line": 120,
+            "description": "<p>The touchMoved() function is called every time a touch move is registered.\nIf no touchMoved() function is defined, the mouseDragged() function will\nbe called instead if it is defined.<br><br>\nBrowsers may have different default behaviors attached to various touch\nevents. To prevent any default behavior for this event, add &quot;return false&quot;\nto the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "touchMoved",
+            "example": [
+                "\n<div>\n<code>\n// Move your finger across the page\n// to change its value\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction touchMoved() {\n  value = value + 5;\n  if (value > 255) {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction touchMoved() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect turns lighter with touch until white. resets\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Touch"
+        },
+        {
+            "file": "src/events/touch.js",
+            "line": 182,
+            "description": "<p>The touchEnded() function is called every time a touch ends. If no\ntouchEnded() function is defined, the mouseReleased() function will be\ncalled instead if it is defined.<br><br>\nBrowsers may have different default behaviors attached to various touch\nevents. To prevent any default behavior for this event, add &quot;return false&quot;\nto the end of the method.</p>\n",
+            "itemtype": "method",
+            "name": "touchEnded",
+            "example": [
+                "\n<div>\n<code>\n// Release touch within the image to\n// change the value of the rectangle\n\nvar value = 0;\nfunction draw() {\n  fill(value);\n  rect(25, 25, 50, 50);\n}\nfunction touchEnded() {\n  if (value === 0) {\n    value = 255;\n  } else {\n    value = 0;\n  }\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nfunction touchEnded() {\n  ellipse(mouseX, mouseY, 5, 5);\n  // prevent default\n  return false;\n}\n</code>\n</div>"
+            ],
+            "alt": "50x50 black rect turns white with touch.\nno image displayed",
+            "class": "p5",
+            "module": "Events",
+            "submodule": "Touch"
+        },
+        {
+            "file": "src/image/filters.js",
+            "line": 3,
+            "description": "<p>This module defines the filters for use with image buffers.</p>\n<p>This module is basically a collection of functions stored in an object\nas opposed to modules. The functions are destructive, modifying\nthe passed in canvas rather than creating a copy.</p>\n<p>Generally speaking users of this module will use the Filters.apply method\non a canvas to create an effect.</p>\n<p>A number of functions are borrowed/adapted from\n<a href=\"http://www.html5rocks.com/en/tutorials/canvas/imagefilters/\">http://www.html5rocks.com/en/tutorials/canvas/imagefilters/</a>\nor the java processing implementation.</p>\n",
+            "class": "p5",
+            "module": "Events"
+        },
+        {
+            "file": "src/image/image.js",
+            "line": 8,
+            "description": "<p>This module defines the p5 methods for the p5.Image class\nfor drawing images to the main display canvas.</p>\n",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/image.js",
+            "line": 18,
+            "description": "<p>Creates a new p5.Image (the datatype for storing images). This provides a\nfresh buffer of pixels to play with. Set the size of the buffer with the\nwidth and height parameters.\n<br><br>\n.pixels gives access to an array containing the values for all the pixels\nin the display window.\nThese values are numbers. This array is the size (including an appropriate\nfactor for the pixelDensity) of the display window x4,\nrepresenting the R, G, B, A values in order for each pixel, moving from\nleft to right across each row, then down each column. See .pixels for\nmore info. It may also be simpler to use set() or get().\n<br><br>\nBefore accessing the pixels of an image, the data must loaded with the\nloadPixels() function. After the array data has been modified, the\nupdatePixels() function must be run to update the changes.</p>\n",
+            "itemtype": "method",
+            "name": "createImage",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "<p>width in pixels</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "height",
+                    "description": "<p>height in pixels</p>\n",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "the p5.Image object",
+                "type": "p5.Image"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar img = createImage(66, 66);\nimg.loadPixels();\nfor (var i = 0; i < img.width; i++) {\n  for (var j = 0; j < img.height; j++) {\n    img.set(i, j, color(0, 90, 102));\n  }\n}\nimg.updatePixels();\nimage(img, 17, 17);\n</code>\n</div>\n\n<div>\n<code>\nvar img = createImage(66, 66);\nimg.loadPixels();\nfor (var i = 0; i < img.width; i++) {\n  for (var j = 0; j < img.height; j++) {\n    img.set(i, j, color(0, 90, 102, (i % img.width) * 2));\n  }\n}\nimg.updatePixels();\nimage(img, 17, 17);\nimage(img, 34, 34);\n</code>\n</div>\n\n<div>\n<code>\nvar pink = color(255, 102, 204);\nvar img = createImage(66, 66);\nimg.loadPixels();\nvar d = pixelDensity();\nvar halfImage = 4 * (width * d) * (height / 2 * d);\nfor (var i = 0; i < halfImage; i += 4) {\n  img.pixels[i] = red(pink);\n  img.pixels[i + 1] = green(pink);\n  img.pixels[i + 2] = blue(pink);\n  img.pixels[i + 3] = alpha(pink);\n}\nimg.updatePixels();\nimage(img, 17, 17);\n</code>\n</div>"
+            ],
+            "alt": "66x66 dark turquoise rect in center of canvas.\n2 gradated dark turquoise rects fade left. 1 center 1 bottom right of canvas\nno image displayed",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/image.js",
+            "line": 98,
+            "description": "<p>Save the current canvas as an image. In Safari, this will open the\nimage in the window and the user must provide their own\nfilename on save-as. Other browsers will either save the\nfile immediately, or prompt the user with a dialogue window.</p>\n",
+            "itemtype": "method",
+            "name": "saveCanvas",
+            "example": [
+                "\n <div class='norender'><code>\n function setup() {\n var c = createCanvas(100, 100);\n background(255, 0, 0);\n saveCanvas(c, 'myCanvas', 'jpg');\n }\n </code></div>\n <div class='norender'><code>\n // note that this example has the same result as above\n // if no canvas is specified, defaults to main canvas\n function setup() {\n var c = createCanvas(100, 100);\n background(255, 0, 0);\n saveCanvas('myCanvas', 'jpg');\n\n // all of the following are valid\n saveCanvas(c, 'myCanvas', 'jpg');\n saveCanvas(c, 'myCanvas');\n saveCanvas(c);\n saveCanvas('myCanvas', 'png');\n saveCanvas('myCanvas');\n saveCanvas();\n }\n </code></div>"
+            ],
+            "alt": "no image displayed\n no image displayed\n no image displayed",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Image",
+            "overloads": [
+                {
+                    "line": 98,
+                    "params": [
+                        {
+                            "name": "selectedCanvas",
+                            "description": "<p>a variable\n                                representing a specific html5 canvas (optional)</p>\n",
+                            "type": "p5.Element|HTMLCanvasElement"
+                        },
+                        {
+                            "name": "filename",
+                            "description": "",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "extension",
+                            "description": "<p>&#39;jpg&#39; or &#39;png&#39;</p>\n",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "line": 141,
+                    "params": [
+                        {
+                            "name": "filename",
+                            "description": "",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "extension",
+                            "description": "",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/image.js",
+            "line": 178,
+            "description": "<p>Capture a sequence of frames that can be used to create a movie.\nAccepts a callback. For example, you may wish to send the frames\nto a server where they can be stored or converted into a movie.\nIf no callback is provided, the browser will pop up save dialogues in an\nattempt to download all of the images that have just been created. With the\ncallback provided the image data isn&#39;t saved by default but instead passed\nas an argument to the callback function as an array of objects, with the\nsize of array equal to the total number of frames.</p>\n<p>Note that saveFrames() will only save the first 15 frames of an animation.\nTo export longer animations, you might look into a library like\n<a href=\"https://github.com/spite/ccapture.js/\">ccapture.js</a>.</p>\n",
+            "itemtype": "method",
+            "name": "saveFrames",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "extension",
+                    "description": "<p>&#39;jpg&#39; or &#39;png&#39;</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "duration",
+                    "description": "<p>Duration in seconds to save the frames for.</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "framerate",
+                    "description": "<p>Framerate to save the frames in.</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>A callback function that will be executed\n                                to handle the image data. This function\n                                should accept an array as argument. The\n                                array will contain the specified number of\n                                frames of objects. Each object has three\n                                properties: imageData - an\n                                image/octet-stream, filename and extension.</p>\n",
+                    "type": "Function(Array)",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\n function draw() {\n background(mouseX);\n }\n\n function mousePressed() {\n saveFrames('out', 'png', 1, 25, function(data) {\n   print(data);\n });\n }\n</code></div>"
+            ],
+            "alt": "canvas background goes from light to dark with mouse x.",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/loading_displaying.js",
+            "line": 17,
+            "description": "<p>Loads an image from a path and creates a p5.Image from it.\n<br><br>\nThe image may not be immediately available for rendering\nIf you want to ensure that the image is ready before doing\nanything with it, place the loadImage() call in preload().\nYou may also supply a callback function to handle the image when it&#39;s ready.\n<br><br>\nThe path to the image should be relative to the HTML file\nthat links in your sketch. Loading an image from a URL or other\nremote location may be blocked due to your browser&#39;s built-in\nsecurity.</p>\n",
+            "itemtype": "method",
+            "name": "loadImage",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>Path of the image to be loaded</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "successCallback",
+                    "description": "<p>Function to be called once\n                               the image is loaded. Will be passed the\n                               p5.Image.</p>\n",
+                    "type": "function(p5.Image)",
+                    "optional": true
+                },
+                {
+                    "name": "failureCallback",
+                    "description": "<p>called with event error if\n                               the image fails to load.</p>\n",
+                    "type": "Function(Event)",
+                    "optional": true
+                }
+            ],
