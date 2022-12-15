@@ -9267,3 +9267,1000 @@ module.exports={
                     "optional": true
                 }
             ],
+            "return": {
+                "description": "the p5.Image object",
+                "type": "p5.Image"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  // here we use a callback to display the image after loading\n  loadImage('assets/laDefense.jpg', function(img) {\n    image(img, 0, 0);\n  });\n}\n</code>\n</div>"
+            ],
+            "alt": "image of the underside of a white umbrella and grided ceililng above\nimage of the underside of a white umbrella and grided ceililng above",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Loading & Displaying"
+        },
+        {
+            "file": "src/image/loading_displaying.js",
+            "line": 125,
+            "description": "<p>Draw an image to the p5.js canvas.</p>\n<p>This function can be used with different numbers of parameters. The\nsimplest use requires only three parameters: img, x, and y—where (x, y) is\nthe position of the image. Two more parameters can optionally be added to\nspecify the width and height of the image.</p>\n<p>This function can also be used with all eight Number parameters. To\ndifferentiate between all these parameters, p5.js uses the language of\n&quot;destination rectangle&quot; (which corresponds to &quot;dx&quot;, &quot;dy&quot;, etc.) and &quot;source\nimage&quot; (which corresponds to &quot;sx&quot;, &quot;sy&quot;, etc.) below. Specifying the\n&quot;source image&quot; dimensions can be useful when you want to display a\nsubsection of the source image instead of the whole thing. Here&#39;s a diagram\nto explain further:\n<img src=\"assets/drawImage.png\"></img></p>\n",
+            "itemtype": "method",
+            "name": "image",
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  // Top-left corner of the img is at (0, 0)\n  // Width and height are the img's original width and height\n  image(img, 0, 0);\n}\n</code>\n</div>\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  background(50);\n  // Top-left corner of the img is at (10, 10)\n  // Width and height are 50 x 50\n  image(img, 10, 10, 50, 50);\n}\n</code>\n</div>\n<div>\n<code>\nfunction setup() {\n  // Here, we use a callback to display the image after loading\n  loadImage('assets/laDefense.jpg', function(img) {\n    image(img, 0, 0);\n  });\n}\n</code>\n</div>\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/gradient.png');\n}\nfunction setup() {\n  // 1. Background image\n  // Top-left corner of the img is at (0, 0)\n  // Width and height are the img's original width and height, 100 x 100\n  image(img, 0, 0);\n  // 2. Top right image\n  // Top-left corner of destination rectangle is at (50, 0)\n  // Destination rectangle width and height are 40 x 20\n  // The next parameters are relative to the source image:\n  // - Starting at position (50, 50) on the source image, capture a 50 x 50\n  // subsection\n  // - Draw this subsection to fill the dimensions of the destination rectangle\n  image(img, 50, 0, 40, 20, 50, 50, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "image of the underside of a white umbrella and gridded ceiling above\nimage of the underside of a white umbrella and gridded ceiling above",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Loading & Displaying",
+            "overloads": [
+                {
+                    "line": 125,
+                    "params": [
+                        {
+                            "name": "img",
+                            "description": "<p>the image to display</p>\n",
+                            "type": "p5.Image|p5.Element"
+                        },
+                        {
+                            "name": "x",
+                            "description": "<p>the x-coordinate of the top-left corner of the image</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y-coordinate of the top-left corner of the image</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "width",
+                            "description": "<p>the width to draw the image</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "height",
+                            "description": "<p>the height to draw the image</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "line": 213,
+                    "params": [
+                        {
+                            "name": "img",
+                            "description": "",
+                            "type": "p5.Image|p5.Element"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "<p>the x-coordinate of the destination\n                          rectangle in which to draw the source image</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "<p>the y-coordinate of the destination\n                          rectangle in which to draw the source image</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "dWidth",
+                            "description": "<p>the width of the destination rectangle</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "dHeight",
+                            "description": "<p>the height of the destination rectangle</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "sx",
+                            "description": "<p>the x-coordinate of the subsection of the source\nimage to draw into the destination rectangle</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "<p>the y-coordinate of the subsection of the source\nimage to draw into the destination rectangle</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "sWidth",
+                            "description": "<p>the width of the subsection of the\n                          source image to draw into the destination\n                          rectangle</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "sHeight",
+                            "description": "<p>the height of the subsection of the\n                           source image to draw into the destination rectangle</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/loading_displaying.js",
+            "line": 296,
+            "description": "<p>Sets the fill value for displaying images. Images can be tinted to\nspecified colors or made transparent by including an alpha value.\n<br><br>\nTo apply transparency to an image without affecting its color, use\nwhite as the tint color and specify an alpha value. For instance,\ntint(255, 128) will make an image 50% transparent (assuming the default\nalpha range of 0-255, which can be changed with colorMode()).\n<br><br>\nThe value for the gray parameter must be less than or equal to the current\nmaximum value as specified by colorMode(). The default maximum value is\n255.</p>\n",
+            "itemtype": "method",
+            "name": "tint",
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  tint(0, 153, 204); // Tint blue\n  image(img, 50, 0);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  tint(0, 153, 204, 126); // Tint blue and set transparency\n  image(img, 50, 0);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  tint(255, 126); // Apply transparency without changing color\n  image(img, 50, 0);\n}\n</code>\n</div>"
+            ],
+            "alt": "2 side by side images of umbrella and ceiling, one image with blue tint\nImages of umbrella and ceiling, one half of image with blue tint\n2 side by side images of umbrella and ceiling, one image translucent",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Loading & Displaying",
+            "overloads": [
+                {
+                    "line": 296,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value relative to\n                                the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "line": 369,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>a color string</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "line": 375,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ]
+                },
+                {
+                    "line": 381,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>the tint color</p>\n",
+                            "type": "p5.Color"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/loading_displaying.js",
+            "line": 391,
+            "description": "<p>Removes the current fill value for displaying images and reverts to\ndisplaying images with their original hues.</p>\n",
+            "itemtype": "method",
+            "name": "noTint",
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  tint(0, 153, 204); // Tint blue\n  image(img, 0, 0);\n  noTint(); // Disable tint\n  image(img, 50, 0);\n}\n</code>\n</div>"
+            ],
+            "alt": "2 side by side images of bricks, left image with blue tint",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Loading & Displaying"
+        },
+        {
+            "file": "src/image/loading_displaying.js",
+            "line": 457,
+            "description": "<p>Set image mode. Modifies the location from which images are drawn by\nchanging the way in which parameters given to image() are interpreted.\nThe default mode is imageMode(CORNER), which interprets the second and\nthird parameters of image() as the upper-left corner of the image. If\ntwo additional parameters are specified, they are used to set the image&#39;s\nwidth and height.\n<br><br>\nimageMode(CORNERS) interprets the second and third parameters of image()\nas the location of one corner, and the fourth and fifth parameters as the\nopposite corner.\n<br><br>\nimageMode(CENTER) interprets the second and third parameters of image()\nas the image&#39;s center point. If two additional parameters are specified,\nthey are used to set the image&#39;s width and height.</p>\n",
+            "itemtype": "method",
+            "name": "imageMode",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>either CORNER, CORNERS, or CENTER</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "example": [
+                "\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  imageMode(CORNER);\n  image(img, 10, 10, 50, 50);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  imageMode(CORNERS);\n  image(img, 10, 10, 90, 40);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  imageMode(CENTER);\n  image(img, 50, 50, 80, 80);\n}\n</code>\n</div>"
+            ],
+            "alt": "small square image of bricks\nhorizontal rectangle image of bricks\nlarge square image of bricks",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Loading & Displaying"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 9,
+            "description": "<p>This module defines the p5.Image class and P5 methods for\ndrawing images to the main display canvas.</p>\n",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 91,
+            "description": "<p>Image width.</p>\n",
+            "itemtype": "property",
+            "name": "width",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div><code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  createCanvas(100, 100);\n  image(img, 0, 0);\n  for (var i = 0; i < img.width; i++) {\n    var c = img.get(i, img.height / 2);\n    stroke(c);\n    line(i, height / 2, i, height);\n  }\n}\n</code></div>"
+            ],
+            "alt": "rocky mountains in top and horizontal lines in corresponding colors in bottom.",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 118,
+            "description": "<p>Image height.</p>\n",
+            "itemtype": "property",
+            "name": "height",
+            "type": "Number",
+            "readonly": "",
+            "example": [
+                "\n<div><code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  createCanvas(100, 100);\n  image(img, 0, 0);\n  for (var i = 0; i < img.height; i++) {\n    var c = img.get(img.width / 2, i);\n    stroke(c);\n    line(0, i, width / 2, i);\n  }\n}\n</code></div>"
+            ],
+            "alt": "rocky mountains on right and vertical lines in corresponding colors on left.",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 152,
+            "description": "<p>Array containing the values for all the pixels in the display window.\nThese values are numbers. This array is the size (include an appropriate\nfactor for pixelDensity) of the display window x4,\nrepresenting the R, G, B, A values in order for each pixel, moving from\nleft to right across each row, then down each column. Retina and other\nhigh denisty displays may have more pixels[] (by a factor of\npixelDensity^2).\nFor example, if the image is 100x100 pixels, there will be 40,000. With\npixelDensity = 2, there will be 160,000. The first four values\n(indices 0-3) in the array will be the R, G, B, A values of the pixel at\n(0, 0). The second four values (indices 4-7) will contain the R, G, B, A\nvalues of the pixel at (1, 0). More generally, to set values for a pixel\nat (x, y):</p>\n<pre><code class=\"lang-javascript\">var d = pixelDensity();\nfor (var i = 0; i &lt; d; i++) {\n  for (var j = 0; j &lt; d; j++) {\n    // loop over\n    idx = 4 * ((y * d + j) * width * d + (x * d + i));\n    pixels[idx] = r;\n    pixels[idx+1] = g;\n    pixels[idx+2] = b;\n    pixels[idx+3] = a;\n  }\n}\n</code></pre>\n<p><br><br>\nBefore accessing this array, the data must loaded with the loadPixels()\nfunction. After the array data has been modified, the updatePixels()\nfunction must be run to update the changes.</p>\n",
+            "itemtype": "property",
+            "name": "pixels",
+            "type": "Number[]",
+            "example": [
+                "\n<div>\n<code>\nvar img = createImage(66, 66);\nimg.loadPixels();\nfor (var i = 0; i < img.width; i++) {\n  for (var j = 0; j < img.height; j++) {\n    img.set(i, j, color(0, 90, 102));\n  }\n}\nimg.updatePixels();\nimage(img, 17, 17);\n</code>\n</div>\n<div>\n<code>\nvar pink = color(255, 102, 204);\nvar img = createImage(66, 66);\nimg.loadPixels();\nfor (var i = 0; i < 4 * (width * height / 2); i += 4) {\n  img.pixels[i] = red(pink);\n  img.pixels[i + 1] = green(pink);\n  img.pixels[i + 2] = blue(pink);\n  img.pixels[i + 3] = alpha(pink);\n}\nimg.updatePixels();\nimage(img, 17, 17);\n</code>\n</div>"
+            ],
+            "alt": "66x66 turquoise rect in center of canvas\n66x66 pink rect in center of canvas",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 223,
+            "description": "<p>Helper fxn for sharing pixel methods</p>\n",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 232,
+            "description": "<p>Loads the pixels data for this image into the [pixels] attribute.</p>\n",
+            "itemtype": "method",
+            "name": "loadPixels",
+            "example": [
+                "\n<div><code>\nvar myImage;\nvar halfImage;\n\nfunction preload() {\n  myImage = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  myImage.loadPixels();\n  halfImage = 4 * width * height / 2;\n  for (var i = 0; i < halfImage; i++) {\n    myImage.pixels[i + halfImage] = myImage.pixels[i];\n  }\n  myImage.updatePixels();\n}\n\nfunction draw() {\n  image(myImage, 0, 0);\n}\n</code></div>"
+            ],
+            "alt": "2 images of rocky mountains vertically stacked",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 268,
+            "description": "<p>Updates the backing canvas for this image with the contents of\nthe [pixels] array.</p>\n",
+            "itemtype": "method",
+            "name": "updatePixels",
+            "example": [
+                "\n<div><code>\nvar myImage;\nvar halfImage;\n\nfunction preload() {\n  myImage = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  myImage.loadPixels();\n  halfImage = 4 * width * height / 2;\n  for (var i = 0; i < halfImage; i++) {\n    myImage.pixels[i + halfImage] = myImage.pixels[i];\n  }\n  myImage.updatePixels();\n}\n\nfunction draw() {\n  image(myImage, 0, 0);\n}\n</code></div>"
+            ],
+            "alt": "2 images of rocky mountains vertically stacked",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image",
+            "overloads": [
+                {
+                    "line": 268,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>x-offset of the target update area for the\n                             underlying canvas</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y-offset of the target update area for the\n                             underlying canvas</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "w",
+                            "description": "<p>height of the target update area for the\n                             underlying canvas</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "h",
+                            "description": "<p>height of the target update area for the\n                             underlying canvas</p>\n",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "line": 308,
+                    "params": []
+                }
+            ]
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 316,
+            "description": "<p>Get a region of pixels from an image.</p>\n<p>If no params are passed, those whole image is returned,\nif x and y are the only params passed a single pixel is extracted\nif all params are passed a rectangle region is extracted and a p5.Image\nis returned.</p>\n<p>Returns undefined if the region is outside the bounds of the image</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "<p>width</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "color of pixel at x,y in array format\n                                   [R, G, B, A] or p5.Image",
+                "type": "Number[]|Color|p5.Image"
+            },
+            "example": [
+                "\n<div><code>\nvar myImage;\nvar c;\n\nfunction preload() {\n  myImage = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  background(myImage);\n  noStroke();\n  c = myImage.get(60, 90);\n  fill(c);\n  rect(25, 25, 50, 50);\n}\n\n//get() returns color here\n</code></div>"
+            ],
+            "alt": "image of rocky mountains with 50x50 green rect in front",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 361,
+            "description": "<p>Set the color of a single pixel or write an image into\nthis p5.Image.</p>\n<p>Note that for a large number of pixels this will\nbe slower than directly manipulating the pixels array\nand then calling updatePixels().</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the pixel</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the pixel</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "a",
+                    "description": "<p>grayscale value | pixel array |\n                               a p5.Color | image to copy</p>\n",
+                    "type": "Number|Number[]|Object"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar img = createImage(66, 66);\nimg.loadPixels();\nfor (var i = 0; i < img.width; i++) {\n  for (var j = 0; j < img.height; j++) {\n    img.set(i, j, color(0, 90, 102, (i % img.width) * 2));\n  }\n}\nimg.updatePixels();\nimage(img, 17, 17);\nimage(img, 34, 34);\n</code>\n</div>"
+            ],
+            "alt": "2 gradated dark turquoise rects fade left. 1 center 1 bottom right of canvas",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 399,
+            "description": "<p>Resize the image to a new width and height. To make the image scale\nproportionally, use 0 as the value for the wide or high parameter.\nFor instance, to make the width of an image 150 pixels, and change\nthe height using the same proportion, use resize(150, 0).</p>\n",
+            "itemtype": "method",
+            "name": "resize",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "<p>the resized image width</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "<p>the resized image height</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar img;\n\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction draw() {\n  image(img, 0, 0);\n}\n\nfunction mousePressed() {\n  img.resize(50, 100);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains. zoomed in",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 483,
+            "description": "<p>Copies a region of pixels from one image to another. If no\nsrcImage is specified this is used as the source. If the source\nand destination regions aren&#39;t the same size, it will\nautomatically resize source pixels to fit the specified\ntarget region.</p>\n",
+            "itemtype": "method",
+            "name": "copy",
+            "example": [
+                "\n<div><code>\nvar photo;\nvar bricks;\nvar x;\nvar y;\n\nfunction preload() {\n  photo = loadImage('assets/rockies.jpg');\n  bricks = loadImage('assets/bricks.jpg');\n}\n\nfunction setup() {\n  x = bricks.width / 2;\n  y = bricks.height / 2;\n  photo.copy(bricks, 0, 0, x, y, 0, 0, x, y);\n  image(photo, 0, 0);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains and smaller image on top of bricks at top left",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image",
+            "overloads": [
+                {
+                    "line": 483,
+                    "params": [
+                        {
+                            "name": "srcImage",
+                            "description": "<p>source image</p>\n",
+                            "type": "p5.Image|p5.Element"
+                        },
+                        {
+                            "name": "sx",
+                            "description": "<p>X coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "<p>Y coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "<p>source image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "<p>source image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "<p>X coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "<p>Y coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "<p>destination image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "<p>destination image height</p>\n",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "line": 524,
+                    "params": [
+                        {
+                            "name": "sx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "",
+                            "type": "Integer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 563,
+            "description": "<p>Masks part of an image from displaying by loading another\nimage and using it&#39;s alpha channel as an alpha channel for\nthis image.</p>\n",
+            "itemtype": "method",
+            "name": "mask",
+            "params": [
+                {
+                    "name": "srcImage",
+                    "description": "<p>source image</p>\n",
+                    "type": "p5.Image"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar photo, maskImage;\nfunction preload() {\n  photo = loadImage('assets/rockies.jpg');\n  maskImage = loadImage('assets/mask2.png');\n}\n\nfunction setup() {\n  createCanvas(100, 100);\n  photo.mask(maskImage);\n  image(photo, 0, 0);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains with white at right\n\n\nhttp://blogs.adobe.com/webplatform/2013/01/28/blending-features-in-canvas/",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 626,
+            "description": "<p>Applies an image filter to a p5.Image</p>\n",
+            "itemtype": "method",
+            "name": "filter",
+            "params": [
+                {
+                    "name": "filterType",
+                    "description": "<p>either THRESHOLD, GRAY, OPAQUE, INVERT,\n                               POSTERIZE, BLUR, ERODE, DILATE or BLUR.\n                               See Filters.js for docs on\n                               each available filter</p>\n",
+                    "type": "Constant"
+                },
+                {
+                    "name": "filterParam",
+                    "description": "<p>an optional parameter unique\n                               to each filter, see above</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar photo1;\nvar photo2;\n\nfunction preload() {\n  photo1 = loadImage('assets/rockies.jpg');\n  photo2 = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  photo2.filter('gray');\n  image(photo1, 0, 0);\n  image(photo2, width / 2, 0);\n}\n</code></div>"
+            ],
+            "alt": "2 images of rocky mountains left one in color, right in black and white",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 662,
+            "description": "<p>Copies a region of pixels from one image to another, using a specified\nblend mode to do the operation.</p>\n",
+            "itemtype": "method",
+            "name": "blend",
+            "example": [
+                "\n<div><code>\nvar mountains;\nvar bricks;\n\nfunction preload() {\n  mountains = loadImage('assets/rockies.jpg');\n  bricks = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  mountains.blend(bricks, 0, 0, 33, 100, 67, 0, 33, 100, ADD);\n  image(mountains, 0, 0);\n  image(bricks, 0, 0);\n}\n</code></div>\n<div><code>\nvar mountains;\nvar bricks;\n\nfunction preload() {\n  mountains = loadImage('assets/rockies.jpg');\n  bricks = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  mountains.blend(bricks, 0, 0, 33, 100, 67, 0, 33, 100, DARKEST);\n  image(mountains, 0, 0);\n  image(bricks, 0, 0);\n}\n</code></div>\n<div><code>\nvar mountains;\nvar bricks;\n\nfunction preload() {\n  mountains = loadImage('assets/rockies.jpg');\n  bricks = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  mountains.blend(bricks, 0, 0, 33, 100, 67, 0, 33, 100, LIGHTEST);\n  image(mountains, 0, 0);\n  image(bricks, 0, 0);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains. Brick images on left and right. Right overexposed\nimage of rockies. Brickwall images on left and right. Right mortar transparent\nimage of rockies. Brickwall images on left and right. Right translucent",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image",
+            "overloads": [
+                {
+                    "line": 662,
+                    "params": [
+                        {
+                            "name": "srcImage",
+                            "description": "<p>source image</p>\n",
+                            "type": "p5.Image"
+                        },
+                        {
+                            "name": "sx",
+                            "description": "<p>X coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "<p>Y coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "<p>source image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "<p>source image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "<p>X coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "<p>Y coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "<p>destination image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "<p>destination image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "blendMode",
+                            "description": "<p>the blend mode. either\n    BLEND, DARKEST, LIGHTEST, DIFFERENCE,\n    MULTIPLY, EXCLUSION, SCREEN, REPLACE, OVERLAY, HARD_LIGHT,\n    SOFT_LIGHT, DODGE, BURN, ADD or NORMAL.</p>\n<p>Available blend modes are: normal | multiply | screen | overlay |\n           darken | lighten | color-dodge | color-burn | hard-light |\n           soft-light | difference | exclusion | hue | saturation |\n           color | luminosity</p>\n<p><a href=\"http://blogs.adobe.com/webplatform/2013/01/28/blending-features-in-canvas/\">http://blogs.adobe.com/webplatform/2013/01/28/blending-features-in-canvas/</a></p>\n",
+                            "type": "Constant"
+                        }
+                    ]
+                },
+                {
+                    "line": 741,
+                    "params": [
+                        {
+                            "name": "sx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "blendMode",
+                            "description": "",
+                            "type": "Constant"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/p5.Image.js",
+            "line": 784,
+            "description": "<p>Saves the image to a file and force the browser to download it.\nAccepts two strings for filename and file extension\nSupports png (default) and jpg.</p>\n",
+            "itemtype": "method",
+            "name": "save",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "<p>give your file a name</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "extension",
+                    "description": "<p>&#39;png&#39; or &#39;jpg&#39;</p>\n",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar photo;\n\nfunction preload() {\n  photo = loadImage('assets/rockies.jpg');\n}\n\nfunction draw() {\n  image(photo, 0, 0);\n}\n\nfunction keyTyped() {\n  if (key === 's') {\n    photo.save('photo', 'png');\n  }\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains.",
+            "class": "p5.Image",
+            "module": "Image",
+            "submodule": "Image"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 14,
+            "description": "<p><a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference\n/Global_Objects/Uint8ClampedArray' target='_blank'>Uint8ClampedArray</a>\ncontaining the values for all the pixels in the display window.\nThese values are numbers. This array is the size (include an appropriate\nfactor for pixelDensity) of the display window x4,\nrepresenting the R, G, B, A values in order for each pixel, moving from\nleft to right across each row, then down each column. Retina and other\nhigh density displays will have more pixels[] (by a factor of\npixelDensity^2).\nFor example, if the image is 100x100 pixels, there will be 40,000. On a\nretina display, there will be 160,000.\n<br><br>\nThe first four values (indices 0-3) in the array will be the R, G, B, A\nvalues of the pixel at (0, 0). The second four values (indices 4-7) will\ncontain the R, G, B, A values of the pixel at (1, 0). More generally, to\nset values for a pixel at (x, y):</p>\n<pre><code class=\"lang-javascript\">var d = pixelDensity();\nfor (var i = 0; i &lt; d; i++) {\n  for (var j = 0; j &lt; d; j++) {\n    // loop over\n    idx = 4 * ((y * d + j) * width * d + (x * d + i));\n    pixels[idx] = r;\n    pixels[idx+1] = g;\n    pixels[idx+2] = b;\n    pixels[idx+3] = a;\n  }\n}\n</code></pre>\n<p>While the above method is complex, it is flexible enough to work with\nany pixelDensity. Note that set() will automatically take care of\nsetting all the appropriate values in pixels[] for a given (x, y) at\nany pixelDensity, but the performance may not be as fast when lots of\nmodifications are made to the pixel array.\n<br><br>\nBefore accessing this array, the data must loaded with the loadPixels()\nfunction. After the array data has been modified, the updatePixels()\nfunction must be run to update the changes.\n<br><br>\nNote that this is not a standard javascript array.  This means that\nstandard javascript functions such as <code>slice()</code> or\n<code>arrayCopy()</code> do not\nwork.</p>",
+            "itemtype": "property",
+            "name": "pixels",
+            "type": "Number[]",
+            "example": [
+                "\n<div>\n<code>\nvar pink = color(255, 102, 204);\nloadPixels();\nvar d = pixelDensity();\nvar halfImage = 4 * (width * d) * (height / 2 * d);\nfor (var i = 0; i < halfImage; i += 4) {\n  pixels[i] = red(pink);\n  pixels[i + 1] = green(pink);\n  pixels[i + 2] = blue(pink);\n  pixels[i + 3] = alpha(pink);\n}\nupdatePixels();\n</code>\n</div>"
+            ],
+            "alt": "top half of canvas pink, bottom grey",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 83,
+            "description": "<p>Copies a region of pixels from one image to another, using a specified\nblend mode to do the operation.</p>\n",
+            "itemtype": "method",
+            "name": "blend",
+            "example": [
+                "\n<div><code>\nvar img0;\nvar img1;\n\nfunction preload() {\n  img0 = loadImage('assets/rockies.jpg');\n  img1 = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  background(img0);\n  image(img1, 0, 0);\n  blend(img1, 0, 0, 33, 100, 67, 0, 33, 100, LIGHTEST);\n}\n</code></div>\n<div><code>\nvar img0;\nvar img1;\n\nfunction preload() {\n  img0 = loadImage('assets/rockies.jpg');\n  img1 = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  background(img0);\n  image(img1, 0, 0);\n  blend(img1, 0, 0, 33, 100, 67, 0, 33, 100, DARKEST);\n}\n</code></div>\n<div><code>\nvar img0;\nvar img1;\n\nfunction preload() {\n  img0 = loadImage('assets/rockies.jpg');\n  img1 = loadImage('assets/bricks_third.jpg');\n}\n\nfunction setup() {\n  background(img0);\n  image(img1, 0, 0);\n  blend(img1, 0, 0, 33, 100, 67, 0, 33, 100, ADD);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains. Brick images on left and right. Right overexposed\nimage of rockies. Brickwall images on left and right. Right mortar transparent\nimage of rockies. Brickwall images on left and right. Right translucent",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels",
+            "overloads": [
+                {
+                    "line": 83,
+                    "params": [
+                        {
+                            "name": "srcImage",
+                            "description": "<p>source image</p>\n",
+                            "type": "p5.Image"
+                        },
+                        {
+                            "name": "sx",
+                            "description": "<p>X coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "<p>Y coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "<p>source image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "<p>source image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "<p>X coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "<p>Y coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "<p>destination image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "<p>destination image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "blendMode",
+                            "description": "<p>the blend mode. either\n    BLEND, DARKEST, LIGHTEST, DIFFERENCE,\n    MULTIPLY, EXCLUSION, SCREEN, REPLACE, OVERLAY, HARD_LIGHT,\n    SOFT_LIGHT, DODGE, BURN, ADD or NORMAL.</p>\n",
+                            "type": "Constant"
+                        }
+                    ]
+                },
+                {
+                    "line": 156,
+                    "params": [
+                        {
+                            "name": "sx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "blendMode",
+                            "description": "",
+                            "type": "Constant"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 176,
+            "description": "<p>Copies a region of the canvas to another region of the canvas\nand copies a region of pixels from an image used as the srcImg parameter\ninto the canvas srcImage is specified this is used as the source. If\nthe source and destination regions aren&#39;t the same size, it will\nautomatically resize source pixels to fit the specified\ntarget region.</p>\n",
+            "itemtype": "method",
+            "name": "copy",
+            "example": [
+                "\n<div><code>\nvar img;\n\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  background(img);\n  copy(img, 7, 22, 10, 10, 35, 25, 50, 50);\n  stroke(255);\n  noFill();\n  // Rectangle shows area being copied\n  rect(7, 22, 10, 10);\n}\n</code></div>"
+            ],
+            "alt": "image of rocky mountains. Brick images on left and right. Right overexposed\nimage of rockies. Brickwall images on left and right. Right mortar transparent\nimage of rockies. Brickwall images on left and right. Right translucent",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels",
+            "overloads": [
+                {
+                    "line": 176,
+                    "params": [
+                        {
+                            "name": "srcImage",
+                            "description": "<p>source image</p>\n",
+                            "type": "p5.Image|p5.Element"
+                        },
+                        {
+                            "name": "sx",
+                            "description": "<p>X coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "<p>Y coordinate of the source&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "<p>source image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "<p>source image height</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "<p>X coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "<p>Y coordinate of the destination&#39;s upper left corner</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "<p>destination image width</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "<p>destination image height</p>\n",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "line": 219,
+                    "params": [
+                        {
+                            "name": "sx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "sh",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dx",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dy",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dw",
+                            "description": "",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dh",
+                            "description": "",
+                            "type": "Integer"
+                        }
