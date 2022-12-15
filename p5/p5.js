@@ -10264,3 +10264,977 @@ module.exports={
                             "description": "",
                             "type": "Integer"
                         }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 235,
+            "description": "<p>Applies a filter to the canvas.\n<br><br></p>\n<p>The presets options are:\n<br><br></p>\n<p>THRESHOLD\nConverts the image to black and white pixels depending if they are above or\nbelow the threshold defined by the level parameter. The parameter must be\nbetween 0.0 (black) and 1.0 (white). If no level is specified, 0.5 is used.\n<br><br></p>\n<p>GRAY\nConverts any colors in the image to grayscale equivalents. No parameter\nis used.\n<br><br></p>\n<p>OPAQUE\nSets the alpha channel to entirely opaque. No parameter is used.\n<br><br></p>\n<p>INVERT\nSets each pixel to its inverse value. No parameter is used.\n<br><br></p>\n<p>POSTERIZE\nLimits each channel of the image to the number of colors specified as the\nparameter. The parameter can be set to values between 2 and 255, but\nresults are most noticeable in the lower ranges.\n<br><br></p>\n<p>BLUR\nExecutes a Gaussian blur with the level parameter specifying the extent\nof the blurring. If no parameter is used, the blur is equivalent to\nGaussian blur of radius 1. Larger values increase the blur.\n<br><br></p>\n<p>ERODE\nReduces the light areas. No parameter is used.\n<br><br></p>\n<p>DILATE\nIncreases the light areas. No parameter is used.</p>\n",
+            "itemtype": "method",
+            "name": "filter",
+            "params": [
+                {
+                    "name": "filterType",
+                    "description": "<p>either THRESHOLD, GRAY, OPAQUE, INVERT,\n                               POSTERIZE, BLUR, ERODE, DILATE or BLUR.\n                               See Filters.js for docs on\n                               each available filter</p>\n",
+                    "type": "Constant"
+                },
+                {
+                    "name": "filterParam",
+                    "description": "<p>an optional parameter unique\n                               to each filter, see above</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(THRESHOLD);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(GRAY);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(OPAQUE);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(INVERT);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(POSTERIZE, 3);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(DILATE);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(BLUR, 3);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/bricks.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  filter(ERODE);\n}\n</code>\n</div>"
+            ],
+            "alt": "black and white image of a brick wall.\ngreyscale image of a brickwall\nimage of a brickwall\njade colored image of a brickwall\nred and pink image of a brickwall\nimage of a brickwall\nblurry image of a brickwall\nimage of a brickwall\nimage of a brickwall with less detail",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 413,
+            "description": "<p>Returns an array of [R,G,B,A] values for any pixel or grabs a section of\nan image. If no parameters are specified, the entire image is returned.\nUse the x and y parameters to get the value of one pixel. Get a section of\nthe display window by specifying additional w and h parameters. When\ngetting an image, the x and y parameters define the coordinates for the\nupper-left corner of the image, regardless of the current imageMode().\n<br><br>\nIf the pixel requested is outside of the image window, [0,0,0,255] is\nreturned. To get the numbers scaled according to the current color ranges\nand taking into account colorMode, use getColor instead of get.\n<br><br>\nGetting the color of a single pixel with get(x, y) is easy, but not as fast\nas grabbing the data directly from pixels[]. The equivalent statement to\nget(x, y) using pixels[] with pixel density d is\n<code>\nvar x, y, d; // set these to the coordinates\nvar off = (y <em> width + x) </em> d * 4;\nvar components = [\n  pixels[off],\n  pixels[off + 1],\n  pixels[off + 2],\n  pixels[off + 3]\n];\nprint(components);\n</code>\n<br><br>\nSee the reference for pixels[] for more information.</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "<p>width</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "values of pixel at x,y in array format\n                             [R, G, B, A] or p5.Image",
+                "type": "Number[]|p5.Image"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  var c = get();\n  image(c, width / 2, 0);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\nfunction setup() {\n  image(img, 0, 0);\n  var c = get(50, 90);\n  fill(c);\n  noStroke();\n  rect(25, 25, 50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "2 images of the rocky mountains, side-by-side\nImage of the rocky mountains with 50x50 green rect in center of canvas",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 489,
+            "description": "<p>Loads the pixel data for the display window into the pixels[] array. This\nfunction must always be called before reading from or writing to pixels[].\nNote that only changes made with set() or direct manipulation of pixels[]\nwill occur.</p>\n",
+            "itemtype": "method",
+            "name": "loadPixels",
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  image(img, 0, 0);\n  var d = pixelDensity();\n  var halfImage = 4 * (img.width * d) * (img.height * d / 2);\n  loadPixels();\n  for (var i = 0; i < halfImage; i++) {\n    pixels[i + halfImage] = pixels[i];\n  }\n  updatePixels();\n}\n</code>\n</div>"
+            ],
+            "alt": "two images of the rocky mountains. one on top, one on bottom of canvas.",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 525,
+            "description": "<p>Changes the color of any pixel, or writes an image directly to the\ndisplay window.</p>\n<p>The x and y parameters specify the pixel to change and the c parameter\nspecifies the color value. This can be a p5.Color object, or [R, G, B, A]\npixel array. It can also be a single grayscale value.\nWhen setting an image, the x and y parameters define the coordinates for\nthe upper-left corner of the image, regardless of the current imageMode().\n</p>\n<p>\nAfter using set(), you must call updatePixels() for your changes to appear.\nThis should be called once all pixels have been set, and must be called before\ncalling .get() or drawing the image.\n</p>\n<p>Setting the color of a single pixel with set(x, y) is easy, but not as\nfast as putting the data directly into pixels[]. Setting the pixels[]\nvalues directly may be complicated when working with a retina display,\nbut will perform better when lots of pixels need to be set directly on\nevery loop.</p>\n<p>See the reference for pixels[] for more information.</p>",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the pixel</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the pixel</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "c",
+                    "description": "<p>insert a grayscale value | a pixel array |\n                               a p5.Color object | a p5.Image to copy</p>\n",
+                    "type": "Number|Number[]|Object"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar black = color(0);\nset(30, 20, black);\nset(85, 20, black);\nset(85, 75, black);\nset(30, 75, black);\nupdatePixels();\n</code>\n</div>\n\n<div>\n<code>\nfor (var i = 30; i < width - 15; i++) {\n  for (var j = 20; j < height - 25; j++) {\n    var c = color(204 - j, 153 - i, 0);\n    set(i, j, c);\n  }\n}\nupdatePixels();\n</code>\n</div>\n\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  set(0, 0, img);\n  updatePixels();\n  line(0, 0, width, height);\n  line(0, height, width, 0);\n}\n</code>\n</div>"
+            ],
+            "alt": "4 black points in the shape of a square middle-right of canvas.\nsquare with orangey-brown gradient lightening at bottom right.\nimage of the rocky mountains. with lines like an 'x' through the center.",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/image/pixels.js",
+            "line": 599,
+            "description": "<p>Updates the display window with the data in the pixels[] array.\nUse in conjunction with loadPixels(). If you&#39;re only reading pixels from\nthe array, there&#39;s no need to call updatePixels() — updating is only\nnecessary to apply changes. updatePixels() should be called anytime the\npixels array is manipulated or set() is called, and only changes made with\nset() or direct changes to pixels[] will occur.</p>\n",
+            "itemtype": "method",
+            "name": "updatePixels",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the upper-left corner of region\n                        to update</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the upper-left corner of region\n                        to update</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "<p>width of region to update</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of region to update</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/rockies.jpg');\n}\n\nfunction setup() {\n  image(img, 0, 0);\n  var d = pixelDensity();\n  var halfImage = 4 * (img.width * d) * (img.height * d / 2);\n  loadPixels();\n  for (var i = 0; i < halfImage; i++) {\n    pixels[i + halfImage] = pixels[i];\n  }\n  updatePixels();\n}\n</code>\n</div>"
+            ],
+            "alt": "two images of the rocky mountains. one on top, one on bottom of canvas.",
+            "class": "p5",
+            "module": "Image",
+            "submodule": "Pixels"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 19,
+            "description": "<p>Loads a JSON file from a file or a URL, and returns an Object.\nNote that even if the JSON file contains an Array, an Object will be\nreturned with index numbers as keys.</p>\n<p>This method is asynchronous, meaning it may not finish before the next\nline in your sketch is executed. JSONP is supported via a polyfill and you\ncan pass in as the second argument an object with definitions of the json\ncallback following the syntax specified <a href=\"https://github.com/camsong/\nfetch-jsonp\">here</a>.</p>\n",
+            "itemtype": "method",
+            "name": "loadJSON",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>name of the file or url to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "jsonpOptions",
+                    "description": "<p>options object for jsonp related settings</p>\n",
+                    "type": "Object",
+                    "optional": true
+                },
+                {
+                    "name": "datatype",
+                    "description": "<p>&quot;json&quot; or &quot;jsonp&quot;</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after\n                                   loadJSON() completes, data is passed\n                                   in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to be executed if\n                                   there is an error, response is passed\n                                   in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "JSON data",
+                "type": "Object|Array"
+            },
+            "example": [
+                "\n\n<p>Calling loadJSON() inside preload() guarantees to complete the\noperation before setup() and draw() are called.</p>\n\n<div><code>\n// Examples use USGS Earthquake API:\n//   https://earthquake.usgs.gov/fdsnws/event/1/#methods\nvar earthquakes;\nfunction preload() {\n  // Get the most recent earthquake in the database\n  var url =\n   'https://earthquake.usgs.gov/earthquakes/feed/v1.0/' +\n    'summary/all_day.geojson';\n  earthquakes = loadJSON(url);\n}\n\nfunction setup() {\n  noLoop();\n}\n\nfunction draw() {\n  background(200);\n  // Get the magnitude and name of the earthquake out of the loaded JSON\n  var earthquakeMag = earthquakes.features[0].properties.mag;\n  var earthquakeName = earthquakes.features[0].properties.place;\n  ellipse(width / 2, height / 2, earthquakeMag * 10, earthquakeMag * 10);\n  textAlign(CENTER);\n  text(earthquakeName, 0, height - 30, width, 30);\n}\n</code></div>\n\n\n<p>Outside of preload(), you may supply a callback function to handle the\nobject:</p>\n<div><code>\nfunction setup() {\n  noLoop();\n  var url =\n   'https://earthquake.usgs.gov/earthquakes/feed/v1.0/' +\n    'summary/all_day.geojson';\n  loadJSON(url, drawEarthquake);\n}\n\nfunction draw() {\n  background(200);\n}\n\nfunction drawEarthquake(earthquakes) {\n  // Get the magnitude and name of the earthquake out of the loaded JSON\n  var earthquakeMag = earthquakes.features[0].properties.mag;\n  var earthquakeName = earthquakes.features[0].properties.place;\n  ellipse(width / 2, height / 2, earthquakeMag * 10, earthquakeMag * 10);\n  textAlign(CENTER);\n  text(earthquakeName, 0, height - 30, width, 30);\n}\n</code></div>"
+            ],
+            "alt": "50x50 ellipse that changes from black to white depending on the current humidity\n50x50 ellipse that changes from black to white depending on the current humidity",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 154,
+            "description": "<p>Reads the contents of a file and creates a String array of its individual\nlines. If the name of the file is used as the parameter, as in the above\nexample, the file must be located in the sketch directory/folder.\n<br><br>\nAlternatively, the file maybe be loaded from anywhere on the local\ncomputer using an absolute path (something that starts with / on Unix and\nLinux, or a drive letter on Windows), or the filename parameter can be a\nURL for a file found on a network.\n<br><br>\nThis method is asynchronous, meaning it may not finish before the next\nline in your sketch is executed.</p>\n",
+            "itemtype": "method",
+            "name": "loadStrings",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "<p>name of the file or url to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after loadStrings()\n                              completes, Array is passed in as first\n                              argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to be executed if\n                              there is an error, response is passed\n                              in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of Strings",
+                "type": "String[]"
+            },
+            "example": [
+                "\n\n<p>Calling loadStrings() inside preload() guarantees to complete the\noperation before setup() and draw() are called.</p>\n\n<div><code>\nvar result;\nfunction preload() {\n  result = loadStrings('assets/test.txt');\n}\n\nfunction setup() {\n  background(200);\n  var ind = floor(random(result.length));\n  text(result[ind], 10, 10, 80, 80);\n}\n</code></div>\n\n<p>Outside of preload(), you may supply a callback function to handle the\nobject:</p>\n\n<div><code>\nfunction setup() {\n  loadStrings('assets/test.txt', pickString);\n}\n\nfunction pickString(result) {\n  background(200);\n  var ind = floor(random(result.length));\n  text(result[ind], 10, 10, 80, 80);\n}\n</code></div>"
+            ],
+            "alt": "randomly generated text from a file, for example \"i smell like butter\"\nrandomly generated text from a file, for example \"i have three feet\"",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 253,
+            "description": "<p>Reads the contents of a file or URL and creates a p5.Table object with\nits values. If a file is specified, it must be located in the sketch&#39;s\n&quot;data&quot; folder. The filename parameter can also be a URL to a file found\nonline. By default, the file is assumed to be comma-separated (in CSV\nformat). Table only looks for a header row if the &#39;header&#39; option is\nincluded.</p>\n\n<p>Possible options include:\n<ul>\n<li>csv - parse the table as comma-separated values</li>\n<li>tsv - parse the table as tab-separated values</li>\n<li>header - this table has a header (title) row</li>\n</ul>\n</p>\n\n<p>When passing in multiple options, pass them in as separate parameters,\nseperated by commas. For example:\n<br><br>\n<code>\nloadTable(&#39;my_csv_file.csv&#39;, &#39;csv&#39;, &#39;header&#39;);\n</code>\n</p>\n\n<p> All files loaded and saved use UTF-8 encoding.</p>\n\n<p>This method is asynchronous, meaning it may not finish before the next\nline in your sketch is executed. Calling loadTable() inside preload()\nguarantees to complete the operation before setup() and draw() are called.\n<p>Outside of preload(), you may supply a callback function to handle the\nobject:</p>\n</p>",
+            "itemtype": "method",
+            "name": "loadTable",
+            "return": {
+                "description": "Table object containing data",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the following CSV file called \"mammals.csv\"\n// located in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n  //the file can be remote\n  //table = loadTable(\"http://p5js.org/reference/assets/mammals.csv\",\n  //                  \"csv\", \"header\");\n}\n\nfunction setup() {\n  //count the columns\n  print(table.getRowCount() + ' total rows in table');\n  print(table.getColumnCount() + ' total columns in table');\n\n  print(table.getColumn('name'));\n  //[\"Goat\", \"Leopard\", \"Zebra\"]\n\n  //cycle through the table\n  for (var r = 0; r < table.getRowCount(); r++)\n    for (var c = 0; c < table.getColumnCount(); c++) {\n      print(table.getString(r, c));\n    }\n}\n</code>\n</div>"
+            ],
+            "alt": "randomly generated text from a file, for example \"i smell like butter\"\nrandomly generated text from a file, for example \"i have three feet\"",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input",
+            "overloads": [
+                {
+                    "line": 253,
+                    "params": [
+                        {
+                            "name": "filename",
+                            "description": "<p>name of the file or URL to load</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "options",
+                            "description": "<p>&quot;header&quot; &quot;csv&quot; &quot;tsv&quot;</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "callback",
+                            "description": "<p>function to be executed after\n                                    loadTable() completes. On success, the\n                                    Table object is passed in as the\n                                    first argument.</p>\n",
+                            "type": "Function",
+                            "optional": true
+                        },
+                        {
+                            "name": "errorCallback",
+                            "description": "<p>function to be executed if\n                                    there is an error, response is passed\n                                    in as first argument</p>\n",
+                            "type": "Function",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "Table object containing data",
+                        "type": "Object"
+                    }
+                },
+                {
+                    "line": 342,
+                    "params": [
+                        {
+                            "name": "filename",
+                            "description": "",
+                            "type": "String"
+                        },
+                        {
+                            "name": "callback",
+                            "description": "",
+                            "type": "Function",
+                            "optional": true
+                        },
+                        {
+                            "name": "errorCallback",
+                            "description": "",
+                            "type": "Function",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "Object"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 586,
+            "description": "<p>Reads the contents of a file and creates an XML object with its values.\nIf the name of the file is used as the parameter, as in the above example,\nthe file must be located in the sketch directory/folder.</p>\n<p>Alternatively, the file maybe be loaded from anywhere on the local\ncomputer using an absolute path (something that starts with / on Unix and\nLinux, or a drive letter on Windows), or the filename parameter can be a\nURL for a file found on a network.</p>\n<p>This method is asynchronous, meaning it may not finish before the next\nline in your sketch is executed. Calling loadXML() inside preload()\nguarantees to complete the operation before setup() and draw() are called.</p>\n<p>Outside of preload(), you may supply a callback function to handle the\nobject.</p>\n",
+            "itemtype": "method",
+            "name": "loadXML",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "<p>name of the file or URL to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after loadXML()\n                              completes, XML object is passed in as\n                              first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to be executed if\n                              there is an error, response is passed\n                              in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "XML object containing data",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var children = xml.getChildren('animal');\n\n  for (var i = 0; i < children.length; i++) {\n    var id = children[i].getNum('id');\n    var coloring = children[i].getString('species');\n    var name = children[i].getContent();\n    print(id + ', ' + coloring + ', ' + name);\n  }\n}\n\n// Sketch prints:\n// 0, Capra hircus, Goat\n// 1, Panthera pardus, Leopard\n// 2, Equus zebra, Zebra\n</code></div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 687,
+            "description": "<p>Method for executing an HTTP GET request. If data type is not specified,\np5 will try to guess based on the URL, defaulting to text. This is equivalent to\ncalling <code>httpDo(path, &#39;GET&#39;)</code>.</p>\n",
+            "itemtype": "method",
+            "name": "httpGet",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>name of the file or url to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "datatype",
+                    "description": "<p>&quot;json&quot;, &quot;jsonp&quot;, &quot;xml&quot;, or &quot;text&quot;</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "data",
+                    "description": "<p>param data passed sent with request</p>\n",
+                    "type": "Object",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after\n                                   httpGet() completes, data is passed in\n                                   as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to be executed if\n                                   there is an error, response is passed\n                                   in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\n// Examples use USGS Earthquake API:\n//   https://earthquake.usgs.gov/fdsnws/event/1/#methods\nvar earthquakes;\nfunction preload() {\n  // Get the most recent earthquake in the database\n  var url =\n   'https://earthquake.usgs.gov/fdsnws/event/1/query?' +\n    'format=geojson&limit=1&orderby=time';\n  httpGet(url, 'jsonp', false, function(response) {\n    // when the HTTP request completes, populate the variable that holds the\n    // earthquake data used in the visualization.\n    earthquakes = response;\n  });\n}\n\nfunction draw() {\n  if (!earthquakes) {\n    // Wait until the earthquake data has loaded before drawing.\n    return;\n  }\n  background(200);\n  // Get the magnitude and name of the earthquake out of the loaded JSON\n  var earthquakeMag = earthquakes.features[0].properties.mag;\n  var earthquakeName = earthquakes.features[0].properties.place;\n  ellipse(width / 2, height / 2, earthquakeMag * 10, earthquakeMag * 10);\n  textAlign(CENTER);\n  text(earthquakeName, 0, height - 30, width, 30);\n  noLoop();\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 741,
+            "description": "<p>Method for executing an HTTP POST request. If data type is not specified,\np5 will try to guess based on the URL, defaulting to text. This is equivalent to\ncalling <code>httpDo(path, &#39;POST&#39;)</code>.</p>\n",
+            "itemtype": "method",
+            "name": "httpPost",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>name of the file or url to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "datatype",
+                    "description": "<p>&quot;json&quot;, &quot;jsonp&quot;, &quot;xml&quot;, or &quot;text&quot;.\n                                   If omitted, httpPost() will guess.</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "data",
+                    "description": "<p>param data passed sent with request</p>\n",
+                    "type": "Object",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after\n                                   httpPost() completes, data is passed in\n                                   as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to be executed if\n                                   there is an error, response is passed\n                                   in as first argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\n// Examples use jsonplaceholder.typicode.com for a Mock Data API\n\nvar url = 'https://jsonplaceholder.typicode.com/posts';\nvar postData = { userId: 1, title: 'p5 Clicked!', body: 'p5.js is way cool.' };\n\nfunction setup() {\n  createCanvas(800, 800);\n}\n\nfunction mousePressed() {\n  // Pick new random color values\n  var r = random(255);\n  var g = random(255);\n  var b = random(255);\n\n  httpPost(url, 'json', postData, function(result) {\n    strokeWeight(2);\n    stroke(r, g, b);\n    fill(r, g, b, 127);\n    ellipse(mouseX, mouseY, 200, 200);\n    text(result.body, mouseX, mouseY);\n  });\n}\n</code>\n</div>\n\n\n<div><code>\nvar url = 'https://invalidURL'; // A bad URL that will cause errors\nvar postData = { title: 'p5 Clicked!', body: 'p5.js is way cool.' };\n\nfunction setup() {\n  createCanvas(800, 800);\n}\n\nfunction mousePressed() {\n  // Pick new random color values\n  var r = random(255);\n  var g = random(255);\n  var b = random(255);\n\n  httpPost(\n    url,\n    'json',\n    postData,\n    function(result) {\n      // ... won't be called\n    },\n    function(error) {\n      strokeWeight(2);\n      stroke(r, g, b);\n      fill(r, g, b, 127);\n      text(error.toString(), mouseX, mouseY);\n    }\n  );\n}\n</code></div>\n"
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 826,
+            "description": "<p>Method for executing an HTTP request. If data type is not specified,\np5 will try to guess based on the URL, defaulting to text.<br><br>\nFor more advanced use, you may also pass in the path as the first argument\nand a object as the second argument, the signature follows the one specified\nin the Fetch API specification.</p>\n",
+            "itemtype": "method",
+            "name": "httpDo",
+            "example": [
+                "\n<div>\n<code>\n// Examples use USGS Earthquake API:\n// https://earthquake.usgs.gov/fdsnws/event/1/#methods\n\n// displays an animation of all USGS earthquakes\nvar earthquakes;\nvar eqFeatureIndex = 0;\n\nfunction preload() {\n  var url = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson';\n  httpDo(\n    url,\n    {\n      method: 'GET',\n      // Other Request options, like special headers for apis\n      headers: { authorization: 'Bearer secretKey' }\n    },\n    function(res) {\n      earthquakes = res;\n    }\n  );\n}\n\nfunction draw() {\n  // wait until the data is loaded\n  if (!earthquakes || !earthquakes.features[eqFeatureIndex]) {\n    return;\n  }\n  clear();\n\n  var feature = earthquakes.features[eqFeatureIndex];\n  var mag = feature.properties.mag;\n  var rad = mag / 11 * ((width + height) / 2);\n  fill(255, 0, 0, 100);\n  ellipse(width / 2 + random(-2, 2), height / 2 + random(-2, 2), rad, rad);\n\n  if (eqFeatureIndex >= earthquakes.features.length) {\n    eqFeatureIndex = 0;\n  } else {\n    eqFeatureIndex += 1;\n  }\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Input",
+            "overloads": [
+                {
+                    "line": 826,
+                    "params": [
+                        {
+                            "name": "path",
+                            "description": "<p>name of the file or url to load</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "method",
+                            "description": "<p>either &quot;GET&quot;, &quot;POST&quot;, or &quot;PUT&quot;,\n                                   defaults to &quot;GET&quot;</p>\n",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "datatype",
+                            "description": "<p>&quot;json&quot;, &quot;jsonp&quot;, &quot;xml&quot;, or &quot;text&quot;</p>\n",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "data",
+                            "description": "<p>param data passed sent with request</p>\n",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "callback",
+                            "description": "<p>function to be executed after\n                                   httpGet() completes, data is passed in\n                                   as first argument</p>\n",
+                            "type": "Function",
+                            "optional": true
+                        },
+                        {
+                            "name": "errorCallback",
+                            "description": "<p>function to be executed if\n                                   there is an error, response is passed\n                                   in as first argument</p>\n",
+                            "type": "Function",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "line": 895,
+                    "params": [
+                        {
+                            "name": "path",
+                            "description": "",
+                            "type": "String"
+                        },
+                        {
+                            "name": "options",
+                            "description": "<p>Request object options as documented in the\n                                   &quot;fetch&quot; API\n<a href=\"https://developer.mozilla.org/en/docs/Web/API/Fetch_API\">reference</a></p>\n",
+                            "type": "Object"
+                        },
+                        {
+                            "name": "callback",
+                            "description": "",
+                            "type": "Function",
+                            "optional": true
+                        },
+                        {
+                            "name": "errorCallback",
+                            "description": "",
+                            "type": "Function",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1063,
+            "itemtype": "method",
+            "name": "createWriter",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>name of the file to be created</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "extension",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.PrintWriter"
+            },
+            "example": [
+                "\n<div>\n<code>\ncreateButton('save')\n  .position(10, 10)\n  .mousePressed(function() {\n    var writer = createWriter('squares.txt');\n    for (var i = 0; i < 10; i++) {\n      writer.print(i * i);\n    }\n    writer.close();\n    writer.flush();\n  });\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1113,
+            "itemtype": "method",
+            "name": "write",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Array"
+                }
+            ],
+            "class": "p5.PrintWriter",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1120,
+            "itemtype": "method",
+            "name": "print",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Array"
+                }
+            ],
+            "class": "p5.PrintWriter",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1127,
+            "itemtype": "method",
+            "name": "flush",
+            "class": "p5.PrintWriter",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1133,
+            "itemtype": "method",
+            "name": "close",
+            "class": "p5.PrintWriter",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1162,
+            "description": "<p>Save an image, text, json, csv, wav, or html. Prompts download to\nthe client&#39;s computer. <b>Note that it is not recommended to call save()\nwithin draw if it&#39;s looping, as the save() function will open a new save\ndialog every frame.</b></p>\n<p>The default behavior is to save the canvas as an image. You can\noptionally specify a filename.\nFor example:</p>\n <pre class='language-javascript'><code>\n save();\n save(&#39;myCanvas.jpg&#39;); // save a specific canvas with a filename\n </code></pre>\n\n<p>Alternately, the first parameter can be a pointer to a canvas\np5.Element, an Array of Strings,\nan Array of JSON, a JSON object, a p5.Table, a p5.Image, or a\np5.SoundFile (requires p5.sound). The second parameter is a filename\n(including extension). The third parameter is for options specific\nto this type of object. This method will save a file that fits the\ngiven paramaters. For example:</p>\n\n <pre class='language-javascript'><code>\n // Saves canvas as an image\n save('myCanvas.jpg');\n\n // Saves pImage as a png image\n var img = createImage(10, 10);\n save(img, 'my.png');\n\n // Saves canvas as an image\n var cnv = createCanvas(100, 100);\n save(cnv, 'myCanvas.jpg');\n\n // Saves p5.Renderer object as an image\n var gb = createGraphics(100, 100);\n save(gb, 'myGraphics.jpg');\n\n var myTable = new p5.Table();\n\n // Saves table as html file\n save(myTable, 'myTable.html');\n\n // Comma Separated Values\n save(myTable, 'myTable.csv');\n\n // Tab Separated Values\n save(myTable, 'myTable.tsv');\n\n var myJSON = { a: 1, b: true };\n\n // Saves pretty JSON\n save(myJSON, 'my.json');\n\n // Optimizes JSON filesize\n save(myJSON, 'my.json', true);\n\n // Saves array of strings to a text file with line breaks after each item\n var arrayOfStrings = ['a', 'b'];\n save(arrayOfStrings, 'my.txt');\n </code></pre>",
+            "itemtype": "method",
+            "name": "save",
+            "params": [
+                {
+                    "name": "objectOrFilename",
+                    "description": "<p>If filename is provided, will\n                                           save canvas as an image with\n                                           either png or jpg extension\n                                           depending on the filename.\n                                           If object is provided, will\n                                           save depending on the object\n                                           and filename (see examples\n                                           above).</p>\n",
+                    "type": "Object|String",
+                    "optional": true
+                },
+                {
+                    "name": "filename",
+                    "description": "<p>If an object is provided as the first\n                             parameter, then the second parameter\n                             indicates the filename,\n                             and should include an appropriate\n                             file extension (see examples above).</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "<p>Additional options depend on\n                          filetype. For example, when saving JSON,\n                          <code>true</code> indicates that the\n                          output will be optimized for filesize,\n                          rather than readability.</p>\n",
+                    "type": "Boolean|String",
+                    "optional": true
+                }
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1290,
+            "description": "<p>Writes the contents of an Array or a JSON object to a .json file.\nThe file saving process and location of the saved file will\nvary between web browsers.</p>\n",
+            "itemtype": "method",
+            "name": "saveJSON",
+            "params": [
+                {
+                    "name": "json",
+                    "description": "",
+                    "type": "Array|Object"
+                },
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "optimize",
+                    "description": "<p>If true, removes line breaks\n                               and spaces from the output\n                               file to optimize filesize\n                               (but not readability).</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n <div><code>\n var json = {}; // new  JSON Object\n\n json.id = 0;\n json.species = 'Panthera leo';\n json.name = 'Lion';\n\n createButton('save')\n .position(10, 10)\n .mousePressed(function() {\n   saveJSON(json, 'lion.json');\n });\n\n // saves the following to a file called \"lion.json\":\n // {\n //   \"id\": 0,\n //   \"species\": \"Panthera leo\",\n //   \"name\": \"Lion\"\n // }\n </code></div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1341,
+            "description": "<p>Writes an array of Strings to a text file, one line per String.\nThe file saving process and location of the saved file will\nvary between web browsers.</p>\n",
+            "itemtype": "method",
+            "name": "saveStrings",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>string array to be written</p>\n",
+                    "type": "String[]"
+                },
+                {
+                    "name": "filename",
+                    "description": "<p>filename for output</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "extension",
+                    "description": "<p>the filename&#39;s extension</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n <div><code>\n var words = 'apple bear cat dog';\n\n // .split() outputs an Array\n var list = split(words, ' ');\n\n createButton('save')\n .position(10, 10)\n .mousePressed(function() {\n   saveStrings(list, 'nouns.txt');\n });\n\n // Saves the following to a file called 'nouns.txt':\n //\n // apple\n // bear\n // cat\n // dog\n </code></div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1402,
+            "description": "<p>Writes the contents of a Table object to a file. Defaults to a\ntext file with comma-separated-values (&#39;csv&#39;) but can also\nuse tab separation (&#39;tsv&#39;), or generate an HTML table (&#39;html&#39;).\nThe file saving process and location of the saved file will\nvary between web browsers.</p>\n",
+            "itemtype": "method",
+            "name": "saveTable",
+            "params": [
+                {
+                    "name": "Table",
+                    "description": "<p>the Table object to save to a file</p>\n",
+                    "type": "p5.Table"
+                },
+                {
+                    "name": "filename",
+                    "description": "<p>the filename to which the Table should be saved</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "<p>can be one of &quot;tsv&quot;, &quot;csv&quot;, or &quot;html&quot;</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\n var table;\n\n function setup() {\n table = new p5.Table();\n\n table.addColumn('id');\n table.addColumn('species');\n table.addColumn('name');\n\n var newRow = table.addRow();\n newRow.setNum('id', table.getRowCount() - 1);\n newRow.setString('species', 'Panthera leo');\n newRow.setString('name', 'Lion');\n\n // To save, un-comment next line then click 'run'\n // saveTable(table, 'new.csv');\n }\n\n // Saves the following to a file called 'new.csv':\n // id,species,name\n // 0,Panthera leo,Lion\n </code></div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/files.js",
+            "line": 1549,
+            "description": "<p>Forces download. Accepts a url to filedata/blob, a filename,\nand an extension (optional).\nThis is a private function because it does not do any formatting,\nbut it is used by saveStrings, saveJSON, saveTable etc.</p>\n",
+            "itemtype": "method",
+            "name": "downloadFile",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "<p>either an href generated by createObjectURL,\n                              or a Blob object containing the data</p>\n",
+                    "type": "String|Blob"
+                },
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "extension",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Output"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 11,
+            "description": "<p>Table Options</p>\n<p>Generic class for handling tabular data, typically from a\nCSV, TSV, or other sort of spreadsheet file.</p>\n<p>CSV files are\n<a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">\ncomma separated values</a>, often with the data in quotes. TSV\nfiles use tabs as separators, and usually don&#39;t bother with the\nquotes.</p>\n<p>File names should end with .csv if they&#39;re comma separated.</p>\n<p>A rough &quot;spec&quot; for CSV can be found\n<a href=\"http://tools.ietf.org/html/rfc4180\">here</a>.</p>\n<p>To load files, use the loadTable method.</p>\n<p>To save tables to your computer, use the save method\n or the saveTable method.</p>\n\n<p>Possible options include:</p>\n<ul>\n<li>csv - parse the table as comma-separated values\n<li>tsv - parse the table as tab-separated values\n<li>header - this table has a header (title) row\n</ul>",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 45,
+            "itemtype": "property",
+            "name": "columns",
+            "type": "String[]",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 50,
+            "itemtype": "property",
+            "name": "rows",
+            "type": "p5.TableRow[]",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 57,
+            "description": "<p>Use addRow() to add a new row of data to a p5.Table object. By default,\nan empty row is created. Typically, you would store a reference to\nthe new row in a TableRow object (see newRow in the example above),\nand then set individual values using set().</p>\n<p>If a p5.TableRow object is included as a parameter, then that row is\nduplicated and added to the table.</p>\n",
+            "itemtype": "method",
+            "name": "addRow",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row to be added to the table</p>\n",
+                    "type": "p5.TableRow",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n //add a row\n var newRow = table.addRow();\n newRow.setString('id', table.getRowCount() - 1);\n newRow.setString('species', 'Canis Lupus');\n newRow.setString('name', 'Wolf');\n\n //print the results\n for (var r = 0; r < table.getRowCount(); r++)\n   for (var c = 0; c < table.getColumnCount(); c++)\n     print(table.getString(r, c));\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 120,
+            "description": "<p>Removes a row from the table object.</p>\n",
+            "itemtype": "method",
+            "name": "removeRow",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "<p>ID number of the row to remove</p>\n",
+                    "type": "Integer"
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  //remove the first row\n  table.removeRow(0);\n\n  //print the results\n  for (var r = 0; r < table.getRowCount(); r++)\n    for (var c = 0; c < table.getColumnCount(); c++)\n      print(table.getString(r, c));\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 168,
+            "description": "<p>Returns a reference to the specified p5.TableRow. The reference\ncan then be used to get and set values of the selected row.</p>\n",
+            "itemtype": "method",
+            "name": "getRow",
+            "params": [
+                {
+                    "name": "rowID",
+                    "description": "<p>ID number of the row to get</p>\n",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "p5.TableRow object",
+                "type": "p5.TableRow"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  var row = table.getRow(1);\n  //print it column by column\n  //note: a row is an object, not an array\n  for (var c = 0; c < table.getColumnCount(); c++) {\n    print(row.getString(c));\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 214,
+            "description": "<p>Gets all rows from the table. Returns an array of p5.TableRows.</p>\n",
+            "itemtype": "method",
+            "name": "getRows",
+            "return": {
+                "description": "Array of p5.TableRows",
+                "type": "p5.TableRow[]"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n var rows = table.getRows();\n\n //warning: rows is an array of objects\n for (var r = 0; r < rows.length; r++) {\n   rows[r].set('name', 'Unicorn');\n }\n\n //print the results\n for (r = 0; r < table.getRowCount(); r++)\n   for (var c = 0; c < table.getColumnCount(); c++)\n     print(table.getString(r, c));\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 263,
+            "description": "<p>Finds the first row in the Table that contains the value\nprovided, and returns a reference to that row. Even if\nmultiple rows are possible matches, only the first matching\nrow is returned. The column to search may be specified by\neither its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "findRow",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>The value to match</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>ID number or title of the\n                               column to search</p>\n",
+                    "type": "Integer|String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.TableRow"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n //find the animal named zebra\n var row = table.findRow('Zebra', 'name');\n //find the corresponding species\n print(row.getString('species'));\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 328,
+            "description": "<p>Finds the rows in the Table that contain the value\nprovided, and returns references to those rows. Returns an\nArray, so for must be used to iterate through all the rows,\nas shown in the example above. The column to search may be\nspecified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "findRows",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>The value to match</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>ID number or title of the\n                               column to search</p>\n",
+                    "type": "Integer|String"
+                }
+            ],
+            "return": {
+                "description": "An Array of TableRow objects",
+                "type": "p5.TableRow[]"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n //add another goat\n var newRow = table.addRow();\n newRow.setString('id', table.getRowCount() - 1);\n newRow.setString('species', 'Scape Goat');\n newRow.setString('name', 'Goat');\n\n //find the rows containing animals named Goat\n var rows = table.findRows('Goat', 'name');\n print(rows.length + ' Goats found');\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 397,
+            "description": "<p>Finds the first row in the Table that matches the regular\nexpression provided, and returns a reference to that row.\nEven if multiple rows are possible matches, only the first\nmatching row is returned. The column to search may be\nspecified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "matchRow",
+            "params": [
+                {
+                    "name": "regexp",
+                    "description": "<p>The regular expression to match</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>The column ID (number) or\n                                 title (string)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "TableRow object",
+                "type": "p5.TableRow"
+            },
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 427,
+            "description": "<p>Finds the rows in the Table that match the regular expression provided,\nand returns references to those rows. Returns an array, so for must be\nused to iterate through all the rows, as shown in the example. The\ncolumn to search may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "matchRows",
+            "params": [
+                {
+                    "name": "regexp",
+                    "description": "<p>The regular expression to match</p>\n",
