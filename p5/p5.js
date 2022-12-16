@@ -11238,3 +11238,959 @@ module.exports={
                 {
                     "name": "regexp",
                     "description": "<p>The regular expression to match</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>The column ID (number) or\n                                 title (string)</p>\n",
+                    "type": "String|Integer",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "An Array of TableRow objects",
+                "type": "p5.TableRow[]"
+            },
+            "example": [
+                "\nvar table;\n\nfunction setup() {\n\n  table = new p5.Table();\n\n  table.addColumn('name');\n  table.addColumn('type');\n\n  var newRow = table.addRow();\n  newRow.setString('name', 'Lion');\n  newRow.setString('type', 'Mammal');\n\n  newRow = table.addRow();\n  newRow.setString('name', 'Snake');\n  newRow.setString('type', 'Reptile');\n\n  newRow = table.addRow();\n  newRow.setString('name', 'Mosquito');\n  newRow.setString('type', 'Insect');\n\n  newRow = table.addRow();\n  newRow.setString('name', 'Lizard');\n  newRow.setString('type', 'Reptile');\n\n  var rows = table.matchRows('R.*', 'type');\n  for (var i = 0; i < rows.length; i++) {\n    print(rows[i].getString('name') + ': ' + rows[i].getString('type'));\n  }\n}\n// Sketch prints:\n// Snake: Reptile\n// Lizard: Reptile"
+            ],
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 491,
+            "description": "<p>Retrieves all values in the specified column, and returns them\nas an array. The column may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "getColumn",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>String or Number of the column to return</p>\n",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "Array of column values",
+                "type": "Array"
+            },
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n //getColumn returns an array that can be printed directly\n print(table.getColumn('species'));\n //outputs [\"Capra hircus\", \"Panthera pardus\", \"Equus zebra\"]\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 544,
+            "description": "<p>Removes all rows from a Table. While all rows are removed,\ncolumns and column titles are maintained.</p>\n",
+            "itemtype": "method",
+            "name": "clearRows",
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n table.clearRows();\n print(table.getRowCount() + ' total rows in table');\n print(table.getColumnCount() + ' total columns in table');\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 586,
+            "description": "<p>Use addColumn() to add a new column to a Table object.\nTypically, you will want to specify a title, so the column\nmay be easily referenced later by name. (If no title is\nspecified, the new column&#39;s title will be null.)</p>\n",
+            "itemtype": "method",
+            "name": "addColumn",
+            "params": [
+                {
+                    "name": "title",
+                    "description": "<p>title of the given column</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n table.addColumn('carnivore');\n table.set(0, 'carnivore', 'no');\n table.set(1, 'carnivore', 'yes');\n table.set(2, 'carnivore', 'no');\n\n //print the results\n for (var r = 0; r < table.getRowCount(); r++)\n   for (var c = 0; c < table.getColumnCount(); c++)\n     print(table.getString(r, c));\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 637,
+            "description": "<p>Returns the total number of columns in a Table.</p>\n",
+            "itemtype": "method",
+            "name": "getColumnCount",
+            "return": {
+                "description": "Number of columns in this table",
+                "type": "Integer"
+            },
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 647,
+            "description": "<p>Returns the total number of rows in a Table.</p>\n",
+            "itemtype": "method",
+            "name": "getRowCount",
+            "return": {
+                "description": "Number of rows in this table",
+                "type": "Integer"
+            },
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 657,
+            "description": "<p>Removes any of the specified characters (or &quot;tokens&quot;).</p>\n\n<p>If no column is specified, then the values in all columns and\nrows are processed. A specific column may be referenced by\neither its ID or title.</p>",
+            "itemtype": "method",
+            "name": "removeTokens",
+            "params": [
+                {
+                    "name": "chars",
+                    "description": "<p>String listing characters to be removed</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>Column ID (number)\n                                 or name (string)</p>\n",
+                    "type": "String|Integer",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 706,
+            "description": "<p>Trims leading and trailing whitespace, such as spaces and tabs,\nfrom String table values. If no column is specified, then the\nvalues in all columns and rows are trimmed. A specific column\nmay be referenced by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "trim",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>Column ID (number)\n                                 or name (string)</p>\n",
+                    "type": "String|Integer",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 746,
+            "description": "<p>Use removeColumn() to remove an existing column from a Table\nobject. The column to be removed may be identified by either\nits title (a String) or its index value (an int).\nremoveColumn(0) would remove the first column, removeColumn(1)\nwould remove the second column, and so on.</p>\n",
+            "itemtype": "method",
+            "name": "removeColumn",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "example": [
+                "\n <div class=\"norender\">\n <code>\n // Given the CSV file \"mammals.csv\"\n // in the project's \"assets\" folder:\n //\n // id,species,name\n // 0,Capra hircus,Goat\n // 1,Panthera pardus,Leopard\n // 2,Equus zebra,Zebra\n\n var table;\n\n function preload() {\n //my table is comma separated value \"csv\"\n //and has a header specifying the columns labels\n table = loadTable('assets/mammals.csv', 'csv', 'header');\n }\n\n function setup() {\n table.removeColumn('id');\n print(table.getColumnCount());\n }\n </code>\n </div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 812,
+            "description": "<p>Stores a value in the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified\nby either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>column ID (Number)\n                              or title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to assign</p>\n",
+                    "type": "String|Number"
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  table.set(0, 'species', 'Canis Lupus');\n  table.set(0, 'name', 'Wolf');\n\n  //print the results\n  for (var r = 0; r < table.getRowCount(); r++)\n    for (var c = 0; c < table.getColumnCount(); c++)\n      print(table.getString(r, c));\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 861,
+            "description": "<p>Stores a Float value in the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified\nby either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "setNum",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row ID</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>column ID (Number)\n                              or title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to assign</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  table.setNum(1, 'id', 1);\n\n  print(table.getColumn(0));\n  //[\"0\", 1, \"2\"]\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 907,
+            "description": "<p>Stores a String value in the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified\nby either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "setString",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row ID</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>column ID (Number)\n                              or title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to assign</p>\n",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 922,
+            "description": "<p>Retrieves a value from the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified by\neither its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row ID</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                  ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String|Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  print(table.get(0, 1));\n  //Capra hircus\n  print(table.get(0, 'species'));\n  //Capra hircus\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 969,
+            "description": "<p>Retrieves a Float value from the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified by\neither its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "getNum",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row ID</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                  ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  print(table.getNum(1, 0) + 100);\n  //id 1 + 100 = 101\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 1014,
+            "description": "<p>Retrieves a String value from the Table&#39;s specified row and column.\nThe row is specified by its ID, while the column may be specified by\neither its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "getString",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "<p>row ID</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                  ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  var tableArray = table.getArray();\n\n  //output each row as array\n  for (var i = 0; i < tableArray.length; i++) {\n    print(tableArray[i]);\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 1063,
+            "description": "<p>Retrieves all table data and returns as an object. If a column name is\npassed in, each row object will be stored with that attribute as its\ntitle.</p>\n",
+            "itemtype": "method",
+            "name": "getObject",
+            "params": [
+                {
+                    "name": "headerColumn",
+                    "description": "<p>Name of the column which should be used to\n                             title each row object (optional)</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Given the CSV file \"mammals.csv\"\n// in the project's \"assets\" folder:\n//\n// id,species,name\n// 0,Capra hircus,Goat\n// 1,Panthera pardus,Leopard\n// 2,Equus zebra,Zebra\n\nvar table;\n\nfunction preload() {\n  //my table is comma separated value \"csv\"\n  //and has a header specifying the columns labels\n  table = loadTable('assets/mammals.csv', 'csv', 'header');\n}\n\nfunction setup() {\n  var tableObject = table.getObject();\n\n  print(tableObject);\n  //outputs an object\n}\n</code>\n</div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.Table.js",
+            "line": 1127,
+            "description": "<p>Retrieves all table data and returns it as a multidimensional array.</p>\n",
+            "itemtype": "method",
+            "name": "getArray",
+            "return": {
+                "description": "",
+                "type": "Array"
+            },
+            "class": "p5.Table",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 43,
+            "description": "<p>Stores a value in the TableRow&#39;s specified column.\nThe column may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>Column ID (Number)\n                              or Title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>The value to be stored</p>\n",
+                    "type": "String|Number"
+                }
+            ],
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 74,
+            "description": "<p>Stores a Float value in the TableRow&#39;s specified column.\nThe column may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "setNum",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>Column ID (Number)\n                              or Title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>The value to be stored\n                              as a Float</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 89,
+            "description": "<p>Stores a String value in the TableRow&#39;s specified column.\nThe column may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "setString",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>Column ID (Number)\n                              or Title (String)</p>\n",
+                    "type": "String|Integer"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>The value to be stored\n                              as a String</p>\n",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 104,
+            "description": "<p>Retrieves a value from the TableRow&#39;s specified column.\nThe column may be specified by either its ID or title.</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                 ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String|Number"
+            },
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 121,
+            "description": "<p>Retrieves a Float value from the TableRow&#39;s specified\ncolumn. The column may be specified by either its ID or\ntitle.</p>\n",
+            "itemtype": "method",
+            "name": "getNum",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                 ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "Float Floating point number",
+                "type": "Number"
+            },
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.TableRow.js",
+            "line": 145,
+            "description": "<p>Retrieves an String value from the TableRow&#39;s specified\ncolumn. The column may be specified by either its ID or\ntitle.</p>\n",
+            "itemtype": "method",
+            "name": "getString",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "<p>columnName (string) or\n                                 ID (number)</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "String",
+                "type": "String"
+            },
+            "class": "p5.TableRow",
+            "module": "IO",
+            "submodule": "Table"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 65,
+            "description": "<p>Gets a copy of the element&#39;s parent. Returns the parent as another\np5.XML object.</p>\n",
+            "itemtype": "method",
+            "name": "getParent",
+            "return": {
+                "description": "element parent",
+                "type": "p5.XML"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var children = xml.getChildren('animal');\n  var parent = children[1].getParent();\n  print(parent.getName());\n}\n\n// Sketch prints:\n// mammals\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 103,
+            "description": "<p>Gets the element&#39;s full name, which is returned as a String.</p>\n",
+            "itemtype": "method",
+            "name": "getName",
+            "return": {
+                "description": "the name of the node",
+                "type": "String"
+            },
+            "example": [
+                "&lt;animal\n <div class='norender'><code>\n // The following short XML file called \"mammals.xml\" is parsed\n // in the code below.\n //\n // <?xml version=\"1.0\"?>\n // &lt;mammals&gt;\n //   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n //   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n //   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n // &lt;/mammals&gt;\n\n var xml;\n\n function preload() {\n xml = loadXML('assets/mammals.xml');\n }\n\n function setup() {\n print(xml.getName());\n }\n\n // Sketch prints:\n // mammals\n </code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 138,
+            "description": "<p>Sets the element&#39;s name, which is specified as a String.</p>\n",
+            "itemtype": "method",
+            "name": "setName",
+            "params": [
+                {
+                    "name": "the",
+                    "description": "<p>new name of the node</p>\n",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                "&lt;animal\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  print(xml.getName());\n  xml.setName('fish');\n  print(xml.getName());\n}\n\n// Sketch prints:\n// mammals\n// fish\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 176,
+            "description": "<p>Checks whether or not the element has any children, and returns the result\nas a boolean.</p>\n",
+            "itemtype": "method",
+            "name": "hasChildren",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "example": [
+                "&lt;animal\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  print(xml.hasChildren());\n}\n\n// Sketch prints:\n// true\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 212,
+            "description": "<p>Get the names of all of the element&#39;s children, and returns the names as an\narray of Strings. This is the same as looping through and calling getName()\non each child element individually.</p>\n",
+            "itemtype": "method",
+            "name": "listChildren",
+            "return": {
+                "description": "names of the children of the element",
+                "type": "String[]"
+            },
+            "example": [
+                "&lt;animal\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  print(xml.listChildren());\n}\n\n// Sketch prints:\n// [\"animal\", \"animal\", \"animal\"]\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 251,
+            "description": "<p>Returns all of the element&#39;s children as an array of p5.XML objects. When\nthe name parameter is specified, then it will return all children that match\nthat name.</p>\n",
+            "itemtype": "method",
+            "name": "getChildren",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>element name</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "children of the element",
+                "type": "p5.XML[]"
+            },
+            "example": [
+                "&lt;animal\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var animals = xml.getChildren('animal');\n\n  for (var i = 0; i < animals.length; i++) {\n    print(animals[i].getContent());\n  }\n}\n\n// Sketch prints:\n// \"Goat\"\n// \"Leopard\"\n// \"Zebra\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 301,
+            "description": "<p>Returns the first of the element&#39;s children that matches the name parameter\nor the child of the given index.It returns undefined if no matching\nchild is found.</p>\n",
+            "itemtype": "method",
+            "name": "getChild",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>element name or index</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.XML"
+            },
+            "example": [
+                "&lt;animal\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getContent());\n}\n\n// Sketch prints:\n// \"Goat\"\n</code></div>\n<div class='norender'><code>\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var secondChild = xml.getChild(1);\n  print(secondChild.getContent());\n}\n\n// Sketch prints:\n// \"Leopard\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 361,
+            "description": "<p>Appends a new child to the element. The child can be specified with\neither a String, which will be used as the new tag&#39;s name, or as a\nreference to an existing p5.XML object.\nA reference to the newly created child is returned as an p5.XML object.</p>\n",
+            "itemtype": "method",
+            "name": "addChild",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>p5.XML Object which will be the child to be added</p>\n",
+                    "type": "p5.XML"
+                }
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 378,
+            "description": "<p>Removes the element specified by name or index.</p>\n",
+            "itemtype": "method",
+            "name": "removeChild",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>element name or index</p>\n",
+                    "type": "String|Integer"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  xml.removeChild('animal');\n  var children = xml.getChildren();\n  for (var i = 0; i < children.length; i++) {\n    print(children[i].getContent());\n  }\n}\n\n// Sketch prints:\n// \"Leopard\"\n// \"Zebra\"\n</code></div>\n<div class='norender'><code>\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  xml.removeChild(1);\n  var children = xml.getChildren();\n  for (var i = 0; i < children.length; i++) {\n    print(children[i].getContent());\n  }\n}\n\n// Sketch prints:\n// \"Goat\"\n// \"Zebra\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 450,
+            "description": "<p>Counts the specified element&#39;s number of attributes, returned as an Number.</p>\n",
+            "itemtype": "method",
+            "name": "getAttributeCount",
+            "return": {
+                "description": "",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getAttributeCount());\n}\n\n// Sketch prints:\n// 2\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 486,
+            "description": "<p>Gets all of the specified element&#39;s attributes, and returns them as an\narray of Strings.</p>\n",
+            "itemtype": "method",
+            "name": "listAttributes",
+            "return": {
+                "description": "an array of strings containing the names of attributes",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.listAttributes());\n}\n\n// Sketch prints:\n// [\"id\", \"species\"]\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 523,
+            "description": "<p>Checks whether or not an element has the specified attribute.</p>\n",
+            "itemtype": "method",
+            "name": "hasAttribute",
+            "params": [
+                {
+                    "name": "the",
+                    "description": "<p>attribute to be checked</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "true if attribute found else false",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n // The following short XML file called \"mammals.xml\" is parsed\n // in the code below.\n //\n // <?xml version=\"1.0\"?>\n // &lt;mammals&gt;\n //   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n //   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n //   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n // &lt;/mammals&gt;\n\n var xml;\n\n function preload() {\n xml = loadXML('assets/mammals.xml');\n }\n\n function setup() {\n var firstChild = xml.getChild('animal');\n print(firstChild.hasAttribute('species'));\n print(firstChild.hasAttribute('color'));\n }\n\n // Sketch prints:\n // true\n // false\n </code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 562,
+            "description": "<p>Returns an attribute value of the element as an Number. If the defaultValue\nparameter is specified and the attribute doesn&#39;t exist, then defaultValue\nis returned. If no defaultValue is specified and the attribute doesn&#39;t\nexist, the value 0 is returned.</p>\n",
+            "itemtype": "method",
+            "name": "getNum",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>the non-null full name of the attribute</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "defaultValue",
+                    "description": "<p>the default value of the attribute</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getNum('id'));\n}\n\n// Sketch prints:\n// 0\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 603,
+            "description": "<p>Returns an attribute value of the element as an String. If the defaultValue\nparameter is specified and the attribute doesn&#39;t exist, then defaultValue\nis returned. If no defaultValue is specified and the attribute doesn&#39;t\nexist, null is returned.</p>\n",
+            "itemtype": "method",
+            "name": "getString",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>the non-null full name of the attribute</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "defaultValue",
+                    "description": "<p>the default value of the attribute</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getString('species'));\n}\n\n// Sketch prints:\n// \"Capra hircus\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 644,
+            "description": "<p>Sets the content of an element&#39;s attribute. The first parameter specifies\nthe attribute name, while the second specifies the new content.</p>\n",
+            "itemtype": "method",
+            "name": "setAttribute",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>the full name of the attribute</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>the value of the attribute</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getString('species'));\n  firstChild.setAttribute('species', 'Jamides zebra');\n  print(firstChild.getString('species'));\n}\n\n// Sketch prints:\n// \"Capra hircus\"\n// \"Jamides zebra\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 687,
+            "description": "<p>Returns the content of an element. If there is no such content,\ndefaultValue is returned if specified, otherwise null is returned.</p>\n",
+            "itemtype": "method",
+            "name": "getContent",
+            "params": [
+                {
+                    "name": "defaultValue",
+                    "description": "<p>value returned if no content is found</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getContent());\n}\n\n// Sketch prints:\n// \"Goat\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 725,
+            "description": "<p>Sets the element&#39;s content.</p>\n",
+            "itemtype": "method",
+            "name": "setContent",
+            "params": [
+                {
+                    "name": "text",
+                    "description": "<p>the new content</p>\n",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\n// The following short XML file called \"mammals.xml\" is parsed\n// in the code below.\n//\n// <?xml version=\"1.0\"?>\n// &lt;mammals&gt;\n//   &lt;animal id=\"0\" species=\"Capra hircus\">Goat&lt;/animal&gt;\n//   &lt;animal id=\"1\" species=\"Panthera pardus\">Leopard&lt;/animal&gt;\n//   &lt;animal id=\"2\" species=\"Equus zebra\">Zebra&lt;/animal&gt;\n// &lt;/mammals&gt;\n\nvar xml;\n\nfunction preload() {\n  xml = loadXML('assets/mammals.xml');\n}\n\nfunction setup() {\n  var firstChild = xml.getChild('animal');\n  print(firstChild.getContent());\n  firstChild.setContent('Mountain Goat');\n  print(firstChild.getContent());\n}\n\n// Sketch prints:\n// \"Goat\"\n// \"Mountain Goat\"\n</code></div>"
+            ],
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 767,
+            "description": "<p>This method is called while the parsing of XML (when loadXML() is\ncalled). The difference between this method and the setContent()\nmethod defined later is that this one is used to set the content\nwhen the node in question has more nodes under it and so on and\nnot directly text content. While in the other one is used when\nthe node in question directly has text inside it.</p>\n",
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/io/p5.XML.js",
+            "line": 784,
+            "description": "<p>This method is called while the parsing of XML (when loadXML() is\ncalled). The XML node is passed and its attributes are stored in the\np5.XML&#39;s attribute Object.</p>\n",
+            "class": "p5.XML",
+            "module": "IO",
+            "submodule": "XML"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 12,
+            "description": "<p>Calculates the absolute value (magnitude) of a number. Maps to Math.abs().\nThe absolute value of a number is always positive.</p>\n",
+            "itemtype": "method",
+            "name": "abs",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to compute</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "absolute value of given number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class = \"norender\"><code>\nfunction setup() {\n  var x = -3;\n  var y = abs(x);\n\n  print(x); // -3\n  print(y); // 3\n}\n</code></div>"
+            ],
+            "alt": "no image displayed",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 36,
+            "description": "<p>Calculates the closest int value that is greater than or equal to the\nvalue of the parameter. Maps to Math.ceil(). For example, ceil(9.03)\nreturns the value 10.</p>\n",
+            "itemtype": "method",
+            "name": "ceil",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to round up</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "rounded up number",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  // map, mouseX between 0 and 5.\n  var ax = map(mouseX, 0, 100, 0, 5);\n  var ay = 66;\n\n  //Get the ceiling of the mapped number.\n  var bx = ceil(map(mouseX, 0, 100, 0, 5));\n  var by = 33;\n\n  // Multiply the mapped numbers by 20 to more easily\n  // see the changes.\n  stroke(0);\n  fill(0);\n  line(0, ay, ax * 20, ay);\n  line(0, by, bx * 20, by);\n\n  // Reformat the float returned by map and draw it.\n  noStroke();\n  text(nfc(ax, 2), ax, ay - 5);\n  text(nfc(bx, 1), bx, by - 5);\n}\n</code></div>"
+            ],
+            "alt": "2 horizontal lines & number sets. increase with mouse x. bottom to 2 decimals",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 76,
+            "description": "<p>Constrains a value between a minimum and maximum value.</p>\n",
+            "itemtype": "method",
+            "name": "constrain",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to constrain</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "low",
