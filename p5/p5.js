@@ -12194,3 +12194,927 @@ module.exports={
                 },
                 {
                     "name": "low",
+                    "description": "<p>minimum limit</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "high",
+                    "description": "<p>maximum limit</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "constrained number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n\n  var leftWall = 25;\n  var rightWall = 75;\n\n  // xm is just the mouseX, while\n  // xc is the mouseX, but constrained\n  // between the leftWall and rightWall!\n  var xm = mouseX;\n  var xc = constrain(mouseX, leftWall, rightWall);\n\n  // Draw the walls.\n  stroke(150);\n  line(leftWall, 0, leftWall, height);\n  line(rightWall, 0, rightWall, height);\n\n  // Draw xm and xc as circles.\n  noStroke();\n  fill(150);\n  ellipse(xm, 33, 9, 9); // Not Constrained\n  fill(0);\n  ellipse(xc, 66, 9, 9); // Constrained\n}\n</code></div>"
+            ],
+            "alt": "2 vertical lines. 2 ellipses move with mouse X 1 does not move passed lines",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 121,
+            "description": "<p>Calculates the distance between two points.</p>\n",
+            "itemtype": "method",
+            "name": "dist",
+            "return": {
+                "description": "distance between the two points",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\n// Move your mouse inside the canvas to see the\n// change in distance between two points!\nfunction draw() {\n  background(200);\n  fill(0);\n\n  var x1 = 10;\n  var y1 = 90;\n  var x2 = mouseX;\n  var y2 = mouseY;\n\n  line(x1, y1, x2, y2);\n  ellipse(x1, y1, 7, 7);\n  ellipse(x2, y2, 7, 7);\n\n  // d is the length of the line\n  // the distance from point 1 to point 2.\n  var d = int(dist(x1, y1, x2, y2));\n\n  // Let's write d along the line we are drawing!\n  push();\n  translate((x1 + x2) / 2, (y1 + y2) / 2);\n  rotate(atan2(y2 - y1, x2 - x1));\n  text(nfc(d, 1), 0, -5);\n  pop();\n  // Fancy!\n}\n</code></div>"
+            ],
+            "alt": "2 ellipses joined by line. 1 ellipse moves with mouse X&Y. Distance displayed.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation",
+            "overloads": [
+                {
+                    "line": 121,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "<p>x-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "<p>y-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "<p>x-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "<p>y-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "distance between the two points",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 165,
+                    "params": [
+                        {
+                            "name": "x1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z1",
+                            "description": "<p>z-coordinate of the first point</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z2",
+                            "description": "<p>z-coordinate of the second point</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "distance between the two points",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 190,
+            "description": "<p>Returns Euler&#39;s number e (2.71828...) raised to the power of the n\nparameter. Maps to Math.exp().</p>\n",
+            "itemtype": "method",
+            "name": "exp",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>exponent to raise</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "e^n",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n\n  // Compute the exp() function with a value between 0 and 2\n  var xValue = map(mouseX, 0, width, 0, 2);\n  var yValue = exp(xValue);\n\n  var y = map(yValue, 0, 8, height, 0);\n\n  var legend = 'exp (' + nfc(xValue, 3) + ')\\n= ' + nf(yValue, 1, 4);\n  stroke(150);\n  line(mouseX, y, mouseX, height);\n  fill(0);\n  text(legend, 5, 15);\n  noStroke();\n  ellipse(mouseX, y, 7, 7);\n\n  // Draw the exp(x) curve,\n  // over the domain of x from 0 to 2\n  noFill();\n  stroke(0);\n  beginShape();\n  for (var x = 0; x < width; x++) {\n    xValue = map(x, 0, width, 0, 2);\n    yValue = exp(xValue);\n    y = map(yValue, 0, 8, height, 0);\n    vertex(x, y);\n  }\n\n  endShape();\n  line(0, 0, 0, height);\n  line(0, height - 1, width, height - 1);\n}\n</code></div>"
+            ],
+            "alt": "ellipse moves along a curve with mouse x. e^n displayed.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 240,
+            "description": "<p>Calculates the closest int value that is less than or equal to the\nvalue of the parameter. Maps to Math.floor().</p>\n",
+            "itemtype": "method",
+            "name": "floor",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to round down</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "rounded down number",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  //map, mouseX between 0 and 5.\n  var ax = map(mouseX, 0, 100, 0, 5);\n  var ay = 66;\n\n  //Get the floor of the mapped number.\n  var bx = floor(map(mouseX, 0, 100, 0, 5));\n  var by = 33;\n\n  // Multiply the mapped numbers by 20 to more easily\n  // see the changes.\n  stroke(0);\n  fill(0);\n  line(0, ay, ax * 20, ay);\n  line(0, by, bx * 20, by);\n\n  // Reformat the float returned by map and draw it.\n  noStroke();\n  text(nfc(ax, 2), ax, ay - 5);\n  text(nfc(bx, 1), bx, by - 5);\n}\n</code></div>"
+            ],
+            "alt": "2 horizontal lines & number sets. increase with mouse x. bottom to 2 decimals",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 279,
+            "description": "<p>Calculates a number between two numbers at a specific increment. The amt\nparameter is the amount to interpolate between the two values where 0.0\nequal to the first point, 0.1 is very near the first point, 0.5 is\nhalf-way in between, etc. The lerp function is convenient for creating\nmotion along a straight path and for drawing dotted lines.</p>\n",
+            "itemtype": "method",
+            "name": "lerp",
+            "params": [
+                {
+                    "name": "start",
+                    "description": "<p>first value</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "stop",
+                    "description": "<p>second value</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "amt",
+                    "description": "<p>number between 0.0 and 1.0</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "lerped value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  background(200);\n  var a = 20;\n  var b = 80;\n  var c = lerp(a, b, 0.2);\n  var d = lerp(a, b, 0.5);\n  var e = lerp(a, b, 0.8);\n\n  var y = 50;\n\n  strokeWeight(5);\n  stroke(0); // Draw the original points in black\n  point(a, y);\n  point(b, y);\n\n  stroke(100); // Draw the lerp points in gray\n  point(c, y);\n  point(d, y);\n  point(e, y);\n}\n</code></div>"
+            ],
+            "alt": "5 points horizontally staggered mid-canvas. mid 3 are grey, outer black",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 324,
+            "description": "<p>Calculates the natural logarithm (the base-e logarithm) of a number. This\nfunction expects the n parameter to be a value greater than 0.0. Maps to\nMath.log().</p>\n",
+            "itemtype": "method",
+            "name": "log",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number greater than 0</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "natural logarithm of n",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  var maxX = 2.8;\n  var maxY = 1.5;\n\n  // Compute the natural log of a value between 0 and maxX\n  var xValue = map(mouseX, 0, width, 0, maxX);\n  if (xValue > 0) {\n   // Cannot take the log of a negative number.\n    var yValue = log(xValue);\n    var y = map(yValue, -maxY, maxY, height, 0);\n\n    // Display the calculation occurring.\n    var legend = 'log(' + nf(xValue, 1, 2) + ')\\n= ' + nf(yValue, 1, 3);\n    stroke(150);\n    line(mouseX, y, mouseX, height);\n    fill(0);\n    text(legend, 5, 15);\n    noStroke();\n    ellipse(mouseX, y, 7, 7);\n  }\n\n  // Draw the log(x) curve,\n  // over the domain of x from 0 to maxX\n  noFill();\n  stroke(0);\n  beginShape();\n  for (var x = 0; x < width; x++) {\n    xValue = map(x, 0, width, 0, maxX);\n    yValue = log(xValue);\n    y = map(yValue, -maxY, maxY, height, 0);\n    vertex(x, y);\n  }\n  endShape();\n  line(0, 0, 0, height);\n  line(0, height / 2, width, height / 2);\n}\n</code></div>"
+            ],
+            "alt": "ellipse moves along a curve with mouse x. natural logarithm of n displayed.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 379,
+            "description": "<p>Calculates the magnitude (or length) of a vector. A vector is a direction\nin space commonly used in computer graphics and linear algebra. Because it\nhas no &quot;start&quot; position, the magnitude of a vector can be thought of as\nthe distance from the coordinate 0,0 to its x,y value. Therefore, mag() is\na shortcut for writing dist(0, 0, x, y).</p>\n",
+            "itemtype": "method",
+            "name": "mag",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>first value</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>second value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "magnitude of vector from (0,0) to (a,b)",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  var x1 = 20;\n  var x2 = 80;\n  var y1 = 30;\n  var y2 = 70;\n\n  line(0, 0, x1, y1);\n  print(mag(x1, y1)); // Prints \"36.05551275463989\"\n  line(0, 0, x2, y1);\n  print(mag(x2, y1)); // Prints \"85.44003745317531\"\n  line(0, 0, x1, y2);\n  print(mag(x1, y2)); // Prints \"72.80109889280519\"\n  line(0, 0, x2, y2);\n  print(mag(x2, y2)); // Prints \"106.3014581273465\"\n}\n</code></div>"
+            ],
+            "alt": "4 lines of different length radiate from top left of canvas.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 418,
+            "description": "<p>Re-maps a number from one range to another.\n<br><br>\nIn the first example above, the number 25 is converted from a value in the\nrange of 0 to 100 into a value that ranges from the left edge of the\nwindow (0) to the right edge (width).</p>\n",
+            "itemtype": "method",
+            "name": "map",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the incoming value to be converted</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "start1",
+                    "description": "<p>lower bound of the value&#39;s current range</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "stop1",
+                    "description": "<p>upper bound of the value&#39;s current range</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "start2",
+                    "description": "<p>lower bound of the value&#39;s target range</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "stop2",
+                    "description": "<p>upper bound of the value&#39;s target range</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "withinBounds",
+                    "description": "<p>constrain the value to the newly mapped range</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "remapped number",
+                "type": "Number"
+            },
+            "example": [
+                "\n  <div><code>\nvar value = 25;\nvar m = map(value, 0, 100, 0, width);\nellipse(m, 50, 10, 10);\n</code></div>\n\n  <div><code>\nfunction setup() {\n  noStroke();\n}\n\nfunction draw() {\n  background(204);\n  var x1 = map(mouseX, 0, width, 25, 75);\n  ellipse(x1, 25, 25, 25);\n  //This ellipse is constrained to the 0-100 range\n  //after setting withinBounds to true\n  var x2 = map(mouseX, 0, width, 0, 100, true);\n  ellipse(x2, 75, 25, 25);\n}\n</code></div>"
+            ],
+            "alt": "10 by 10 white ellipse with in mid left canvas\n2 25 by 25 white ellipses move with mouse x. Bottom has more range from X",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 474,
+            "description": "<p>Determines the largest value in a sequence of numbers, and then returns\nthat value. max() accepts any number of Number parameters, or an Array\nof any length.</p>\n",
+            "itemtype": "method",
+            "name": "max",
+            "return": {
+                "description": "maximum Number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  // Change the elements in the array and run the sketch\n  // to show how max() works!\n  var numArray = [2, 1, 5, 4, 8, 9];\n  fill(0);\n  noStroke();\n  text('Array Elements', 0, 10);\n  // Draw all numbers in the array\n  var spacing = 15;\n  var elemsY = 25;\n  for (var i = 0; i < numArray.length; i++) {\n    text(numArray[i], i * spacing, elemsY);\n  }\n  var maxX = 33;\n  var maxY = 80;\n  // Draw the Maximum value in the array.\n  textSize(32);\n  text(max(numArray), maxX, maxY);\n}\n</code></div>"
+            ],
+            "alt": "Small text at top reads: Array Elements 2 1 5 4 8 9. Large text at center: 9",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation",
+            "overloads": [
+                {
+                    "line": 474,
+                    "params": [
+                        {
+                            "name": "n0",
+                            "description": "<p>Number to compare</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "n1",
+                            "description": "<p>Number to compare</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "maximum Number",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 510,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>Numbers to compare</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 524,
+            "description": "<p>Determines the smallest value in a sequence of numbers, and then returns\nthat value. min() accepts any number of Number parameters, or an Array\nof any length.</p>\n",
+            "itemtype": "method",
+            "name": "min",
+            "return": {
+                "description": "minimum Number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  // Change the elements in the array and run the sketch\n  // to show how min() works!\n  var numArray = [2, 1, 5, 4, 8, 9];\n  fill(0);\n  noStroke();\n  text('Array Elements', 0, 10);\n  // Draw all numbers in the array\n  var spacing = 15;\n  var elemsY = 25;\n  for (var i = 0; i < numArray.length; i++) {\n    text(numArray[i], i * spacing, elemsY);\n  }\n  var maxX = 33;\n  var maxY = 80;\n  // Draw the Minimum value in the array.\n  textSize(32);\n  text(min(numArray), maxX, maxY);\n}\n</code></div>"
+            ],
+            "alt": "Small text at top reads: Array Elements 2 1 5 4 8 9. Large text at center: 1",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation",
+            "overloads": [
+                {
+                    "line": 524,
+                    "params": [
+                        {
+                            "name": "n0",
+                            "description": "<p>Number to compare</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "n1",
+                            "description": "<p>Number to compare</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "minimum Number",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 560,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>Numbers to compare</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 574,
+            "description": "<p>Normalizes a number from another range into a value between 0 and 1.\nIdentical to map(value, low, high, 0, 1).\nNumbers outside of the range are not clamped to 0 and 1, because\nout-of-range values are often intentional and useful. (See the second\nexample above.)</p>\n",
+            "itemtype": "method",
+            "name": "norm",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>incoming value to be normalized</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "start",
+                    "description": "<p>lower bound of the value&#39;s current range</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "stop",
+                    "description": "<p>upper bound of the value&#39;s current range</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "normalized number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  var currentNum = mouseX;\n  var lowerBound = 0;\n  var upperBound = width; //100;\n  var normalized = norm(currentNum, lowerBound, upperBound);\n  var lineY = 70;\n  line(0, lineY, width, lineY);\n  //Draw an ellipse mapped to the non-normalized value.\n  noStroke();\n  fill(50);\n  var s = 7; // ellipse size\n  ellipse(currentNum, lineY, s, s);\n\n  // Draw the guide\n  var guideY = lineY + 15;\n  text('0', 0, guideY);\n  textAlign(RIGHT);\n  text('100', width, guideY);\n\n  // Draw the normalized value\n  textAlign(LEFT);\n  fill(0);\n  textSize(32);\n  var normalY = 40;\n  var normalX = 20;\n  text(normalized, normalX, normalY);\n}\n</code></div>"
+            ],
+            "alt": "ellipse moves with mouse. 0 shown left & 100 right and updating values center",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 627,
+            "description": "<p>Facilitates exponential expressions. The pow() function is an efficient\nway of multiplying numbers by themselves (or their reciprocals) in large\nquantities. For example, pow(3, 5) is equivalent to the expression\n3<em>3</em>3<em>3</em>3 and pow(3, -5) is equivalent to 1 / 3<em>3</em>3<em>3</em>3. Maps to\nMath.pow().</p>\n",
+            "itemtype": "method",
+            "name": "pow",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>base of the exponential expression</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "e",
+                    "description": "<p>power by which to raise the base</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "n^e",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  //Exponentially increase the size of an ellipse.\n  var eSize = 3; // Original Size\n  var eLoc = 10; // Original Location\n\n  ellipse(eLoc, eLoc, eSize, eSize);\n\n  ellipse(eLoc * 2, eLoc * 2, pow(eSize, 2), pow(eSize, 2));\n\n  ellipse(eLoc * 4, eLoc * 4, pow(eSize, 3), pow(eSize, 3));\n\n  ellipse(eLoc * 8, eLoc * 8, pow(eSize, 4), pow(eSize, 4));\n}\n</code></div>"
+            ],
+            "alt": "small to large ellipses radiating from top left of canvas",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 661,
+            "description": "<p>Calculates the integer closest to the n parameter. For example,\nround(133.8) returns the value 134. Maps to Math.round().</p>\n",
+            "itemtype": "method",
+            "name": "round",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to round</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "rounded number",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  //map, mouseX between 0 and 5.\n  var ax = map(mouseX, 0, 100, 0, 5);\n  var ay = 66;\n\n  // Round the mapped number.\n  var bx = round(map(mouseX, 0, 100, 0, 5));\n  var by = 33;\n\n  // Multiply the mapped numbers by 20 to more easily\n  // see the changes.\n  stroke(0);\n  fill(0);\n  line(0, ay, ax * 20, ay);\n  line(0, by, bx * 20, by);\n\n  // Reformat the float returned by map and draw it.\n  noStroke();\n  text(nfc(ax, 2), ax, ay - 5);\n  text(nfc(bx, 1), bx, by - 5);\n}\n</code></div>"
+            ],
+            "alt": "horizontal center line squared values displayed on top and regular on bottom.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 700,
+            "description": "<p>Squares a number (multiplies a number by itself). The result is always a\npositive number, as multiplying two negative numbers always yields a\npositive result. For example, -1 * -1 = 1.</p>\n",
+            "itemtype": "method",
+            "name": "sq",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>number to square</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "squared number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  var eSize = 7;\n  var x1 = map(mouseX, 0, width, 0, 10);\n  var y1 = 80;\n  var x2 = sq(x1);\n  var y2 = 20;\n\n  // Draw the non-squared.\n  line(0, y1, width, y1);\n  ellipse(x1, y1, eSize, eSize);\n\n  // Draw the squared.\n  line(0, y2, width, y2);\n  ellipse(x2, y2, eSize, eSize);\n\n  // Draw dividing line.\n  stroke(100);\n  line(0, height / 2, width, height / 2);\n\n  // Draw text.\n  var spacing = 15;\n  noStroke();\n  fill(0);\n  text('x = ' + x1, 0, y1 + spacing);\n  text('sq(x) = ' + x2, 0, y2 + spacing);\n}\n</code></div>"
+            ],
+            "alt": "horizontal center line squared values displayed on top and regular on bottom.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/calculation.js",
+            "line": 747,
+            "description": "<p>Calculates the square root of a number. The square root of a number is\nalways positive, even though there may be a valid negative root. The\nsquare root s of number a is such that s*s = a. It is the opposite of\nsquaring. Maps to Math.sqrt().</p>\n",
+            "itemtype": "method",
+            "name": "sqrt",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>non-negative number to square root</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "square root of number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction draw() {\n  background(200);\n  var eSize = 7;\n  var x1 = mouseX;\n  var y1 = 80;\n  var x2 = sqrt(x1);\n  var y2 = 20;\n\n  // Draw the non-squared.\n  line(0, y1, width, y1);\n  ellipse(x1, y1, eSize, eSize);\n\n  // Draw the squared.\n  line(0, y2, width, y2);\n  ellipse(x2, y2, eSize, eSize);\n\n  // Draw dividing line.\n  stroke(100);\n  line(0, height / 2, width, height / 2);\n\n  // Draw text.\n  noStroke();\n  fill(0);\n  var spacing = 15;\n  text('x = ' + x1, 0, y1 + spacing);\n  text('sqrt(x) = ' + x2, 0, y2 + spacing);\n}\n</code></div>"
+            ],
+            "alt": "horizontal center line squareroot values displayed on top and regular on bottom.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Calculation"
+        },
+        {
+            "file": "src/math/math.js",
+            "line": 12,
+            "description": "<p>Creates a new p5.Vector (the datatype for storing vectors). This provides a\ntwo or three dimensional vector, specifically a Euclidean (also known as\ngeometric) vector. A vector is an entity that has both magnitude and\ndirection.</p>\n",
+            "itemtype": "method",
+            "name": "createVector",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x component of the vector</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y component of the vector</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "<p>z component of the vector</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div modernizr='webgl'><code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  noStroke();\n  fill(255, 102, 204);\n}\n\nfunction draw() {\n  background(255);\n  pointLight(color(255), createVector(sin(millis() / 1000) * 20, -40, -10));\n  scale(0.75);\n  sphere();\n}\n</code></div>"
+            ],
+            "alt": "a purple sphere lit by a point light oscillating horizontally",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/noise.js",
+            "line": 40,
+            "description": "<p>Returns the Perlin noise value at specified coordinates. Perlin noise is\na random sequence generator producing a more natural ordered, harmonic\nsuccession of numbers compared to the standard <b>random()</b> function.\nIt was invented by Ken Perlin in the 1980s and been used since in\ngraphical applications to produce procedural textures, natural motion,\nshapes, terrains etc.<br /><br /> The main difference to the\n<b>random()</b> function is that Perlin noise is defined in an infinite\nn-dimensional space where each pair of coordinates corresponds to a\nfixed semi-random value (fixed only for the lifespan of the program; see\nthe noiseSeed() function). p5.js can compute 1D, 2D and 3D noise,\ndepending on the number of coordinates given. The resulting value will\nalways be between 0.0 and 1.0. The noise value can be animated by moving\nthrough the noise space as demonstrated in the example above. The 2nd\nand 3rd dimension can also be interpreted as time.<br /><br />The actual\nnoise is structured similar to an audio signal, in respect to the\nfunction&#39;s use of frequencies. Similar to the concept of harmonics in\nphysics, perlin noise is computed over several octaves which are added\ntogether for the final result. <br /><br />Another way to adjust the\ncharacter of the resulting sequence is the scale of the input\ncoordinates. As the function works within an infinite space the value of\nthe coordinates doesn&#39;t matter as such, only the distance between\nsuccessive coordinates does (eg. when using <b>noise()</b> within a\nloop). As a general rule the smaller the difference between coordinates,\nthe smoother the resulting noise sequence will be. Steps of 0.005-0.03\nwork best for most applications, but this will differ depending on use.</p>\n",
+            "itemtype": "method",
+            "name": "noise",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate in noise space</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate in noise space</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "<p>z-coordinate in noise space</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Perlin noise value (between 0 and 1) at specified\n                     coordinates",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar xoff = 0.0;\n\nfunction draw() {\n  background(204);\n  xoff = xoff + 0.01;\n  var n = noise(xoff) * width;\n  line(n, 0, n, height);\n}\n</code>\n</div>\n<div>\n<code>var noiseScale=0.02;\n\nfunction draw() {\n  background(0);\n  for (var x=0; x < width; x++) {\n    var noiseVal = noise((mouseX+x)*noiseScale, mouseY*noiseScale);\n    stroke(noiseVal*255);\n    line(x, mouseY+noiseVal*80, x, height);\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "vertical line moves left to right with updating noise values.\nhorizontal wave pattern effected by mouse x-position & updating noise values.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Noise"
+        },
+        {
+            "file": "src/math/noise.js",
+            "line": 187,
+            "description": "<p>Adjusts the character and level of detail produced by the Perlin noise\n function. Similar to harmonics in physics, noise is computed over\n several octaves. Lower octaves contribute more to the output signal and\n as such define the overall intensity of the noise, whereas higher octaves\n create finer grained details in the noise sequence.\n <br><br>\n By default, noise is computed over 4 octaves with each octave contributing\n exactly half than its predecessor, starting at 50% strength for the 1st\n octave. This falloff amount can be changed by adding an additional function\n parameter. Eg. a falloff factor of 0.75 means each octave will now have\n 75% impact (25% less) of the previous lower octave. Any value between\n 0.0 and 1.0 is valid, however note that values greater than 0.5 might\n result in greater than 1.0 values returned by <b>noise()</b>.\n <br><br>\n By changing these parameters, the signal created by the <b>noise()</b>\n function can be adapted to fit very specific needs and characteristics.</p>\n",
+            "itemtype": "method",
+            "name": "noiseDetail",
+            "params": [
+                {
+                    "name": "lod",
+                    "description": "<p>number of octaves to be used by the noise</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "falloff",
+                    "description": "<p>falloff factor for each octave</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n <div>\n <code>\n var noiseVal;\n var noiseScale = 0.02;\nfunction setup() {\n   createCanvas(100, 100);\n }\nfunction draw() {\n   background(0);\n   for (var y = 0; y < height; y++) {\n     for (var x = 0; x < width / 2; x++) {\n       noiseDetail(2, 0.2);\n       noiseVal = noise((mouseX + x) * noiseScale, (mouseY + y) * noiseScale);\n       stroke(noiseVal * 255);\n       point(x, y);\n       noiseDetail(8, 0.65);\n       noiseVal = noise(\n         (mouseX + x + width / 2) * noiseScale,\n         (mouseY + y) * noiseScale\n       );\n       stroke(noiseVal * 255);\n       point(x + width / 2, y);\n     }\n   }\n }\n </code>\n </div>"
+            ],
+            "alt": "2 vertical grey smokey patterns affected my mouse x-position and noise.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Noise"
+        },
+        {
+            "file": "src/math/noise.js",
+            "line": 253,
+            "description": "<p>Sets the seed value for <b>noise()</b>. By default, <b>noise()</b>\nproduces different results each time the program is run. Set the\n<b>value</b> parameter to a constant to return the same pseudo-random\nnumbers each time the software is run.</p>\n",
+            "itemtype": "method",
+            "name": "noiseSeed",
+            "params": [
+                {
+                    "name": "seed",
+                    "description": "<p>the seed value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>var xoff = 0.0;\n\nfunction setup() {\n  noiseSeed(99);\n  stroke(0, 10);\n}\n\nfunction draw() {\n  xoff = xoff + .01;\n  var n = noise(xoff) * width;\n  line(n, 0, n, height);\n}\n</code>\n</div>"
+            ],
+            "alt": "vertical grey lines drawing in pattern affected by noise.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Noise"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 69,
+            "description": "<p>The x component of the vector</p>\n",
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 74,
+            "description": "<p>The y component of the vector</p>\n",
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 79,
+            "description": "<p>The z component of the vector</p>\n",
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 87,
+            "description": "<p>Returns a string representation of a vector v by calling String(v)\nor v.toString(). This method is useful for logging vectors in the\nconsole.</p>\n",
+            "itemtype": "method",
+            "name": "toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class = \"norender\">\n<code>\nfunction setup() {\n  var v = createVector(20, 30);\n  print(String(v)); // prints \"p5.Vector Object : [20, 30, 0]\"\n}\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 107,
+            "description": "<p>Sets the x, y, and z component of the vector using two or three separate\nvariables, the data from a p5.Vector, or the values from a float array.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nfunction setup() {\n  var v = createVector(1, 2, 3);\n  v.set(4, 5, 6); // Sets vector to [4, 5, 6]\n\n  var v1 = createVector(0, 0, 0);\n  var arr = [1, 2, 3];\n  v1.set(arr); // Sets vector to [1, 2, 3]\n}\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 107,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>the x component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>the z component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 129,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>the vector to set</p>\n",
+                            "type": "p5.Vector|Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 153,
+            "description": "<p>Gets a copy of the vector, returns a p5.Vector object.</p>\n",
+            "itemtype": "method",
+            "name": "copy",
+            "return": {
+                "description": "the copy of the p5.Vector object",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v1 = createVector(1, 2, 3);\nvar v2 = v1.copy();\nprint(v1.x === v2.x && v1.y === v2.y && v1.z === v2.z);\n// Prints \"true\"\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 176,
+            "description": "<p>Adds x, y, and z components to a vector, adds one vector to another, or\nadds two independent vectors together. The version of the method that adds\ntwo vectors together is a static method and returns a p5.Vector, the others\nacts directly on the vector. See the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "add",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(1, 2, 3);\nv.add(4, 5, 6);\n// v's components are set to [5, 7, 9]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(1, 2, 3);\nvar v2 = createVector(2, 3, 4);\n\nvar v3 = p5.Vector.add(v1, v2);\n// v3 has components [3, 5, 7]\nprint(v3);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 176,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>the x component of the vector to be added</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y component of the vector to be added</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>the z component of the vector to be added</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 208,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>the vector to add</p>\n",
+                            "type": "p5.Vector|Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 1035,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>a p5.Vector to add</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>a p5.Vector to add</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "target",
+                            "description": "<p>the vector to receive the result</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1
+                },
+                {
+                    "line": 1042,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the resulting p5.Vector",
+                        "type": "p5.Vector"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 232,
+            "description": "<p>Subtracts x, y, and z components from a vector, subtracts one vector from\nanother, or subtracts two independent vectors. The version of the method\nthat subtracts two vectors is a static method and returns a p5.Vector, the\nother acts directly on the vector. See the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "sub",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(4, 5, 6);\nv.sub(1, 1, 1);\n// v's components are set to [3, 4, 5]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(2, 3, 4);\nvar v2 = createVector(1, 2, 3);\n\nvar v3 = p5.Vector.sub(v1, v2);\n// v3 has components [1, 1, 1]\nprint(v3);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 232,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>the x component of the vector to subtract</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y component of the vector to subtract</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>the z component of the vector to subtract</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 264,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>the vector to subtract</p>\n",
+                            "type": "p5.Vector|Number[]"
+                        }
+                    ],
+                    "chainable": 1
