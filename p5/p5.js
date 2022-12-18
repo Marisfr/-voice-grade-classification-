@@ -13118,3 +13118,1006 @@ module.exports={
                         }
                     ],
                     "chainable": 1
+                },
+                {
+                    "line": 1065,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>a p5.Vector to subtract from</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>a p5.Vector to subtract</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "target",
+                            "description": "<p>if undefined a new vector will be created</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1
+                },
+                {
+                    "line": 1072,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the resulting p5.Vector",
+                        "type": "p5.Vector"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 288,
+            "description": "<p>Multiply the vector by a scalar. The static version of this method\ncreates a new p5.Vector while the non static version acts on the vector\ndirectly. See the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "mult",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(1, 2, 3);\nv.mult(2);\n// v's components are set to [2, 4, 6]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(1, 2, 3);\nvar v2 = p5.Vector.mult(v1, 2);\n// v2 has components [2, 4, 6]\nprint(v2);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 288,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>the number to multiply with the vector</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 1093,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "<p>the vector to multiply</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "n",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "target",
+                            "description": "<p>if undefined a new vector will be created</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1
+                },
+                {
+                    "line": 1100,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "n",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the resulting new p5.Vector",
+                        "type": "p5.Vector"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 329,
+            "description": "<p>Divide the vector by a scalar. The static version of this method creates a\nnew p5.Vector while the non static version acts on the vector directly.\nSee the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "div",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(6, 4, 2);\nv.div(2); //v's components are set to [3, 2, 1]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(6, 4, 2);\nvar v2 = p5.Vector.div(v1, 2);\n// v2 has components [3, 2, 1]\nprint(v2);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 329,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>the number to divide the vector by</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 1120,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "<p>the vector to divide</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "n",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "target",
+                            "description": "<p>if undefined a new vector will be created</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1
+                },
+                {
+                    "line": 1127,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "n",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the resulting new p5.Vector",
+                        "type": "p5.Vector"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 373,
+            "description": "<p>Calculates the magnitude (length) of the vector and returns the result as\na float (this is simply the equation sqrt(x<em>x + y</em>y + z*z).)</p>\n",
+            "itemtype": "method",
+            "name": "mag",
+            "return": {
+                "description": "magnitude of the vector",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(20.0, 30.0, 40.0);\nvar m = v.mag();\nprint(m); // Prints \"53.85164807134504\"\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 373,
+                    "params": [],
+                    "return": {
+                        "description": "magnitude of the vector",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 1217,
+                    "params": [
+                        {
+                            "name": "vecT",
+                            "description": "<p>the vector to return the magnitude of</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the magnitude of vecT",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 392,
+            "description": "<p>Calculates the squared magnitude of the vector and returns the result\nas a float (this is simply the equation <em>(x<em>x + y</em>y + z*z)</em>.)\nFaster if the real length is not required in the\ncase of comparing vectors, etc.</p>\n",
+            "itemtype": "method",
+            "name": "magSq",
+            "return": {
+                "description": "squared magnitude of the vector",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(6, 4, 2);\nprint(v1.magSq()); // Prints \"56\"\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 416,
+            "description": "<p>Calculates the dot product of two vectors. The version of the method\nthat computes the dot product of two independent vectors is a static\nmethod. See the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "dot",
+            "return": {
+                "description": "the dot product",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v1 = createVector(1, 2, 3);\nvar v2 = createVector(2, 3, 4);\n\nprint(v1.dot(v2)); // Prints \"20\"\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n//Static method\nvar v1 = createVector(1, 2, 3);\nvar v2 = createVector(3, 2, 1);\nprint(p5.Vector.dot(v1, v2)); // Prints \"10\"\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 416,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>x component of the vector</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>z component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "the dot product",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 447,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>value component of the vector or a p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 1147,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>the first p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>the second p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the dot product",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 459,
+            "description": "<p>Calculates and returns a vector composed of the cross product between\ntwo vectors. Both the static and non static methods return a new p5.Vector.\nSee the examples for more context.</p>\n",
+            "itemtype": "method",
+            "name": "cross",
+            "return": {
+                "description": "p5.Vector composed of cross product",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v1 = createVector(1, 2, 3);\nvar v2 = createVector(1, 2, 3);\n\nv1.cross(v2); // v's components are [0, 0, 0]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(1, 0, 0);\nvar v2 = createVector(0, 1, 0);\n\nvar crossProduct = p5.Vector.cross(v1, v2);\n// crossProduct has components [0, 0, 1]\nprint(crossProduct);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 459,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "<p>p5.Vector to be crossed</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "return": {
+                        "description": "p5.Vector composed of cross product",
+                        "type": "p5.Vector"
+                    }
+                },
+                {
+                    "line": 1161,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>the first p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>the second p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the cross product",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 500,
+            "description": "<p>Calculates the Euclidean distance between two points (considering a\npoint as a vector object).</p>\n",
+            "itemtype": "method",
+            "name": "dist",
+            "return": {
+                "description": "the distance",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v1 = createVector(1, 0, 0);\nvar v2 = createVector(0, 1, 0);\n\nvar distance = v1.dist(v2); // distance is 1.4142...\nprint(distance);\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\n// Static method\nvar v1 = createVector(1, 0, 0);\nvar v2 = createVector(0, 1, 0);\n\nvar distance = p5.Vector.dist(v1, v2);\n// distance is 1.4142...\nprint(distance);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 500,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "<p>the x, y, and z coordinates of a p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "return": {
+                        "description": "the distance",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 1176,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>the first p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>the second p5.Vector</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the distance",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 537,
+            "description": "<p>Normalize the vector to length 1 (make it a unit vector).</p>\n",
+            "itemtype": "method",
+            "name": "normalize",
+            "return": {
+                "description": "normalized p5.Vector",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(10, 20, 2);\n// v has components [10.0, 20.0, 2.0]\nv.normalize();\n// v's components are set to\n// [0.4454354, 0.8908708, 0.089087084]\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 557,
+            "description": "<p>Limit the magnitude of this vector to the value used for the <b>max</b>\nparameter.</p>\n",
+            "itemtype": "method",
+            "name": "limit",
+            "params": [
+                {
+                    "name": "max",
+                    "description": "<p>the maximum magnitude for the vector</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(10, 20, 2);\n// v has components [10.0, 20.0, 2.0]\nv.limit(5);\n// v's components are set to\n// [2.2271771, 4.4543543, 0.4454354]\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 584,
+            "description": "<p>Set the magnitude of this vector to the value used for the <b>len</b>\nparameter.</p>\n",
+            "itemtype": "method",
+            "name": "setMag",
+            "params": [
+                {
+                    "name": "len",
+                    "description": "<p>the new length for this vector</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(10, 20, 2);\n// v has components [10.0, 20.0, 2.0]\nv.setMag(10);\n// v's components are set to [6.0, 8.0, 0.0]\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 605,
+            "description": "<p>Calculate the angle of rotation for this vector (only 2D vectors)</p>\n",
+            "itemtype": "method",
+            "name": "heading",
+            "return": {
+                "description": "the angle of rotation",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class = \"norender\">\n<code>\nfunction setup() {\n  var v1 = createVector(30, 50);\n  print(v1.heading()); // 1.0303768265243125\n\n  v1 = createVector(40, 50);\n  print(v1.heading()); // 0.8960553845713439\n\n  v1 = createVector(30, 70);\n  print(v1.heading()); // 1.1659045405098132\n}\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 637,
+            "description": "<p>Rotate the vector by an angle (only 2D vectors), magnitude remains the\nsame</p>\n",
+            "itemtype": "method",
+            "name": "rotate",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the angle of rotation</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(10.0, 20.0);\n// v has components [10.0, 20.0, 0.0]\nv.rotate(HALF_PI);\n// v's components are set to [-20.0, 9.999999, 0.0]\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 667,
+            "description": "<p>Calculates and returns the angle (in radians) between two vectors.</p>\n",
+            "itemtype": "method",
+            "name": "angleBetween",
+            "params": [
+                {
+                    "name": "the",
+                    "description": "<p>x, y, and z components of a p5.Vector</p>\n",
+                    "type": "p5.Vector"
+                }
+            ],
+            "return": {
+                "description": "the angle between (in radians)",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v1 = createVector(1, 0, 0);\nvar v2 = createVector(0, 1, 0);\n\nvar angle = v1.angleBetween(v2);\n// angle is PI/2\nprint(angle);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 700,
+            "description": "<p>Linear interpolate the vector to another vector</p>\n",
+            "itemtype": "method",
+            "name": "lerp",
+            "chainable": 1,
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = createVector(1, 1, 0);\n\nv.lerp(3, 3, 0, 0.5); // v now has components [2,2,0]\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nvar v1 = createVector(0, 0, 0);\nvar v2 = createVector(100, 100, 0);\n\nvar v3 = p5.Vector.lerp(v1, v2, 0.5);\n// v3 has components [50,50,0]\nprint(v3);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 700,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>the x component</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y component</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>the z component</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "amt",
+                            "description": "<p>the amount of interpolation; some value between 0.0\n                        (old vector) and 1.0 (new vector). 0.9 is very near\n                        the new vector. 0.5 is halfway in between.</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 732,
+                    "params": [
+                        {
+                            "name": "v",
+                            "description": "<p>the p5.Vector to lerp to</p>\n",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "amt",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 1191,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "amt",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "target",
+                            "description": "<p>if undefined a new vector will be created</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "static": 1
+                },
+                {
+                    "line": 1199,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "p5.Vector"
+                        },
+                        {
+                            "name": "amt",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "static": 1,
+                    "return": {
+                        "description": "the lerped value",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 748,
+            "description": "<p>Return a representation of this vector as a float array. This is only\nfor temporary use. If used in any other fashion, the contents should be\ncopied by using the <b>p5.Vector.copy()</b> method to copy into your own\narray.</p>\n",
+            "itemtype": "method",
+            "name": "array",
+            "return": {
+                "description": "an Array with the 3 values",
+                "type": "Number[]"
+            },
+            "example": [
+                "\n<div class = \"norender\">\n<code>\nfunction setup() {\n  var v = createVector(20, 30);\n  print(v.array()); // Prints : Array [20, 30, 0]\n}\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nvar v = createVector(10.0, 20.0, 30.0);\nvar f = v.array();\nprint(f[0]); // Prints \"10.0\"\nprint(f[1]); // Prints \"20.0\"\nprint(f[2]); // Prints \"30.0\"\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 780,
+            "description": "<p>Equality check against a p5.Vector</p>\n",
+            "itemtype": "method",
+            "name": "equals",
+            "return": {
+                "description": "whether the vectors are equals",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n<div class = \"norender\">\n<code>\nvar v1 = createVector(5, 10, 20);\nvar v2 = createVector(5, 10, 20);\nvar v3 = createVector(13, 10, 19);\n\nprint(v1.equals(v2.x, v2.y, v2.z)); // true\nprint(v1.equals(v3.x, v3.y, v3.z)); // false\n</code>\n</div>\n\n<div class=\"norender\">\n<code>\nvar v1 = createVector(10.0, 20.0, 30.0);\nvar v2 = createVector(10.0, 20.0, 30.0);\nvar v3 = createVector(0.0, 0.0, 0.0);\nprint(v1.equals(v2)); // true\nprint(v1.equals(v3)); // false\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math",
+            "overloads": [
+                {
+                    "line": 780,
+                    "params": [
+                        {
+                            "name": "x",
+                            "description": "<p>the x component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>the y component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>the z component of the vector</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "whether the vectors are equals",
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "line": 810,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>the vector to compare</p>\n",
+                            "type": "p5.Vector|Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "Boolean"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 835,
+            "description": "<p>Make a new 2D vector from an angle</p>\n",
+            "itemtype": "method",
+            "name": "fromAngle",
+            "static": 1,
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the desired angle</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "length",
+                    "description": "<p>the length of the new vector (defaults to 1)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "the new p5.Vector object",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(200);\n\n  // Create a variable, proportional to the mouseX,\n  // varying from 0-360, to represent an angle in degrees.\n  angleMode(DEGREES);\n  var myDegrees = map(mouseX, 0, width, 0, 360);\n\n  // Display that variable in an onscreen text.\n  // (Note the nfc() function to truncate additional decimal places,\n  // and the \"\\xB0\" character for the degree symbol.)\n  var readout = 'angle = ' + nfc(myDegrees, 1) + '\\xB0';\n  noStroke();\n  fill(0);\n  text(readout, 5, 15);\n\n  // Create a p5.Vector using the fromAngle function,\n  // and extract its x and y components.\n  var v = p5.Vector.fromAngle(radians(myDegrees), 30);\n  var vx = v.x;\n  var vy = v.y;\n\n  push();\n  translate(width / 2, height / 2);\n  noFill();\n  stroke(150);\n  line(0, 0, 30, 0);\n  stroke(0);\n  line(0, 0, vx, vy);\n  pop();\n}\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 900,
+            "description": "<p>Make a new 3D vector from a pair of ISO spherical angles</p>\n",
+            "itemtype": "method",
+            "name": "fromAngles",
+            "static": 1,
+            "params": [
+                {
+                    "name": "theta",
+                    "description": "<p>the polar angle (zero is up)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "phi",
+                    "description": "<p>the azimuthal angle (zero is out of the screen)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "length",
+                    "description": "<p>the length of the new vector (defaults to 1)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "the new p5.Vector object",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div modernizr='webgl'>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  fill(255);\n  noStroke();\n}\nfunction draw() {\n  background(255);\n\n  var t = millis() / 1000;\n\n  // add three point lights\n  pointLight(color('#f00'), p5.Vector.fromAngles(t * 1.0, t * 1.3, 100));\n  pointLight(color('#0f0'), p5.Vector.fromAngles(t * 1.1, t * 1.2, 100));\n  pointLight(color('#00f'), p5.Vector.fromAngles(t * 1.2, t * 1.1, 100));\n\n  sphere(35);\n}\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 963,
+            "description": "<p>Make a new 2D unit vector from a random angle</p>\n",
+            "itemtype": "method",
+            "name": "random2D",
+            "static": 1,
+            "return": {
+                "description": "the new p5.Vector object",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = p5.Vector.random2D();\n// May make v's attributes something like:\n// [0.61554617, -0.51195765, 0.0] or\n// [-0.4695841, -0.14366731, 0.0] or\n// [0.6091097, -0.22805278, 0.0]\nprint(v);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 997,
+            "description": "<p>Make a new random 3D unit vector.</p>\n",
+            "itemtype": "method",
+            "name": "random3D",
+            "static": 1,
+            "return": {
+                "description": "the new p5.Vector object",
+                "type": "p5.Vector"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar v = p5.Vector.random3D();\n// May make v's attributes something like:\n// [0.61554617, -0.51195765, 0.599168] or\n// [-0.4695841, -0.14366731, -0.8711202] or\n// [0.6091097, -0.22805278, -0.7595902]\nprint(v);\n</code>\n</div>"
+            ],
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1090,
+            "description": "<p>Multiplies a vector by a scalar and returns a new vector.</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1117,
+            "description": "<p>Divides a vector by a scalar and returns a new vector.</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1144,
+            "description": "<p>Calculates the dot product of two vectors.</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1158,
+            "description": "<p>Calculates the cross product of two vectors.</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1172,
+            "description": "<p>Calculates the Euclidean distance between two points (considering a\npoint as a vector object).</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/p5.Vector.js",
+            "line": 1187,
+            "description": "<p>Linear interpolate a vector to another vector and return the result as a\nnew vector.</p>\n",
+            "class": "p5.Vector",
+            "module": "Math",
+            "submodule": "Math"
+        },
+        {
+            "file": "src/math/random.js",
+            "line": 48,
+            "description": "<p>Sets the seed value for random().</p>\n<p>By default, random() produces different results each time the program\nis run. Set the seed parameter to a constant to return the same\npseudo-random numbers each time the software is run.</p>\n",
+            "itemtype": "method",
+            "name": "randomSeed",
+            "params": [
+                {
+                    "name": "seed",
+                    "description": "<p>the seed value</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nrandomSeed(99);\nfor (var i = 0; i < 100; i++) {\n  var r = random(0, 255);\n  stroke(r);\n  line(i, 0, i, 100);\n}\n</code>\n</div>"
+            ],
+            "alt": "many vertical lines drawn in white, black or grey.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Random"
+        },
+        {
+            "file": "src/math/random.js",
+            "line": 79,
+            "description": "<p>Return a random floating-point number.</p>\n<p>Takes either 0, 1 or 2 arguments.</p>\n<p>If no argument is given, returns a random number from 0\nup to (but not including) 1.</p>\n<p>If one argument is given and it is a number, returns a random number from 0\nup to (but not including) the number.</p>\n<p>If one argument is given and it is an array, returns a random element from\nthat array.</p>\n<p>If two arguments are given, returns a random number from the\nfirst argument up to (but not including) the second argument.</p>\n",
+            "itemtype": "method",
+            "name": "random",
+            "return": {
+                "description": "the random number",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nfor (var i = 0; i < 100; i++) {\n  var r = random(50);\n  stroke(r * 5);\n  line(50, i, 50 + r, i);\n}\n</code>\n</div>\n<div>\n<code>\nfor (var i = 0; i < 100; i++) {\n  var r = random(-50, 50);\n  line(50, i, 50 + r, i);\n}\n</code>\n</div>\n<div>\n<code>\n// Get a random element from an array using the random(Array) syntax\nvar words = ['apple', 'bear', 'cat', 'dog'];\nvar word = random(words); // select random word\ntext(word, 10, 50); // draw the word\n</code>\n</div>"
+            ],
+            "alt": "100 horizontal lines from center canvas to right. size+fill change each time\n100 horizontal lines from center of canvas. height & side change each render\nword displayed at random. Either apple, bear, cat, or dog",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Random",
+            "overloads": [
+                {
+                    "line": 79,
+                    "params": [
+                        {
+                            "name": "min",
+                            "description": "<p>the lower bound (inclusive)</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "max",
+                            "description": "<p>the upper bound (exclusive)</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "the random number",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 133,
+                    "params": [
+                        {
+                            "name": "choices",
+                            "description": "<p>the array to choose from</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "the random element from the array",
+                        "type": "*"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/math/random.js",
+            "line": 166,
+            "description": "<p>Returns a random number fitting a Gaussian, or\n normal, distribution. There is theoretically no minimum or maximum\n value that randomGaussian() might return. Rather, there is\n just a very low probability that values far from the mean will be\n returned; and a higher probability that numbers near the mean will\n be returned.\n <br><br>\n Takes either 0, 1 or 2 arguments.<br>\n If no args, returns a mean of 0 and standard deviation of 1.<br>\n If one arg, that arg is the mean (standard deviation is 1).<br>\n If two args, first is mean, second is standard deviation.</p>\n",
+            "itemtype": "method",
+            "name": "randomGaussian",
+            "params": [
+                {
+                    "name": "mean",
+                    "description": "<p>the mean</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "sd",
+                    "description": "<p>the standard deviation</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the random number",
+                "type": "Number"
+            },
+            "example": [
+                "\n <div>\n <code>\n for (var y = 0; y < 100; y++) {\n   var x = randomGaussian(50, 15);\n   line(50, y, x, y);\n }\n </code>\n </div>\n <div>\n <code>\n var distribution = new Array(360);\nfunction setup() {\n   createCanvas(100, 100);\n   for (var i = 0; i < distribution.length; i++) {\n     distribution[i] = floor(randomGaussian(0, 15));\n   }\n }\nfunction draw() {\n   background(204);\n  translate(width / 2, width / 2);\n  for (var i = 0; i < distribution.length; i++) {\n     rotate(TWO_PI / distribution.length);\n     stroke(0);\n     var dist = abs(distribution[i]);\n     line(0, 0, dist, 0);\n   }\n }\n </code>\n </div>"
+            ],
+            "alt": "100 horizontal lines from center of canvas. height & side change each render\n black lines radiate from center of canvas. size determined each render",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Random"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 18,
+            "description": "<p>The inverse of cos(), returns the arc cosine of a value. This function\nexpects the values in the range of -1 to 1 and values are returned in\nthe range 0 to PI (3.1415927).</p>\n",
+            "itemtype": "method",
+            "name": "acos",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the value whose arc cosine is to be returned</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the arc cosine of the given value",
