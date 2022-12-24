@@ -14121,3 +14121,989 @@ module.exports={
             ],
             "return": {
                 "description": "the arc cosine of the given value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class= “norender\">\n<code>\nvar a = PI;\nvar c = cos(a);\nvar ac = acos(c);\n// Prints: \"3.1415927 : -1.0 : 3.1415927\"\nprint(a + ' : ' + c + ' : ' + ac);\n</code>\n</div>\n\n<div class= “norender\">\n<code>\nvar a = PI + PI / 4.0;\nvar c = cos(a);\nvar ac = acos(c);\n// Prints: \"3.926991 : -0.70710665 : 2.3561943\"\nprint(a + ' : ' + c + ' : ' + ac);\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 56,
+            "description": "<p>The inverse of sin(), returns the arc sine of a value. This function\nexpects the values in the range of -1 to 1 and values are returned\nin the range -PI/2 to PI/2.</p>\n",
+            "itemtype": "method",
+            "name": "asin",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the value whose arc sine is to be returned</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the arc sine of the given value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class= “norender\">\n<code>\nvar a = PI + PI / 3;\nvar s = sin(a);\nvar as = asin(s);\n// Prints: \"1.0471976 : 0.86602545 : 1.0471976\"\nprint(a + ' : ' + s + ' : ' + as);\n</code>\n</div>\n\n<div class= “norender\">\n<code>\nvar a = PI + PI / 3.0;\nvar s = sin(a);\nvar as = asin(s);\n// Prints: \"4.1887903 : -0.86602545 : -1.0471976\"\nprint(a + ' : ' + s + ' : ' + as);\n</code>\n</div>\n"
+            ],
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 95,
+            "description": "<p>The inverse of tan(), returns the arc tangent of a value. This function\nexpects the values in the range of -Infinity to Infinity (exclusive) and\nvalues are returned in the range -PI/2 to PI/2.</p>\n",
+            "itemtype": "method",
+            "name": "atan",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the value whose arc tangent is to be returned</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the arc tangent of the given value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class= “norender\">\n<code>\nvar a = PI + PI / 3;\nvar t = tan(a);\nvar at = atan(t);\n// Prints: \"1.0471976 : 1.7320509 : 1.0471976\"\nprint(a + ' : ' + t + ' : ' + at);\n</code>\n</div>\n\n<div class= “norender\">\n<code>\nvar a = PI + PI / 3.0;\nvar t = tan(a);\nvar at = atan(t);\n// Prints: \"4.1887903 : 1.7320513 : 1.0471977\"\nprint(a + ' : ' + t + ' : ' + at);\n</code>\n</div>\n"
+            ],
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 134,
+            "description": "<p>Calculates the angle (in radians) from a specified point to the coordinate\norigin as measured from the positive x-axis. Values are returned as a\nfloat in the range from PI to -PI. The atan2() function is most often used\nfor orienting geometry to the position of the cursor.\n<br><br>\nNote: The y-coordinate of the point is the first parameter, and the\nx-coordinate is the second parameter, due the the structure of calculating\nthe tangent.</p>\n",
+            "itemtype": "method",
+            "name": "atan2",
+            "params": [
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the point</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the point</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the arc tangent of the given point",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(204);\n  translate(width / 2, height / 2);\n  var a = atan2(mouseY - height / 2, mouseX - width / 2);\n  rotate(a);\n  rect(-30, -5, 60, 10);\n}\n</code>\n</div>"
+            ],
+            "alt": "60 by 10 rect at center of canvas rotates with mouse movements",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 174,
+            "description": "<p>Calculates the cosine of an angle. This function takes into account the\ncurrent angleMode. Values are returned in the range -1 to 1.</p>\n",
+            "itemtype": "method",
+            "name": "cos",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the angle</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the cosine of the angle",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar a = 0.0;\nvar inc = TWO_PI / 25.0;\nfor (var i = 0; i < 25; i++) {\n  line(i * 4, 50, i * 4, 50 + cos(a) * 40.0);\n  a = a + inc;\n}\n</code>\n</div>"
+            ],
+            "alt": "vertical black lines form wave patterns, extend-down on left and right side",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 206,
+            "description": "<p>Calculates the sine of an angle. This function takes into account the\ncurrent angleMode. Values are returned in the range -1 to 1.</p>\n",
+            "itemtype": "method",
+            "name": "sin",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the angle</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the sine of the angle",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar a = 0.0;\nvar inc = TWO_PI / 25.0;\nfor (var i = 0; i < 25; i++) {\n  line(i * 4, 50, i * 4, 50 + sin(a) * 40.0);\n  a = a + inc;\n}\n</code>\n</div>"
+            ],
+            "alt": "vertical black lines extend down and up from center to form wave pattern",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 238,
+            "description": "<p>Calculates the tangent of an angle. This function takes into account\nthe current angleMode. Values are returned in the range -1 to 1.</p>\n",
+            "itemtype": "method",
+            "name": "tan",
+            "params": [
+                {
+                    "name": "angle",
+                    "description": "<p>the angle</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the tangent of the angle",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar a = 0.0;\nvar inc = TWO_PI / 50.0;\nfor (var i = 0; i < 100; i = i + 2) {\n  line(i, 50, i, 50 + tan(a) * 2.0);\n  a = a + inc;\n}\n</code>"
+            ],
+            "alt": "vertical black lines end down and up from center to form spike pattern",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 270,
+            "description": "<p>Converts a radian measurement to its corresponding value in degrees.\nRadians and degrees are two ways of measuring the same thing. There are\n360 degrees in a circle and 2*PI radians in a circle. For example,\n90° = PI/2 = 1.5707964.</p>\n",
+            "itemtype": "method",
+            "name": "degrees",
+            "params": [
+                {
+                    "name": "radians",
+                    "description": "<p>the radians value to convert to degrees</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the converted angle",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class= “norender\">\n<code>\nvar rad = PI / 4;\nvar deg = degrees(rad);\nprint(rad + ' radians is ' + deg + ' degrees');\n// Prints: 0.7853981633974483 radians is 45 degrees\n</code>\n</div>\n"
+            ],
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 296,
+            "description": "<p>Converts a degree measurement to its corresponding value in radians.\nRadians and degrees are two ways of measuring the same thing. There are\n360 degrees in a circle and 2*PI radians in a circle. For example,\n90° = PI/2 = 1.5707964.</p>\n",
+            "itemtype": "method",
+            "name": "radians",
+            "params": [
+                {
+                    "name": "degrees",
+                    "description": "<p>the degree value to convert to radians</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "the converted angle",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class= “norender\">\n<code>\nvar deg = 45.0;\nvar rad = radians(deg);\nprint(deg + ' degrees is ' + rad + ' radians');\n// Prints: 45 degrees is 0.7853981633974483 radians\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/math/trigonometry.js",
+            "line": 320,
+            "description": "<p>Sets the current mode of p5 to given mode. Default mode is RADIANS.</p>\n",
+            "itemtype": "method",
+            "name": "angleMode",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>either RADIANS or DEGREES</p>\n",
+                    "type": "Constant"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nfunction draw() {\n  background(204);\n  angleMode(DEGREES); // Change the mode to DEGREES\n  var a = atan2(mouseY - height / 2, mouseX - width / 2);\n  translate(width / 2, height / 2);\n  push();\n  rotate(a);\n  rect(-20, -5, 40, 10); // Larger rectangle is rotating in degrees\n  pop();\n  angleMode(RADIANS); // Change the mode to RADIANS\n  rotate(a); // var a stays the same\n  rect(-40, -5, 20, 10); // Smaller rectangle is rotating in radians\n}\n</code>\n</div>"
+            ],
+            "alt": "40 by 10 rect in center rotates with mouse moves. 20 by 10 rect moves faster.",
+            "class": "p5",
+            "module": "Math",
+            "submodule": "Trigonometry"
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 13,
+            "description": "<p>Sets the current alignment for drawing text. Accepts two\narguments: horizAlign (LEFT, CENTER, or RIGHT) and\nvertAlign (TOP, BOTTOM, CENTER, or BASELINE).</p>\n<p>The horizAlign parameter is in reference to the x value\nof the text() function, while the vertAlign parameter is\nin reference to the y value.</p>\n<p>So if you write textAlign(LEFT), you are aligning the left\nedge of your text to the x value you give in text(). If you\nwrite textAlign(RIGHT, TOP), you are aligning the right edge\nof your text to the x value and the top of edge of the text\nto the y value.</p>\n",
+            "itemtype": "method",
+            "name": "textAlign",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntextSize(16);\ntextAlign(RIGHT);\ntext('ABCD', 50, 30);\ntextAlign(CENTER);\ntext('EFGH', 50, 50);\ntextAlign(LEFT);\ntext('IJKL', 50, 70);\n</code>\n</div>"
+            ],
+            "alt": "Letters ABCD displayed at top right, EFGH at center and IJKL at bottom left.",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes",
+            "overloads": [
+                {
+                    "line": 13,
+                    "params": [
+                        {
+                            "name": "horizAlign",
+                            "description": "<p>horizontal alignment, either LEFT,\n                           CENTER, or RIGHT</p>\n",
+                            "type": "Constant"
+                        },
+                        {
+                            "name": "vertAlign",
+                            "description": "<p>vertical alignment, either TOP,\n                           BOTTOM, CENTER, or BASELINE</p>\n",
+                            "type": "Constant",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 51,
+                    "params": [],
+                    "return": {
+                        "description": "",
+                        "type": "Object"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 59,
+            "description": "<p>Sets/gets the spacing, in pixels, between lines of text. This\nsetting will be used in all subsequent calls to the text() function.</p>\n",
+            "itemtype": "method",
+            "name": "textLeading",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// Text to display. The \"\\n\" is a \"new line\" character\nvar lines = 'L1\\nL2\\nL3';\ntextSize(12);\n\ntextLeading(10); // Set leading to 10\ntext(lines, 10, 25);\n\ntextLeading(20); // Set leading to 20\ntext(lines, 40, 25);\n\ntextLeading(30); // Set leading to 30\ntext(lines, 70, 25);\n</code>\n</div>"
+            ],
+            "alt": "set L1 L2 & L3 displayed vertically 3 times. spacing increases for each set",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes",
+            "overloads": [
+                {
+                    "line": 59,
+                    "params": [
+                        {
+                            "name": "leading",
+                            "description": "<p>the size in pixels for spacing between lines</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 88,
+                    "params": [],
+                    "return": {
+                        "description": "",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 96,
+            "description": "<p>Sets/gets the current font size. This size will be used in all subsequent\ncalls to the text() function. Font size is measured in pixels.</p>\n",
+            "itemtype": "method",
+            "name": "textSize",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntextSize(12);\ntext('Font Size 12', 10, 30);\ntextSize(14);\ntext('Font Size 14', 10, 60);\ntextSize(16);\ntext('Font Size 16', 10, 90);\n</code>\n</div>"
+            ],
+            "alt": "Font Size 12 displayed small, Font Size 14 medium & Font Size 16 large",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes",
+            "overloads": [
+                {
+                    "line": 96,
+                    "params": [
+                        {
+                            "name": "theSize",
+                            "description": "<p>the size of the letters in units of pixels</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 119,
+                    "params": [],
+                    "return": {
+                        "description": "",
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 127,
+            "description": "<p>Sets/gets the style of the text for system fonts to NORMAL, ITALIC, or BOLD.\nNote: this may be is overridden by CSS styling. For non-system fonts\n(opentype, truetype, etc.) please load styled fonts instead.</p>\n",
+            "itemtype": "method",
+            "name": "textStyle",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nstrokeWeight(0);\ntextSize(12);\ntextStyle(NORMAL);\ntext('Font Style Normal', 10, 30);\ntextStyle(ITALIC);\ntext('Font Style Italic', 10, 60);\ntextStyle(BOLD);\ntext('Font Style Bold', 10, 90);\n</code>\n</div>"
+            ],
+            "alt": "words Font Style Normal displayed normally, Italic in italic and bold in bold",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes",
+            "overloads": [
+                {
+                    "line": 127,
+                    "params": [
+                        {
+                            "name": "theStyle",
+                            "description": "<p>styling for text, either NORMAL,\n                           ITALIC, or BOLD</p>\n",
+                            "type": "Constant"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 153,
+                    "params": [],
+                    "return": {
+                        "description": "",
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 161,
+            "description": "<p>Calculates and returns the width of any character or text string.</p>\n",
+            "itemtype": "method",
+            "name": "textWidth",
+            "params": [
+                {
+                    "name": "theText",
+                    "description": "<p>the String of characters to measure</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\ntextSize(28);\n\nvar aChar = 'P';\nvar cWidth = textWidth(aChar);\ntext(aChar, 0, 40);\nline(cWidth, 0, cWidth, 50);\n\nvar aString = 'p5.js';\nvar sWidth = textWidth(aString);\ntext(aString, 0, 85);\nline(sWidth, 50, sWidth, 100);\n</code>\n</div>"
+            ],
+            "alt": "Letter P and p5.js are displayed with vertical lines at end. P is wide",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 195,
+            "description": "<p>Returns the ascent of the current font at its current size. The ascent\nrepresents the distance, in pixels, of the tallest character above\nthe baseline.</p>\n",
+            "itemtype": "method",
+            "name": "textAscent",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar base = height * 0.75;\nvar scalar = 0.8; // Different for each font\n\ntextSize(32); // Set initial text size\nvar asc = textAscent() * scalar; // Calc ascent\nline(0, base - asc, width, base - asc);\ntext('dp', 0, base); // Draw text on baseline\n\ntextSize(64); // Increase text size\nasc = textAscent() * scalar; // Recalc ascent\nline(40, base - asc, width, base - asc);\ntext('dp', 40, base); // Draw text on baseline\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 223,
+            "description": "<p>Returns the descent of the current font at its current size. The descent\nrepresents the distance, in pixels, of the character with the longest\ndescender below the baseline.</p>\n",
+            "itemtype": "method",
+            "name": "textDescent",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar base = height * 0.75;\nvar scalar = 0.8; // Different for each font\n\ntextSize(32); // Set initial text size\nvar desc = textDescent() * scalar; // Calc ascent\nline(0, base + desc, width, base + desc);\ntext('dp', 0, base); // Draw text on baseline\n\ntextSize(64); // Increase text size\ndesc = textDescent() * scalar; // Recalc ascent\nline(40, base + desc, width, base + desc);\ntext('dp', 40, base); // Draw text on baseline\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/typography/attributes.js",
+            "line": 251,
+            "description": "<p>Helper function to measure ascent and descent.</p>\n",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Attributes"
+        },
+        {
+            "file": "src/typography/loading_displaying.js",
+            "line": 16,
+            "description": "<p>Loads an opentype font file (.otf, .ttf) from a file or a URL,\nand returns a PFont Object. This method is asynchronous,\nmeaning it may not finish before the next line in your sketch\nis executed.\n<br><br>\nThe path to the font should be relative to the HTML file\nthat links in your sketch. Loading an from a URL or other\nremote location may be blocked due to your browser&#39;s built-in\nsecurity.</p>\n",
+            "itemtype": "method",
+            "name": "loadFont",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>name of the file or url to load</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be executed after\n                                   loadFont() completes</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "onError",
+                    "description": "<p>function to be executed if\n                                   an error occurs</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "p5.Font object",
+                "type": "p5.Font"
+            },
+            "example": [
+                "\n\n<p>Calling loadFont() inside preload() guarantees that the load\noperation will have completed before setup() and draw() are called.</p>\n\n<div><code>\nvar myFont;\nfunction preload() {\n  myFont = loadFont('assets/AvenirNextLTPro-Demi.otf');\n}\n\nfunction setup() {\n  fill('#ED225D');\n  textFont(myFont);\n  textSize(36);\n  text('p5*js', 10, 50);\n}\n</code></div>\n\nOutside of preload(), you may supply a callback function to handle the\nobject:\n\n<div><code>\nfunction setup() {\n  loadFont('assets/AvenirNextLTPro-Demi.otf', drawText);\n}\n\nfunction drawText(font) {\n  fill('#ED225D');\n  textFont(font, 36);\n  text('p5*js', 10, 50);\n}\n</code></div>\n\n<p>You can also use the string name of the font to style other HTML\nelements.</p>\n\n<div><code>\nfunction preload() {\n  loadFont('assets/Avenir.otf');\n}\n\nfunction setup() {\n  var myDiv = createDiv('hello there');\n  myDiv.style('font-family', 'Avenir');\n}\n</code></div>"
+            ],
+            "alt": "p5*js in p5's theme dark pink\np5*js in p5's theme dark pink",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Loading & Displaying"
+        },
+        {
+            "file": "src/typography/loading_displaying.js",
+            "line": 142,
+            "description": "<p>Draws text to the screen. Displays the information specified in the first\nparameter on the screen in the position specified by the additional\nparameters. A default font will be used unless a font is set with the\ntextFont() function and a default size will be used unless a font is set\nwith textSize(). Change the color of the text with the fill() function.\nChange the outline of the text with the stroke() and strokeWeight()\nfunctions.\n<br><br>\nThe text displays in relation to the textAlign() function, which gives the\noption to draw to the left, right, and center of the coordinates.\n<br><br>\nThe x2 and y2 parameters define a rectangular area to display within and\nmay only be used with string data. When these parameters are specified,\nthey are interpreted based on the current rectMode() setting. Text that\ndoes not fit completely within the rectangle specified will not be drawn\nto the screen.</p>\n",
+            "itemtype": "method",
+            "name": "text",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "<p>the alphanumeric symbols to be displayed</p>\n",
+                    "type": "String|Object|Array"
+                },
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of text</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of text</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "x2",
+                    "description": "<p>by default, the width of the text box,\n                    see rectMode() for more info</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y2",
+                    "description": "<p>by default, the height of the text box,\n                    see rectMode() for more info</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\ntextSize(32);\ntext('word', 10, 30);\nfill(0, 102, 153);\ntext('word', 10, 60);\nfill(0, 102, 153, 51);\ntext('word', 10, 90);\n</code>\n</div>\n<div>\n<code>\nvar s = 'The quick brown fox jumped over the lazy dog.';\nfill(50);\ntext(s, 10, 10, 70, 80); // Text wraps within text box\n</code>\n</div>"
+            ],
+            "alt": "'word' displayed 3 times going from black, blue to translucent blue\nThe quick brown fox jumped over the lazy dog.",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Loading & Displaying"
+        },
+        {
+            "file": "src/typography/loading_displaying.js",
+            "line": 199,
+            "description": "<p>Sets the current font that will be drawn with the text() function.</p>\n",
+            "itemtype": "method",
+            "name": "textFont",
+            "return": {
+                "description": "the current font",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div>\n<code>\nfill(0);\ntextSize(12);\ntextFont('Georgia');\ntext('Georgia', 12, 30);\ntextFont('Helvetica');\ntext('Helvetica', 12, 60);\n</code>\n</div>\n<div>\n<code>\nvar fontRegular, fontItalic, fontBold;\nfunction preload() {\n  fontRegular = loadFont('assets/Regular.otf');\n  fontItalic = loadFont('assets/Italic.ttf');\n  fontBold = loadFont('assets/Bold.ttf');\n}\nfunction setup() {\n  background(210);\n  fill(0)\n   .strokeWeight(0)\n   .textSize(10);\n  textFont(fontRegular);\n  text('Font Style Normal', 10, 30);\n  textFont(fontItalic);\n  text('Font Style Italic', 10, 50);\n  textFont(fontBold);\n  text('Font Style Bold', 10, 70);\n}\n</code>\n</div>"
+            ],
+            "alt": "words Font Style Normal displayed normally, Italic in italic and bold in bold",
+            "class": "p5",
+            "module": "Typography",
+            "submodule": "Loading & Displaying",
+            "overloads": [
+                {
+                    "line": 199,
+                    "params": [],
+                    "return": {
+                        "description": "the current font",
+                        "type": "Object"
+                    }
+                },
+                {
+                    "line": 242,
+                    "params": [
+                        {
+                            "name": "font",
+                            "description": "<p>a font loaded via loadFont(), or a String\nrepresenting a <a href=\"https://mzl.la/2dOw8WD\">web safe font</a> (a font\nthat is generally available across all systems)</p>\n",
+                            "type": "Object|String"
+                        },
+                        {
+                            "name": "size",
+                            "description": "<p>the font size to use</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/typography/p5.Font.js",
+            "line": 32,
+            "description": "<p>Underlying opentype font implementation</p>\n",
+            "itemtype": "property",
+            "name": "font",
+            "class": "p5.Font",
+            "module": "Typography",
+            "submodule": "Font"
+        },
+        {
+            "file": "src/typography/p5.Font.js",
+            "line": 45,
+            "description": "<p>Returns a tight bounding box for the given text string using this\nfont (currently only supports single lines)</p>\n",
+            "itemtype": "method",
+            "name": "textBounds",
+            "params": [
+                {
+                    "name": "line",
+                    "description": "<p>a line of text</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "x",
+                    "description": "<p>x-position</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-position</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "fontSize",
+                    "description": "<p>font size to use (optional)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "<p>opentype options (optional)</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "a rectangle object with properties: x, y, w, h",
+                "type": "Object"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar font;\nvar textString = 'Lorem ipsum dolor sit amet.';\nfunction preload() {\n  font = loadFont('./assets/Regular.otf');\n}\nfunction setup() {\n  background(210);\n\n  var bbox = font.textBounds(textString, 10, 30, 12);\n  fill(255);\n  stroke(0);\n  rect(bbox.x, bbox.y, bbox.w, bbox.h);\n  fill(0);\n  noStroke();\n\n  textFont(font);\n  textSize(12);\n  text(textString, 10, 30);\n}\n</code>\n</div>"
+            ],
+            "alt": "words Lorem ipsum dol go off canvas and contained by white bounding box",
+            "class": "p5.Font",
+            "module": "Typography",
+            "submodule": "Font"
+        },
+        {
+            "file": "src/typography/p5.Font.js",
+            "line": 160,
+            "description": "<p>Computes an array of points following the path for specified text</p>\n",
+            "itemtype": "method",
+            "name": "textToPoints",
+            "params": [
+                {
+                    "name": "txt",
+                    "description": "<p>a line of text</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "x",
+                    "description": "<p>x-position</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-position</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "fontSize",
+                    "description": "<p>font size to use (optional)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "options",
+                    "description": "<p>an (optional) object that can contain:</p>\n<p><br>sampleFactor - the ratio of path-length to number of samples\n(default=.25); higher values yield more points and are therefore\nmore precise</p>\n<p><br>simplifyThreshold - if set to a non-zero value, collinear points will be\nbe removed from the polygon; the value represents the threshold angle to use\nwhen determining whether two edges are collinear</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "an array of points, each with x, y, alpha (the path angle)",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar font;\nfunction preload() {\n  font = loadFont('./assets/Avenir.otf');\n}\n\nvar points;\nvar bounds;\nfunction setup() {\n  createCanvas(100, 100);\n  stroke(0);\n  fill(255, 104, 204);\n\n  points = font.textToPoints('p5', 0, 0, 10, {\n    sampleFactor: 5,\n    simplifyThreshold: 0\n  });\n  bounds = font.textBounds(' p5 ', 0, 0, 10);\n}\n\nfunction draw() {\n  background(255);\n  beginShape();\n  translate(-bounds.x * width / bounds.w, -bounds.y * height / bounds.h);\n  for (var i = 0; i < points.length; i++) {\n    var p = points[i];\n    vertex(\n      p.x * width / bounds.w +\n        sin(20 * p.y / bounds.h + millis() / 1000) * width / 30,\n      p.y * height / bounds.h\n    );\n  }\n  endShape(CLOSE);\n}\n</code>\n</div>\n"
+            ],
+            "class": "p5.Font",
+            "module": "Typography",
+            "submodule": "Font"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 12,
+            "description": "<p>Adds a value to the end of an array. Extends the length of\nthe array by one. Maps to Array.push().</p>\n",
+            "itemtype": "method",
+            "name": "append",
+            "params": [
+                {
+                    "name": "array",
+                    "description": "<p>Array to append</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>to be added to the Array</p>\n",
+                    "type": "Any"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  var myArray = ['Mango', 'Apple', 'Papaya'];\n  print(myArray); // ['Mango', 'Apple', 'Papaya']\n\n  append(myArray, 'Peach');\n  print(myArray); // ['Mango', 'Apple', 'Papaya', 'Peach']\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 35,
+            "description": "<p>Copies an array (or part of an array) to another array. The src array is\ncopied to the dst array, beginning at the position specified by\nsrcPosition and into the position specified by dstPosition. The number of\nelements to copy is determined by length. Note that copying values\noverwrites existing values in the destination array. To append values\ninstead of overwriting them, use concat().\n<br><br>\nThe simplified version with only two arguments, arrayCopy(src, dst),\ncopies an entire array to another of the same size. It is equivalent to\narrayCopy(src, 0, dst, 0, src.length).\n<br><br>\nUsing this function is far more efficient for copying array data than\niterating through a for() loop and copying each element individually.</p>\n",
+            "itemtype": "method",
+            "name": "arrayCopy",
+            "example": [
+                "\n<div class='norender'><code>\nvar src = ['A', 'B', 'C'];\nvar dst = [1, 2, 3];\nvar srcPosition = 1;\nvar dstPosition = 0;\nvar length = 2;\n\nprint(src); // ['A', 'B', 'C']\nprint(dst); // [ 1 ,  2 ,  3 ]\n\narrayCopy(src, srcPosition, dst, dstPosition, length);\nprint(dst); // ['B', 'C', 3]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions",
+            "overloads": [
+                {
+                    "line": 35,
+                    "params": [
+                        {
+                            "name": "src",
+                            "description": "<p>the source Array</p>\n",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "srcPosition",
+                            "description": "<p>starting position in the source Array</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "dst",
+                            "description": "<p>the destination Array</p>\n",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "dstPosition",
+                            "description": "<p>starting position in the destination Array</p>\n",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "length",
+                            "description": "<p>number of Array elements to be copied</p>\n",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "line": 72,
+                    "params": [
+                        {
+                            "name": "src",
+                            "description": "",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "dst",
+                            "description": "",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "length",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 110,
+            "description": "<p>Concatenates two arrays, maps to Array.concat(). Does not modify the\ninput arrays.</p>\n",
+            "itemtype": "method",
+            "name": "concat",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "<p>first Array to concatenate</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "b",
+                    "description": "<p>second Array to concatenate</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "concatenated array",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div class = 'norender'><code>\nfunction setup() {\n  var arr1 = ['A', 'B', 'C'];\n  var arr2 = [1, 2, 3];\n\n  print(arr1); // ['A','B','C']\n  print(arr2); // [1,2,3]\n\n  var arr3 = concat(arr1, arr2);\n\n  print(arr1); // ['A','B','C']\n  print(arr2); // [1, 2, 3]\n  print(arr3); // ['A','B','C', 1, 2, 3]\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 140,
+            "description": "<p>Reverses the order of an array, maps to Array.reverse()</p>\n",
+            "itemtype": "method",
+            "name": "reverse",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>Array to reverse</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  var myArray = ['A', 'B', 'C'];\n  print(myArray); // ['A','B','C']\n\n  reverse(myArray);\n  print(myArray); // ['C','B','A']\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 160,
+            "description": "<p>Decreases an array by one element and returns the shortened array,\nmaps to Array.pop().</p>\n",
+            "itemtype": "method",
+            "name": "shorten",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>Array to shorten</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "shortened Array",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div class = 'norender'><code>\nfunction setup() {\n  var myArray = ['A', 'B', 'C'];\n  print(myArray); // ['A', 'B', 'C']\n  var newArray = shorten(myArray);\n  print(myArray); // ['A','B','C']\n  print(newArray); // ['A','B']\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 183,
+            "description": "<p>Randomizes the order of the elements of an array. Implements\n<a href='http://Bost.Ocks.org/mike/shuffle/' target=_blank>\nFisher-Yates Shuffle Algorithm</a>.</p>\n",
+            "itemtype": "method",
+            "name": "shuffle",
+            "params": [
+                {
+                    "name": "array",
+                    "description": "<p>Array to shuffle</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "bool",
+                    "description": "<p>modify passed array</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "shuffled Array",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  var regularArr = ['ABC', 'def', createVector(), TAU, Math.E];\n  print(regularArr);\n  shuffle(regularArr, true); // force modifications to passed array\n  print(regularArr);\n\n  // By default shuffle() returns a shuffled cloned array:\n  var newArr = shuffle(regularArr);\n  print(regularArr);\n  print(newArr);\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 225,
+            "description": "<p>Sorts an array of numbers from smallest to largest, or puts an array of\nwords in alphabetical order. The original array is not modified; a\nre-ordered array is returned. The count parameter states the number of\nelements to sort. For example, if there are 12 elements in an array and\ncount is set to 5, only the first 5 elements in the array will be sorted.</p>\n",
+            "itemtype": "method",
+            "name": "sort",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>Array to sort</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "count",
+                    "description": "<p>number of elements to sort, starting from 0</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div class = 'norender'><code>\nfunction setup() {\n  var words = ['banana', 'apple', 'pear', 'lime'];\n  print(words); // ['banana', 'apple', 'pear', 'lime']\n  var count = 4; // length of array\n\n  words = sort(words, count);\n  print(words); // ['apple', 'banana', 'lime', 'pear']\n}\n</code></div>\n<div class = 'norender'><code>\nfunction setup() {\n  var numbers = [2, 6, 1, 5, 14, 9, 8, 12];\n  print(numbers); // [2, 6, 1, 5, 14, 9, 8, 12]\n  var count = 5; // Less than the length of the array\n\n  numbers = sort(numbers, count);\n  print(numbers); // [1,2,5,6,14,9,8,12]\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 271,
+            "description": "<p>Inserts a value or an array of values into an existing array. The first\nparameter specifies the initial array to be modified, and the second\nparameter defines the data to be inserted. The third parameter is an index\nvalue which specifies the array position from which to insert data.\n(Remember that array index numbering starts at zero, so the first position\nis 0, the second position is 1, and so on.)</p>\n",
+            "itemtype": "method",
+            "name": "splice",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>Array to splice into</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to be spliced in</p>\n",
+                    "type": "Any"
+                },
+                {
+                    "name": "position",
+                    "description": "<p>in the array from which to insert data</p>\n",
+                    "type": "Integer"
+                }
+            ],
+            "example": [
+                "\n<div class = 'norender'><code>\nfunction setup() {\n  var myArray = [0, 1, 2, 3, 4];\n  var insArray = ['A', 'B', 'C'];\n  print(myArray); // [0, 1, 2, 3, 4]\n  print(insArray); // ['A','B','C']\n\n  splice(myArray, insArray, 3);\n  print(myArray); // [0,1,2,'A','B','C',3,4]\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/array_functions.js",
+            "line": 304,
+            "description": "<p>Extracts an array of elements from an existing array. The list parameter\ndefines the array from which the elements will be copied, and the start\nand count parameters specify which elements to extract. If no count is\ngiven, elements will be extracted from the start to the end of the array.\nWhen specifying the start, remember that the first array element is 0.\nThis function does not change the source array.</p>\n",
+            "itemtype": "method",
+            "name": "subset",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>Array to extract from</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "start",
+                    "description": "<p>position to begin</p>\n",
+                    "type": "Integer"
+                },
+                {
+                    "name": "count",
+                    "description": "<p>number of values to extract</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of extracted elements",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div class = 'norender'><code>\nfunction setup() {\n  var myArray = [1, 2, 3, 4, 5];\n  print(myArray); // [1, 2, 3, 4, 5]\n\n  var sub1 = subset(myArray, 0, 3);\n  var sub2 = subset(myArray, 2, 2);\n  print(sub1); // [1,2,3]\n  print(sub2); // [3,4]\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Array Functions"
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 12,
+            "description": "<p>Converts a string to its floating point representation. The contents of a\nstring must resemble a number, or NaN (not a number) will be returned.\nFor example, float(&quot;1234.56&quot;) evaluates to 1234.56, but float(&quot;giraffe&quot;)\nwill return NaN.</p>\n<p>When an array of values is passed in, then an array of floats of the same\nlength is returned.</p>\n",
+            "itemtype": "method",
+            "name": "float",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "<p>float string to parse</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "floating point representation of string",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nvar str = '20';\nvar diameter = float(str);\nellipse(width / 2, height / 2, diameter, diameter);\n</code></div>"
+            ],
+            "alt": "20 by 20 white ellipse in the center of the canvas",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion"
+        },
