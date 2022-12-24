@@ -20849,3 +20849,975 @@ module.exports={
                     "type": "Number",
                     "optional": true
                 }
+            ],
+            "example": [
+                "\n<div><code>\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.2;\nvar susPercent = 0.2;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(playEnv);\n}\n\nfunction playEnv(){\n  // trigger env on triOsc, 0 seconds from now\n  // After decay, sustain for 0.2 seconds before release\n  env.play(triOsc, 0, 0.2);\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6328,
+            "description": "<p>Trigger the Attack, and Decay portion of the Envelope.\nSimilar to holding down a key on a piano, but it will\nhold the sustain level until you let go. Input can be\nany p5.sound object, or a <a href=\"\nhttp://docs.webplatform.org/wiki/apis/webaudio/AudioParam\">\nWeb Audio Param</a>.</p>\n",
+            "itemtype": "method",
+            "name": "triggerAttack",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>p5.sound Object or Web Audio Param</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time from now (in seconds)</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\n\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.3;\nvar susPercent = 0.4;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n  background(200);\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(envAttack);\n}\n\nfunction envAttack(){\n  console.log('trigger attack');\n  env.triggerAttack();\n\n  background(0,255,0);\n  text('attack!', width/2, height/2);\n}\n\nfunction mouseReleased() {\n  env.triggerRelease();\n\n  background(200);\n  text('click to play', width/2, height/2);\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6435,
+            "description": "<p>Trigger the Release of the Envelope. This is similar to releasing\nthe key on a piano and letting the sound fade according to the\nrelease level and release time.</p>\n",
+            "itemtype": "method",
+            "name": "triggerRelease",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>p5.sound Object or Web Audio Param</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time to trigger the release</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\n\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.3;\nvar susPercent = 0.4;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n  background(200);\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(envAttack);\n}\n\nfunction envAttack(){\n  console.log('trigger attack');\n  env.triggerAttack();\n\n  background(0,255,0);\n  text('attack!', width/2, height/2);\n}\n\nfunction mouseReleased() {\n  env.triggerRelease();\n\n  background(200);\n  text('click to play', width/2, height/2);\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6532,
+            "description": "<p>Exponentially ramp to a value using the first two\nvalues from <code><a href=\"#/p5.Env/setADSR\">setADSR(attackTime, decayTime)</a></code>\nas <a href=\"https://en.wikipedia.org/wiki/RC_time_constant\">\ntime constants</a> for simple exponential ramps.\nIf the value is higher than current value, it uses attackTime,\nwhile a decrease uses decayTime.</p>\n",
+            "itemtype": "method",
+            "name": "ramp",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>p5.sound Object or Web Audio Param</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>When to trigger the ramp</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "v",
+                    "description": "<p>Target value</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "v2",
+                    "description": "<p>Second target value (optional)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar env, osc, amp, cnv;\n\nvar attackTime = 0.001;\nvar decayTime = 0.2;\nvar attackLevel = 1;\nvar decayLevel = 0;\n\nfunction setup() {\n  cnv = createCanvas(100, 100);\n  fill(0,255,0);\n  noStroke();\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime);\n\n  osc = new p5.Oscillator();\n  osc.amp(env);\n  osc.start();\n\n  amp = new p5.Amplitude();\n\n  cnv.mousePressed(triggerRamp);\n}\n\nfunction triggerRamp() {\n  env.ramp(osc, 0, attackLevel, decayLevel);\n}\n\nfunction draw() {\n  background(20,20,20);\n  text('click me', 10, 20);\n  var h = map(amp.getLevel(), 0, 0.4, 0, height);;\n\n  rect(0, height, width, -h);\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6637,
+            "description": "<p>Add a value to the p5.Oscillator&#39;s output amplitude,\nand return the oscillator. Calling this method\nagain will override the initial add() with new values.</p>\n",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>Constant number to add</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Envelope Returns this envelope\n                                   with scaled output",
+                "type": "p5.Env"
+            },
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6653,
+            "description": "<p>Multiply the p5.Env&#39;s output amplitude\nby a fixed value. Calling this method\nagain will override the initial mult() with new values.</p>\n",
+            "itemtype": "method",
+            "name": "mult",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>Constant number to multiply</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Envelope Returns this envelope\n                                   with scaled output",
+                "type": "p5.Env"
+            },
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6669,
+            "description": "<p>Scale this envelope&#39;s amplitude values to a given\nrange, and return the envelope. Calling this method\nagain will override the initial scale() with new values.</p>\n",
+            "itemtype": "method",
+            "name": "scale",
+            "params": [
+                {
+                    "name": "inMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "inMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Envelope Returns this envelope\n                                   with scaled output",
+                "type": "p5.Env"
+            },
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6773,
+            "description": "<p>Set the width of a Pulse object (an oscillator that implements\nPulse Width Modulation).</p>\n",
+            "itemtype": "method",
+            "name": "width",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "<p>Width between the pulses (0 to 1.0,\n                       defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Pulse",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6958,
+            "description": "<p>Set type of noise to &#39;white&#39;, &#39;pink&#39; or &#39;brown&#39;.\nWhite is the default.</p>\n",
+            "itemtype": "method",
+            "name": "setType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>&#39;white&#39;, &#39;pink&#39; or &#39;brown&#39;</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6988,
+            "description": "<p>Start the noise</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7005,
+            "description": "<p>Stop the noise.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7017,
+            "description": "<p>Pan the noise.</p>\n",
+            "itemtype": "method",
+            "name": "pan",
+            "params": [
+                {
+                    "name": "panning",
+                    "description": "<p>Number between -1 (left)\n                         and 1 (right)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7026,
+            "description": "<p>Set the amplitude of the noise between 0 and 1.0. Or,\nmodulate amplitude with an audio signal such as an oscillator.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>amplitude between 0 and 1.0\n                                   or modulating signal/oscillator</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7037,
+            "description": "<p>Send output to a p5.sound or web audio object</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7043,
+            "description": "<p>Disconnect all output.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Noise",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7117,
+            "description": "<p>Client must allow browser to access their microphone / audioin source.\nDefault: false. Will become true when the client enables acces.</p>\n",
+            "itemtype": "property",
+            "name": "enabled",
+            "type": "Boolean",
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7133,
+            "description": "<p>Start processing audio input. This enables the use of other\nAudioIn methods like getLevel(). Note that by default, AudioIn\nis not connected to p5.sound&#39;s output. So you won&#39;t hear\nanything unless you use the connect() method.<br/></p>\n<p>Certain browsers limit access to the user&#39;s microphone. For example,\nChrome only allows access from localhost and over https. For this reason,\nyou may want to include an errorCallback—a function that is called in case\nthe browser won&#39;t provide mic access.</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "successCallback",
+                    "description": "<p>Name of a function to call on\n                                  success.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>Name of a function to call if\n                                  there was an error. For example,\n                                  some browsers do not support\n                                  getUserMedia.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7186,
+            "description": "<p>Turn the AudioIn off. If the AudioIn is stopped, it cannot getLevel().\nIf re-starting, the user may be prompted for permission access.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7202,
+            "description": "<p>Connect to an audio unit. If no parameter is provided, will\nconnect to the master output (i.e. your speakers).<br/></p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>An object that accepts audio input,\n                        such as an FFT</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7223,
+            "description": "<p>Disconnect the AudioIn from all audio units. For example, if\nconnect() had been called, disconnect() will stop sending\nsignal to your speakers.<br/></p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7235,
+            "description": "<p>Read the Amplitude (volume level) of an AudioIn. The AudioIn\nclass contains its own instance of the Amplitude class to help\nmake it easy to get a microphone&#39;s volume level. Accepts an\noptional smoothing value (0.0 &lt; 1.0). <em>NOTE: AudioIn must\n.start() before using .getLevel().</em><br/></p>\n",
+            "itemtype": "method",
+            "name": "getLevel",
+            "params": [
+                {
+                    "name": "smoothing",
+                    "description": "<p>Smoothing is 0.0 by default.\n                             Smooths values based on previous values.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Volume level (between 0.0 and 1.0)",
+                "type": "Number"
+            },
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7253,
+            "description": "<p>Set amplitude (volume) of a mic input between 0 and 1.0. <br/></p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "vol",
+                    "description": "<p>between 0 and 1.0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "time",
+                    "description": "<p>ramp time (optional)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7272,
+            "description": "<p>Returns a list of available input sources. This is a wrapper\nfor &lt;a title=&quot;MediaDevices.enumerateDevices() - Web APIs | MDN&quot; target=&quot;_blank&quot; href=\n &quot;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices\">https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices</a>&quot;</p>\n<blockquote>\n<p>and it returns a Promise.</p>\n</blockquote>\n",
+            "itemtype": "method",
+            "name": "getSources",
+            "params": [
+                {
+                    "name": "successCallback",
+                    "description": "<p>This callback function handles the sources when they\n                                     have been enumerated. The callback function\n                                     receives the deviceList array as its only argument</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>This optional callback receives the error\n                                   message as its argument.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns a Promise that can be used in place of the callbacks, similar\n                           to the enumerateDevices() method",
+                "type": "Object"
+            },
+            "example": [
+                "\n <div><code>\n var audiograb;\n\n function setup(){\n   //new audioIn\n   audioGrab = new p5.AudioIn();\n\n   audioGrab.getSources(function(deviceList) {\n     //print out the array of available sources\n     console.log(deviceList);\n     //set the source to the first item in the deviceList array\n     audioGrab.setSource(0);\n   });\n }\n </code></div>"
+            ],
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7323,
+            "description": "<p>Set the input source. Accepts a number representing a\nposition in the array returned by getSources().\nThis is only available in browsers that support\n&lt;a title=&quot;MediaDevices.enumerateDevices() - Web APIs | MDN&quot; target=&quot;_blank&quot; href=\n&quot;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices\">https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices</a>&quot;</p>\n<blockquote>\n<p>navigator.mediaDevices.enumerateDevices()</a>.<br/></p>\n</blockquote>\n",
+            "itemtype": "method",
+            "name": "setSource",
+            "params": [
+                {
+                    "name": "num",
+                    "description": "<p>position of input source in the array</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7363,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7379,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7403,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7429,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7451,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7473,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7519,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7550,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7568,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7905,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 7927,
+            "class": "p5.AudioIn",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8003,
+            "description": "<p>In classes that extend\np5.Effect, connect effect nodes\nto the wet parameter</p>\n",
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8016,
+            "description": "<p>Set the output volume of the filter.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "vol",
+                    "description": "<p>amplitude between 0 and 1.0</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts until rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "tFromNow",
+                    "description": "<p>schedule this event to happen in tFromNow seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8033,
+            "description": "<p>Link effects together in a chain\nExample usage: filter.chain(reverb, delay, panner);\nMay be used with an open-ended number of arguments</p>\n",
+            "itemtype": "method",
+            "name": "chain",
+            "params": [
+                {
+                    "name": "arguments",
+                    "description": "<p>Chain together multiple sound objects</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8050,
+            "description": "<p>Adjust the dry/wet value.</p>\n",
+            "itemtype": "method",
+            "name": "drywet",
+            "params": [
+                {
+                    "name": "fade",
+                    "description": "<p>The desired drywet value (0 - 1.0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8062,
+            "description": "<p>Send output to a p5.js-sound, Web Audio Node, or use signal to\ncontrol an AudioParam</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8073,
+            "description": "<p>Disconnect all output.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Effect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8181,
+            "description": "<p>The p5.Filter is built with a\n<a href=\"http://www.w3.org/TR/webaudio/#BiquadFilterNode\">\nWeb Audio BiquadFilter Node</a>.</p>\n",
+            "itemtype": "property",
+            "name": "biquadFilter",
+            "type": "DelayNode",
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8199,
+            "description": "<p>Filter an audio signal according to a set\nof filter parameters.</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "Signal",
+                    "description": "<p>An object that outputs audio</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "freq",
+                    "description": "<p>Frequency in Hz, from 10 to 22050</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "res",
+                    "description": "<p>Resonance/Width of the filter frequency\n                      from 0.001 to 1000</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8213,
+            "description": "<p>Set the frequency and the resonance of the filter.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Frequency in Hz, from 10 to 22050</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "res",
+                    "description": "<p>Resonance (Q) from 0.001 to 1000</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8230,
+            "description": "<p>Set the filter frequency, in Hz, from 10 to 22050 (the range of\nhuman hearing, although in reality most people hear in a narrower\nrange).</p>\n",
+            "itemtype": "method",
+            "name": "freq",
+            "params": [
+                {
+                    "name": "freq",
+                    "description": "<p>Filter Frequency</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "value  Returns the current frequency value",
+                "type": "Number"
+            },
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8255,
+            "description": "<p>Controls either width of a bandpass frequency,\nor the resonance of a low/highpass cutoff frequency.</p>\n",
+            "itemtype": "method",
+            "name": "res",
+            "params": [
+                {
+                    "name": "res",
+                    "description": "<p>Resonance/Width of filter freq\n                     from 0.001 to 1000</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "value Returns the current res value",
+                "type": "Number"
+            },
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8277,
+            "description": "<p>Controls the gain attribute of a Biquad Filter.\nThis is distinctly different from .amp() which is inherited from p5.Effect\n.amp() controls the volume via the output gain node\np5.Filter.gain() controls the gain parameter of a Biquad Filter node.</p>\n",
+            "itemtype": "method",
+            "name": "gain",
+            "params": [
+                {
+                    "name": "gain",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the current or updated gain value",
+                "type": "Number"
+            },
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8298,
+            "description": "<p>Toggle function. Switches between the specified type and allpass</p>\n",
+            "itemtype": "method",
+            "name": "toggle",
+            "return": {
+                "description": "[Toggle value]",
+                "type": "Boolean"
+            },
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8313,
+            "description": "<p>Set the type of a p5.Filter. Possible types include:\n&quot;lowpass&quot; (default), &quot;highpass&quot;, &quot;bandpass&quot;,\n&quot;lowshelf&quot;, &quot;highshelf&quot;, &quot;peaking&quot;, &quot;notch&quot;,\n&quot;allpass&quot;.</p>\n",
+            "itemtype": "method",
+            "name": "setType",
+            "params": [
+                {
+                    "name": "t",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.Filter",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8516,
+            "description": "<p>The p5.EQ is built with abstracted p5.Filter objects.\nTo modify any bands, use methods of the <a\nhref=\"/reference/#/p5.Filter\" title=\"p5.Filter reference\">\np5.Filter</a> API, especially <code>gain</code> and <code>freq</code>.\nBands are stored in an array, with indices 0 - 3, or 0 - 7</p>\n",
+            "itemtype": "property",
+            "name": "bands",
+            "type": "Array",
+            "class": "p5.EQ",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8551,
+            "description": "<p>Process an input by connecting it to the EQ</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>Audio source</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.EQ",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8637,
+            "description": "<p><a title=\"Web Audio Panner docs\"  href=\n\"https://developer.mozilla.org/en-US/docs/Web/API/PannerNode\">\nWeb Audio Spatial Panner Node</a></p>\n<p>Properties include</p>\n<ul>\n<li>&lt;a title=&quot;w3 spec for Panning Model&quot;\nhref=&quot;<a href=\"https://www.w3.org/TR/webaudio/#idl-def-PanningModelType\">https://www.w3.org/TR/webaudio/#idl-def-PanningModelType</a>&quot;<blockquote>\n<p>panningModel</a>: &quot;equal power&quot; or &quot;HRTF&quot;</p>\n</blockquote>\n</li>\n<li>&lt;a title=&quot;w3 spec for Distance Model&quot;\nhref=&quot;<a href=\"https://www.w3.org/TR/webaudio/#idl-def-DistanceModelType\">https://www.w3.org/TR/webaudio/#idl-def-DistanceModelType</a>&quot;<blockquote>\n<p>distanceModel</a>: &quot;linear&quot;, &quot;inverse&quot;, or &quot;exponential&quot;</p>\n</blockquote>\n</li>\n</ul>\n",
+            "itemtype": "property",
+            "name": "panner",
+            "type": "AudioNode",
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8660,
+            "description": "<p>Connect an audio sorce</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>Input source</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8669,
+            "description": "<p>Set the X,Y,Z position of the Panner</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "xVal",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "yVal",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "zVal",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "time",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Updated x, y, z values as an array",
+                "type": "Array"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8688,
+            "description": "<p>Getter and setter methods for position coordinates</p>\n",
+            "itemtype": "method",
+            "name": "positionX",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8693,
+            "description": "<p>Getter and setter methods for position coordinates</p>\n",
+            "itemtype": "method",
+            "name": "positionY",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8698,
+            "description": "<p>Getter and setter methods for position coordinates</p>\n",
+            "itemtype": "method",
+            "name": "positionZ",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8736,
+            "description": "<p>Set the X,Y,Z position of the Panner</p>\n",
+            "itemtype": "method",
+            "name": "orient",
+            "params": [
+                {
+                    "name": "xVal",
+                    "description": "",
+                    "type": "Number"
+                },
