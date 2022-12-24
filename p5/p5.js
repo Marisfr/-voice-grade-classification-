@@ -15107,3 +15107,984 @@ module.exports={
             "module": "Data",
             "submodule": "Conversion"
         },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 42,
+            "description": "<p>Converts a boolean, string, or float to its integer representation.\nWhen an array of values is passed in, then an int array of the same length\nis returned.</p>\n",
+            "itemtype": "method",
+            "name": "int",
+            "return": {
+                "description": "integer representation of value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(int('10')); // 10\nprint(int(10.31)); // 10\nprint(int(-10)); // -10\nprint(int(true)); // 1\nprint(int(false)); // 0\nprint(int([false, true, '10.3', 9.8])); // [0, 1, 10, 9]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 42,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "String|Boolean|Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representation of value",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 61,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>values to parse</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representation of values",
+                        "type": "Number[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 81,
+            "description": "<p>Converts a boolean, string or number to its string representation.\nWhen an array of values is passed in, then an array of strings of the same\nlength is returned.</p>\n",
+            "itemtype": "method",
+            "name": "str",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>value to parse</p>\n",
+                    "type": "String|Boolean|Number|Array"
+                }
+            ],
+            "return": {
+                "description": "string representation of value",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(str('10')); // \"10\"\nprint(str(10.31)); // \"10.31\"\nprint(str(-10)); // \"-10\"\nprint(str(true)); // \"true\"\nprint(str(false)); // \"false\"\nprint(str([true, '10.3', 9.8])); // [ \"true\", \"10.3\", \"9.8\" ]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion"
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 107,
+            "description": "<p>Converts a number or string to its boolean representation.\nFor a number, any non-zero value (positive or negative) evaluates to true,\nwhile zero evaluates to false. For a string, the value &quot;true&quot; evaluates to\ntrue, while any other value evaluates to false. When an array of number or\nstring values is passed in, then a array of booleans of the same length is\nreturned.</p>\n",
+            "itemtype": "method",
+            "name": "boolean",
+            "params": [
+                {
+                    "name": "n",
+                    "description": "<p>value to parse</p>\n",
+                    "type": "String|Boolean|Number|Array"
+                }
+            ],
+            "return": {
+                "description": "boolean representation of value",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(boolean(0)); // false\nprint(boolean(1)); // true\nprint(boolean('true')); // true\nprint(boolean('abcd')); // false\nprint(boolean([0, 12, 'true'])); // [false, true, false]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion"
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 139,
+            "description": "<p>Converts a number, string representation of a number, or boolean to its byte\nrepresentation. A byte can be only a whole number between -128 and 127, so\nwhen a value outside of this range is converted, it wraps around to the\ncorresponding byte representation. When an array of number, string or boolean\nvalues is passed in, then an array of bytes the same length is returned.</p>\n",
+            "itemtype": "method",
+            "name": "byte",
+            "return": {
+                "description": "byte representation of value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(byte(127)); // 127\nprint(byte(128)); // -128\nprint(byte(23.4)); // 23\nprint(byte('23.4')); // 23\nprint(byte('hello')); // NaN\nprint(byte(true)); // 1\nprint(byte([0, 255, '100'])); // [0, -1, 100]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 139,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "String|Boolean|Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "byte representation of value",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 161,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>values to parse</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "array of byte representation of values",
+                        "type": "Number[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 175,
+            "description": "<p>Converts a number or string to its corresponding single-character\nstring representation. If a string parameter is provided, it is first\nparsed as an integer and then translated into a single-character string.\nWhen an array of number or string values is passed in, then an array of\nsingle-character strings of the same length is returned.</p>\n",
+            "itemtype": "method",
+            "name": "char",
+            "return": {
+                "description": "string representation of value",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(char(65)); // \"A\"\nprint(char('65')); // \"A\"\nprint(char([65, 66, 67])); // [ \"A\", \"B\", \"C\" ]\nprint(join(char([65, 66, 67]), '')); // \"ABC\"\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 175,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "String|Number"
+                        }
+                    ],
+                    "return": {
+                        "description": "string representation of value",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 194,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>values to parse</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "array of string representation of values",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 209,
+            "description": "<p>Converts a single-character string to its corresponding integer\nrepresentation. When an array of single-character string values is passed\nin, then an array of integers of the same length is returned.</p>\n",
+            "itemtype": "method",
+            "name": "unchar",
+            "return": {
+                "description": "integer representation of value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(unchar('A')); // 65\nprint(unchar(['A', 'B', 'C'])); // [ 65, 66, 67 ]\nprint(unchar(split('ABC', ''))); // [ 65, 66, 67 ]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 209,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "String"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representation of value",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 225,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>values to parse</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representation of values",
+                        "type": "Number[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 238,
+            "description": "<p>Converts a number to a string in its equivalent hexadecimal notation. If a\nsecond parameter is passed, it is used to set the number of characters to\ngenerate in the hexadecimal notation. When an array is passed in, an\narray of strings in hexadecimal notation of the same length is returned.</p>\n",
+            "itemtype": "method",
+            "name": "hex",
+            "return": {
+                "description": "hexadecimal string representation of value",
+                "type": "String"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(hex(255)); // \"000000FF\"\nprint(hex(255, 6)); // \"0000FF\"\nprint(hex([0, 127, 255], 6)); // [ \"000000\", \"00007F\", \"0000FF\" ]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 238,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "digits",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "hexadecimal string representation of value",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 256,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>array of values to parse</p>\n",
+                            "type": "Number[]"
+                        },
+                        {
+                            "name": "digits",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "hexadecimal string representation of values",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/conversion.js",
+            "line": 285,
+            "description": "<p>Converts a string representation of a hexadecimal number to its equivalent\ninteger value. When an array of strings in hexadecimal notation is passed\nin, an array of integers of the same length is returned.</p>\n",
+            "itemtype": "method",
+            "name": "unhex",
+            "return": {
+                "description": "integer representation of hexadecimal value",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nprint(unhex('A')); // 10\nprint(unhex('FF')); // 255\nprint(unhex(['FF', 'AA', '00'])); // [ 255, 170, 0 ]\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "Conversion",
+            "overloads": [
+                {
+                    "line": 285,
+                    "params": [
+                        {
+                            "name": "n",
+                            "description": "<p>value to parse</p>\n",
+                            "type": "String"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representation of hexadecimal value",
+                        "type": "Number"
+                    }
+                },
+                {
+                    "line": 301,
+                    "params": [
+                        {
+                            "name": "ns",
+                            "description": "<p>values to parse</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "integer representations of hexadecimal value",
+                        "type": "Number[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 15,
+            "description": "<p>Combines an array of Strings into one String, each separated by the\ncharacter(s) used for the separator parameter. To join arrays of ints or\nfloats, it&#39;s necessary to first convert them to Strings using nf() or\nnfs().</p>\n",
+            "itemtype": "method",
+            "name": "join",
+            "params": [
+                {
+                    "name": "list",
+                    "description": "<p>array of Strings to be joined</p>\n",
+                    "type": "Array"
+                },
+                {
+                    "name": "separator",
+                    "description": "<p>String to be placed between each item</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "joined String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar array = ['Hello', 'world!'];\nvar separator = ' ';\nvar message = join(array, separator);\ntext(message, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "\"hello world!\" displayed middle left of canvas.",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions"
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 44,
+            "description": "<p>This function is used to apply a regular expression to a piece of text,\nand return matching groups (elements found inside parentheses) as a\nString array. If there are no matches, a null value will be returned.\nIf no groups are specified in the regular expression, but the sequence\nmatches, an array of length 1 (with the matched text as the first element\nof the array) will be returned.\n<br><br>\nTo use the function, first check to see if the result is null. If the\nresult is null, then the sequence did not match at all. If the sequence\ndid match, an array is returned.\n<br><br>\nIf there are groups (specified by sets of parentheses) in the regular\nexpression, then the contents of each will be returned in the array.\nElement [0] of a regular expression match returns the entire matching\nstring, and the match groups start at element [1] (the first group is [1],\nthe second [2], and so on).</p>\n",
+            "itemtype": "method",
+            "name": "match",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "<p>the String to be searched</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "regexp",
+                    "description": "<p>the regexp to be used for matching</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Array of Strings found",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar string = 'Hello p5js*!';\nvar regexp = 'p5js\\\\*';\nvar m = match(string, regexp);\ntext(m, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "\"p5js*\" displayed middle left of canvas.",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions"
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 85,
+            "description": "<p>This function is used to apply a regular expression to a piece of text,\nand return a list of matching groups (elements found inside parentheses)\nas a two-dimensional String array. If there are no matches, a null value\nwill be returned. If no groups are specified in the regular expression,\nbut the sequence matches, a two dimensional array is still returned, but\nthe second dimension is only of length one.\n<br><br>\nTo use the function, first check to see if the result is null. If the\nresult is null, then the sequence did not match at all. If the sequence\ndid match, a 2D array is returned.\n<br><br>\nIf there are groups (specified by sets of parentheses) in the regular\nexpression, then the contents of each will be returned in the array.\nAssuming a loop with counter variable i, element [i][0] of a regular\nexpression match returns the entire matching string, and the match groups\nstart at element [i][1] (the first group is [i][1], the second [i][2],\nand so on).</p>\n",
+            "itemtype": "method",
+            "name": "matchAll",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "<p>the String to be searched</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "regexp",
+                    "description": "<p>the regexp to be used for matching</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "2d Array of Strings found",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div class=\"norender\">\n<code>\nvar string = 'Hello p5js*! Hello world!';\nvar regexp = 'Hello';\nmatchAll(string, regexp);\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions"
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 132,
+            "description": "<p>Utility function for formatting numbers into strings. There are two\nversions: one for formatting floats, and one for formatting ints.\nThe values for the digits, left, and right parameters should always\nbe positive integers.</p>\n",
+            "itemtype": "method",
+            "name": "nf",
+            "return": {
+                "description": "formatted String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  background(200);\n  var num = 112.53106115;\n\n  noStroke();\n  fill(0);\n  textSize(14);\n  // Draw formatted numbers\n  text(nf(num, 5, 2), 10, 20);\n\n  text(nf(num, 4, 3), 10, 55);\n\n  text(nf(num, 3, 6), 10, 85);\n\n  // Draw dividing lines\n  stroke(120);\n  line(0, 30, width, 30);\n  line(0, 65, width, 65);\n}\n</code>\n</div>"
+            ],
+            "alt": "\"0011253\" top left, \"0112.531\" mid left, \"112.531061\" bottom left canvas",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions",
+            "overloads": [
+                {
+                    "line": 132,
+                    "params": [
+                        {
+                            "name": "num",
+                            "description": "<p>the Number to format</p>\n",
+                            "type": "Number|String"
+                        },
+                        {
+                            "name": "left",
+                            "description": "<p>number of digits to the left of the\n                               decimal point</p>\n",
+                            "type": "Integer|String",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "<p>number of digits to the right of the\n                               decimal point</p>\n",
+                            "type": "Integer|String",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted String",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 174,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>the Numbers to format</p>\n",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "left",
+                            "description": "",
+                            "type": "Integer|String",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "",
+                            "type": "Integer|String",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted Strings",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 237,
+            "description": "<p>Utility function for formatting numbers into strings and placing\nappropriate commas to mark units of 1000. There are two versions: one\nfor formatting ints, and one for formatting an array of ints. The value\nfor the right parameter should always be a positive integer.</p>\n",
+            "itemtype": "method",
+            "name": "nfc",
+            "return": {
+                "description": "formatted String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  background(200);\n  var num = 11253106.115;\n  var numArr = [1, 1, 2];\n\n  noStroke();\n  fill(0);\n  textSize(12);\n\n  // Draw formatted numbers\n  text(nfc(num, 4), 10, 30);\n  text(nfc(numArr, 2), 10, 80);\n\n  // Draw dividing line\n  stroke(120);\n  line(0, 50, width, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "\"11,253,106.115\" top middle and \"1.00,1.00,2.00\" displayed bottom mid",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions",
+            "overloads": [
+                {
+                    "line": 237,
+                    "params": [
+                        {
+                            "name": "num",
+                            "description": "<p>the Number to format</p>\n",
+                            "type": "Number|String"
+                        },
+                        {
+                            "name": "right",
+                            "description": "<p>number of digits to the right of the\n                                 decimal point</p>\n",
+                            "type": "Integer|String",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted String",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 275,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>the Numbers to format</p>\n",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "right",
+                            "description": "",
+                            "type": "Integer|String",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted Strings",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 313,
+            "description": "<p>Utility function for formatting numbers into strings. Similar to nf() but\nputs a &quot;+&quot; in front of positive numbers and a &quot;-&quot; in front of negative\nnumbers. There are two versions: one for formatting floats, and one for\nformatting ints. The values for left, and right parameters\nshould always be positive integers.</p>\n",
+            "itemtype": "method",
+            "name": "nfp",
+            "return": {
+                "description": "formatted String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  background(200);\n  var num1 = 11253106.115;\n  var num2 = -11253106.115;\n\n  noStroke();\n  fill(0);\n  textSize(12);\n\n  // Draw formatted numbers\n  text(nfp(num1, 4, 2), 10, 30);\n  text(nfp(num2, 4, 2), 10, 80);\n\n  // Draw dividing line\n  stroke(120);\n  line(0, 50, width, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "\"+11253106.11\" top middle and \"-11253106.11\" displayed bottom middle",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions",
+            "overloads": [
+                {
+                    "line": 313,
+                    "params": [
+                        {
+                            "name": "num",
+                            "description": "<p>the Number to format</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "left",
+                            "description": "<p>number of digits to the left of the decimal\n                               point</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "<p>number of digits to the right of the\n                               decimal point</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted String",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 354,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>the Numbers to format</p>\n",
+                            "type": "Number[]"
+                        },
+                        {
+                            "name": "left",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted Strings",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 375,
+            "description": "<p>Utility function for formatting numbers into strings. Similar to nf() but\nputs a &quot; &quot; (space) in front of positive numbers and a &quot;-&quot; in front of\nnegative numbers. There are two versions: one for formatting floats, and\none for formatting ints. The values for the digits, left, and right\nparameters should always be positive integers.</p>\n",
+            "itemtype": "method",
+            "name": "nfs",
+            "return": {
+                "description": "formatted String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  background(200);\n  var num1 = 11253106.115;\n  var num2 = -11253106.115;\n\n  noStroke();\n  fill(0);\n  textSize(12);\n  // Draw formatted numbers\n  text(nfs(num1, 4, 2), 10, 30);\n\n  text(nfs(num2, 4, 2), 10, 80);\n\n  // Draw dividing line\n  stroke(120);\n  line(0, 50, width, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "\"11253106.11\" top middle and \"-11253106.11\" displayed bottom middle",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions",
+            "overloads": [
+                {
+                    "line": 375,
+                    "params": [
+                        {
+                            "name": "num",
+                            "description": "<p>the Number to format</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "left",
+                            "description": "<p>number of digits to the left of the decimal\n                               point</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "<p>number of digits to the right of the\n                               decimal point</p>\n",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted String",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 416,
+                    "params": [
+                        {
+                            "name": "nums",
+                            "description": "<p>the Numbers to format</p>\n",
+                            "type": "Array"
+                        },
+                        {
+                            "name": "left",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "right",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "formatted Strings",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 437,
+            "description": "<p>The split() function maps to String.split(), it breaks a String into\npieces using a character or string as the delimiter. The delim parameter\nspecifies the character or characters that mark the boundaries between\neach piece. A String[] array is returned that contains each of the pieces.</p>\n<p>The splitTokens() function works in a similar fashion, except that it\nsplits using a range of characters instead of a specific character or\nsequence.</p>\n",
+            "itemtype": "method",
+            "name": "split",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the String to be split</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "delim",
+                    "description": "<p>the String used to separate the data</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Array of Strings",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar names = 'Pat,Xio,Alex';\nvar splitString = split(names, ',');\ntext(splitString[0], 5, 30);\ntext(splitString[1], 5, 50);\ntext(splitString[2], 5, 70);\n</code>\n</div>"
+            ],
+            "alt": "\"pat\" top left, \"Xio\" mid left and \"Alex\" displayed bottom left",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions"
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 471,
+            "description": "<p>The splitTokens() function splits a String at one or many character\ndelimiters or &quot;tokens.&quot; The delim parameter specifies the character or\ncharacters to be used as a boundary.\n<br><br>\nIf no delim characters are specified, any whitespace character is used to\nsplit. Whitespace characters include tab (\\t), line feed (\\n), carriage\nreturn (\\r), form feed (\\f), and space.</p>\n",
+            "itemtype": "method",
+            "name": "splitTokens",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>the String to be split</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "delim",
+                    "description": "<p>list of individual Strings that will be used as\n                         separators</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of Strings",
+                "type": "String[]"
+            },
+            "example": [
+                "\n<div class = \"norender\">\n<code>\nfunction setup() {\n  var myStr = 'Mango, Banana, Lime';\n  var myStrArr = splitTokens(myStr, ',');\n\n  print(myStrArr); // prints : [\"Mango\",\" Banana\",\" Lime\"]\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions"
+        },
+        {
+            "file": "src/utilities/string_functions.js",
+            "line": 526,
+            "description": "<p>Removes whitespace characters from the beginning and end of a String. In\naddition to standard whitespace characters such as space, carriage return,\nand tab, this function also removes the Unicode &quot;nbsp&quot; character.</p>\n",
+            "itemtype": "method",
+            "name": "trim",
+            "return": {
+                "description": "a trimmed String",
+                "type": "String"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar string = trim('  No new lines\\n   ');\ntext(string + ' here', 2, 50);\n</code>\n</div>"
+            ],
+            "alt": "\"No new lines here\" displayed center canvas",
+            "class": "p5",
+            "module": "Data",
+            "submodule": "String Functions",
+            "overloads": [
+                {
+                    "line": 526,
+                    "params": [
+                        {
+                            "name": "str",
+                            "description": "<p>a String to be trimmed</p>\n",
+                            "type": "String"
+                        }
+                    ],
+                    "return": {
+                        "description": "a trimmed String",
+                        "type": "String"
+                    }
+                },
+                {
+                    "line": 546,
+                    "params": [
+                        {
+                            "name": "strs",
+                            "description": "<p>an Array of Strings to be trimmed</p>\n",
+                            "type": "Array"
+                        }
+                    ],
+                    "return": {
+                        "description": "an Array of trimmed Strings",
+                        "type": "String[]"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 12,
+            "description": "<p>p5.js communicates with the clock on your computer. The day() function\nreturns the current day as a value from 1 - 31.</p>\n",
+            "itemtype": "method",
+            "name": "day",
+            "return": {
+                "description": "the current day",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar d = day();\ntext('Current day: \\n' + d, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current day is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 34,
+            "description": "<p>p5.js communicates with the clock on your computer. The hour() function\nreturns the current hour as a value from 0 - 23.</p>\n",
+            "itemtype": "method",
+            "name": "hour",
+            "return": {
+                "description": "the current hour",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar h = hour();\ntext('Current hour:\\n' + h, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current hour is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 56,
+            "description": "<p>p5.js communicates with the clock on your computer. The minute() function\nreturns the current minute as a value from 0 - 59.</p>\n",
+            "itemtype": "method",
+            "name": "minute",
+            "return": {
+                "description": "the current minute",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar m = minute();\ntext('Current minute: \\n' + m, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current minute is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 78,
+            "description": "<p>Returns the number of milliseconds (thousandths of a second) since\nstarting the program. This information is often used for timing events and\nanimation sequences.</p>\n",
+            "itemtype": "method",
+            "name": "millis",
+            "return": {
+                "description": "the number of milliseconds since starting the program",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar millisecond = millis();\ntext('Milliseconds \\nrunning: \\n' + millisecond, 5, 40);\n</code>\n</div>"
+            ],
+            "alt": "number of milliseconds since program has started displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 101,
+            "description": "<p>p5.js communicates with the clock on your computer. The month() function\nreturns the current month as a value from 1 - 12.</p>\n",
+            "itemtype": "method",
+            "name": "month",
+            "return": {
+                "description": "the current month",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar m = month();\ntext('Current month: \\n' + m, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current month is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 123,
+            "description": "<p>p5.js communicates with the clock on your computer. The second() function\nreturns the current second as a value from 0 - 59.</p>\n",
+            "itemtype": "method",
+            "name": "second",
+            "return": {
+                "description": "the current second",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar s = second();\ntext('Current second: \\n' + s, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current second is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/utilities/time_date.js",
+            "line": 145,
+            "description": "<p>p5.js communicates with the clock on your computer. The year() function\nreturns the current year as an integer (2014, 2015, 2016, etc).</p>\n",
+            "itemtype": "method",
+            "name": "year",
+            "return": {
+                "description": "the current year",
+                "type": "Integer"
+            },
+            "example": [
+                "\n<div>\n<code>\nvar y = year();\ntext('Current year: \\n' + y, 5, 50);\n</code>\n</div>"
+            ],
+            "alt": "Current year is displayed",
+            "class": "p5",
+            "module": "IO",
+            "submodule": "Time & Date"
+        },
+        {
+            "file": "src/webgl/camera.js",
+            "line": 12,
+            "description": "<p>Sets camera position for a 3D sketch. The function behaves similarly\ngluLookAt, except that it replaces the existing modelview matrix instead\nof applying any transformations calculated here on top of the existing\nmodel view.\nWhen called with no arguments, this function\nsets a default camera equivalent to calling\ncamera(0, 0, (height/2.0) / tan(PI*30.0 / 180.0), 0, 0, 0, 0, 1, 0);</p>\n",
+            "itemtype": "method",
+            "name": "camera",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>camera position value on x axis</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>camera position value on y axis</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "<p>camera position value on z axis</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "centerX",
+                    "description": "<p>x coordinate representing center of the sketch</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "centerY",
+                    "description": "<p>y coordinate representing center of the sketch</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "centerZ",
+                    "description": "<p>z coordinate representing center of the sketch</p>\n",
