@@ -17048,3 +17048,968 @@ module.exports={
             "submodule": "Rendering"
         },
         {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 485,
+            "description": "<p>Basic stroke material for geometry with a given color</p>\n",
+            "itemtype": "method",
+            "name": "stroke",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "<p>gray value,\nred or hue value (depending on the current color mode),\nor color Array, or CSS color string</p>\n",
+                    "type": "Number|Number[]|String|p5.Color"
+                },
+                {
+                    "name": "v2",
+                    "description": "<p>green or saturation value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "v3",
+                    "description": "<p>blue or brightness value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "a",
+                    "description": "<p>opacity</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(200, 200, WEBGL);\n}\n\nfunction draw() {\n  background(0);\n  stroke(240, 150, 150);\n  fill(100, 100, 240);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  box(75, 75, 75);\n}\n</code>\n</div>"
+            ],
+            "alt": "black canvas with purple cube with pink outline spinning",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 525,
+            "description": "<p>Change weight of stroke</p>\n",
+            "itemtype": "method",
+            "name": "strokeWeight",
+            "params": [
+                {
+                    "name": "stroke",
+                    "description": "<p>weight to be used for drawing</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(200, 400, WEBGL);\n  setAttributes('antialias', true);\n}\n\nfunction draw() {\n  background(0);\n  noStroke();\n  translate(0, -100, 0);\n  stroke(240, 150, 150);\n  fill(100, 100, 240);\n  push();\n  strokeWeight(8);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  sphere(75);\n  pop();\n  push();\n  translate(0, 200, 0);\n  strokeWeight(1);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  sphere(75);\n  pop();\n}\n</code>\n</div>"
+            ],
+            "alt": "black canvas with two purple rotating spheres with pink\noutlines the sphere on top has much heavier outlines,",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 573,
+            "description": "<p>Returns an array of [R,G,B,A] values for any pixel or grabs a section of\nan image. If no parameters are specified, the entire image is returned.\nUse the x and y parameters to get the value of one pixel. Get a section of\nthe display window by specifying additional w and h parameters. When\ngetting an image, the x and y parameters define the coordinates for the\nupper-left corner of the image, regardless of the current imageMode().\n<br><br>\nIf the pixel requested is outside of the image window, [0,0,0,255] is\nreturned.\n<br><br>\nGetting the color of a single pixel with get(x, y) is easy, but not as fast\nas grabbing the data directly from pixels[]. The equivalent statement to\nget(x, y) is using pixels[] with pixel density d</p>\n",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of the pixel</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "<p>width</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "color of pixel at x,y in array format\n                                   [R, G, B, A] or p5.Image",
+                "type": "Number[]|Color|p5.Image"
+            },
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 601,
+            "description": "<p>Loads the pixels data for this canvas into the pixels[] attribute.\nNote that updatePixels() and set() do not work.\nAny pixel manipulation must be done directly to the pixels[] array.</p>\n",
+            "itemtype": "method",
+            "name": "loadPixels",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 751,
+            "description": "<p>pushes a copy of the model view matrix onto the\nMV Matrix stack.</p>\n",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 760,
+            "description": "<p>[pop description]</p>\n",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
+            "file": "src/webgl/p5.Shader.js",
+            "line": 271,
+            "description": "<p>Wrapper around gl.uniform functions.\nAs we store uniform info in the shader we can use that\nto do type checking on the supplied data and call\nthe appropriate function.</p>\n",
+            "itemtype": "method",
+            "name": "setUniform",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "uniformName",
+                    "description": "<p>the name of the uniform in the\nshader program</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "<p>the data to be associated\nwith that uniform; type varies (could be a single numerical value, array,\nmatrix, or texture / sampler reference)</p>\n",
+                    "type": "Object|Number|Boolean|Number[]"
+                }
+            ],
+            "class": "p5.Shader",
+            "module": "Lights, Camera",
+            "submodule": "Shaders"
+        },
+        {
+            "file": "src/webgl/p5.Texture.js",
+            "line": 123,
+            "description": "<p>Checks if the source data for this texture has changed (if it&#39;s\neasy to do so) and reuploads the texture if necessary. If it&#39;s not\npossible or to expensive to do a calculation to determine wheter or\nnot the data has occurred, this method simply re-uploads the texture.</p>\n",
+            "itemtype": "method",
+            "name": "update",
+            "class": "p5.Texture",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/p5.Texture.js",
+            "line": 232,
+            "description": "<p>Binds the texture to the appropriate GL target.</p>\n",
+            "itemtype": "method",
+            "name": "bindTexture",
+            "class": "p5.Texture",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/p5.Texture.js",
+            "line": 245,
+            "description": "<p>Unbinds the texture from the appropriate GL target.</p>\n",
+            "itemtype": "method",
+            "name": "unbindTexture",
+            "class": "p5.Texture",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 13,
+            "description": "<p>Draw a plane with given a width and height</p>\n",
+            "itemtype": "method",
+            "name": "plane",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "<p>width of the plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "height",
+                    "description": "<p>height of the plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>Optional number of triangle\n                            subdivisions in x-dimension</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>Optional number of triangle\n                            subdivisions in y-dimension</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//draw a plane with width 50 and height 50\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  plane(50, 50);\n}\n</code>\n</div>"
+            ],
+            "alt": "Nothing displayed on canvas\nRotating interior view of a box with sides that change color.\n3d red and green gradient.\nRotating interior view of a cylinder with sides that change color.\nRotating view of a cylinder with sides that change color.\n3d red and green gradient.\nrotating view of a multi-colored cylinder with concave sides.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 94,
+            "description": "<p>Draw a box with given width, height and depth</p>\n",
+            "itemtype": "method",
+            "name": "box",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "<p>width of the box</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "Height",
+                    "description": "<p>height of the box</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "depth",
+                    "description": "<p>depth of the box</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>Optional number of triangle\n                           subdivisions in x-dimension</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>Optional number of triangle\n                           subdivisions in y-dimension</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning box with width, height and depth 200\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  box(50);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 208,
+            "description": "<p>Draw a sphere with given radius</p>\n",
+            "itemtype": "method",
+            "name": "sphere",
+            "params": [
+                {
+                    "name": "radius",
+                    "description": "<p>radius of circle</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 24</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 16</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// draw a sphere with radius 200\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  sphere(40);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 336,
+            "description": "<p>Draw a cylinder with given radius and height</p>\n",
+            "itemtype": "method",
+            "name": "cylinder",
+            "params": [
+                {
+                    "name": "radius",
+                    "description": "<p>radius of the surface</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "height",
+                    "description": "<p>height of the cylinder</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>number of segments,\n                            the more segments the smoother geometry\n                            default is 24</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>number of segments in y-dimension,\n                            the more segments the smoother geometry\n                            default is 16</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning cylinder with radius 200 and height 200\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateZ(frameCount * 0.01);\n  cylinder(20, 50);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 401,
+            "description": "<p>Draw a cone with given radius and height</p>\n",
+            "itemtype": "method",
+            "name": "cone",
+            "params": [
+                {
+                    "name": "radius",
+                    "description": "<p>radius of the bottom surface</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "height",
+                    "description": "<p>height of the cone</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 24</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 16</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning cone with radius 200 and height 200\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateZ(frameCount * 0.01);\n  cone(40, 70);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 476,
+            "description": "<p>Draw an ellipsoid with given radius</p>\n",
+            "itemtype": "method",
+            "name": "ellipsoid",
+            "params": [
+                {
+                    "name": "radiusx",
+                    "description": "<p>xradius of circle</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "radiusy",
+                    "description": "<p>yradius of circle</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "radiusz",
+                    "description": "<p>zradius of circle</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 24. Avoid detail number above\n                                   150, it may crash the browser.</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>number of segments,\n                                   the more segments the smoother geometry\n                                   default is 16. Avoid detail number above\n                                   150, it may crash the browser.</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n// draw an ellipsoid with radius 20, 30 and 40.\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  ellipsoid(20, 30, 40);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "src/webgl/primitives.js",
+            "line": 565,
+            "description": "<p>Draw a torus with given radius and tube radius</p>\n",
+            "itemtype": "method",
+            "name": "torus",
+            "params": [
+                {
+                    "name": "radius",
+                    "description": "<p>radius of the whole ring</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "tubeRadius",
+                    "description": "<p>radius of the tube</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "detailX",
+                    "description": "<p>number of segments in x-dimension,\n                               the more segments the smoother geometry\n                               default is 24</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "detailY",
+                    "description": "<p>number of segments in y-dimension,\n                               the more segments the smoother geometry\n                               default is 16</p>\n",
+                    "type": "Integer",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning torus with radius 200 and tube radius 60\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  torus(50, 15);\n}\n</code>\n</div>"
+            ],
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Primitives"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 40,
+            "description": "<p>Searches the page for an element with the given ID, class, or tag name (using the &#39;#&#39; or &#39;.&#39;\nprefixes to specify an ID or class respectively, and none for a tag) and returns it as\na p5.Element. If a class or tag name is given with more than 1 element,\nonly the first element will be returned.\nThe DOM node itself can be accessed with .elt.\nReturns null if none found. You can also specify a container to search within.</p>\n",
+            "itemtype": "method",
+            "name": "select",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>id, class, or tag name of element to search for</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "container",
+                    "description": "<p>id, p5.Element, or HTML element to search within</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "p5.Element containing node found",
+                "type": "Object|p5.Element|Null"
+            },
+            "example": [
+                "\n<div ><code class='norender'>\nfunction setup() {\n  createCanvas(100, 100);\n  //translates canvas 50px down\n  select('canvas').position(100, 100);\n}\n</code></div>\n<div ><code class='norender'>\n// these are all valid calls to select()\nvar a = select('#moo');\nvar b = select('#blah', '#myContainer');\nvar c = select('#foo', b);\nvar d = document.getElementById('beep');\nvar e = select('p', d);\n[a, b, c, d, e]; // unused\n</code></div>\n"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 101,
+            "description": "<p>Searches the page for elements with the given class or tag name (using the &#39;.&#39; prefix\nto specify a class and no prefix for a tag) and returns them as p5.Elements\nin an array.\nThe DOM node itself can be accessed with .elt.\nReturns an empty array if none found.\nYou can also specify a container to search within.</p>\n",
+            "itemtype": "method",
+            "name": "selectAll",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "<p>class or tag name of elements to search for</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "container",
+                    "description": "<p>id, p5.Element, or HTML element to search within</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of p5.Elements containing nodes found",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  createButton('btn');\n  createButton('2nd btn');\n  createButton('3rd btn');\n  var buttons = selectAll('button');\n\n  for (var i = 0; i < buttons.length; i++) {\n    buttons[i].size(100, 100);\n  }\n}\n</code></div>\n<div class='norender'><code>\n// these are all valid calls to selectAll()\nvar a = selectAll('.moo');\na = selectAll('div');\na = selectAll('button', '#myContainer');\n\nvar d = select('#container');\na = selectAll('p', d);\n\nvar f = document.getElementById('beep');\na = select('.blah', f);\n\na; // unused\n</code></div>\n"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 162,
+            "description": "<p>Helper function for select and selectAll</p>\n",
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 178,
+            "description": "<p>Helper function for getElement and getElements.</p>\n",
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 212,
+            "description": "<p>Removes all elements created by p5, except any canvas / graphics\nelements created by createCanvas or createGraphics.\nEvent handlers are removed, and element is removed from the DOM.</p>\n",
+            "itemtype": "method",
+            "name": "removeElements",
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  createCanvas(100, 100);\n  createDiv('this is some text');\n  createP('this is a paragraph');\n}\nfunction mousePressed() {\n  removeElements(); // this will remove the div and p, not canvas\n}\n</code></div>\n"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 239,
+            "description": "<p>Helpers for create methods.</p>\n",
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 250,
+            "description": "<p>Creates a &lt;div&gt;&lt;/div&gt; element in the DOM with given inner HTML.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createDiv",
+            "params": [
+                {
+                    "name": "html",
+                    "description": "<p>inner HTML for element created</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateDiv('this is some text');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 264,
+            "description": "<p>Creates a &lt;p&gt;&lt;/p&gt; element in the DOM with given inner HTML. Used\nfor paragraph length text.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createP",
+            "params": [
+                {
+                    "name": "html",
+                    "description": "<p>inner HTML for element created</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateP('this is some text');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 279,
+            "description": "<p>Creates a &lt;span&gt;&lt;/span&gt; element in the DOM with given inner HTML.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createSpan",
+            "params": [
+                {
+                    "name": "html",
+                    "description": "<p>inner HTML for element created</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateSpan('this is some text');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 302,
+            "description": "<p>Creates an &lt;img&gt; element in the DOM with given src and\nalternate text.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createImg",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>src path or url for image</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "alt",
+                    "description": "<p>alternate text to be used if image does not load</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "successCallback",
+                    "description": "<p>callback to be called once image data is loaded</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateImg('http://p5js.org/img/asterisk-01.png');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 345,
+            "description": "<p>Creates an &lt;a&gt;&lt;/a&gt; element in the DOM for including a hyperlink.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createA",
+            "params": [
+                {
+                    "name": "href",
+                    "description": "<p>url of page to link to</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "html",
+                    "description": "<p>inner html of link element to display</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "target",
+                    "description": "<p>target where new link should open,\n                            could be _blank, _self, _parent, _top.</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateA('http://p5js.org/', 'this is a link');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 370,
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 372,
+            "description": "<p>Creates a slider &lt;input&gt;&lt;/input&gt; element in the DOM.\nUse .size() to set the display length of the slider.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createSlider",
+            "params": [
+                {
+                    "name": "min",
+                    "description": "<p>minimum value of the slider</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "<p>maximum value of the slider</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>default value of the slider</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "step",
+                    "description": "<p>step size for each tick of the slider (if step is set to 0, the slider will move continuously from the minimum to the maximum value)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar slider;\nfunction setup() {\n  slider = createSlider(0, 255, 100);\n  slider.position(10, 10);\n  slider.style('width', '80px');\n}\n\nfunction draw() {\n  var val = slider.value();\n  background(val);\n}\n</code></div>\n\n<div><code>\nvar slider;\nfunction setup() {\n  colorMode(HSB);\n  slider = createSlider(0, 360, 60, 40);\n  slider.position(10, 10);\n  slider.style('width', '80px');\n}\n\nfunction draw() {\n  var val = slider.value();\n  background(val, 100, 100, 1);\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 429,
+            "description": "<p>Creates a &lt;button&gt;&lt;/button&gt; element in the DOM.\nUse .size() to set the display size of the button.\nUse .mousePressed() to specify behavior on press.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createButton",
+            "params": [
+                {
+                    "name": "label",
+                    "description": "<p>label displayed on the button</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value of the button</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nvar button;\nfunction setup() {\n  createCanvas(100, 100);\n  background(0);\n  button = createButton('click me');\n  button.position(19, 19);\n  button.mousePressed(changeBG);\n}\n\nfunction changeBG() {\n  var val = random(255);\n  background(val);\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 465,
+            "description": "<p>Creates a checkbox &lt;input&gt;&lt;/input&gt; element in the DOM.\nCalling .checked() on a checkbox returns if it is checked or not</p>\n",
+            "itemtype": "method",
+            "name": "createCheckbox",
+            "params": [
+                {
+                    "name": "label",
+                    "description": "<p>label displayed after checkbox</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value of the checkbox; checked is true, unchecked is false</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nvar checkbox;\n\nfunction setup() {\n  checkbox = createCheckbox('label', false);\n  checkbox.changed(myCheckedEvent);\n}\n\nfunction myCheckedEvent() {\n  if (this.checked()) {\n    console.log('Checking!');\n  } else {\n    console.log('Unchecking!');\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 533,
+            "description": "<p>Creates a dropdown menu &lt;select&gt;&lt;/select&gt; element in the DOM.\nIt also helps to assign select-box methods to p5.Element when selecting existing select box</p>\n",
+            "itemtype": "method",
+            "name": "createSelect",
+            "return": {
+                "description": "",
+                "type": "p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar sel;\n\nfunction setup() {\n  textAlign(CENTER);\n  background(200);\n  sel = createSelect();\n  sel.position(10, 10);\n  sel.option('pear');\n  sel.option('kiwi');\n  sel.option('grape');\n  sel.changed(mySelectEvent);\n}\n\nfunction mySelectEvent() {\n  var item = sel.value();\n  background(200);\n  text('it is a' + item + '!', 50, 50);\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom",
+            "overloads": [
+                {
+                    "line": 533,
+                    "params": [
+                        {
+                            "name": "multiple",
+                            "description": "<p>true if dropdown should support multiple selections</p>\n",
+                            "type": "Boolean",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Element"
+                    }
+                },
+                {
+                    "line": 561,
+                    "params": [
+                        {
+                            "name": "existing",
+                            "description": "<p>DOM select element</p>\n",
+                            "type": "Object"
+                        }
+                    ],
+                    "return": {
+                        "description": "",
+                        "type": "p5.Element"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 637,
+            "description": "<p>Creates a radio button &lt;input&gt;&lt;/input&gt; element in the DOM.\nThe .option() method can be used to set options for the radio after it is\ncreated. The .value() method will return the currently selected option.</p>\n",
+            "itemtype": "method",
+            "name": "createRadio",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "<p>the id and name of the created div and input field respectively</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar radio;\n\nfunction setup() {\n  radio = createRadio();\n  radio.option('black');\n  radio.option('white');\n  radio.option('gray');\n  radio.style('width', '60px');\n  textAlign(CENTER);\n  fill(255, 0, 0);\n}\n\nfunction draw() {\n  var val = radio.value();\n  background(val);\n  text(val, width / 2, height / 2);\n}\n</code></div>\n<div><code>\nvar radio;\n\nfunction setup() {\n  radio = createRadio();\n  radio.option('apple', 1);\n  radio.option('bread', 2);\n  radio.option('juice', 3);\n  radio.style('width', '60px');\n  textAlign(CENTER);\n}\n\nfunction draw() {\n  background(200);\n  var val = radio.value();\n  if (val) {\n    text('item cost is $' + val, width / 2, height / 2);\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 775,
+            "description": "<p>Creates an &lt;input&gt;&lt;/input&gt; element in the DOM for text input.\nUse .size() to set the display length of the box.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createInput",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>default value of the input box</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "type",
+                    "description": "<p>type of text, ie text, password etc. Defaults to text</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nfunction setup() {\n  var inp = createInput('');\n  inp.input(myInputEvent);\n}\n\nfunction myInputEvent() {\n  console.log('you are typing: ', this.value());\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 805,
+            "description": "<p>Creates an &lt;input&gt;&lt;/input&gt; element in the DOM of type &#39;file&#39;.\nThis allows users to select local files for use in a sketch.</p>\n",
+            "itemtype": "method",
+            "name": "createFileInput",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>callback function for when a file loaded</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "multiple",
+                    "description": "<p>optional to allow multiple files selected</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created DOM element",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\nvar input;\nvar img;\n\nfunction setup() {\n  input = createFileInput(handleFile);\n  input.position(0, 0);\n}\n\nfunction draw() {\n  if (img) {\n    image(img, 0, 0, width, height);\n  }\n}\n\nfunction handleFile(file) {\n  print(file);\n  if (file.type === 'image') {\n    img = createImg(file.data);\n    img.hide();\n  }\n}"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 891,
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 928,
+            "description": "<p>Creates an HTML5 &lt;video&gt; element in the DOM for simple playback\nof audio/video. Shown by default, can be hidden with .hide()\nand drawn into canvas using video(). Appends to the container\nnode if one is specified, otherwise appends to body. The first parameter\ncan be either a single string path to a video file, or an array of string\npaths to different formats of the same video. This is useful for ensuring\nthat your video can play across different browsers, as each supports\ndifferent formats. See <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats'>this\npage</a> for further information about supported formats.</p>\n",
+            "itemtype": "method",
+            "name": "createVideo",
