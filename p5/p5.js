@@ -19857,3 +19857,995 @@ module.exports={
                 "\n<div><code>\nfunction preload(){\n  sound = loadSound('assets/beat.mp3');\n}\nfunction setup() {\n  amplitude = new p5.Amplitude();\n  sound.play();\n}\nfunction draw() {\n  background(0);\n  fill(255);\n  var level = amplitude.getLevel();\n  var size = map(level, 0, 1, 0, 200);\n  ellipse(width/2, height/2, size, size);\n}\nfunction mouseClicked(){\n  sound.stop();\n}\n</code></div>"
             ],
             "class": "p5.Amplitude",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2378,
+            "description": "<p>Determines whether the results of Amplitude.process() will be\nNormalized. To normalize, Amplitude finds the difference the\nloudest reading it has processed and the maximum amplitude of\n1.0. Amplitude adds this difference to all values to produce\nresults that will reliably map between 0.0 and 1.0. However,\nif a louder moment occurs, the amount that Normalize adds to\nall the values will change. Accepts an optional boolean parameter\n(true or false). Normalizing is off by default.</p>\n",
+            "itemtype": "method",
+            "name": "toggleNormalize",
+            "params": [
+                {
+                    "name": "boolean",
+                    "description": "<p>set normalize to true (1) or false (0)</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Amplitude",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2398,
+            "description": "<p>Smooth Amplitude analysis by averaging with the last analysis\nframe. Off by default.</p>\n",
+            "itemtype": "method",
+            "name": "smooth",
+            "params": [
+                {
+                    "name": "set",
+                    "description": "<p>smoothing from 0.0 &lt;= 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Amplitude",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2567,
+            "description": "<p>Set the input source for the FFT analysis. If no source is\nprovided, FFT will analyze all sound in the sketch.</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "source",
+                    "description": "<p>p5.sound object (or web audio API source node)</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2586,
+            "description": "<p>Returns an array of amplitude values (between -1.0 and +1.0) that represent\na snapshot of amplitude readings in a single buffer. Length will be\nequal to bins (defaults to 1024). Can be used to draw the waveform\nof a sound.</p>\n",
+            "itemtype": "method",
+            "name": "waveform",
+            "params": [
+                {
+                    "name": "bins",
+                    "description": "<p>Must be a power of two between\n                          16 and 1024. Defaults to 1024.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "precision",
+                    "description": "<p>If any value is provided, will return results\n                            in a Float32 Array which is more precise\n                            than a regular array.</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array    Array of amplitude values (-1 to 1)\n                          over time. Array length = bins.",
+                "type": "Array"
+            },
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2629,
+            "description": "<p>Returns an array of amplitude values (between 0 and 255)\nacross the frequency spectrum. Length is equal to FFT bins\n(1024 by default). The array indices correspond to frequencies\n(i.e. pitches), from the lowest to the highest that humans can\nhear. Each value represents amplitude at that slice of the\nfrequency spectrum. Must be called prior to using\n<code>getEnergy()</code>.</p>\n",
+            "itemtype": "method",
+            "name": "analyze",
+            "params": [
+                {
+                    "name": "bins",
+                    "description": "<p>Must be a power of two between\n                           16 and 1024. Defaults to 1024.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "scale",
+                    "description": "<p>If &quot;dB,&quot; returns decibel\n                           float measurements between\n                           -140 and 0 (max).\n                           Otherwise returns integers from 0-255.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "spectrum    Array of energy (amplitude/volume)\n                            values across the frequency spectrum.\n                            Lowest energy (silence) = 0, highest\n                            possible is 255.",
+                "type": "Array"
+            },
+            "example": [
+                "\n<div><code>\nvar osc;\nvar fft;\n\nfunction setup(){\n  createCanvas(100,100);\n  osc = new p5.Oscillator();\n  osc.amp(0);\n  osc.start();\n  fft = new p5.FFT();\n}\n\nfunction draw(){\n  background(0);\n\n  var freq = map(mouseX, 0, 800, 20, 15000);\n  freq = constrain(freq, 1, 20000);\n  osc.freq(freq);\n\n  var spectrum = fft.analyze();\n  noStroke();\n  fill(0,255,0); // spectrum is green\n  for (var i = 0; i< spectrum.length; i++){\n    var x = map(i, 0, spectrum.length, 0, width);\n    var h = -height + map(spectrum[i], 0, 255, height, 0);\n    rect(x, height, width / spectrum.length, h );\n  }\n\n  stroke(255);\n  text('Freq: ' + round(freq)+'Hz', 10, 10);\n\n  isMouseOverCanvas();\n}\n\n// only play sound when mouse is over canvas\nfunction isMouseOverCanvas() {\n  var mX = mouseX, mY = mouseY;\n  if (mX > 0 && mX < width && mY < height && mY > 0) {\n    osc.amp(0.5, 0.2);\n  } else {\n    osc.amp(0, 0.2);\n  }\n}\n</code></div>\n\n"
+            ],
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2721,
+            "description": "<p>Returns the amount of energy (volume) at a specific\n<a href=\"https://en.wikipedia.org/wiki/Audio_frequency\" target=\"_blank\">\nfrequency</a>, or the average amount of energy between two\nfrequencies. Accepts Number(s) corresponding\nto frequency (in Hz), or a String corresponding to predefined\nfrequency ranges (&quot;bass&quot;, &quot;lowMid&quot;, &quot;mid&quot;, &quot;highMid&quot;, &quot;treble&quot;).\nReturns a range between 0 (no energy/volume at that frequency) and\n255 (maximum energy).\n<em>NOTE: analyze() must be called prior to getEnergy(). Analyze()\ntells the FFT to analyze frequency data, and getEnergy() uses\nthe results determine the value at a specific frequency or\nrange of frequencies.</em></p></p>\n",
+            "itemtype": "method",
+            "name": "getEnergy",
+            "params": [
+                {
+                    "name": "frequency1",
+                    "description": "<p>Will return a value representing\n                              energy at this frequency. Alternately,\n                              the strings &quot;bass&quot;, &quot;lowMid&quot; &quot;mid&quot;,\n                              &quot;highMid&quot;, and &quot;treble&quot; will return\n                              predefined frequency ranges.</p>\n",
+                    "type": "Number|String"
+                },
+                {
+                    "name": "frequency2",
+                    "description": "<p>If a second frequency is given,\n                              will return average amount of\n                              energy that exists between the\n                              two frequencies.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Energy   Energy (volume/amplitude) from\n                            0 and 255.",
+                "type": "Number"
+            },
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2803,
+            "description": "<p>Returns the\n<a href=\"http://en.wikipedia.org/wiki/Spectral_centroid\" target=\"_blank\">\nspectral centroid</a> of the input signal.\n<em>NOTE: analyze() must be called prior to getCentroid(). Analyze()\ntells the FFT to analyze frequency data, and getCentroid() uses\nthe results determine the spectral centroid.</em></p></p>\n",
+            "itemtype": "method",
+            "name": "getCentroid",
+            "return": {
+                "description": "Spectral Centroid Frequency   Frequency of the spectral centroid in Hz.",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\n\n\nfunction setup(){\ncnv = createCanvas(800,400);\nsound = new p5.AudioIn();\nsound.start();\nfft = new p5.FFT();\nsound.connect(fft);\n}\n\n\nfunction draw(){\n\nvar centroidplot = 0.0;\nvar spectralCentroid = 0;\n\n\nbackground(0);\nstroke(0,255,0);\nvar spectrum = fft.analyze();\nfill(0,255,0); // spectrum is green\n\n//draw the spectrum\n\nfor (var i = 0; i< spectrum.length; i++){\n  var x = map(log(i), 0, log(spectrum.length), 0, width);\n  var h = map(spectrum[i], 0, 255, 0, height);\n  var rectangle_width = (log(i+1)-log(i))*(width/log(spectrum.length));\n  rect(x, height, rectangle_width, -h )\n}\n\nvar nyquist = 22050;\n\n// get the centroid\nspectralCentroid = fft.getCentroid();\n\n// the mean_freq_index calculation is for the display.\nvar mean_freq_index = spectralCentroid/(nyquist/spectrum.length);\n\ncentroidplot = map(log(mean_freq_index), 0, log(spectrum.length), 0, width);\n\n\nstroke(255,0,0); // the line showing where the centroid is will be red\n\nrect(centroidplot, 0, width / spectrum.length, height)\nnoStroke();\nfill(255,255,255);  // text is white\ntextSize(40);\ntext(\"centroid: \"+round(spectralCentroid)+\" Hz\", 10, 40);\n}\n </code></div>"
+            ],
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2884,
+            "description": "<p>Smooth FFT analysis by averaging with the last analysis frame.</p>\n",
+            "itemtype": "method",
+            "name": "smooth",
+            "params": [
+                {
+                    "name": "smoothing",
+                    "description": "<p>0.0 &lt; smoothing &lt; 1.0.\n                             Defaults to 0.8.</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2904,
+            "description": "<p>Returns an array of average amplitude values for a given number\nof frequency bands split equally. N defaults to 16.\n<em>NOTE: analyze() must be called prior to linAverages(). Analyze()\ntells the FFT to analyze frequency data, and linAverages() uses\nthe results to group them into a smaller set of averages.</em></p></p>\n",
+            "itemtype": "method",
+            "name": "linAverages",
+            "params": [
+                {
+                    "name": "N",
+                    "description": "<p>Number of returned frequency groups</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "linearAverages   Array of average amplitude values for each group",
+                "type": "Array"
+            },
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2934,
+            "description": "<p>Returns an array of average amplitude values of the spectrum, for a given\nset of <a href=\"https://en.wikipedia.org/wiki/Octave_band\" target=\"_blank\">\nOctave Bands</a>\n<em>NOTE: analyze() must be called prior to logAverages(). Analyze()\ntells the FFT to analyze frequency data, and logAverages() uses\nthe results to group them into a smaller set of averages.</em></p></p>\n",
+            "itemtype": "method",
+            "name": "logAverages",
+            "params": [
+                {
+                    "name": "octaveBands",
+                    "description": "<p>Array of Octave Bands objects for grouping</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "logAverages    Array of average amplitude values for each group",
+                "type": "Array"
+            },
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2964,
+            "description": "<p>Calculates and Returns the 1/N\n<a href=\"https://en.wikipedia.org/wiki/Octave_band\" target=\"_blank\">Octave Bands</a>\nN defaults to 3 and minimum central frequency to 15.625Hz.\n(1/3 Octave Bands ~= 31 Frequency Bands)\nSetting fCtr0 to a central value of a higher octave will ignore the lower bands\nand produce less frequency groups.</p>\n",
+            "itemtype": "method",
+            "name": "getOctaveBands",
+            "params": [
+                {
+                    "name": "N",
+                    "description": "<p>Specifies the 1/N type of generated octave bands</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "fCtr0",
+                    "description": "<p>Minimum central frequency for the lowest band</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "octaveBands   Array of octave band objects with their bounds",
+                "type": "Array"
+            },
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3022,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3399,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3420,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3479,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3797,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 3969,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4127,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4168,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4238,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4426,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4483,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4651,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4699,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4730,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4751,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4771,
+            "class": "p5.FFT",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4873,
+            "description": "<p>Fade to value, for smooth transitions</p>\n",
+            "itemtype": "method",
+            "name": "fade",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "<p>Value to set this signal</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>Length of fade, in seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Signal",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4884,
+            "description": "<p>Connect a p5.sound object or Web Audio node to this\np5.Signal so that its amplitude values can be scaled.</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "input",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Signal",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4898,
+            "description": "<p>Add a constant value to this audio signal,\nand return the resulting audio signal. Does\nnot change the value of the original signal,\ninstead it returns a new p5.SignalAdd.</p>\n",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "object",
+                "type": "p5.Signal"
+            },
+            "class": "p5.Signal",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4917,
+            "description": "<p>Multiply this signal by a constant value,\nand return the resulting audio signal. Does\nnot change the value of the original signal,\ninstead it returns a new p5.SignalMult.</p>\n",
+            "itemtype": "method",
+            "name": "mult",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>to multiply</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "object",
+                "type": "p5.Signal"
+            },
+            "class": "p5.Signal",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 4936,
+            "description": "<p>Scale this signal value to a given range,\nand return the result as an audio signal. Does\nnot change the value of the original signal,\ninstead it returns a new p5.SignalScale.</p>\n",
+            "itemtype": "method",
+            "name": "scale",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>to multiply</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "inMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "inMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "object",
+                "type": "p5.Signal"
+            },
+            "class": "p5.Signal",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5070,
+            "description": "<p>Start an oscillator. Accepts an optional parameter to\ndetermine how long (in seconds from now) until the\noscillator starts.</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>startTime in seconds from now.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "frequency",
+                    "description": "<p>frequency in Hz.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5110,
+            "description": "<p>Stop an oscillator. Accepts an optional parameter\nto determine how long (in seconds from now) until the\noscillator stops.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "params": [
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>Time, in seconds from now.</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5126,
+            "description": "<p>Set the amplitude between 0 and 1.0. Or, pass in an object\nsuch as an oscillator to modulate amplitude with an audio signal.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "vol",
+                    "description": "<p>between 0 and 1.0\n                            or a modulating signal/oscillator</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "gain  If no value is provided,\n                            returns the Web Audio API\n                            AudioParam that controls\n                            this oscillator's\n                            gain/amplitude/volume)",
+                "type": "AudioParam"
+            },
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5161,
+            "description": "<p>Set frequency of an oscillator to a value. Or, pass in an object\nsuch as an oscillator to modulate the frequency with an audio signal.</p>\n",
+            "itemtype": "method",
+            "name": "freq",
+            "params": [
+                {
+                    "name": "Frequency",
+                    "description": "<p>Frequency in Hz\n                                      or modulating signal/oscillator</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Ramp time (in seconds)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>Schedule this event to happen\n                                 at x seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Frequency If no value is provided,\n                                returns the Web Audio API\n                                AudioParam that controls\n                                this oscillator's frequency",
+                "type": "AudioParam"
+            },
+            "example": [
+                "\n<div><code>\nvar osc = new p5.Oscillator(300);\nosc.start();\nosc.freq(40, 10);\n</code></div>"
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5220,
+            "description": "<p>Set type to &#39;sine&#39;, &#39;triangle&#39;, &#39;sawtooth&#39; or &#39;square&#39;.</p>\n",
+            "itemtype": "method",
+            "name": "setType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>&#39;sine&#39;, &#39;triangle&#39;, &#39;sawtooth&#39; or &#39;square&#39;.</p>\n",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5232,
+            "description": "<p>Connect to a p5.sound / Web Audio object.</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>A p5.sound or Web Audio object</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5249,
+            "description": "<p>Disconnect all outputs</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5260,
+            "description": "<p>Pan between Left (-1) and Right (1)</p>\n",
+            "itemtype": "method",
+            "name": "pan",
+            "params": [
+                {
+                    "name": "panning",
+                    "description": "<p>Number between -1 and 1</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5292,
+            "description": "<p>Set the phase of an oscillator between 0.0 and 1.0.\nIn this implementation, phase is a delay time\nbased on the oscillator&#39;s current frequency.</p>\n",
+            "itemtype": "method",
+            "name": "phase",
+            "params": [
+                {
+                    "name": "phase",
+                    "description": "<p>float between 0.0 and 1.0</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5346,
+            "description": "<p>Add a value to the p5.Oscillator&#39;s output amplitude,\nand return the oscillator. Calling this method again\nwill override the initial add() with a new value.</p>\n",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>Constant number to add</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Oscillator Returns this oscillator\n                                   with scaled output",
+                "type": "p5.Oscillator"
+            },
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5363,
+            "description": "<p>Multiply the p5.Oscillator&#39;s output amplitude\nby a fixed value (i.e. turn it up!). Calling this method\nagain will override the initial mult() with a new value.</p>\n",
+            "itemtype": "method",
+            "name": "mult",
+            "params": [
+                {
+                    "name": "number",
+                    "description": "<p>Constant number to multiply</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Oscillator Returns this oscillator\n                                   with multiplied output",
+                "type": "p5.Oscillator"
+            },
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5379,
+            "description": "<p>Scale this oscillator&#39;s amplitude values to a given\nrange, and return the oscillator. Calling this method\nagain will override the initial scale() with new values.</p>\n",
+            "itemtype": "method",
+            "name": "scale",
+            "params": [
+                {
+                    "name": "inMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "inMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMin",
+                    "description": "<p>input range minumum</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "outMax",
+                    "description": "<p>input range maximum</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Oscillator Returns this oscillator\n                                   with scaled output",
+                "type": "p5.Oscillator"
+            },
+            "class": "p5.Oscillator",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5478,
+            "class": "p5.SqrOsc",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5681,
+            "class": "p5.SqrOsc",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5970,
+            "description": "<p>Time until envelope reaches attackLevel</p>\n",
+            "itemtype": "property",
+            "name": "attackTime",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5975,
+            "description": "<p>Level once attack is complete.</p>\n",
+            "itemtype": "property",
+            "name": "attackLevel",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5980,
+            "description": "<p>Time until envelope reaches decayLevel.</p>\n",
+            "itemtype": "property",
+            "name": "decayTime",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5985,
+            "description": "<p>Level after decay. The envelope will sustain here until it is released.</p>\n",
+            "itemtype": "property",
+            "name": "decayLevel",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5990,
+            "description": "<p>Duration of the release portion of the envelope.</p>\n",
+            "itemtype": "property",
+            "name": "releaseTime",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 5995,
+            "description": "<p>Level at the end of the release.</p>\n",
+            "itemtype": "property",
+            "name": "releaseLevel",
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6031,
+            "description": "<p>Reset the envelope with a series of time/value pairs.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "attackTime",
+                    "description": "<p>Time (in seconds) before level\n                               reaches attackLevel</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "attackLevel",
+                    "description": "<p>Typically an amplitude between\n                               0.0 and 1.0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "decayTime",
+                    "description": "<p>Time</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "decayLevel",
+                    "description": "<p>Amplitude (In a standard ADSR envelope,\n                               decayLevel = sustainLevel)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "releaseTime",
+                    "description": "<p>Release Time (in seconds)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "releaseLevel",
+                    "description": "<p>Amplitude</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar t1 = 0.1; // attack time in seconds\nvar l1 = 0.7; // attack level 0.0 to 1.0\nvar t2 = 0.3; // decay time in seconds\nvar l2 = 0.1; // decay level  0.0 to 1.0\nvar t3 = 0.2; // sustain time in seconds\nvar l3 = dL; // sustain level  0.0 to 1.0\n// release level defaults to zero\n\nvar env;\nvar triOsc;\n\nfunction setup() {\n  background(0);\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env(t1, l1, t2, l2, t3, l3);\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env); // give the env control of the triOsc's amp\n  triOsc.start();\n}\n\n// mouseClick triggers envelope if over canvas\nfunction mouseClicked() {\n  // is mouse over canvas?\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    env.play(triOsc);\n  }\n}\n</code></div>\n"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6090,
+            "description": "<p>Set values like a traditional\n<a href=\"https://en.wikipedia.org/wiki/Synthesizer#/media/File:ADSR_parameter.svg\">\nADSR envelope\n</a>.</p>\n",
+            "itemtype": "method",
+            "name": "setADSR",
+            "params": [
+                {
+                    "name": "attackTime",
+                    "description": "<p>Time (in seconds before envelope\n                              reaches Attack Level</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "decayTime",
+                    "description": "<p>Time (in seconds) before envelope\n                              reaches Decay/Sustain Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "susRatio",
+                    "description": "<p>Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,\n                              where 1.0 = attackLevel, 0.0 = releaseLevel.\n                              The susRatio determines the decayLevel and the level at which the\n                              sustain portion of the envelope will sustain.\n                              For example, if attackLevel is 0.4, releaseLevel is 0,\n                              and susAmt is 0.5, the decayLevel would be 0.2. If attackLevel is\n                              increased to 1.0 (using <code>setRange</code>),\n                              then decayLevel would increase proportionally, to become 0.5.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "releaseTime",
+                    "description": "<p>Time in seconds from now (defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.2;\nvar susPercent = 0.2;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(playEnv);\n}\n\nfunction playEnv(){\n  env.play();\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6155,
+            "description": "<p>Set max (attackLevel) and min (releaseLevel) of envelope.</p>\n",
+            "itemtype": "method",
+            "name": "setRange",
+            "params": [
+                {
+                    "name": "aLevel",
+                    "description": "<p>attack level (defaults to 1)</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rLevel",
+                    "description": "<p>release level (defaults to 0)</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar attackLevel = 1.0;\nvar releaseLevel = 0;\n\nvar attackTime = 0.001\nvar decayTime = 0.2;\nvar susPercent = 0.2;\nvar releaseTime = 0.5;\n\nvar env, triOsc;\n\nfunction setup() {\n  var cnv = createCanvas(100, 100);\n\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  env = new p5.Env();\n  env.setADSR(attackTime, decayTime, susPercent, releaseTime);\n  env.setRange(attackLevel, releaseLevel);\n\n  triOsc = new p5.Oscillator('triangle');\n  triOsc.amp(env);\n  triOsc.start();\n  triOsc.freq(220);\n\n  cnv.mousePressed(playEnv);\n}\n\nfunction playEnv(){\n  env.play();\n}\n</code></div>"
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6234,
+            "description": "<p>Assign a parameter to be controlled by this envelope.\nIf a p5.Sound object is given, then the p5.Env will control its\noutput gain. If multiple inputs are provided, the env will\ncontrol all of them.</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "inputs",
+                    "description": "<p>A p5.sound object or\n                              Web Audio Param.</p>\n",
+                    "type": "Object",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6249,
+            "description": "<p>Set whether the envelope ramp is linear (default) or exponential.\nExponential ramps can be useful because we perceive amplitude\nand frequency logarithmically.</p>\n",
+            "itemtype": "method",
+            "name": "setExp",
+            "params": [
+                {
+                    "name": "isExp",
+                    "description": "<p>true is exponential, false is linear</p>\n",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "p5.Env",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 6267,
+            "description": "<p>Play tells the envelope to start acting on a given input.\nIf the input is a p5.sound object (i.e. AudioIn, Oscillator,\nSoundFile), then Env will control its output volume.\nEnvelopes can also be used to control any <a href=\"\nhttp://docs.webplatform.org/wiki/apis/webaudio/AudioParam\">\nWeb Audio Audio Param.</a></p>\n",
+            "itemtype": "method",
+            "name": "play",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>A p5.sound object or\n                              Web Audio Param.</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "startTime",
+                    "description": "<p>time from now (in seconds) at which to play</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "sustainTime",
+                    "description": "<p>time to sustain before releasing the envelope</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
