@@ -18013,3 +18013,910 @@ module.exports={
             "description": "<p>Creates an HTML5 &lt;video&gt; element in the DOM for simple playback\nof audio/video. Shown by default, can be hidden with .hide()\nand drawn into canvas using video(). Appends to the container\nnode if one is specified, otherwise appends to body. The first parameter\ncan be either a single string path to a video file, or an array of string\npaths to different formats of the same video. This is useful for ensuring\nthat your video can play across different browsers, as each supports\ndifferent formats. See <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats'>this\npage</a> for further information about supported formats.</p>\n",
             "itemtype": "method",
             "name": "createVideo",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>path to a video file, or array of paths for\n                            supporting different browsers</p>\n",
+                    "type": "String|Array"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>callback function to be called upon\n                            &#39;canplaythrough&#39; event fire, that is, when the\n                            browser can play the media, and estimates that\n                            enough data has been loaded to play the media\n                            up to its end without having to stop for\n                            further buffering of content</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to video p5.Element",
+                "type": "p5.MediaElement|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar vid;\nfunction setup() {\n  vid = createVideo(['small.mp4', 'small.ogv', 'small.webm'], vidLoad);\n}\n\n// This function is called when the video loads\nfunction vidLoad() {\n  vid.play();\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 967,
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 969,
+            "description": "<p>Creates a hidden HTML5 &lt;audio&gt; element in the DOM for simple audio\nplayback. Appends to the container node if one is specified,\notherwise appends to body. The first parameter\ncan be either a single string path to a audio file, or an array of string\npaths to different formats of the same audio. This is useful for ensuring\nthat your audio can play across different browsers, as each supports\ndifferent formats. See <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats'>this\npage for further information about supported formats</a>.</p>\n",
+            "itemtype": "method",
+            "name": "createAudio",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>path to an audio file, or array of paths\n                            for supporting different browsers</p>\n",
+                    "type": "String|String[]",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>callback function to be called upon\n                            &#39;canplaythrough&#39; event fire, that is, when the\n                            browser can play the media, and estimates that\n                            enough data has been loaded to play the media\n                            up to its end without having to stop for\n                            further buffering of content</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to audio p5.Element  /**",
+                "type": "p5.MediaElement|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar ele;\nfunction setup() {\n  ele = createAudio('assets/beat.mp3');\n\n  // here we set the element to autoplay\n  // The element will play as soon\n  // as it is able to do so.\n  ele.autoplay(true);\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1007,
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1042,
+            "description": "<p>Creates a new &lt;video&gt; element that contains the audio/video feed\nfrom a webcam. This can be drawn onto the canvas using video().</p>\n<p>More specific properties of the feed can be passing in a Constraints object.\nSee the\n<a href='http://w3c.github.io/mediacapture-main/getusermedia.html#media-track-constraints'> W3C\nspec</a> for possible properties. Note that not all of these are supported\nby all browsers.</p>\n<p>Security note: A new browser security specification requires that getUserMedia,\nwhich is behind createCapture(), only works when you&#39;re running the code locally,\nor on HTTPS. Learn more <a href='http://stackoverflow.com/questions/34197653/getusermedia-in-chrome-47-without-using-https'>here</a>\nand <a href='https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia'>here</a>.</p>",
+            "itemtype": "method",
+            "name": "createCapture",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>type of capture, either VIDEO or\n                                  AUDIO if none specified, default both,\n                                  or a Constraints object</p>\n",
+                    "type": "String|Constant|Object"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to be called once\n                                  stream has loaded</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "capture video p5.Element",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nvar capture;\n\nfunction setup() {\n  createCanvas(480, 120);\n  capture = createCapture(VIDEO);\n}\n\nfunction draw() {\n  image(capture, 0, 0, width, width * capture.height / capture.width);\n  filter(INVERT);\n}\n</code></div>\n<div class='norender'><code>\nfunction setup() {\n  createCanvas(480, 120);\n  var constraints = {\n    video: {\n      mandatory: {\n        minWidth: 1280,\n        minHeight: 720\n      },\n      optional: [{ maxFrameRate: 10 }]\n    },\n    audio: true\n  };\n  createCapture(constraints, function(stream) {\n    console.log(stream);\n  });\n}\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1158,
+            "description": "<p>Creates element with given tag in the DOM with given content.\nAppends to the container node if one is specified, otherwise\nappends to body.</p>\n",
+            "itemtype": "method",
+            "name": "createElement",
+            "params": [
+                {
+                    "name": "tag",
+                    "description": "<p>tag for the new element</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "content",
+                    "description": "<p>html content to be inserted into the element</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element holding created node",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\ncreateElement('h2', 'im an h2 p5.element!');\n</code></div>"
+            ],
+            "class": "p5.dom",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1184,
+            "description": "<p>Adds specified class to the element.</p>\n",
+            "itemtype": "method",
+            "name": "addClass",
+            "params": [
+                {
+                    "name": "class",
+                    "description": "<p>name of class to add</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var div = createDiv('div');\n div.addClass('myClass');\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1211,
+            "description": "<p>Removes specified class from the element.</p>\n",
+            "itemtype": "method",
+            "name": "removeClass",
+            "params": [
+                {
+                    "name": "class",
+                    "description": "<p>name of class to remove</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "* @example\n <div class='norender'><code>\n // In this example, a class is set when the div is created\n // and removed when mouse is pressed. This could link up\n // with a CSS style rule to toggle style properties.\nvar div;\nfunction setup() {\n   div = createDiv('div');\n   div.addClass('myClass');\n }\nfunction mousePressed() {\n   div.removeClass('myClass');\n }\n </code></div>",
+                "type": "Object|p5.Element"
+            },
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1242,
+            "description": "<p>Attaches the element  as a child to the parent specified.\n Accepts either a string ID, DOM node, or p5.Element.\n If no argument is specified, an array of children DOM nodes is returned.</p>\n",
+            "itemtype": "method",
+            "name": "child",
+            "params": [
+                {
+                    "name": "child",
+                    "description": "<p>the ID, DOM node, or p5.Element\n                         to add to the current element</p>\n",
+                    "type": "String|Object|p5.Element",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.Element"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var div0 = createDiv('this is the parent');\n var div1 = createDiv('this is the child');\n div0.child(div1); // use p5.Element\n </code></div>\n <div class='norender'><code>\n var div0 = createDiv('this is the parent');\n var div1 = createDiv('this is the child');\n div1.id('apples');\n div0.child('apples'); // use id\n </code></div>\n <div class='norender'><code>\n var div0 = createDiv('this is the parent');\n var elt = document.getElementById('myChildDiv');\n div0.child(elt); // use element from page\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1286,
+            "description": "<p>Centers a p5 Element either vertically, horizontally,\nor both, relative to its parent or according to\nthe body if the Element has no parent. If no argument is passed\nthe Element is aligned both vertically and horizontally.</p>\n",
+            "itemtype": "method",
+            "name": "center",
+            "params": [
+                {
+                    "name": "align",
+                    "description": "<p>passing &#39;vertical&#39;, &#39;horizontal&#39; aligns element accordingly</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "pointer to p5.Element",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  var div = createDiv('').size(10, 10);\n  div.style('background-color', 'orange');\n  div.center();\n}\n</code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1339,
+            "description": "<p>If an argument is given, sets the inner HTML of the element,\n replacing any existing html. If true is included as a second\n argument, html is appended instead of replacing existing html.\n If no arguments are given, returns\n the inner HTML of the element.</p>\n",
+            "itemtype": "method",
+            "name": "html",
+            "params": [
+                {
+                    "name": "html",
+                    "description": "<p>the HTML to be placed inside the element</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "append",
+                    "description": "<p>whether to append HTML to existing</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element|String"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var div = createDiv('').size(100, 100);\n div.html('hi');\n </code></div>\n <div class='norender'><code>\n var div = createDiv('Hello ').size(100, 100);\n div.html('World', true);\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1374,
+            "description": "<p>Sets the position of the element relative to (0, 0) of the\n window. Essentially, sets position:absolute and left and top\n properties of style. If no arguments given returns the x and y position\n of the element in an object.</p>\n",
+            "itemtype": "method",
+            "name": "position",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-position relative to upper left of window</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-position relative to upper left of window</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n <div><code class='norender'>\n function setup() {\n   var cnv = createCanvas(100, 100);\n   // positions canvas 50px to the right and 100px\n   // below upper left corner of the window\n   cnv.position(50, 100);\n }\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1464,
+            "description": "<p>Sets the given style (css) property (1st arg) of the element with the\ngiven value (2nd arg). If a single argument is given, .style()\nreturns the value of the given property; however, if the single argument\nis given in css syntax (&#39;text-align:center&#39;), .style() sets the css\nappropriatly. .style() also handles 2d and 3d css transforms. If\nthe 1st arg is &#39;rotate&#39;, &#39;translate&#39;, or &#39;position&#39;, the following arguments\naccept Numbers as values. (&#39;translate&#39;, 10, 100, 50);</p>\n",
+            "itemtype": "method",
+            "name": "style",
+            "params": [
+                {
+                    "name": "property",
+                    "description": "<p>property to be set</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to assign to property (only String|Number for rotate/translate)</p>\n",
+                    "type": "String|Number|p5.Color",
+                    "optional": true
+                },
+                {
+                    "name": "value2",
+                    "description": "<p>position can take a 2nd value</p>\n",
+                    "type": "String|Number|p5.Color",
+                    "optional": true
+                },
+                {
+                    "name": "value3",
+                    "description": "<p>translate can take a 2nd &amp; 3rd value</p>\n",
+                    "type": "String|Number|p5.Color",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "value of property, if no value is specified\nor p5.Element",
+                "type": "String|Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code class='norender'>\nvar myDiv = createDiv('I like pandas.');\nmyDiv.style('font-size', '18px');\nmyDiv.style('color', '#ff0000');\n</code></div>\n<div><code class='norender'>\nvar col = color(25, 23, 200, 50);\nvar button = createButton('button');\nbutton.style('background-color', col);\nbutton.position(10, 10);\n</code></div>\n<div><code class='norender'>\nvar myDiv = createDiv('I like lizards.');\nmyDiv.style('position', 20, 20);\nmyDiv.style('rotate', 45);\n</code></div>\n<div><code class='norender'>\nvar myDiv;\nfunction setup() {\n  background(200);\n  myDiv = createDiv('I like gray.');\n  myDiv.position(20, 20);\n}\n\nfunction draw() {\n  myDiv.style('font-size', mouseX + 'px');\n}\n</code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1561,
+            "description": "<p>Adds a new attribute or changes the value of an existing attribute\n on the specified element. If no value is specified, returns the\n value of the given attribute, or null if attribute is not set.</p>\n",
+            "itemtype": "method",
+            "name": "attribute",
+            "params": [
+                {
+                    "name": "attr",
+                    "description": "<p>attribute to set</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>value to assign to attribute</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "value of attribute, if no value is\n                             specified or p5.Element",
+                "type": "String|Object|p5.Element"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var myDiv = createDiv('I like pandas.');\n myDiv.attribute('align', 'center');\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1601,
+            "description": "<p>Removes an attribute on the specified element.</p>\n",
+            "itemtype": "method",
+            "name": "removeAttribute",
+            "params": [
+                {
+                    "name": "attr",
+                    "description": "<p>attribute to remove</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n <div><code>\n var button;\n var checkbox;\nfunction setup() {\n   checkbox = createCheckbox('enable', true);\n   checkbox.changed(enableButton);\n   button = createButton('button');\n   button.position(10, 10);\n }\nfunction enableButton() {\n   if (this.checked()) {\n     // Re-enable the button\n     button.removeAttribute('disabled');\n   } else {\n     // Disable the button\n     button.attribute('disabled', '');\n   }\n }\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1646,
+            "description": "<p>Either returns the value of the element if no arguments\ngiven, or sets the value of the element.</p>\n",
+            "itemtype": "method",
+            "name": "value",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "String|Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "value of element if no value is specified or p5.Element",
+                "type": "String|Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n// gets the value\nvar inp;\nfunction setup() {\n  inp = createInput('');\n}\n\nfunction mousePressed() {\n  print(inp.value());\n}\n</code></div>\n<div class='norender'><code>\n// sets the value\nvar inp;\nfunction setup() {\n  inp = createInput('myValue');\n}\n\nfunction mousePressed() {\n  inp.value('myValue');\n}\n</code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1688,
+            "description": "<p>Shows the current element. Essentially, setting display:block for the style.</p>\n",
+            "itemtype": "method",
+            "name": "show",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var div = createDiv('div');\n div.style('display', 'none');\n div.show(); // turns display to block\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1706,
+            "description": "<p>Hides the current element. Essentially, setting display:none for the style.</p>\n",
+            "itemtype": "method",
+            "name": "hide",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div class='norender'><code>\nvar div = createDiv('this is a div');\ndiv.hide();\n</code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1722,
+            "description": "<p>Sets the width and height of the element. AUTO can be used to\n only adjust one dimension. If no arguments given returns the width and height\n of the element in an object.</p>\n",
+            "itemtype": "method",
+            "name": "size",
+            "params": [
+                {
+                    "name": "w",
+                    "description": "<p>width of the element, either AUTO, or a number</p>\n",
+                    "type": "Number|Constant",
+                    "optional": true
+                },
+                {
+                    "name": "h",
+                    "description": "<p>height of the element, either AUTO, or a number</p>\n",
+                    "type": "Number|Constant",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n <div class='norender'><code>\n var div = createDiv('this is a div');\n div.size(100, 100);\n </code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1796,
+            "description": "<p>Removes the element and deregisters all listeners.</p>\n",
+            "itemtype": "method",
+            "name": "remove",
+            "example": [
+                "\n<div class='norender'><code>\nvar myDiv = createDiv('this is some text');\nmyDiv.remove();\n</code></div>"
+            ],
+            "class": "p5.Element",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1842,
+            "description": "<p>Path to the media element source.</p>\n",
+            "itemtype": "property",
+            "name": "src",
+            "return": {
+                "description": "src",
+                "type": "String"
+            },
+            "example": [
+                "\n<div><code>\nvar ele;\n\nfunction setup() {\n  background(250);\n\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n\n  //In this example we create\n  //a new p5.MediaElement via createAudio().\n  ele = createAudio('assets/beat.mp3');\n\n  //We'll set up our example so that\n  //when you click on the text,\n  //an alert box displays the MediaElement's\n  //src field.\n  textAlign(CENTER);\n  text('Click Me!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    //Show our p5.MediaElement's src field\n    alert(ele.src);\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1908,
+            "description": "<p>Play an HTML5 media element.</p>\n",
+            "itemtype": "method",
+            "name": "play",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\nvar ele;\n\nfunction setup() {\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n\n  //In this example we create\n  //a new p5.MediaElement via createAudio().\n  ele = createAudio('assets/beat.mp3');\n\n  background(250);\n  textAlign(CENTER);\n  text('Click to Play!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    //Here we call the play() function on\n    //the p5.MediaElement we created above.\n    //This will start the audio sample.\n    ele.play();\n\n    background(200);\n    text('You clicked Play!', width / 2, height / 2);\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 1961,
+            "description": "<p>Stops an HTML5 media element (sets current time to zero).</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\n//This example both starts\n//and stops a sound sample\n//when the user clicks the canvas\n\n//We will store the p5.MediaElement\n//object in here\nvar ele;\n\n//while our audio is playing,\n//this will be set to true\nvar sampleIsPlaying = false;\n\nfunction setup() {\n  //Here we create a p5.MediaElement object\n  //using the createAudio() function.\n  ele = createAudio('assets/beat.mp3');\n  background(200);\n  textAlign(CENTER);\n  text('Click to play!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    background(200);\n\n    if (sampleIsPlaying) {\n      //if the sample is currently playing\n      //calling the stop() function on\n      //our p5.MediaElement will stop\n      //it and reset its current\n      //time to 0 (i.e. it will start\n      //at the beginning the next time\n      //you play it)\n      ele.stop();\n\n      sampleIsPlaying = false;\n      text('Click to play!', width / 2, height / 2);\n    } else {\n      //loop our sound element until we\n      //call ele.stop() on it.\n      ele.loop();\n\n      sampleIsPlaying = true;\n      text('Click to stop!', width / 2, height / 2);\n    }\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2025,
+            "description": "<p>Pauses an HTML5 media element.</p>\n",
+            "itemtype": "method",
+            "name": "pause",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\n//This example both starts\n//and pauses a sound sample\n//when the user clicks the canvas\n\n//We will store the p5.MediaElement\n//object in here\nvar ele;\n\n//while our audio is playing,\n//this will be set to true\nvar sampleIsPlaying = false;\n\nfunction setup() {\n  //Here we create a p5.MediaElement object\n  //using the createAudio() function.\n  ele = createAudio('assets/lucky_dragons.mp3');\n  background(200);\n  textAlign(CENTER);\n  text('Click to play!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    background(200);\n\n    if (sampleIsPlaying) {\n      //Calling pause() on our\n      //p5.MediaElement will stop it\n      //playing, but when we call the\n      //loop() or play() functions\n      //the sample will start from\n      //where we paused it.\n      ele.pause();\n\n      sampleIsPlaying = false;\n      text('Click to resume!', width / 2, height / 2);\n    } else {\n      //loop our sound element until we\n      //call ele.pause() on it.\n      ele.loop();\n\n      sampleIsPlaying = true;\n      text('Click to pause!', width / 2, height / 2);\n    }\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2087,
+            "description": "<p>Set &#39;loop&#39; to true for an HTML5 media element, and starts playing.</p>\n",
+            "itemtype": "method",
+            "name": "loop",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\n//Clicking the canvas will loop\n//the audio sample until the user\n//clicks again to stop it\n\n//We will store the p5.MediaElement\n//object in here\nvar ele;\n\n//while our audio is playing,\n//this will be set to true\nvar sampleIsLooping = false;\n\nfunction setup() {\n  //Here we create a p5.MediaElement object\n  //using the createAudio() function.\n  ele = createAudio('assets/lucky_dragons.mp3');\n  background(200);\n  textAlign(CENTER);\n  text('Click to loop!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    background(200);\n\n    if (!sampleIsLooping) {\n      //loop our sound element until we\n      //call ele.stop() on it.\n      ele.loop();\n\n      sampleIsLooping = true;\n      text('Click to stop!', width / 2, height / 2);\n    } else {\n      ele.stop();\n\n      sampleIsLooping = false;\n      text('Click to loop!', width / 2, height / 2);\n    }\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2143,
+            "description": "<p>Set &#39;loop&#39; to false for an HTML5 media element. Element will stop\nwhen it reaches the end.</p>\n",
+            "itemtype": "method",
+            "name": "noLoop",
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "example": [
+                "\n<div><code>\n//This example both starts\n//and stops loop of sound sample\n//when the user clicks the canvas\n\n//We will store the p5.MediaElement\n//object in here\nvar ele;\n//while our audio is playing,\n//this will be set to true\nvar sampleIsPlaying = false;\n\nfunction setup() {\n  //Here we create a p5.MediaElement object\n  //using the createAudio() function.\n  ele = createAudio('assets/beat.mp3');\n  background(200);\n  textAlign(CENTER);\n  text('Click to play!', width / 2, height / 2);\n}\n\nfunction mouseClicked() {\n  //here we test if the mouse is over the\n  //canvas element when it's clicked\n  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {\n    background(200);\n\n    if (sampleIsPlaying) {\n      ele.noLoop();\n      text('No more Loops!', width / 2, height / 2);\n    } else {\n      ele.loop();\n      sampleIsPlaying = true;\n      text('Click to stop looping!', width / 2, height / 2);\n    }\n  }\n}\n</code></div>\n"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2195,
+            "description": "<p>Set HTML5 media element to autoplay or not.</p>\n",
+            "itemtype": "method",
+            "name": "autoplay",
+            "params": [
+                {
+                    "name": "autoplay",
+                    "description": "<p>whether the element should autoplay</p>\n",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.Element"
+            },
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2207,
+            "description": "<p>Sets volume for this HTML5 media element. If no argument is given,\nreturns the current volume.</p>\n",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "<p>volume between 0.0 and 1.0</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "current volume or p5.MediaElement",
+                "type": "Number|p5.MediaElement"
+            },
+            "itemtype": "method",
+            "name": "volume",
+            "example": [
+                "\n<div><code>\nvar ele;\nfunction setup() {\n  // p5.MediaElement objects are usually created\n  // by calling the createAudio(), createVideo(),\n  // and createCapture() functions.\n  // In this example we create\n  // a new p5.MediaElement via createAudio().\n  ele = createAudio('assets/lucky_dragons.mp3');\n  background(250);\n  textAlign(CENTER);\n  text('Click to Play!', width / 2, height / 2);\n}\nfunction mouseClicked() {\n  // Here we call the volume() function\n  // on the sound element to set its volume\n  // Volume must be between 0.0 and 1.0\n  ele.volume(0.2);\n  ele.play();\n  background(200);\n  text('You clicked Play!', width / 2, height / 2);\n}\n</code></div>\n<div><code>\nvar audio;\nvar counter = 0;\n\nfunction loaded() {\n  audio.play();\n}\n\nfunction setup() {\n  audio = createAudio('assets/lucky_dragons.mp3', loaded);\n  textAlign(CENTER);\n}\n\nfunction draw() {\n  if (counter === 0) {\n    background(0, 255, 0);\n    text('volume(0.9)', width / 2, height / 2);\n  } else if (counter === 1) {\n    background(255, 255, 0);\n    text('volume(0.5)', width / 2, height / 2);\n  } else if (counter === 2) {\n    background(255, 0, 0);\n    text('volume(0.1)', width / 2, height / 2);\n  }\n}\n\nfunction mousePressed() {\n  counter++;\n  if (counter === 0) {\n    audio.volume(0.9);\n  } else if (counter === 1) {\n    audio.volume(0.5);\n  } else if (counter === 2) {\n    audio.volume(0.1);\n  } else {\n    counter = 0;\n    audio.volume(0.9);\n  }\n}\n</code>\n</div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2289,
+            "description": "<p>If no arguments are given, returns the current playback speed of the\nelement. The speed parameter sets the speed where 2.0 will play the\nelement twice as fast, 0.5 will play at half the speed, and -1 will play\nthe element in normal speed in reverse.(Note that not all browsers support\nbackward playback and even if they do, playback might not be smooth.)</p>\n",
+            "itemtype": "method",
+            "name": "speed",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "<p>speed multiplier for element playback</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "current playback speed or p5.MediaElement",
+                "type": "Number|Object|p5.MediaElement"
+            },
+            "example": [
+                "\n<div class='norender'><code>\n//Clicking the canvas will loop\n//the audio sample until the user\n//clicks again to stop it\n\n//We will store the p5.MediaElement\n//object in here\nvar ele;\nvar button;\n\nfunction setup() {\n  createCanvas(710, 400);\n  //Here we create a p5.MediaElement object\n  //using the createAudio() function.\n  ele = createAudio('assets/beat.mp3');\n  ele.loop();\n  background(200);\n\n  button = createButton('2x speed');\n  button.position(100, 68);\n  button.mousePressed(twice_speed);\n\n  button = createButton('half speed');\n  button.position(200, 68);\n  button.mousePressed(half_speed);\n\n  button = createButton('reverse play');\n  button.position(300, 68);\n  button.mousePressed(reverse_speed);\n\n  button = createButton('STOP');\n  button.position(400, 68);\n  button.mousePressed(stop_song);\n\n  button = createButton('PLAY!');\n  button.position(500, 68);\n  button.mousePressed(play_speed);\n}\n\nfunction twice_speed() {\n  ele.speed(2);\n}\n\nfunction half_speed() {\n  ele.speed(0.5);\n}\n\nfunction reverse_speed() {\n  ele.speed(-1);\n}\n\nfunction stop_song() {\n  ele.stop();\n}\n\nfunction play_speed() {\n  ele.play();\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2368,
+            "description": "<p>If no arguments are given, returns the current time of the element.\nIf an argument is given the current time of the element is set to it.</p>\n",
+            "itemtype": "method",
+            "name": "time",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>time to jump to (in seconds)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "current time (in seconds)\n                                or p5.MediaElement",
+                "type": "Number|Object|p5.MediaElement"
+            },
+            "example": [
+                "\n<div><code>\nvar ele;\nvar beginning = true;\nfunction setup() {\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n\n  //In this example we create\n  //a new p5.MediaElement via createAudio().\n  ele = createAudio('assets/lucky_dragons.mp3');\n  background(250);\n  textAlign(CENTER);\n  text('start at beginning', width / 2, height / 2);\n}\n\n// this function fires with click anywhere\nfunction mousePressed() {\n  if (beginning === true) {\n    // here we start the sound at the beginning\n    // time(0) is not necessary here\n    // as this produces the same result as\n    // play()\n    ele.play().time(0);\n    background(200);\n    text('jump 2 sec in', width / 2, height / 2);\n    beginning = false;\n  } else {\n    // here we jump 2 seconds into the sound\n    ele.play().time(2);\n    background(250);\n    text('start at beginning', width / 2, height / 2);\n    beginning = true;\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2423,
+            "description": "<p>Returns the duration of the HTML5 media element.</p>\n",
+            "itemtype": "method",
+            "name": "duration",
+            "return": {
+                "description": "duration",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nvar ele;\nfunction setup() {\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n  //In this example we create\n  //a new p5.MediaElement via createAudio().\n  ele = createAudio('assets/doorbell.mp3');\n  background(250);\n  textAlign(CENTER);\n  text('Click to know the duration!', 10, 25, 70, 80);\n}\nfunction mouseClicked() {\n  ele.play();\n  background(200);\n  //ele.duration dislpays the duration\n  text(ele.duration() + ' seconds', width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2541,
+            "description": "<p>Schedule an event to be called when the audio or video\nelement reaches the end. If the element is looping,\nthis will not be called. The element is passed in\nas the argument to the onended callback.</p>\n",
+            "itemtype": "method",
+            "name": "onended",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>function to call when the\n                            soundfile has ended. The\n                            media element will be passed\n                            in as the argument to the\n                            callback.</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object|p5.MediaElement"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  var audioEl = createAudio('assets/beat.mp3');\n  audioEl.showControls();\n  audioEl.onended(sayDone);\n}\n\nfunction sayDone(elt) {\n  alert('done playing ' + elt.src);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2572,
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2574,
+            "description": "<p>Send the audio output of this element to a specified audioNode or\np5.sound object. If no element is provided, connects to p5&#39;s master\noutput. That connection is established when this method is first called.\nAll connections are removed by the .disconnect() method.</p>\n<p>This method is meant to be used with the p5.sound.js addon library.</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "audioNode",
+                    "description": "<p>AudioNode from the Web Audio API,\nor an object from the p5.sound library</p>\n",
+                    "type": "AudioNode|Object"
+                }
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2623,
+            "description": "<p>Disconnect all Web Audio routing, including to master output.\nThis is useful if you want to re-route the output through\naudio effects, for example.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2638,
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2640,
+            "description": "<p>Show the default MediaElement controls, as determined by the web browser.</p>\n",
+            "itemtype": "method",
+            "name": "showControls",
+            "example": [
+                "\n<div><code>\nvar ele;\nfunction setup() {\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n  //In this example we create\n  //a new p5.MediaElement via createAudio()\n  ele = createAudio('assets/lucky_dragons.mp3');\n  background(200);\n  textAlign(CENTER);\n  text('Click to Show Controls!', 10, 25, 70, 80);\n}\nfunction mousePressed() {\n  ele.showControls();\n  background(200);\n  text('Controls Shown', width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2671,
+            "description": "<p>Hide the default mediaElement controls.</p>\n",
+            "itemtype": "method",
+            "name": "hideControls",
+            "example": [
+                "\n<div><code>\nvar ele;\nfunction setup() {\n  //p5.MediaElement objects are usually created\n  //by calling the createAudio(), createVideo(),\n  //and createCapture() functions.\n  //In this example we create\n  //a new p5.MediaElement via createAudio()\n  ele = createAudio('assets/lucky_dragons.mp3');\n  ele.showControls();\n  background(200);\n  textAlign(CENTER);\n  text('Click to hide Controls!', 10, 25, 70, 80);\n}\nfunction mousePressed() {\n  ele.hideControls();\n  background(200);\n  text('Controls hidden', width / 2, height / 2);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2700,
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2711,
+            "description": "<p>Schedule events to trigger every time a MediaElement\n(audio/video) reaches a playback cue point.</p>\n<p>Accepts a callback function, a time (in seconds) at which to trigger\nthe callback, and an optional parameter for the callback.</p>\n<p>Time will be passed as the first parameter to the callback function,\nand param will be the second parameter.</p>\n",
+            "itemtype": "method",
+            "name": "addCue",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>Time in seconds, relative to this media\n                            element&#39;s playback. For example, to trigger\n                            an event every time playback reaches two\n                            seconds, pass in the number 2. This will be\n                            passed as the first parameter to\n                            the callback function.</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>Name of a function that will be\n                            called at the given time. The callback will\n                            receive time and (optionally) param as its\n                            two parameters.</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>An object to be passed as the\n                            second parameter to the\n                            callback function.</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "id ID of this cue,\n                    useful for removeCue(id)",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  background(255, 255, 255);\n\n  var audioEl = createAudio('assets/beat.mp3');\n  audioEl.showControls();\n\n  // schedule three calls to changeBackground\n  audioEl.addCue(0.5, changeBackground, color(255, 0, 0));\n  audioEl.addCue(1.0, changeBackground, color(0, 255, 0));\n  audioEl.addCue(2.5, changeBackground, color(0, 0, 255));\n  audioEl.addCue(3.0, changeBackground, color(0, 255, 255));\n  audioEl.addCue(4.2, changeBackground, color(255, 255, 0));\n  audioEl.addCue(5.0, changeBackground, color(255, 255, 0));\n}\n\nfunction changeBackground(val) {\n  background(val);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2773,
+            "description": "<p>Remove a callback based on its ID. The ID is returned by the\naddCue method.</p>\n",
+            "itemtype": "method",
+            "name": "removeCue",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "<p>ID of the cue, as returned by addCue</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar audioEl, id1, id2;\nfunction setup() {\n  background(255, 255, 255);\n  audioEl = createAudio('assets/beat.mp3');\n  audioEl.showControls();\n  // schedule five calls to changeBackground\n  id1 = audioEl.addCue(0.5, changeBackground, color(255, 0, 0));\n  audioEl.addCue(1.0, changeBackground, color(0, 255, 0));\n  audioEl.addCue(2.5, changeBackground, color(0, 0, 255));\n  audioEl.addCue(3.0, changeBackground, color(0, 255, 255));\n  id2 = audioEl.addCue(4.2, changeBackground, color(255, 255, 0));\n  text('Click to remove first and last Cue!', 10, 25, 70, 80);\n}\nfunction mousePressed() {\n  audioEl.removeCue(id1);\n  audioEl.removeCue(id2);\n}\nfunction changeBackground(val) {\n  background(val);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2815,
+            "description": "<p>Remove all of the callbacks that had originally been scheduled\nvia the addCue method.</p>\n",
+            "itemtype": "method",
+            "name": "clearCues",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "<p>ID of the cue, as returned by addCue</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar audioEl;\nfunction setup() {\n  background(255, 255, 255);\n  audioEl = createAudio('assets/beat.mp3');\n  //Show the default MediaElement controls, as determined by the web browser\n  audioEl.showControls();\n  // schedule calls to changeBackground\n  background(200);\n  text('Click to change Cue!', 10, 25, 70, 80);\n  audioEl.addCue(0.5, changeBackground, color(255, 0, 0));\n  audioEl.addCue(1.0, changeBackground, color(0, 255, 0));\n  audioEl.addCue(2.5, changeBackground, color(0, 0, 255));\n  audioEl.addCue(3.0, changeBackground, color(0, 255, 255));\n  audioEl.addCue(4.2, changeBackground, color(255, 255, 0));\n}\nfunction mousePressed() {\n  // here we clear the scheduled callbacks\n  audioEl.clearCues();\n  // then we add some more callbacks\n  audioEl.addCue(1, changeBackground, color(2, 2, 2));\n  audioEl.addCue(3, changeBackground, color(255, 255, 0));\n}\nfunction changeBackground(val) {\n  background(val);\n}\n</code></div>"
+            ],
+            "class": "p5.MediaElement",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2885,
+            "description": "<p>Underlying File object. All normal File methods can be called on this.</p>\n",
+            "itemtype": "property",
+            "name": "file",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2897,
+            "description": "<p>File type (image, text, etc.)</p>\n",
+            "itemtype": "property",
+            "name": "type",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2903,
+            "description": "<p>File subtype (usually the file extension jpg, png, xml, etc.)</p>\n",
+            "itemtype": "property",
+            "name": "subtype",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2909,
+            "description": "<p>File name</p>\n",
+            "itemtype": "property",
