@@ -21821,3 +21821,986 @@ module.exports={
                     "description": "",
                     "type": "Number"
                 },
+                {
+                    "name": "yVal",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "zVal",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "time",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Updated x, y, z values as an array",
+                "type": "Array"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8755,
+            "description": "<p>Getter and setter methods for orient coordinates</p>\n",
+            "itemtype": "method",
+            "name": "orientX",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8760,
+            "description": "<p>Getter and setter methods for orient coordinates</p>\n",
+            "itemtype": "method",
+            "name": "orientY",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8765,
+            "description": "<p>Getter and setter methods for orient coordinates</p>\n",
+            "itemtype": "method",
+            "name": "orientZ",
+            "return": {
+                "description": "updated coordinate value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8803,
+            "description": "<p>Set the rolloff factor and max distance</p>\n",
+            "itemtype": "method",
+            "name": "setFalloff",
+            "params": [
+                {
+                    "name": "maxDistance",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "rolloffFactor",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8813,
+            "description": "<p>Maxium distance between the source and the listener</p>\n",
+            "itemtype": "method",
+            "name": "maxDist",
+            "params": [
+                {
+                    "name": "maxDistance",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "updated value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 8825,
+            "description": "<p>How quickly the volume is reduced as the source moves away from the listener</p>\n",
+            "itemtype": "method",
+            "name": "rollof",
+            "params": [
+                {
+                    "name": "rolloffFactor",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "updated value",
+                "type": "Number"
+            },
+            "class": "p5.Panner3D",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9128,
+            "description": "<p>The p5.Delay is built with two\n<a href=\"http://www.w3.org/TR/webaudio/#DelayNode\">\nWeb Audio Delay Nodes</a>, one for each stereo channel.</p>\n",
+            "itemtype": "property",
+            "name": "leftDelay",
+            "type": "DelayNode",
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9136,
+            "description": "<p>The p5.Delay is built with two\n<a href=\"http://www.w3.org/TR/webaudio/#DelayNode\">\nWeb Audio Delay Nodes</a>, one for each stereo channel.</p>\n",
+            "itemtype": "property",
+            "name": "rightDelay",
+            "type": "DelayNode",
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9168,
+            "description": "<p>Add delay to an audio signal according to a set\nof delay parameters.</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "Signal",
+                    "description": "<p>An object that outputs audio</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "delayTime",
+                    "description": "<p>Time (in seconds) of the delay/echo.\n                             Some browsers limit delayTime to\n                             1 second.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "feedback",
+                    "description": "<p>sends the delay back through itself\n                             in a loop that decreases in volume\n                             each time.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "lowPass",
+                    "description": "<p>Cutoff frequency. Only frequencies\n                             below the lowPass will be part of the\n                             delay.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9203,
+            "description": "<p>Set the delay (echo) time, in seconds. Usually this value will be\na floating point number between 0.0 and 1.0.</p>\n",
+            "itemtype": "method",
+            "name": "delayTime",
+            "params": [
+                {
+                    "name": "delayTime",
+                    "description": "<p>Time (in seconds) of the delay</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9222,
+            "description": "<p>Feedback occurs when Delay sends its signal back through its input\nin a loop. The feedback amount determines how much signal to send each\ntime through the loop. A feedback greater than 1.0 is not desirable because\nit will increase the overall output each time through the loop,\ncreating an infinite feedback loop. The default value is 0.5</p>\n",
+            "itemtype": "method",
+            "name": "feedback",
+            "params": [
+                {
+                    "name": "feedback",
+                    "description": "<p>0.0 to 1.0, or an object such as an\n                                Oscillator that can be used to\n                                modulate this param</p>\n",
+                    "type": "Number|Object"
+                }
+            ],
+            "return": {
+                "description": "Feedback value",
+                "type": "Number"
+            },
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9250,
+            "description": "<p>Set a lowpass filter frequency for the delay. A lowpass filter\nwill cut off any frequencies higher than the filter frequency.</p>\n",
+            "itemtype": "method",
+            "name": "filter",
+            "params": [
+                {
+                    "name": "cutoffFreq",
+                    "description": "<p>A lowpass filter will cut off any\n                            frequencies higher than the filter frequency.</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "res",
+                    "description": "<p>Resonance of the filter frequency\n                            cutoff, or an object (i.e. a p5.Oscillator)\n                            that can be used to modulate this parameter.\n                            High numbers (i.e. 15) will produce a resonance,\n                            low numbers (i.e. .2) will produce a slope.</p>\n",
+                    "type": "Number|Object"
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9267,
+            "description": "<p>Choose a preset type of delay. &#39;pingPong&#39; bounces the signal\nfrom the left to the right channel to produce a stereo effect.\nAny other parameter will revert to the default delay setting.</p>\n",
+            "itemtype": "method",
+            "name": "setType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "<p>&#39;pingPong&#39; (1) or &#39;default&#39; (0)</p>\n",
+                    "type": "String|Number"
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9300,
+            "description": "<p>Set the output level of the delay effect.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>amplitude between 0 and 1.0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9309,
+            "description": "<p>Send output to a p5.sound or web audio object</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9315,
+            "description": "<p>Disconnect all output.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Delay",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9394,
+            "description": "<p>Connect a source to the reverb, and assign reverb parameters.</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>p5.sound / Web Audio object with a sound\n                         output.</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "seconds",
+                    "description": "<p>Duration of the reverb, in seconds.\n                         Min: 0, Max: 10. Defaults to 3.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "decayRate",
+                    "description": "<p>Percentage of decay with each echo.\n                          Min: 0, Max: 100. Defaults to 2.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "reverse",
+                    "description": "<p>Play the reverb backwards or forwards.</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Reverb",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9423,
+            "description": "<p>Set the reverb settings. Similar to .process(), but without\nassigning a new input.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "seconds",
+                    "description": "<p>Duration of the reverb, in seconds.\n                         Min: 0, Max: 10. Defaults to 3.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "decayRate",
+                    "description": "<p>Percentage of decay with each echo.\n                          Min: 0, Max: 100. Defaults to 2.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "reverse",
+                    "description": "<p>Play the reverb backwards or forwards.</p>\n",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Reverb",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9451,
+            "description": "<p>Set the output level of the reverb effect.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>amplitude between 0 and 1.0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Reverb",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9460,
+            "description": "<p>Send output to a p5.sound or web audio object</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Reverb",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9466,
+            "description": "<p>Disconnect all output.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Reverb",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9560,
+            "description": "<p>Internally, the p5.Convolver uses the a\n<a href=\"http://www.w3.org/TR/webaudio/#ConvolverNode\">\nWeb Audio Convolver Node</a>.</p>\n",
+            "itemtype": "property",
+            "name": "convolverNod",
+            "type": "ConvolverNode",
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9585,
+            "description": "<p>Create a p5.Convolver. Accepts a path to a soundfile\nthat will be used to generate an impulse response.</p>\n",
+            "itemtype": "method",
+            "name": "createConvolver",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>path to a sound file</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function to call if loading is successful.\n                              The object will be passed in as the argument\n                              to the callback function.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function to call if loading is not successful.\n                              A custom error will be passed in as the argument\n                              to the callback function.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "p5.Convolver"
+            },
+            "example": [
+                "\n<div><code>\nvar cVerb, sound;\nfunction preload() {\n  // We have both MP3 and OGG versions of all sound assets\n  soundFormats('ogg', 'mp3');\n\n  // Try replacing 'bx-spring' with other soundfiles like\n  // 'concrete-tunnel' 'small-plate' 'drum' 'beatbox'\n  cVerb = createConvolver('assets/bx-spring.mp3');\n\n  // Try replacing 'Damscray_DancingTiger' with\n  // 'beat', 'doorbell', lucky_dragons'\n  sound = loadSound('assets/Damscray_DancingTiger.mp3');\n}\n\nfunction setup() {\n  // disconnect from master output...\n  sound.disconnect();\n\n  // ...and process with cVerb\n  // so that we only hear the convolution\n  cVerb.process(sound);\n\n  sound.play();\n}\n</code></div>"
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9701,
+            "description": "<p>Connect a source to the reverb, and assign reverb parameters.</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>p5.sound / Web Audio object with a sound\n                         output.</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar cVerb, sound;\nfunction preload() {\n  soundFormats('ogg', 'mp3');\n\n  cVerb = createConvolver('assets/concrete-tunnel.mp3');\n\n  sound = loadSound('assets/beat.mp3');\n}\n\nfunction setup() {\n  // disconnect from master output...\n  sound.disconnect();\n\n  // ...and process with (i.e. connect to) cVerb\n  // so that we only hear the convolution\n  cVerb.process(sound);\n\n  sound.play();\n}\n</code></div>"
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9733,
+            "description": "<p>If you load multiple impulse files using the .addImpulse method,\nthey will be stored as Objects in this Array. Toggle between them\nwith the <code>toggleImpulse(id)</code> method.</p>\n",
+            "itemtype": "property",
+            "name": "impulses",
+            "type": "Array",
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9741,
+            "description": "<p>Load and assign a new Impulse Response to the p5.Convolver.\nThe impulse is added to the <code>.impulses</code> array. Previous\nimpulses can be accessed with the <code>.toggleImpulse(id)</code>\nmethod.</p>\n",
+            "itemtype": "method",
+            "name": "addImpulse",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>path to a sound file</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function (optional)</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function (optional)</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9759,
+            "description": "<p>Similar to .addImpulse, except that the <code>.impulses</code>\nArray is reset to save memory. A new <code>.impulses</code>\narray is created with this impulse as the only item.</p>\n",
+            "itemtype": "method",
+            "name": "resetImpulse",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>path to a sound file</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>function (optional)</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>function (optional)</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9777,
+            "description": "<p>If you have used <code>.addImpulse()</code> to add multiple impulses\nto a p5.Convolver, then you can use this method to toggle between\nthe items in the <code>.impulses</code> Array. Accepts a parameter\nto identify which impulse you wish to use, identified either by its\noriginal filename (String) or by its position in the <code>.impulses\n</code> Array (Number).<br/>\nYou can access the objects in the .impulses Array directly. Each\nObject has two attributes: an <code>.audioBuffer</code> (type:\nWeb Audio <a href=\"\nhttp://webaudio.github.io/web-audio-api/#the-audiobuffer-interface\">\nAudioBuffer)</a> and a <code>.name</code>, a String that corresponds\nwith the original filename.</p>\n",
+            "itemtype": "method",
+            "name": "toggleImpulse",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "<p>Identify the impulse by its original filename\n                          (String), or by its position in the\n                          <code>.impulses</code> Array (Number).</p>\n",
+                    "type": "String|Number"
+                }
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9821,
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 9846,
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10041,
+            "description": "<p>Set the global tempo, in beats per minute, for all\np5.Parts. This method will impact all active p5.Parts.</p>\n",
+            "itemtype": "method",
+            "name": "setBPM",
+            "params": [
+                {
+                    "name": "BPM",
+                    "description": "<p>Beats Per Minute</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Seconds from now</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Convolver",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10131,
+            "description": "<p>Array of values to pass into the callback\nat each step of the phrase. Depending on the callback\nfunction&#39;s requirements, these values may be numbers,\nstrings, or an object with multiple parameters.\nZero (0) indicates a rest.</p>\n",
+            "itemtype": "property",
+            "name": "sequence",
+            "type": "Array",
+            "class": "p5.Phrase",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10219,
+            "description": "<p>Set the tempo of this part, in Beats Per Minute.</p>\n",
+            "itemtype": "method",
+            "name": "setBPM",
+            "params": [
+                {
+                    "name": "BPM",
+                    "description": "<p>Beats Per Minute</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10229,
+            "description": "<p>Returns the Beats Per Minute of this currently part.</p>\n",
+            "itemtype": "method",
+            "name": "getBPM",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10238,
+            "description": "<p>Start playback of this part. It will play\nthrough all of its phrases at a speed\ndetermined by setBPM.</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10254,
+            "description": "<p>Loop playback of this part. It will begin\nlooping through all of its phrases at a speed\ndetermined by setBPM.</p>\n",
+            "itemtype": "method",
+            "name": "loop",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10271,
+            "description": "<p>Tell the part to stop looping.</p>\n",
+            "itemtype": "method",
+            "name": "noLoop",
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10283,
+            "description": "<p>Stop the part and cue it to step 0.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10293,
+            "description": "<p>Pause the part. Playback will resume\nfrom the current step.</p>\n",
+            "itemtype": "method",
+            "name": "pause",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>seconds from now</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10305,
+            "description": "<p>Add a p5.Phrase to this Part.</p>\n",
+            "itemtype": "method",
+            "name": "addPhrase",
+            "params": [
+                {
+                    "name": "phrase",
+                    "description": "<p>reference to a p5.Phrase</p>\n",
+                    "type": "p5.Phrase"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10326,
+            "description": "<p>Remove a phrase from this part, based on the name it was\ngiven when it was created.</p>\n",
+            "itemtype": "method",
+            "name": "removePhrase",
+            "params": [
+                {
+                    "name": "phraseName",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10340,
+            "description": "<p>Get a phrase from this part, based on the name it was\ngiven when it was created. Now you can modify its array.</p>\n",
+            "itemtype": "method",
+            "name": "getPhrase",
+            "params": [
+                {
+                    "name": "phraseName",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10354,
+            "description": "<p>Get a phrase from this part, based on the name it was\ngiven when it was created. Now you can modify its array.</p>\n",
+            "itemtype": "method",
+            "name": "replaceSequence",
+            "params": [
+                {
+                    "name": "phraseName",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "sequence",
+                    "description": "<p>Array of values to pass into the callback\n                          at each step of the phrase.</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10382,
+            "description": "<p>Fire a callback function at every step.</p>\n",
+            "itemtype": "method",
+            "name": "onStep",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>The name of the callback\n                            you want to fire\n                            on every beat/tatum.</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "class": "p5.Part",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10435,
+            "description": "<p>Start playback of the score.</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10444,
+            "description": "<p>Stop playback of the score.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10454,
+            "description": "<p>Pause playback of the score.</p>\n",
+            "itemtype": "method",
+            "name": "pause",
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10462,
+            "description": "<p>Loop playback of the score.</p>\n",
+            "itemtype": "method",
+            "name": "loop",
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10471,
+            "description": "<p>Stop looping playback of the score. If it\nis currently playing, this will go into effect\nafter the current round of playback completes.</p>\n",
+            "itemtype": "method",
+            "name": "noLoop",
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10496,
+            "description": "<p>Set the tempo for all parts in the score</p>\n",
+            "itemtype": "method",
+            "name": "setBPM",
+            "params": [
+                {
+                    "name": "BPM",
+                    "description": "<p>Beats Per Minute</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Seconds from now</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Score",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10564,
+            "description": "<p>musicalTimeMode uses <a href = \"https://github.com/Tonejs/Tone.js/wiki/Time\">Tone.Time</a> convention\ntrue if string, false if number</p>\n",
+            "itemtype": "property",
+            "name": "musicalTimeMode",
+            "type": "Boolean",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10571,
+            "description": "<p>musicalTimeMode variables\nmodify these only when the interval is specified in musicalTime format as a string</p>\n",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10578,
+            "description": "<p>Set a limit to the number of loops to play. defaults to Infinity</p>\n",
+            "itemtype": "property",
+            "name": "maxIterations",
+            "type": "Number",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10587,
+            "description": "<p>Do not initiate the callback if timeFromNow is &lt; 0\nThis ususually occurs for a few milliseconds when the page\nis not fully loaded</p>\n<p>The callback should only be called until maxIterations is reached</p>\n",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10601,
+            "description": "<p>Start the loop</p>\n",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule a starting time</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10614,
+            "description": "<p>Stop the loop</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "params": [
+                {
