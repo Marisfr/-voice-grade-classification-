@@ -16088,3 +16088,963 @@ module.exports={
                 {
                     "name": "centerZ",
                     "description": "<p>z coordinate representing center of the sketch</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "upX",
+                    "description": "<p>x component of direction &#39;up&#39; from camera</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "upY",
+                    "description": "<p>y component of direction &#39;up&#39; from camera</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "upZ",
+                    "description": "<p>z component of direction &#39;up&#39; from camera</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  //move the camera away from the plane by a sin wave\n  camera(0, 0, sin(frameCount * 0.01) * 100, 0, 0, 0, 0, 1, 0);\n  plane(120, 120);\n}\n</code>\n</div>"
+            ],
+            "alt": "blue square shrinks in size grows to fill canvas. disappears then loops.",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Camera"
+        },
+        {
+            "file": "src/webgl/camera.js",
+            "line": 159,
+            "description": "<p>Sets perspective camera. When called with no arguments, the defaults\nprovided are equivalent to\nperspective(PI/3.0, width/height, cameraZ/10.0, cameraZ<em>10.0)\nwhere cameraZ is ((height/2.0) / tan(PI</em>60.0/360.0));</p>\n",
+            "itemtype": "method",
+            "name": "perspective",
+            "params": [
+                {
+                    "name": "fovy",
+                    "description": "<p>camera frustum vertical field of view,\n                          from bottom to top of view, in degrees</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "aspect",
+                    "description": "<p>camera frustum aspect ratio</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "near",
+                    "description": "<p>frustum near plane length</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "far",
+                    "description": "<p>frustum far plane length</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//drag mouse to toggle the world!\n//you will see there's a vanish point\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  var fov = 60 / 180 * PI;\n  var cameraZ = height / 2.0 / tan(fov / 2.0);\n  perspective(60 / 180 * PI, width / height, cameraZ * 0.1, cameraZ * 10);\n}\nfunction draw() {\n  background(200);\n  orbitControl();\n  for (var i = -1; i < 2; i++) {\n    for (var j = -2; j < 3; j++) {\n      push();\n      translate(i * 160, 0, j * 160);\n      box(40, 40, 40);\n      pop();\n    }\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "colored 3d boxes toggleable with mouse position",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Camera"
+        },
+        {
+            "file": "src/webgl/camera.js",
+            "line": 239,
+            "description": "<p>Setup ortho camera</p>\n",
+            "itemtype": "method",
+            "name": "ortho",
+            "params": [
+                {
+                    "name": "left",
+                    "description": "<p>camera frustum left plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "right",
+                    "description": "<p>camera frustum right plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "bottom",
+                    "description": "<p>camera frustum bottom plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "top",
+                    "description": "<p>camera frustum top plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "near",
+                    "description": "<p>camera frustum near plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "far",
+                    "description": "<p>camera frustum far plane</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\n//drag mouse to toggle the world!\n//there's no vanish point\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  ortho(-width / 2, width / 2, height / 2, -height / 2, 0, 500);\n}\nfunction draw() {\n  background(200);\n  orbitControl();\n  strokeWeight(0.1);\n  for (var i = -1; i < 2; i++) {\n    for (var j = -2; j < 3; j++) {\n      push();\n      translate(i * 160, 0, j * 160);\n      box(40, 40, 40);\n      pop();\n    }\n  }\n}\n</code>\n</div>"
+            ],
+            "alt": "3 3d boxes, reveal several more boxes on 3d plane when mouse used to toggle",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Camera"
+        },
+        {
+            "file": "src/webgl/interaction.js",
+            "line": 5,
+            "itemtype": "method",
+            "name": "orbitControl",
+            "chainable": 1,
+            "class": "p5",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/light.js",
+            "line": 12,
+            "description": "<p>Creates an ambient light with a color</p>\n",
+            "itemtype": "method",
+            "name": "ambientLight",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(0);\n  ambientLight(150);\n  ambientMaterial(250);\n  noStroke();\n  sphere(25);\n}\n</code>\n</div>"
+            ],
+            "alt": "evenly distributed light across a sphere",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Lights",
+            "overloads": [
+                {
+                    "line": 12,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value relative to\n                                the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value\n                                relative to the current color range</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 46,
+                    "params": [
+                        {
+                            "name": "value",
+                            "description": "<p>a color string</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "alpha",
+                            "description": "",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 53,
+                    "params": [
+                        {
+                            "name": "values",
+                            "description": "<p>an array containing the red,green,blue &amp;\n                                and alpha components of the color</p>\n",
+                            "type": "Number[]"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 60,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>the ambient light color</p>\n",
+                            "type": "p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/light.js",
+            "line": 93,
+            "description": "<p>Creates a directional light with a color and a direction</p>\n",
+            "itemtype": "method",
+            "name": "directionalLight",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(0);\n  //move your mouse to change light direction\n  var dirX = (mouseX / width - 0.5) * 2;\n  var dirY = (mouseY / height - 0.5) * 2;\n  directionalLight(250, 250, 250, -dirX, -dirY, 0.25);\n  ambientMaterial(250);\n  noStroke();\n  sphere(25);\n}\n</code>\n</div>"
+            ],
+            "alt": "light source on canvas changeable with mouse position",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Lights",
+            "overloads": [
+                {
+                    "line": 93,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value (depending on the current\ncolor mode),</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "position",
+                            "description": "<p>the direction of the light</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 126,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>color Array, CSS color string,\n                                            or p5.Color value</p>\n",
+                            "type": "Number[]|String|p5.Color"
+                        },
+                        {
+                            "name": "x",
+                            "description": "<p>x axis direction</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y axis direction</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>z axis direction</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 136,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "type": "Number[]|String|p5.Color"
+                        },
+                        {
+                            "name": "position",
+                            "description": "",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 143,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/light.js",
+            "line": 197,
+            "description": "<p>Creates a point light with a color and a light position</p>\n",
+            "itemtype": "method",
+            "name": "pointLight",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(0);\n  //move your mouse to change light position\n  var locX = mouseX - width / 2;\n  var locY = mouseY - height / 2;\n  // to set the light position,\n  // think of the world's coordinate as:\n  // -width/2,-height/2 -------- width/2,-height/2\n  //                |            |\n  //                |     0,0    |\n  //                |            |\n  // -width/2,height/2--------width/2,height/2\n  pointLight(250, 250, 250, locX, locY, 50);\n  ambientMaterial(250);\n  noStroke();\n  sphere(25);\n}\n</code>\n</div>"
+            ],
+            "alt": "spot light on canvas changes position with mouse",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Lights",
+            "overloads": [
+                {
+                    "line": 197,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>red or hue value (depending on the current\ncolor mode),</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "x",
+                            "description": "<p>x axis position</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "<p>y axis position</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "<p>z axis position</p>\n",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 239,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v3",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "position",
+                            "description": "<p>the position of the light</p>\n",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 248,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>color Array, CSS color string,\nor p5.Color value</p>\n",
+                            "type": "Number[]|String|p5.Color"
+                        },
+                        {
+                            "name": "x",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "y",
+                            "description": "",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "z",
+                            "description": "",
+                            "type": "Number"
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 258,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "",
+                            "type": "Number[]|String|p5.Color"
+                        },
+                        {
+                            "name": "position",
+                            "description": "",
+                            "type": "p5.Vector"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/loading.js",
+            "line": 14,
+            "description": "<p>Load a 3d model from an OBJ file.\n<br><br>\nOne of the limitations of the OBJ format is that it doesn&#39;t have a built-in\nsense of scale. This means that models exported from different programs might\nbe very different sizes. If your model isn&#39;t displaying, try calling\nloadModel() with the normalized parameter set to true. This will resize the\nmodel to a scale appropriate for p5. You can also make additional changes to\nthe final size of your model with the scale() function.</p>\n",
+            "itemtype": "method",
+            "name": "loadModel",
+            "return": {
+                "description": "the p5.Geometry object",
+                "type": "p5.Geometry"
+            },
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning teapot\nvar teapot;\n\nfunction preload() {\n  teapot = loadModel('assets/teapot.obj');\n}\n\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  model(teapot);\n}\n</code>\n</div>"
+            ],
+            "alt": "Vertically rotating 3-d teapot with red, green and blue gradient.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Models",
+            "overloads": [
+                {
+                    "line": 14,
+                    "params": [
+                        {
+                            "name": "path",
+                            "description": "<p>Path of the model to be loaded</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "normalize",
+                            "description": "<p>If true, scale the model to a\n                                     standardized size when loading</p>\n",
+                            "type": "Boolean"
+                        },
+                        {
+                            "name": "successCallback",
+                            "description": "<p>Function to be called\n                                    once the model is loaded. Will be passed\n                                    the 3D model object.</p>\n",
+                            "type": "function(p5.Geometry)",
+                            "optional": true
+                        },
+                        {
+                            "name": "failureCallback",
+                            "description": "<p>called with event error if\n                                        the image fails to load.</p>\n",
+                            "type": "Function(Event)",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "the p5.Geometry object",
+                        "type": "p5.Geometry"
+                    }
+                },
+                {
+                    "line": 61,
+                    "params": [
+                        {
+                            "name": "path",
+                            "description": "",
+                            "type": "String"
+                        },
+                        {
+                            "name": "successCallback",
+                            "description": "",
+                            "type": "function(p5.Geometry)",
+                            "optional": true
+                        },
+                        {
+                            "name": "failureCallback",
+                            "description": "",
+                            "type": "Function(Event)",
+                            "optional": true
+                        }
+                    ],
+                    "return": {
+                        "description": "the p5.Geometry object",
+                        "type": "p5.Geometry"
+                    }
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/loading.js",
+            "line": 103,
+            "description": "<p>Parse OBJ lines into model. For reference, this is what a simple model of a\nsquare might look like:</p>\n<p>v -0.5 -0.5 0.5\nv -0.5 -0.5 -0.5\nv -0.5 0.5 -0.5\nv -0.5 0.5 0.5</p>\n<p>f 4 3 2 1</p>\n",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Models"
+        },
+        {
+            "file": "src/webgl/loading.js",
+            "line": 212,
+            "description": "<p>Render a 3d model to the screen.</p>\n",
+            "itemtype": "method",
+            "name": "model",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "<p>Loaded 3d model to be rendered</p>\n",
+                    "type": "p5.Geometry"
+                }
+            ],
+            "example": [
+                "\n<div>\n<code>\n//draw a spinning teapot\nvar teapot;\n\nfunction preload() {\n  teapot = loadModel('assets/teapot.obj');\n}\n\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  model(teapot);\n}\n</code>\n</div>"
+            ],
+            "alt": "Vertically rotating 3-d teapot with red, green and blue gradient.",
+            "class": "p5",
+            "module": "Shape",
+            "submodule": "3D Models"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 14,
+            "description": "<p>Loads a custom shader from the provided vertex and fragment\nshader paths. The shader files are loaded asynchronously in the\nbackground, so this method should be used in preload().</p>\n<p>For now, there are three main types of shaders. p5 will automatically\nsupply appropriate vertices, normals, colors, and lighting attributes\nif the parameters defined in the shader match the names.</p>\n",
+            "itemtype": "method",
+            "name": "loadShader",
+            "params": [
+                {
+                    "name": "vertFilename",
+                    "description": "<p>path to file containing vertex shader\nsource code</p>\n",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "fragFilename",
+                    "description": "<p>path to file containing fragment shader\nsource code</p>\n",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "a shader object created from the provided\nvertex and fragment shader files.",
+                "type": "p5.Shader"
+            },
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 56,
+            "itemtype": "method",
+            "name": "createShader",
+            "params": [
+                {
+                    "name": "vertSrc",
+                    "description": "<p>source code for the vertex shader</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "fragSrc",
+                    "description": "<p>source code for the fragment shader</p>\n",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "a shader object created from the provided\nvertex and fragment shaders.",
+                "type": "p5.Shader"
+            },
+            "example": [
+                "\n<div modernizr='webgl'>\n<code>\n// the 'varying's are shared between both vertex & fragment shaders\nvar varying = 'precision highp float; varying vec2 vPos;';\n\n// the vertex shader is called for each vertex\nvar vs =\n  varying +\n  'attribute vec3 aPosition;' +\n  'void main() { vPos = (gl_Position = vec4(aPosition,1.0)).xy; }';\n\n// the fragment shader is called for each pixel\nvar fs =\n  varying +\n  'uniform vec2 p;' +\n  'uniform float r;' +\n  'const int I = 500;' +\n  'void main() {' +\n  '  vec2 c = p + vPos * r, z = c;' +\n  '  float n = 0.0;' +\n  '  for (int i = I; i > 0; i --) {' +\n  '    if(z.x*z.x+z.y*z.y > 4.0) {' +\n  '      n = float(i)/float(I);' +\n  '      break;' +\n  '    }' +\n  '    z = vec2(z.x*z.x-z.y*z.y, 2.0*z.x*z.y) + c;' +\n  '  }' +\n  '  gl_FragColor = vec4(0.5-cos(n*17.0)/2.0,0.5-cos(n*13.0)/2.0,0.5-cos(n*23.0)/2.0,1.0);' +\n  '}';\n\nvar mandel;\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n\n  // create and initialize the shader\n  mandel = createShader(vs, fs);\n  shader(mandel);\n  noStroke();\n\n  // 'p' is the center point of the Mandelbrot image\n  mandel.setUniform('p', [-0.74364388703, 0.13182590421]);\n}\n\nfunction draw() {\n  // 'r' is the size of the image in Mandelbrot-space\n  mandel.setUniform('r', 1.5 * exp(-6.5 * (1 + sin(millis() / 2000))));\n  quad(-1, -1, 1, -1, 1, 1, -1, 1);\n}\n</code>\n</div>"
+            ],
+            "alt": "zooming Mandelbrot set. a colorful, infinitely detailed fractal.",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 122,
+            "description": "<p>The shader() function lets the user provide a custom shader\nto fill in shapes in WEBGL mode. Users can create their\nown shaders by loading vertex and fragment shaders with\nloadShader().</p>\n",
+            "itemtype": "method",
+            "name": "shader",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "s",
+                    "description": "<p>the desired p5.Shader to use for rendering\nshapes.</p>\n",
+                    "type": "p5.Shader",
+                    "optional": true
+                }
+            ],
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 145,
+            "description": "<p>Normal material for geometry. You can view all\npossible materials in this\n<a href=\"https://p5js.org/examples/3d-materials.html\">example</a>.</p>\n",
+            "itemtype": "method",
+            "name": "normalMaterial",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(200);\n  normalMaterial();\n  sphere(50);\n}\n</code>\n</div>"
+            ],
+            "alt": "Red, green and blue gradient.",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 178,
+            "description": "<p>Texture for geometry.  You can view other possible materials in this\n<a href=\"https://p5js.org/examples/3d-materials.html\">example</a>.</p>\n",
+            "itemtype": "method",
+            "name": "texture",
+            "params": [
+                {
+                    "name": "tex",
+                    "description": "<p>2-dimensional graphics\n                   to render as texture</p>\n",
+                    "type": "p5.Image|p5.MediaElement|p5.Graphics"
+                }
+            ],
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nvar img;\nfunction preload() {\n  img = loadImage('assets/laDefense.jpg');\n}\n\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(0);\n  rotateZ(frameCount * 0.01);\n  rotateX(frameCount * 0.01);\n  rotateY(frameCount * 0.01);\n  //pass image as texture\n  texture(img);\n  box(200, 200, 200);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar pg;\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  pg = createGraphics(200, 200);\n  pg.textSize(100);\n}\n\nfunction draw() {\n  background(0);\n  pg.background(255);\n  pg.text('hello!', 0, 100);\n  //pass image as texture\n  texture(pg);\n  plane(200);\n}\n</code>\n</div>\n\n<div>\n<code>\nvar vid;\nfunction preload() {\n  vid = createVideo('assets/fingers.mov');\n  vid.hide();\n  vid.loop();\n}\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(0);\n  //pass video frame as texture\n  texture(vid);\n  plane(200);\n}\n</code>\n</div>"
+            ],
+            "alt": "Rotating view of many images umbrella and grid roof on a 3d plane\nblack canvas\nblack canvas",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material"
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 273,
+            "description": "<p>Ambient material for geometry with a given color. You can view all\npossible materials in this\n<a href=\"https://p5js.org/examples/3d-materials.html\">example</a>.</p>\n",
+            "itemtype": "method",
+            "name": "ambientMaterial",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(0);\n  ambientLight(100);\n  pointLight(250, 250, 250, 100, 100, 0);\n  ambientMaterial(250);\n  sphere(50);\n}\n</code>\n</div>"
+            ],
+            "alt": "radiating light source from top right of canvas",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material",
+            "overloads": [
+                {
+                    "line": 273,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>gray value, red or hue value\n                        (depending on the current color mode),</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "a",
+                            "description": "<p>opacity</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 304,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>color, color Array, or CSS color string</p>\n",
+                            "type": "Number[]|String|p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/material.js",
+            "line": 320,
+            "description": "<p>Specular material for geometry with a given color. You can view all\npossible materials in this\n<a href=\"https://p5js.org/examples/3d-materials.html\">example</a>.</p>\n",
+            "itemtype": "method",
+            "name": "specularMaterial",
+            "chainable": 1,
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\nfunction draw() {\n  background(0);\n  ambientLight(100);\n  pointLight(250, 250, 250, 100, 100, 0);\n  specularMaterial(250);\n  sphere(50);\n}\n</code>\n</div>"
+            ],
+            "alt": "diffused radiating light source from top right of canvas",
+            "class": "p5",
+            "module": "Lights, Camera",
+            "submodule": "Material",
+            "overloads": [
+                {
+                    "line": 320,
+                    "params": [
+                        {
+                            "name": "v1",
+                            "description": "<p>gray value, red or hue value\n                      (depending on the current color mode),</p>\n",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "v2",
+                            "description": "<p>green or saturation value</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "v3",
+                            "description": "<p>blue or brightness value</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        },
+                        {
+                            "name": "a",
+                            "description": "<p>opacity</p>\n",
+                            "type": "Number",
+                            "optional": true
+                        }
+                    ],
+                    "chainable": 1
+                },
+                {
+                    "line": 351,
+                    "params": [
+                        {
+                            "name": "color",
+                            "description": "<p>color Array, or CSS color string</p>\n",
+                            "type": "Number[]|String|p5.Color"
+                        }
+                    ],
+                    "chainable": 1
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/p5.Geometry.js",
+            "line": 54,
+            "itemtype": "method",
+            "name": "computeFaces",
+            "chainable": 1,
+            "class": "p5.Geometry",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.Geometry.js",
+            "line": 87,
+            "description": "<p>computes smooth normals per vertex as an average of each\nface.</p>\n",
+            "itemtype": "method",
+            "name": "computeNormals",
+            "chainable": 1,
+            "class": "p5.Geometry",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.Geometry.js",
+            "line": 116,
+            "description": "<p>Averages the vertex normals. Used in curved\nsurfaces</p>\n",
+            "itemtype": "method",
+            "name": "averageNormals",
+            "chainable": 1,
+            "class": "p5.Geometry",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.Geometry.js",
+            "line": 137,
+            "description": "<p>Averages pole normals.  Used in spherical primitives</p>\n",
+            "itemtype": "method",
+            "name": "averagePoleNormals",
+            "chainable": 1,
+            "class": "p5.Geometry",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.Geometry.js",
+            "line": 226,
+            "description": "<p>Modifies all vertices to be centered within the range -100 to 100.</p>\n",
+            "itemtype": "method",
+            "name": "normalize",
+            "chainable": 1,
+            "class": "p5.Geometry",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.Immediate.js",
+            "line": 1,
+            "description": "<p>Welcome to RendererGL Immediate Mode.\nImmediate mode is used for drawing custom shapes\nfrom a set of vertices.  Immediate Mode is activated\nwhen you call beginShape() &amp; de-activated when you call endShape().\nImmediate mode is a style of programming borrowed\nfrom OpenGL&#39;s (now-deprecated) immediate mode.\nIt differs from p5.js&#39; default, Retained Mode, which caches\ngeometries and buffers on the CPU to reduce the number of webgl\ndraw calls. Retained mode is more efficient &amp; performative,\nhowever, Immediate Mode is useful for sketching quick\ngeometric ideas.</p>\n",
+            "class": "p5.RendererGL",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.Immediate.js",
+            "line": 19,
+            "description": "<p>Begin shape drawing.  This is a helpful way of generating\ncustom shapes quickly.  However in WEBGL mode, application\nperformance will likely drop as a result of too many calls to\nbeginShape() / endShape().  As a high performance alternative,\nplease use p5.js geometry primitives.</p>\n",
+            "itemtype": "method",
+            "name": "beginShape",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "<p>webgl primitives mode.  beginShape supports the\n                      following modes:\n                      POINTS,LINES,LINE_STRIP,LINE_LOOP,TRIANGLES,\n                      TRIANGLE_STRIP,and TRIANGLE_FAN.</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "class": "p5.RendererGL",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.Immediate.js",
+            "line": 61,
+            "description": "<p>adds a vertex to be drawn in a custom Shape.</p>\n",
+            "itemtype": "method",
+            "name": "vertex",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "<p>x-coordinate of vertex</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "<p>y-coordinate of vertex</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "<p>z-coordinate of vertex</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "chainable": 1,
+            "todo": [
+                "implement handling of p5.Vector args"
+            ],
+            "class": "p5.RendererGL",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.Immediate.js",
+            "line": 104,
+            "description": "<p>End shape drawing and render vertices to screen.</p>\n",
+            "chainable": 1,
+            "class": "p5.RendererGL",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 79,
+            "description": "<p>model view, projection, &amp; normal\nmatrices</p>\n",
+            "class": "p5.RendererGL",
+            "module": "Lights, Camera"
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 199,
+            "description": "<p>Set attributes for the WebGL Drawing context.\nThis is a way of adjusting ways that the WebGL\nrenderer works to fine-tune the display and performance.\nThis should be put in setup().\nThe available attributes are:\n<br>\nalpha - indicates if the canvas contains an alpha buffer\ndefault is true\n<br><br>\ndepth - indicates whether the drawing buffer has a depth buffer\nof at least 16 bits - default is true\n<br><br>\nstencil - indicates whether the drawing buffer has a stencil buffer\nof at least 8 bits\n<br><br>\nantialias - indicates whether or not to perform anti-aliasing\ndefault is false\n<br><br>\npremultipliedAlpha - indicates that the page compositor will assume\nthe drawing buffer contains colors with pre-multiplied alpha\ndefault is false\n<br><br>\npreserveDrawingBuffer - if true the buffers will not be cleared and\nand will preserve their values until cleared or overwritten by author\n(note that p5 clears automatically on draw loop)\ndefault is true\n<br><br>\nperPixelLighting - if true, per-pixel lighting will be used in the\nlighting shader.\ndefault is false\n<br><br></p>\n",
+            "itemtype": "method",
+            "name": "setAttributes",
+            "example": [
+                "\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n}\n\nfunction draw() {\n  background(255);\n  push();\n  rotateZ(frameCount * 0.02);\n  rotateX(frameCount * 0.02);\n  rotateY(frameCount * 0.02);\n  fill(0, 0, 0);\n  box(50);\n  pop();\n}\n</code>\n</div>\n<br>\nNow with the antialias attribute set to true.\n<br>\n<div>\n<code>\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  setAttributes('antialias', true);\n}\n\nfunction draw() {\n  background(255);\n  push();\n  rotateZ(frameCount * 0.02);\n  rotateX(frameCount * 0.02);\n  rotateY(frameCount * 0.02);\n  fill(0, 0, 0);\n  box(50);\n  pop();\n}\n</code>\n</div>\n\n<div>\n<code>\n// press the mouse button to enable perPixelLighting\nfunction setup() {\n  createCanvas(100, 100, WEBGL);\n  noStroke();\n  fill(255);\n}\n\nvar lights = [\n  { c: '#f00', t: 1.12, p: 1.91, r: 0.2 },\n  { c: '#0f0', t: 1.21, p: 1.31, r: 0.2 },\n  { c: '#00f', t: 1.37, p: 1.57, r: 0.2 },\n  { c: '#ff0', t: 1.12, p: 1.91, r: 0.7 },\n  { c: '#0ff', t: 1.21, p: 1.31, r: 0.7 },\n  { c: '#f0f', t: 1.37, p: 1.57, r: 0.7 }\n];\n\nfunction draw() {\n  var t = millis() / 1000 + 1000;\n  background(0);\n  directionalLight(color('#222'), 1, 1, 1);\n\n  for (var i = 0; i < lights.length; i++) {\n    var light = lights[i];\n    pointLight(\n      color(light.c),\n      p5.Vector.fromAngles(t * light.t, t * light.p, width * light.r)\n    );\n  }\n\n  specularMaterial(255);\n  sphere(width * 0.1);\n\n  rotateX(t * 0.77);\n  rotateY(t * 0.83);\n  rotateZ(t * 0.91);\n  torus(width * 0.3, width * 0.07, 30, 10);\n}\n\nfunction mousePressed() {\n  setAttributes('perPixelLighting', true);\n  noStroke();\n  fill(255);\n}\nfunction mouseReleased() {\n  setAttributes('perPixelLighting', false);\n  noStroke();\n  fill(255);\n}\n</code>\n</div>"
+            ],
+            "alt": "a rotating cube with smoother edges",
+            "class": "p5",
+            "module": "Rendering",
+            "submodule": "Rendering",
+            "overloads": [
+                {
+                    "line": 199,
+                    "params": [
+                        {
+                            "name": "key",
+                            "description": "<p>Name of attribute</p>\n",
+                            "type": "String"
+                        },
+                        {
+                            "name": "value",
+                            "description": "<p>New value of named attribute</p>\n",
+                            "type": "Boolean"
+                        }
+                    ]
+                },
+                {
+                    "line": 332,
+                    "params": [
+                        {
+                            "name": "obj",
+                            "description": "<p>object with key-value pairs</p>\n",
+                            "type": "Object"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "src/webgl/p5.RendererGL.js",
+            "line": 416,
+            "description": "<p>[background description]</p>\n",
+            "class": "p5.RendererGL",
+            "module": "Rendering",
+            "submodule": "Rendering"
+        },
+        {
