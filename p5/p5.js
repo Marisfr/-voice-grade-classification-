@@ -18920,3 +18920,940 @@ module.exports={
             "line": 2909,
             "description": "<p>File name</p>\n",
             "itemtype": "property",
+            "name": "name",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2915,
+            "description": "<p>File size</p>\n",
+            "itemtype": "property",
+            "name": "size",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.dom.js",
+            "line": 2922,
+            "description": "<p>URL string containing image data.</p>\n",
+            "itemtype": "property",
+            "name": "data",
+            "class": "p5.File",
+            "module": "p5.dom",
+            "submodule": "p5.dom"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 46,
+            "description": "<p>p5.sound\n<a href=\"https://p5js.org/reference/#/libraries/p5.sound\">https://p5js.org/reference/#/libraries/p5.sound</a></p>\n<p>From the Processing Foundation and contributors\n<a href=\"https://github.com/processing/p5.js-sound/graphs/contributors\">https://github.com/processing/p5.js-sound/graphs/contributors</a></p>\n<p>MIT License (MIT)\n<a href=\"https://github.com/processing/p5.js-sound/blob/master/LICENSE\">https://github.com/processing/p5.js-sound/blob/master/LICENSE</a></p>\n<p>Some of the many audio libraries &amp; resources that inspire p5.sound:</p>\n<ul>\n<li>TONE.js (c) Yotam Mann. Licensed under The MIT License (MIT). <a href=\"https://github.com/TONEnoTONE/Tone.js\">https://github.com/TONEnoTONE/Tone.js</a></li>\n<li>buzz.js (c) Jay Salvat. Licensed under The MIT License (MIT). <a href=\"http://buzz.jaysalvat.com/\">http://buzz.jaysalvat.com/</a></li>\n<li>Boris Smus Web Audio API book, 2013. Licensed under the Apache License <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">http://www.apache.org/licenses/LICENSE-2.0</a></li>\n<li>wavesurfer.js <a href=\"https://github.com/katspaugh/wavesurfer.js\">https://github.com/katspaugh/wavesurfer.js</a></li>\n<li>Web Audio Components by Jordan Santell <a href=\"https://github.com/web-audio-components\">https://github.com/web-audio-components</a></li>\n<li><p>Wilm Thoben&#39;s Sound library for Processing <a href=\"https://github.com/processing/processing/tree/master/java/libraries/sound\">https://github.com/processing/processing/tree/master/java/libraries/sound</a></p>\n<p>Web Audio API: <a href=\"http://w3.org/TR/webaudio/\">http://w3.org/TR/webaudio/</a></p>\n</li>\n</ul>\n",
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 212,
+            "description": "<p>Returns the Audio Context for this sketch. Useful for users\nwho would like to dig deeper into the <a target='_blank' href=\n'http://webaudio.github.io/web-audio-api/'>Web Audio API\n</a>.</p>",
+            "itemtype": "method",
+            "name": "getAudioContext",
+            "return": {
+                "description": "AudioContext for this sketch",
+                "type": "Object"
+            },
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 226,
+            "description": "<p>Determine which filetypes are supported (inspired by buzz.js)\nThe audio element (el) will only be used to test browser support for various audio formats</p>\n",
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 296,
+            "description": "<p>Master contains AudioContext and the master sound output.</p>\n",
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 329,
+            "description": "<p>Returns a number representing the master amplitude (volume) for sound\nin this sketch.</p>\n",
+            "itemtype": "method",
+            "name": "getMasterVolume",
+            "return": {
+                "description": "Master amplitude (volume) for sound in this sketch.\n                 Should be between 0.0 (silence) and 1.0.",
+                "type": "Number"
+            },
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 340,
+            "description": "<p>Scale the output of all sound in this sketch</p>\nScaled between 0.0 (silence) and 1.0 (full volume).\n1.0 is the maximum amplitude of a digital sound, so multiplying\nby greater than 1.0 may cause digital distortion. To\nfade, provide a <code>rampTime</code> parameter. For more\ncomplex fades, see the Env class.\n\nAlternately, you can pass in a signal source such as an\noscillator to modulate the amplitude with an audio signal.\n\n<p><b>How This Works</b>: When you load the p5.sound module, it\ncreates a single instance of p5sound. All sound objects in this\nmodule output to p5sound before reaching your computer&#39;s output.\nSo if you change the amplitude of p5sound, it impacts all of the\nsound in this module.</p>\n\n<p>If no value is provided, returns a Web Audio API Gain Node</p>",
+            "itemtype": "method",
+            "name": "masterVolume",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>Volume (amplitude) between 0.0\n                                   and 1.0 or modulating signal/oscillator</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Fade for t seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>Schedule this event to happen at\n                               t seconds in the future</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 382,
+            "description": "<p><code>p5.soundOut</code> is the p5.sound master output. It sends output to\nthe destination of this window&#39;s web audio context. It contains\nWeb Audio API nodes including a dyanmicsCompressor (<code>.limiter</code>),\nand Gain Nodes for <code>.input</code> and <code>.output</code>.</p>\n",
+            "itemtype": "property",
+            "name": "soundOut",
+            "type": "Object",
+            "class": "p5.sound",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 407,
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 410,
+            "description": "<p>Returns a number representing the sample rate, in samples per second,\nof all sound objects in this audio context. It is determined by the\nsampling rate of your operating system&#39;s sound card, and it is not\ncurrently possile to change.\nIt is often 44100, or twice the range of human hearing.</p>\n",
+            "itemtype": "method",
+            "name": "sampleRate",
+            "return": {
+                "description": "samplerate samples per second",
+                "type": "Number"
+            },
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 423,
+            "description": "<p>Returns the closest MIDI note value for\na given frequency.</p>\n",
+            "itemtype": "method",
+            "name": "freqToMidi",
+            "params": [
+                {
+                    "name": "frequency",
+                    "description": "<p>A freqeuncy, for example, the &quot;A&quot;\n                           above Middle C is 440Hz</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "MIDI note value",
+                "type": "Number"
+            },
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 437,
+            "description": "<p>Returns the frequency value of a MIDI note value.\nGeneral MIDI treats notes as integers where middle C\nis 60, C# is 61, D is 62 etc. Useful for generating\nmusical frequencies with oscillators.</p>\n",
+            "itemtype": "method",
+            "name": "midiToFreq",
+            "params": [
+                {
+                    "name": "midiNote",
+                    "description": "<p>The number of a MIDI note</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Frequency value of the given MIDI note",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nvar notes = [60, 64, 67, 72];\nvar i = 0;\n\nfunction setup() {\n  osc = new p5.Oscillator('Triangle');\n  osc.start();\n  frameRate(1);\n}\n\nfunction draw() {\n  var freq = midiToFreq(notes[i]);\n  osc.freq(freq);\n  i++;\n  if (i >= notes.length){\n    i = 0;\n  }\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 470,
+            "description": "<p>List the SoundFile formats that you will include. LoadSound\nwill search your directory for these extensions, and will pick\na format that is compatable with the client&#39;s web browser.\n<a href=\"http://media.io/\">Here</a> is a free online file\nconverter.</p>\n",
+            "itemtype": "method",
+            "name": "soundFormats",
+            "params": [
+                {
+                    "name": "formats",
+                    "description": "<p>i.e. &#39;mp3&#39;, &#39;wav&#39;, &#39;ogg&#39;</p>\n",
+                    "type": "String",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nfunction preload() {\n  // set the global sound formats\n  soundFormats('mp3', 'ogg');\n\n  // load either beatbox.mp3, or .ogg, depending on browser\n  mySound = loadSound('assets/beatbox.mp3');\n}\n\nfunction setup() {\n  mySound.play();\n}\n</code></div>"
+            ],
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 583,
+            "description": "<p>Used by Osc and Env to chain signal math</p>\n",
+            "class": "p5",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 855,
+            "description": "<p>loadSound() returns a new p5.SoundFile from a specified\npath. If called during preload(), the p5.SoundFile will be ready\nto play in time for setup() and draw(). If called outside of\npreload, the p5.SoundFile will not be ready immediately, so\nloadSound accepts a callback as the second parameter. Using a\n<a href=\"https://github.com/processing/p5.js/wiki/Local-server\">\nlocal server</a> is recommended when loading external files.</p>\n",
+            "itemtype": "method",
+            "name": "loadSound",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>Path to the sound file, or an array with\n                                  paths to soundfiles in multiple formats\n                                  i.e. [&#39;sound.ogg&#39;, &#39;sound.mp3&#39;].\n                                  Alternately, accepts an object: either\n                                  from the HTML5 File API, or a p5.File.</p>\n",
+                    "type": "String|Array"
+                },
+                {
+                    "name": "successCallback",
+                    "description": "<p>Name of a function to call once file loads</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "errorCallback",
+                    "description": "<p>Name of a function to call if there is\n                                    an error loading the file.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "whileLoading",
+                    "description": "<p>Name of a function to call while file is loading.\n                               This function will receive the percentage loaded\n                               so far, from 0.0 to 1.0.</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns a p5.SoundFile",
+                "type": "SoundFile"
+            },
+            "example": [
+                "\n<div><code>\nfunction preload() {\n mySound = loadSound('assets/doorbell.mp3');\n}\n\nfunction setup() {\n  mySound.setVolume(0.1);\n  mySound.play();\n}\n</code></div>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 995,
+            "description": "<p>Returns true if the sound file finished loading successfully.</p>\n",
+            "itemtype": "method",
+            "name": "isLoaded",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1008,
+            "description": "<p>Play the p5.SoundFile</p>\n",
+            "itemtype": "method",
+            "name": "play",
+            "params": [
+                {
+                    "name": "startTime",
+                    "description": "<p>(optional) schedule playback to start (in seconds from now).</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "rate",
+                    "description": "<p>(optional) playback rate</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "amp",
+                    "description": "<p>(optional) amplitude (volume)\n                                    of playback</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "cueStart",
+                    "description": "<p>(optional) cue start time in seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "duration",
+                    "description": "<p>(optional) duration of playback in seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1109,
+            "description": "<p>p5.SoundFile has two play modes: <code>restart</code> and\n<code>sustain</code>. Play Mode determines what happens to a\np5.SoundFile if it is triggered while in the middle of playback.\nIn sustain mode, playback will continue simultaneous to the\nnew playback. In restart mode, play() will stop playback\nand start over. With untilDone, a sound will play only if it&#39;s\nnot already playing. Sustain is the default mode.</p>\n",
+            "itemtype": "method",
+            "name": "playMode",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "<p>&#39;restart&#39; or &#39;sustain&#39; or &#39;untilDone&#39;</p>\n",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                "\n<div><code>\nfunction setup(){\n  mySound = loadSound('assets/Damscray_DancingTiger.mp3');\n}\nfunction mouseClicked() {\n  mySound.playMode('sustain');\n  mySound.play();\n}\nfunction keyPressed() {\n  mySound.playMode('restart');\n  mySound.play();\n}\n\n </code></div>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1152,
+            "description": "<p>Pauses a file that is currently playing. If the file is not\nplaying, then nothing will happen.</p>\n<p>After pausing, .play() will resume from the paused\nposition.\nIf p5.SoundFile had been set to loop before it was paused,\nit will continue to loop after it is unpaused with .play().</p>\n",
+            "itemtype": "method",
+            "name": "pause",
+            "params": [
+                {
+                    "name": "startTime",
+                    "description": "<p>(optional) schedule event to occur\n                             seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar soundFile;\n\nfunction preload() {\n  soundFormats('ogg', 'mp3');\n  soundFile = loadSound('assets/Damscray_02.mp3');\n}\nfunction setup() {\n  background(0, 255, 0);\n  soundFile.setVolume(0.1);\n  soundFile.loop();\n}\nfunction keyTyped() {\n  if (key == 'p') {\n    soundFile.pause();\n    background(255, 0, 0);\n  }\n}\n\nfunction keyReleased() {\n  if (key == 'p') {\n    soundFile.play();\n    background(0, 255, 0);\n  }\n}\n</code>\n</div>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1208,
+            "description": "<p>Loop the p5.SoundFile. Accepts optional parameters to set the\nplayback rate, playback volume, loopStart, loopEnd.</p>\n",
+            "itemtype": "method",
+            "name": "loop",
+            "params": [
+                {
+                    "name": "startTime",
+                    "description": "<p>(optional) schedule event to occur\n                            seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "rate",
+                    "description": "<p>(optional) playback rate</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "amp",
+                    "description": "<p>(optional) playback volume</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "cueLoopStart",
+                    "description": "<p>(optional) startTime in seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "duration",
+                    "description": "<p>(optional) loop duration in seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1224,
+            "description": "<p>Set a p5.SoundFile&#39;s looping flag to true or false. If the sound\nis currently playing, this change will take effect when it\nreaches the end of the current playback.</p>\n",
+            "itemtype": "method",
+            "name": "setLoop",
+            "params": [
+                {
+                    "name": "Boolean",
+                    "description": "<p>set looping to true or false</p>\n",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1245,
+            "description": "<p>Returns &#39;true&#39; if a p5.SoundFile is currently looping and playing, &#39;false&#39; if not.</p>\n",
+            "itemtype": "method",
+            "name": "isLooping",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1260,
+            "description": "<p>Returns true if a p5.SoundFile is playing, false if not (i.e.\npaused or stopped).</p>\n",
+            "itemtype": "method",
+            "name": "isPlaying",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1270,
+            "description": "<p>Returns true if a p5.SoundFile is paused, false if not (i.e.\nplaying or stopped).</p>\n",
+            "itemtype": "method",
+            "name": "isPaused",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1280,
+            "description": "<p>Stop soundfile playback.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "params": [
+                {
+                    "name": "startTime",
+                    "description": "<p>(optional) schedule event to occur\n                            in seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1326,
+            "description": "<p>Multiply the output volume (amplitude) of a sound file\nbetween 0.0 (silence) and 1.0 (full volume).\n1.0 is the maximum amplitude of a digital sound, so multiplying\nby greater than 1.0 may cause digital distortion. To\nfade, provide a <code>rampTime</code> parameter. For more\ncomplex fades, see the Env class.</p>\n<p>Alternately, you can pass in a signal source such as an\noscillator to modulate the amplitude with an audio signal.</p>\n",
+            "itemtype": "method",
+            "name": "setVolume",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>Volume (amplitude) between 0.0\n                                   and 1.0 or modulating signal/oscillator</p>\n",
+                    "type": "Number|Object"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Fade for t seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>Schedule this event to happen at\n                               t seconds in the future</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1367,
+            "description": "<p>Set the stereo panning of a p5.sound object to\na floating point number between -1.0 (left) and 1.0 (right).\nDefault is 0.0 (center).</p>\n",
+            "itemtype": "method",
+            "name": "pan",
+            "params": [
+                {
+                    "name": "panValue",
+                    "description": "<p>Set the stereo panner</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                                seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\n\n var ball = {};\n var soundFile;\n\n function setup() {\n   soundFormats('ogg', 'mp3');\n   soundFile = loadSound('assets/beatbox.mp3');\n }\n\n function draw() {\n   background(0);\n   ball.x = constrain(mouseX, 0, width);\n   ellipse(ball.x, height/2, 20, 20)\n }\n\n function mousePressed(){\n   // map the ball's x location to a panning degree\n   // between -1.0 (left) and 1.0 (right)\n   var panning = map(ball.x, 0., width,-1.0, 1.0);\n   soundFile.pan(panning);\n   soundFile.play();\n }\n </div></code>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1406,
+            "description": "<p>Returns the current stereo pan position (-1.0 to 1.0)</p>\n",
+            "itemtype": "method",
+            "name": "getPan",
+            "return": {
+                "description": "Returns the stereo pan setting of the Oscillator\n                         as a number between -1.0 (left) and 1.0 (right).\n                         0.0 is center and default.",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1417,
+            "description": "<p>Set the playback rate of a sound file. Will change the speed and the pitch.\nValues less than zero will reverse the audio buffer.</p>\n",
+            "itemtype": "method",
+            "name": "rate",
+            "params": [
+                {
+                    "name": "playbackRate",
+                    "description": "<p>Set the playback rate. 1.0 is normal,\n                                   .5 is half-speed, 2.0 is twice as fast.\n                                   Values less than zero play backwards.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar song;\n\nfunction preload() {\n  song = loadSound('assets/Damscray_DancingTiger.mp3');\n}\n\nfunction setup() {\n  song.loop();\n}\n\nfunction draw() {\n  background(200);\n\n  // Set the rate to a range between 0.1 and 4\n  // Changing the rate also alters the pitch\n  var speed = map(mouseY, 0.1, height, 0, 2);\n  speed = constrain(speed, 0.01, 4);\n  song.rate(speed);\n\n  // Draw a circle to show what is going on\n  stroke(0);\n  fill(51, 100);\n  ellipse(mouseX, 100, 48, 48);\n}\n\n </code>\n </div>\n"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1490,
+            "description": "<p>Returns the duration of a sound file in seconds.</p>\n",
+            "itemtype": "method",
+            "name": "duration",
+            "return": {
+                "description": "The duration of the soundFile in seconds.",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1504,
+            "description": "<p>Return the current position of the p5.SoundFile playhead, in seconds.\nTime is relative to the normal buffer direction, so if <code>reverseBuffer</code>\nhas been called, currentTime will count backwards.</p>\n",
+            "itemtype": "method",
+            "name": "currentTime",
+            "return": {
+                "description": "currentTime of the soundFile in seconds.",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1515,
+            "description": "<p>Move the playhead of the song to a position, in seconds. Start timing\nand playback duration. If none are given, will reset the file to play\nentire duration from start to finish.</p>\n",
+            "itemtype": "method",
+            "name": "jump",
+            "params": [
+                {
+                    "name": "cueTime",
+                    "description": "<p>cueTime of the soundFile in seconds.</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "duration",
+                    "description": "<p>duration in seconds.</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1538,
+            "description": "<p>Return the number of channels in a sound file.\nFor example, Mono = 1, Stereo = 2.</p>\n",
+            "itemtype": "method",
+            "name": "channels",
+            "return": {
+                "description": "[channels]",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1548,
+            "description": "<p>Return the sample rate of the sound file.</p>\n",
+            "itemtype": "method",
+            "name": "sampleRate",
+            "return": {
+                "description": "[sampleRate]",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1557,
+            "description": "<p>Return the number of samples in a sound file.\nEqual to sampleRate * duration.</p>\n",
+            "itemtype": "method",
+            "name": "frames",
+            "return": {
+                "description": "[sampleCount]",
+                "type": "Number"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1567,
+            "description": "<p>Returns an array of amplitude peaks in a p5.SoundFile that can be\nused to draw a static waveform. Scans through the p5.SoundFile&#39;s\naudio buffer to find the greatest amplitudes. Accepts one\nparameter, &#39;length&#39;, which determines size of the array.\nLarger arrays result in more precise waveform visualizations.</p>\n<p>Inspired by Wavesurfer.js.</p>\n",
+            "itemtype": "method",
+            "name": "getPeaks",
+            "params": [
+                {
+                    "name": "length",
+                    "description": "<p>length is the size of the returned array.\n                         Larger length results in more precision.\n                         Defaults to 5*width of the browser window.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of peaks.",
+                "type": "Float32Array"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1619,
+            "description": "<p>Reverses the p5.SoundFile&#39;s buffer source.\nPlayback must be handled separately (see example).</p>\n",
+            "itemtype": "method",
+            "name": "reverseBuffer",
+            "example": [
+                "\n<div><code>\nvar drum;\n\nfunction preload() {\n  drum = loadSound('assets/drum.mp3');\n}\n\nfunction setup() {\n  drum.reverseBuffer();\n  drum.play();\n}\n\n </code>\n </div>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1659,
+            "description": "<p>Schedule an event to be called when the soundfile\nreaches the end of a buffer. If the soundfile is\nplaying through once, this will be called when it\nends. If it is looping, it will be called when\nstop is called.</p>\n",
+            "itemtype": "method",
+            "name": "onended",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>function to call when the\n                            soundfile has ended.</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1712,
+            "description": "<p>Connects the output of a p5sound object to input of another\np5.sound object. For example, you may connect a p5.SoundFile to an\nFFT or an Effect. If no parameter is given, it will connect to\nthe master output. Most p5sound objects connect to the master\noutput when they are created.</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "<p>Audio object that accepts an input</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1733,
+            "description": "<p>Disconnects the output of this p5sound object.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1741,
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1746,
+            "description": "<p>Reset the source for this SoundFile to a\nnew path (URL).</p>\n",
+            "itemtype": "method",
+            "name": "setPath",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "<p>path to audio file</p>\n",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>Callback</p>\n",
+                    "type": "Function"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1759,
+            "description": "<p>Replace the current Audio Buffer with a new Buffer.</p>\n",
+            "itemtype": "method",
+            "name": "setBuffer",
+            "params": [
+                {
+                    "name": "buf",
+                    "description": "<p>Array of Float32 Array(s). 2 Float32 Arrays\n                   will create a stereo source. 1 will create\n                   a mono source.</p>\n",
+                    "type": "Array"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 1831,
+            "description": "<p>processPeaks returns an array of timestamps where it thinks there is a beat.</p>\n<p>This is an asynchronous function that processes the soundfile in an offline audio context,\nand sends the results to your callback function.</p>\n<p>The process involves running the soundfile through a lowpass filter, and finding all of the\npeaks above the initial threshold. If the total number of peaks are below the minimum number of peaks,\nit decreases the threshold and re-runs the analysis until either minPeaks or minThreshold are reached.</p>\n",
+            "itemtype": "method",
+            "name": "processPeaks",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>a function to call once this data is returned</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "initThreshold",
+                    "description": "<p>initial threshold defaults to 0.9</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "minThreshold",
+                    "description": "<p>minimum threshold defaults to 0.22</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "minPeaks",
+                    "description": "<p>minimum number of peaks defaults to 200</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Array of timestamped peaks",
+                "type": "Array"
+            },
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2022,
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2031,
+            "description": "<p>Schedule events to trigger every time a MediaElement\n(audio/video) reaches a playback cue point.</p>\n<p>Accepts a callback function, a time (in seconds) at which to trigger\nthe callback, and an optional parameter for the callback.</p>\n<p>Time will be passed as the first parameter to the callback function,\nand param will be the second parameter.</p>\n",
+            "itemtype": "method",
+            "name": "addCue",
+            "params": [
+                {
+                    "name": "time",
+                    "description": "<p>Time in seconds, relative to this media\n                           element&#39;s playback. For example, to trigger\n                           an event every time playback reaches two\n                           seconds, pass in the number 2. This will be\n                           passed as the first parameter to\n                           the callback function.</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>Name of a function that will be\n                           called at the given time. The callback will\n                           receive time and (optionally) param as its\n                           two parameters.</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "value",
+                    "description": "<p>An object to be passed as the\n                           second parameter to the\n                           callback function.</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "id ID of this cue,\n                    useful for removeCue(id)",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction setup() {\n  background(0);\n  noStroke();\n  fill(255);\n  textAlign(CENTER);\n  text('click to play', width/2, height/2);\n\n  mySound = loadSound('assets/beat.mp3');\n\n  // schedule calls to changeText\n  mySound.addCue(0.50, changeText, \"hello\" );\n  mySound.addCue(1.00, changeText, \"p5\" );\n  mySound.addCue(1.50, changeText, \"what\" );\n  mySound.addCue(2.00, changeText, \"do\" );\n  mySound.addCue(2.50, changeText, \"you\" );\n  mySound.addCue(3.00, changeText, \"want\" );\n  mySound.addCue(4.00, changeText, \"to\" );\n  mySound.addCue(5.00, changeText, \"make\" );\n  mySound.addCue(6.00, changeText, \"?\" );\n}\n\nfunction changeText(val) {\n  background(0);\n  text(val, width/2, height/2);\n}\n\nfunction mouseClicked() {\n  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {\n    if (mySound.isPlaying() ) {\n      mySound.stop();\n    } else {\n      mySound.play();\n    }\n  }\n}\n</code></div>"
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2106,
+            "description": "<p>Remove a callback based on its ID. The ID is returned by the\naddCue method.</p>\n",
+            "itemtype": "method",
+            "name": "removeCue",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "<p>ID of the cue, as returned by addCue</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2124,
+            "description": "<p>Remove all of the callbacks that had originally been scheduled\nvia the addCue method.</p>\n",
+            "itemtype": "method",
+            "name": "clearCues",
+            "class": "p5.SoundFile",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2232,
+            "description": "<p>Connects to the p5sound instance (master output) by default.\nOptionally, you can pass in a specific source (i.e. a soundfile).</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "snd",
+                    "description": "<p>set the sound source\n                                     (optional, defaults to\n                                     master output)</p>\n",
+                    "type": "SoundObject|undefined",
+                    "optional": true
+                },
+                {
+                    "name": "smoothing",
+                    "description": "<p>a range between 0.0 and 1.0\n                                      to smooth amplitude readings</p>\n",
+                    "type": "Number|undefined",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nfunction preload(){\n  sound1 = loadSound('assets/beat.mp3');\n  sound2 = loadSound('assets/drum.mp3');\n}\nfunction setup(){\n  amplitude = new p5.Amplitude();\n  sound1.play();\n  sound2.play();\n  amplitude.setInput(sound2);\n}\nfunction draw() {\n  background(0);\n  fill(255);\n  var level = amplitude.getLevel();\n  var size = map(level, 0, 1, 0, 200);\n  ellipse(width/2, height/2, size, size);\n}\nfunction mouseClicked(){\n  sound1.stop();\n  sound2.stop();\n}\n</code></div>"
+            ],
+            "class": "p5.Amplitude",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 2337,
+            "description": "<p>Returns a single Amplitude reading at the moment it is called.\nFor continuous readings, run in the draw loop.</p>\n",
+            "itemtype": "method",
+            "name": "getLevel",
+            "params": [
+                {
+                    "name": "channel",
+                    "description": "<p>Optionally return only channel 0 (left) or 1 (right)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Amplitude as a number between 0.0 and 1.0",
+                "type": "Number"
+            },
+            "example": [
+                "\n<div><code>\nfunction preload(){\n  sound = loadSound('assets/beat.mp3');\n}\nfunction setup() {\n  amplitude = new p5.Amplitude();\n  sound.play();\n}\nfunction draw() {\n  background(0);\n  fill(255);\n  var level = amplitude.getLevel();\n  var size = map(level, 0, 1, 0, 200);\n  ellipse(width/2, height/2, size, size);\n}\nfunction mouseClicked(){\n  sound.stop();\n}\n</code></div>"
+            ],
+            "class": "p5.Amplitude",
