@@ -22804,3 +22804,989 @@ module.exports={
             "name": "stop",
             "params": [
                 {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule a stopping time</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10627,
+            "description": "<p>Pause the loop</p>\n",
+            "itemtype": "method",
+            "name": "pause",
+            "params": [
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule a pausing time</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10639,
+            "description": "<p>Synchronize loops. Use this method to start two more more loops in synchronization\nor to start a loop in synchronization with a loop that is already playing\nThis method will schedule the implicit loop in sync with the explicit master loop\ni.e. loopToStart.syncedStart(loopToSyncWith)</p>\n",
+            "itemtype": "method",
+            "name": "syncedStart",
+            "params": [
+                {
+                    "name": "otherLoop",
+                    "description": "<p>a p5.SoundLoop to sync with</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>Start the loops in sync after timeFromNow seconds</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10720,
+            "description": "<p>Getters and Setters, setting any paramter will result in a change in the clock&#39;s\nfrequency, that will be reflected after the next callback\nbeats per minute (defaults to 60)</p>\n",
+            "itemtype": "property",
+            "name": "bpm",
+            "type": "Number",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10738,
+            "description": "<p>number of quarter notes in a measure (defaults to 4)</p>\n",
+            "itemtype": "property",
+            "name": "timeSignature",
+            "type": "Number",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10754,
+            "description": "<p>length of the loops interval</p>\n",
+            "itemtype": "property",
+            "name": "interval",
+            "type": "Number|String",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10768,
+            "description": "<p>how many times the callback has been called so far</p>\n",
+            "itemtype": "property",
+            "name": "iterations",
+            "type": "Number",
+            "readonly": "",
+            "class": "p5.SoundLoop",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10809,
+            "description": "<p>The p5.Compressor is built with a <a href=\"https://www.w3.org/TR/webaudio/#the-dynamicscompressornode-interface\"\n  target=\"_blank\" title=\"W3 spec for Dynamics Compressor Node\">Web Audio Dynamics Compressor Node\n  </a></p>\n",
+            "itemtype": "property",
+            "name": "compressor",
+            "type": "AudioNode",
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10820,
+            "description": "<p>Performs the same function as .connect, but also accepts\noptional parameters to set compressor&#39;s audioParams</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>Sound source to be connected</p>\n",
+                    "type": "Object"
+                },
+                {
+                    "name": "attack",
+                    "description": "<p>The amount of time (in seconds) to reduce the gain by 10dB,\n                           default = .003, range 0 - 1</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "knee",
+                    "description": "<p>A decibel value representing the range above the\n                           threshold where the curve smoothly transitions to the &quot;ratio&quot; portion.\n                           default = 30, range 0 - 40</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "ratio",
+                    "description": "<p>The amount of dB change in input for a 1 dB change in output\n                           default = 12, range 1 - 20</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "threshold",
+                    "description": "<p>The decibel value above which the compression will start taking effect\n                           default = -24, range -100 - 0</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "release",
+                    "description": "<p>The amount of time (in seconds) to increase the gain by 10dB\n                           default = .25, range 0 - 1</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10843,
+            "description": "<p>Set the paramters of a compressor.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "attack",
+                    "description": "<p>The amount of time (in seconds) to reduce the gain by 10dB,\n                           default = .003, range 0 - 1</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "knee",
+                    "description": "<p>A decibel value representing the range above the\n                           threshold where the curve smoothly transitions to the &quot;ratio&quot; portion.\n                           default = 30, range 0 - 40</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "ratio",
+                    "description": "<p>The amount of dB change in input for a 1 dB change in output\n                           default = 12, range 1 - 20</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "threshold",
+                    "description": "<p>The decibel value above which the compression will start taking effect\n                           default = -24, range -100 - 0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "release",
+                    "description": "<p>The amount of time (in seconds) to increase the gain by 10dB\n                           default = .25, range 0 - 1</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10875,
+            "description": "<p>Get current attack or set value w/ time ramp</p>\n",
+            "itemtype": "method",
+            "name": "attack",
+            "params": [
+                {
+                    "name": "attack",
+                    "description": "<p>Attack is the amount of time (in seconds) to reduce the gain by 10dB,\n                         default = .003, range 0 - 1</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "time",
+                    "description": "<p>Assign time value to schedule the change in value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10895,
+            "description": "<p>Get current knee or set value w/ time ramp</p>\n",
+            "itemtype": "method",
+            "name": "knee",
+            "params": [
+                {
+                    "name": "knee",
+                    "description": "<p>A decibel value representing the range above the\n                       threshold where the curve smoothly transitions to the &quot;ratio&quot; portion.\n                       default = 30, range 0 - 40</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "time",
+                    "description": "<p>Assign time value to schedule the change in value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10915,
+            "description": "<p>Get current ratio or set value w/ time ramp</p>\n",
+            "itemtype": "method",
+            "name": "ratio",
+            "params": [
+                {
+                    "name": "ratio",
+                    "description": "<p>The amount of dB change in input for a 1 dB change in output\n                           default = 12, range 1 - 20</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "time",
+                    "description": "<p>Assign time value to schedule the change in value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10934,
+            "description": "<p>Get current threshold or set value w/ time ramp</p>\n",
+            "itemtype": "method",
+            "name": "threshold",
+            "params": [
+                {
+                    "name": "threshold",
+                    "description": "<p>The decibel value above which the compression will start taking effect\n                           default = -24, range -100 - 0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "time",
+                    "description": "<p>Assign time value to schedule the change in value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10953,
+            "description": "<p>Get current release or set value w/ time ramp</p>\n",
+            "itemtype": "method",
+            "name": "release",
+            "params": [
+                {
+                    "name": "release",
+                    "description": "<p>The amount of time (in seconds) to increase the gain by 10dB\n                           default = .25, range 0 - 1</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "time",
+                    "description": "<p>Assign time value to schedule the change in value</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 10973,
+            "description": "<p>Return the current reduction value</p>\n",
+            "itemtype": "method",
+            "name": "reduction",
+            "return": {
+                "description": "Value of the amount of gain reduction that is applied to the signal",
+                "type": "Number"
+            },
+            "class": "p5.Compressor",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11085,
+            "description": "<p>Connect a specific device to the p5.SoundRecorder.\nIf no parameter is given, p5.SoundRecorer will record\nall audible p5.sound from your sketch.</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>p5.sound object or a web audio unit\n                       that outputs sound</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundRecorder",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11106,
+            "description": "<p>Start recording. To access the recording, provide\na p5.SoundFile as the first parameter. The p5.SoundRecorder\nwill send its recording to that p5.SoundFile for playback once\nrecording is complete. Optional parameters include duration\n(in seconds) of the recording, and a callback function that\nwill be called once the complete recording has been\ntransfered to the p5.SoundFile.</p>\n",
+            "itemtype": "method",
+            "name": "record",
+            "params": [
+                {
+                    "name": "soundFile",
+                    "description": "<p>p5.SoundFile</p>\n",
+                    "type": "p5.SoundFile"
+                },
+                {
+                    "name": "duration",
+                    "description": "<p>Time (in seconds)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "<p>The name of a function that will be\n                              called once the recording completes</p>\n",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "class": "p5.SoundRecorder",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11139,
+            "description": "<p>Stop the recording. Once the recording is stopped,\nthe results will be sent to the p5.SoundFile that\nwas given on .record(), and if a callback function\nwas provided on record, that function will be called.</p>\n",
+            "itemtype": "method",
+            "name": "stop",
+            "class": "p5.SoundRecorder",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11212,
+            "description": "<p>Save a p5.SoundFile as a .wav audio file.</p>\n",
+            "itemtype": "method",
+            "name": "saveSound",
+            "params": [
+                {
+                    "name": "soundFile",
+                    "description": "<p>p5.SoundFile that you wish to save</p>\n",
+                    "type": "p5.SoundFile"
+                },
+                {
+                    "name": "name",
+                    "description": "<p>name of the resulting .wav file.</p>\n",
+                    "type": "String"
+                }
+            ],
+            "class": "p5.SoundRecorder",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11388,
+            "description": "<p>isDetected is set to true when a peak is detected.</p>\n",
+            "itemtype": "attribute",
+            "name": "isDetected",
+            "type": "Boolean",
+            "default": "false",
+            "class": "p5.PeakDetect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11401,
+            "description": "<p>The update method is run in the draw loop.</p>\n<p>Accepts an FFT object. You must call .analyze()\non the FFT object prior to updating the peakDetect\nbecause it relies on a completed FFT analysis.</p>\n",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "fftObject",
+                    "description": "<p>A p5.FFT object</p>\n",
+                    "type": "p5.FFT"
+                }
+            ],
+            "class": "p5.PeakDetect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11432,
+            "description": "<p>onPeak accepts two arguments: a function to call when\na peak is detected. The value of the peak,\nbetween 0.0 and 1.0, is passed to the callback.</p>\n",
+            "itemtype": "method",
+            "name": "onPeak",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "<p>Name of a function that will\n                            be called when a peak is\n                            detected.</p>\n",
+                    "type": "Function"
+                },
+                {
+                    "name": "val",
+                    "description": "<p>Optional value to pass\n                            into the function when\n                            a peak is detected.</p>\n",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n<div><code>\nvar cnv, soundFile, fft, peakDetect;\nvar ellipseWidth = 0;\n\nfunction setup() {\n  cnv = createCanvas(100,100);\n  textAlign(CENTER);\n\n  soundFile = loadSound('assets/beat.mp3');\n  fft = new p5.FFT();\n  peakDetect = new p5.PeakDetect();\n\n  setupSound();\n\n  // when a beat is detected, call triggerBeat()\n  peakDetect.onPeak(triggerBeat);\n}\n\nfunction draw() {\n  background(0);\n  fill(255);\n  text('click to play', width/2, height/2);\n\n  fft.analyze();\n  peakDetect.update(fft);\n\n  ellipseWidth *= 0.95;\n  ellipse(width/2, height/2, ellipseWidth, ellipseWidth);\n}\n\n// this function is called by peakDetect.onPeak\nfunction triggerBeat() {\n  ellipseWidth = 50;\n}\n\n// mouseclick starts/stops sound\nfunction setupSound() {\n  cnv.mouseClicked( function() {\n    if (soundFile.isPlaying() ) {\n      soundFile.stop();\n    } else {\n      soundFile.play();\n    }\n  });\n}\n</code></div>"
+            ],
+            "class": "p5.PeakDetect",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11578,
+            "description": "<p>Connect a source to the gain node.</p>\n",
+            "itemtype": "method",
+            "name": "setInput",
+            "params": [
+                {
+                    "name": "src",
+                    "description": "<p>p5.sound / Web Audio object with a sound\n                         output.</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Gain",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11588,
+            "description": "<p>Send output to a p5.sound or web audio object</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.Gain",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11598,
+            "description": "<p>Disconnect all output.</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.Gain",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11606,
+            "description": "<p>Set the output level of the gain node.</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "volume",
+                    "description": "<p>amplitude between 0 and 1.0</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>create a fade that lasts rampTime</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "timeFromNow",
+                    "description": "<p>schedule this event to happen\n                              seconds from now</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.Gain",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11684,
+            "description": "<p>Connect to p5 objects or Web Audio Nodes</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.AudioVoice",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11693,
+            "description": "<p>Disconnect from soundOut</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.AudioVoice",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11761,
+            "description": "<p>Play tells the MonoSynth to start playing a note. This method schedules\nthe calling of .triggerAttack and .triggerRelease.</p>\n",
+            "itemtype": "method",
+            "name": "play",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>the note you want to play, specified as a\n                               frequency in Hertz (Number) or as a midi\n                               value in Note/Octave format (&quot;C4&quot;, &quot;Eb3&quot;...etc&quot;)\n                               See <a href = \"https://github.com/Tonejs/Tone.js/wiki/Instruments\">\n                               Tone</a>. Defaults to 440 hz.</p>\n",
+                    "type": "String | Number"
+                },
+                {
+                    "name": "velocity",
+                    "description": "<p>velocity of the note to play (ranging from 0 to 1)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time from now (in seconds) at which to play</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "sustainTime",
+                    "description": "<p>time to sustain before releasing the envelope</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11783,
+            "description": "<p>Trigger the Attack, and Decay portion of the Envelope.\nSimilar to holding down a key on a piano, but it will\nhold the sustain level until you let go.</p>\n",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>the note you want to play, specified as a\n                               frequency in Hertz (Number) or as a midi\n                               value in Note/Octave format (&quot;C4&quot;, &quot;Eb3&quot;...etc&quot;)\n                               See <a href = \"https://github.com/Tonejs/Tone.js/wiki/Instruments\">\n                               Tone</a>. Defaults to 440 hz</p>\n",
+                    "type": "String | Number"
+                },
+                {
+                    "name": "velocity",
+                    "description": "<p>velocity of the note to play (ranging from 0 to 1)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time from now (in seconds) at which to play</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "itemtype": "method",
+            "name": "triggerAttack",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11806,
+            "description": "<p>Trigger the release of the Envelope. This is similar to releasing\nthe key on a piano and letting the sound fade according to the\nrelease level and release time.</p>\n",
+            "params": [
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time to trigger the release</p>\n",
+                    "type": "Number"
+                }
+            ],
+            "itemtype": "method",
+            "name": "triggerRelease",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11819,
+            "description": "<p>Set values like a traditional\n<a href=\"https://en.wikipedia.org/wiki/Synthesizer#/media/File:ADSR_parameter.svg\">\nADSR envelope\n</a>.</p>\n",
+            "itemtype": "method",
+            "name": "setADSR",
+            "params": [
+                {
+                    "name": "attackTime",
+                    "description": "<p>Time (in seconds before envelope\n                              reaches Attack Level</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "decayTime",
+                    "description": "<p>Time (in seconds) before envelope\n                              reaches Decay/Sustain Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "susRatio",
+                    "description": "<p>Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,\n                              where 1.0 = attackLevel, 0.0 = releaseLevel.\n                              The susRatio determines the decayLevel and the level at which the\n                              sustain portion of the envelope will sustain.\n                              For example, if attackLevel is 0.4, releaseLevel is 0,\n                              and susAmt is 0.5, the decayLevel would be 0.2. If attackLevel is\n                              increased to 1.0 (using <code>setRange</code>),\n                              then decayLevel would increase proportionally, to become 0.5.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "releaseTime",
+                    "description": "<p>Time in seconds from now (defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11843,
+            "description": "<p>Getters and Setters</p>\n",
+            "itemtype": "property",
+            "name": "attack",
+            "type": "Number",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11847,
+            "itemtype": "property",
+            "name": "decay",
+            "type": "Number",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11850,
+            "itemtype": "property",
+            "name": "sustain",
+            "type": "Number",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11853,
+            "itemtype": "property",
+            "name": "release",
+            "type": "Number",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11890,
+            "description": "<p>MonoSynth amp</p>\n",
+            "itemtype": "method",
+            "name": "amp",
+            "params": [
+                {
+                    "name": "vol",
+                    "description": "<p>desired volume</p>\n",
+                    "type": "Number"
+                },
+                {
+                    "name": "rampTime",
+                    "description": "<p>Time to reach new volume</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "new volume value",
+                "type": "Number"
+            },
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11904,
+            "description": "<p>Connect to a p5.sound / Web Audio object.</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>A p5.sound or Web Audio object</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11914,
+            "description": "<p>Disconnect all outputs</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11922,
+            "description": "<p>Get rid of the MonoSynth and free up its resources / memory.</p>\n",
+            "itemtype": "method",
+            "name": "dispose",
+            "class": "p5.MonoSynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11974,
+            "description": "<p>An object that holds information about which notes have been played and\nwhich notes are currently being played. New notes are added as keys\non the fly. While a note has been attacked, but not released, the value of the\nkey is the audiovoice which is generating that note. When notes are released,\nthe value of the key becomes undefined.</p>\n",
+            "itemtype": "property",
+            "name": "notes",
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11986,
+            "description": "<p>A PolySynth must have at least 1 voice, defaults to 8</p>\n",
+            "itemtype": "property",
+            "name": "polyvalue",
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 11991,
+            "description": "<p>Monosynth that generates the sound for each note that is triggered. The\np5.PolySynth defaults to using the p5.MonoSynth as its voice.</p>\n",
+            "itemtype": "property",
+            "name": "AudioVoice",
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12022,
+            "description": "<p>Play a note by triggering noteAttack and noteRelease with sustain time</p>\n",
+            "itemtype": "method",
+            "name": "play",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>midi note to play (ranging from 0 to 127 - 60 being a middle C)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "velocity",
+                    "description": "<p>velocity of the note to play (ranging from 0 to 1)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time from now (in seconds) at which to play</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "sustainTime",
+                    "description": "<p>time to sustain before releasing the envelope</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12036,
+            "description": "<p>noteADSR sets the envelope for a specific note that has just been triggered.\nUsing this method modifies the envelope of whichever audiovoice is being used\nto play the desired note. The envelope should be reset before noteRelease is called\nin order to prevent the modified envelope from being used on other notes.</p>\n",
+            "itemtype": "method",
+            "name": "noteADSR",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>Midi note on which ADSR should be set.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "attackTime",
+                    "description": "<p>Time (in seconds before envelope\n                              reaches Attack Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "decayTime",
+                    "description": "<p>Time (in seconds) before envelope\n                              reaches Decay/Sustain Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "susRatio",
+                    "description": "<p>Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,\n                              where 1.0 = attackLevel, 0.0 = releaseLevel.\n                              The susRatio determines the decayLevel and the level at which the\n                              sustain portion of the envelope will sustain.\n                              For example, if attackLevel is 0.4, releaseLevel is 0,\n                              and susAmt is 0.5, the decayLevel would be 0.2. If attackLevel is\n                              increased to 1.0 (using <code>setRange</code>),\n                              then decayLevel would increase proportionally, to become 0.5.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "releaseTime",
+                    "description": "<p>Time in seconds from now (defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12064,
+            "description": "<p>Set the PolySynths global envelope. This method modifies the envelopes of each\nmonosynth so that all notes are played with this envelope.</p>\n",
+            "itemtype": "method",
+            "name": "setADSR",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>Midi note on which ADSR should be set.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "attackTime",
+                    "description": "<p>Time (in seconds before envelope\n                               reaches Attack Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "decayTime",
+                    "description": "<p>Time (in seconds) before envelope\n                               reaches Decay/Sustain Level</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "susRatio",
+                    "description": "<p>Ratio between attackLevel and releaseLevel, on a scale from 0 to 1,\n                               where 1.0 = attackLevel, 0.0 = releaseLevel.\n                               The susRatio determines the decayLevel and the level at which the\n                               sustain portion of the envelope will sustain.\n                               For example, if attackLevel is 0.4, releaseLevel is 0,\n                               and susAmt is 0.5, the decayLevel would be 0.2. If attackLevel is\n                               increased to 1.0 (using <code>setRange</code>),\n                               then decayLevel would increase proportionally, to become 0.5.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "releaseTime",
+                    "description": "<p>Time in seconds from now (defaults to 0)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12089,
+            "description": "<p>Trigger the Attack, and Decay portion of a MonoSynth.\nSimilar to holding down a key on a piano, but it will\nhold the sustain level until you let go.</p>\n",
+            "itemtype": "method",
+            "name": "noteAttack",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>midi note on which attack should be triggered.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "velocity",
+                    "description": "<p>velocity of the note to play (ranging from 0 to 1)/</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time from now (in seconds)</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12162,
+            "description": "<p>Trigger the Release of an AudioVoice note. This is similar to releasing\nthe key on a piano and letting the sound fade according to the\nrelease level and release time.</p>\n",
+            "itemtype": "method",
+            "name": "noteRelease",
+            "params": [
+                {
+                    "name": "note",
+                    "description": "<p>midi note on which attack should be triggered.</p>\n",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "secondsFromNow",
+                    "description": "<p>time to trigger the release</p>\n",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12192,
+            "description": "<p>Connect to a p5.sound / Web Audio object.</p>\n",
