@@ -24771,3 +24771,948 @@ module.exports={
         {
             "message": "unknown tag: alt",
             "line": " src/math/calculation.js:121"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:190"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:240"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:279"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:324"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:379"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:418"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:474"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:524"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:574"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:627"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:661"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:700"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:747"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/math.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/noise.js:40"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/noise.js:187"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/noise.js:253"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/p5.Vector.js:13"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/random.js:48"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/random.js:79"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/random.js:166"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/trigonometry.js:134"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/trigonometry.js:174"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/trigonometry.js:206"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/trigonometry.js:238"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/trigonometry.js:320"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/attributes.js:13"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/attributes.js:59"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/attributes.js:96"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/attributes.js:127"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/attributes.js:161"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/loading_displaying.js:16"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/loading_displaying.js:142"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/loading_displaying.js:199"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/typography/p5.Font.js:45"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/conversion.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:15"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:44"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:132"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:237"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:313"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:375"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:437"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/string_functions.js:526"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:34"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:56"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:78"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:101"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:123"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/utilities/time_date.js:145"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/camera.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/camera.js:159"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/camera.js:239"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/light.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/light.js:93"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/light.js:197"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/loading.js:14"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/loading.js:212"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/webgl/material.js:56"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/material.js:56"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/material.js:145"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/material.js:178"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/material.js:273"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/material.js:320"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/p5.RendererGL.js:199"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/p5.RendererGL.js:438"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/p5.RendererGL.js:485"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/p5.RendererGL.js:525"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/webgl/primitives.js:13"
+        },
+        {
+            "message": "replacing incorrect tag: params with param",
+            "line": " lib/addons/p5.sound.js:1567"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/addons/p5.sound.js:1567"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/addons/p5.sound.js:7272"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/addons/p5.sound.js:9222"
+        },
+        {
+            "message": "Missing item type\nConversions adapted from <http://www.easyrgb.com/math.html>.\n\nIn these functions, hue is always in the range [0,1); all other components\nare in the range [0,1]. 'Brightness' and 'value' are used interchangeably.",
+            "line": " src/color/color_conversion.js:10"
+        },
+        {
+            "message": "Missing item type\nConvert an HSBA array to HSLA.",
+            "line": " src/color/color_conversion.js:20"
+        },
+        {
+            "message": "Missing item type\nConvert an HSBA array to RGBA.",
+            "line": " src/color/color_conversion.js:46"
+        },
+        {
+            "message": "Missing item type\nConvert an HSLA array to HSBA.",
+            "line": " src/color/color_conversion.js:101"
+        },
+        {
+            "message": "Missing item type\nConvert an HSLA array to RGBA.\n\nWe need to change basis from HSLA to something that can be more easily be\nprojected onto RGBA. We will choose hue and brightness as our first two\ncomponents, and pick a convenient third one ('zest') so that we don't need\nto calculate formal HSBA saturation.",
+            "line": " src/color/color_conversion.js:124"
+        },
+        {
+            "message": "Missing item type\nConvert an RGBA array to HSBA.",
+            "line": " src/color/color_conversion.js:188"
+        },
+        {
+            "message": "Missing item type\nConvert an RGBA array to HSLA.",
+            "line": " src/color/color_conversion.js:227"
+        },
+        {
+            "message": "Missing item type\nHue is the same in HSB and HSL, but the maximum value may be different.\nThis function will return the HSB-normalized saturation when supplied with\nan HSB color object, but will default to the HSL-normalized saturation\notherwise.",
+            "line": " src/color/p5.Color.js:242"
+        },
+        {
+            "message": "Missing item type\nSaturation is scaled differently in HSB and HSL. This function will return\nthe HSB saturation when supplied with an HSB color object, but will default\nto the HSL saturation otherwise.",
+            "line": " src/color/p5.Color.js:273"
+        },
+        {
+            "message": "Missing item type\nCSS named colors.",
+            "line": " src/color/p5.Color.js:292"
+        },
+        {
+            "message": "Missing item type\nThese regular expressions are used to build up the patterns for matching\nviable CSS color strings: fragmenting the regexes in this way increases the\nlegibility and comprehensibility of the code.\n\nNote that RGB values of .9 are not parsed by IE, but are supported here for\ncolor string consistency.",
+            "line": " src/color/p5.Color.js:445"
+        },
+        {
+            "message": "Missing item type\nFull color string patterns. The capture groups are necessary.",
+            "line": " src/color/p5.Color.js:458"
+        },
+        {
+            "message": "Missing item type\nFor a number of different inputs, returns a color formatted as [r, g, b, a]\narrays, with each component normalized between 0 and 1.",
+            "line": " src/color/p5.Color.js:595"
+        },
+        {
+            "message": "Missing item type\nFor HSB and HSL, interpret the gray level as a brightness/lightness\nvalue (they are equivalent when chroma is zero). For RGB, normalize the\ngray level according to the blue maximum.",
+            "line": " src/color/p5.Color.js:812"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/core/canvas.js:1"
+        },
+        {
+            "message": "Missing item type\nReturns the current framerate.",
+            "line": " src/core/environment.js:242"
+        },
+        {
+            "message": "Missing item type\nSpecifies the number of frames to be displayed every second. For example,\nthe function call frameRate(30) will attempt to refresh 30 times a second.\nIf the processor is not fast enough to maintain the specified rate, the\nframe rate will not be achieved. Setting the frame rate within setup() is\nrecommended. The default rate is 60 frames per second.\n\nCalling frameRate() with no arguments returns the current framerate.",
+            "line": " src/core/environment.js:252"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/core/error_helpers.js:1"
+        },
+        {
+            "message": "Missing item type\nPrints out a fancy, colorful message to the console log",
+            "line": " src/core/error_helpers.js:65"
+        },
+        {
+            "message": "Missing item type\nValidates parameters\nparam  {String}               func    the name of the function\nparam  {Array}                args    user input arguments\n\nexample:\n var a;\n ellipse(10,10,a,5);\nconsole ouput:\n \"It looks like ellipse received an empty variable in spot #2.\"\n\nexample:\n ellipse(10,\"foo\",5,5);\nconsole output:\n \"ellipse was expecting a number for parameter #1,\n          received \"foo\" instead.\"",
+            "line": " src/core/error_helpers.js:397"
+        },
+        {
+            "message": "Missing item type\nPrints out all the colors in the color pallete with white text.\nFor color blindness testing.",
+            "line": " src/core/error_helpers.js:449"
+        },
+        {
+            "message": "Missing item type\n_globalInit\n\nTODO: ???\nif sketch is on window\nassume \"global\" mode\nand instantiate p5 automatically\notherwise do nothing",
+            "line": " src/core/init.js:5"
+        },
+        {
+            "message": "Missing item type\nHelper fxn for sharing pixel methods",
+            "line": " src/core/p5.Element.js:1059"
+        },
+        {
+            "message": "Missing item type\nResize our canvas element.",
+            "line": " src/core/p5.Renderer.js:63"
+        },
+        {
+            "message": "Missing item type\nHelper fxn to check font type (system or otf)",
+            "line": " src/core/p5.Renderer.js:132"
+        },
+        {
+            "message": "Missing item type\nHelper fxn to measure ascent and descent.\nAdapted from http://stackoverflow.com/a/25355178",
+            "line": " src/core/p5.Renderer.js:185"
+        },
+        {
+            "message": "Missing item type\np5.Renderer2D\nThe 2D graphics canvas renderer class.\nextends p5.Renderer",
+            "line": " src/core/p5.Renderer2D.js:10"
+        },
+        {
+            "message": "Missing item type\nGenerate a cubic Bezier representing an arc on the unit circle of total\nangle `size` radians, beginning `start` radians above the x-axis. Up to\nfour of these curves are combined to make a full arc.\n\nSee www.joecridge.me/bezier.pdf for an explanation of the method.",
+            "line": " src/core/p5.Renderer2D.js:404"
+        },
+        {
+            "message": "Missing item type\nshim for Uint8ClampedArray.slice\n(allows arrayCopy to work with pixels[])\nwith thanks to http://halfpapstudios.com/blog/tag/html5-canvas/\nEnumerable set to false to protect for...in from\nUint8ClampedArray.prototype pollution.",
+            "line": " src/core/shim.js:70"
+        },
+        {
+            "message": "Missing item type\nprivate helper function to handle the user passing objects in\nduring construction or calls to create()",
+            "line": " src/data/p5.TypedDict.js:187"
+        },
+        {
+            "message": "Missing item type\nprivate helper function to ensure that the user passed in valid\nvalues for the Dictionary type",
+            "line": " src/data/p5.TypedDict.js:367"
+        },
+        {
+            "message": "Missing item type\nprivate helper function to ensure that the user passed in valid\nvalues for the Dictionary type",
+            "line": " src/data/p5.TypedDict.js:414"
+        },
+        {
+            "message": "Missing item type\nprivate helper function for finding lowest or highest value\nthe argument 'flip' is used to flip the comparison arrow\nfrom 'less than' to 'greater than'",
+            "line": " src/data/p5.TypedDict.js:531"
+        },
+        {
+            "message": "Missing item type\nprivate helper function for finding lowest or highest key\nthe argument 'flip' is used to flip the comparison arrow\nfrom 'less than' to 'greater than'",
+            "line": " src/data/p5.TypedDict.js:596"
+        },
+        {
+            "message": "Missing item type\n_updatePAccelerations updates the pAcceleration values",
+            "line": " src/events/acceleration.js:80"
+        },
+        {
+            "message": "Missing item type\nHolds the key codes of currently pressed keys.",
+            "line": " src/events/keyboard.js:12"
+        },
+        {
+            "message": "Missing item type\nThe onblur function is called when the user is no longer focused\non the p5 element. Because the keyup events will not fire if the user is\nnot focused on the element we must assume all keys currently down have\nbeen released.",
+            "line": " src/events/keyboard.js:308"
+        },
+        {
+            "message": "Missing item type\nThe checkDownKeys function returns a boolean true if any keys pressed\nand a false if no keys are currently pressed.\n\nHelps avoid instances where a multiple keys are pressed simultaneously and\nreleasing a single key will then switch the\nkeyIsPressed property to true.",
+            "line": " src/events/keyboard.js:370"
+        },
+        {
+            "message": "Missing item type\nThis module defines the filters for use with image buffers.\n\nThis module is basically a collection of functions stored in an object\nas opposed to modules. The functions are destructive, modifying\nthe passed in canvas rather than creating a copy.\n\nGenerally speaking users of this module will use the Filters.apply method\non a canvas to create an effect.\n\nA number of functions are borrowed/adapted from\nhttp://www.html5rocks.com/en/tutorials/canvas/imagefilters/\nor the java processing implementation.",
+            "line": " src/image/filters.js:3"
+        },
+        {
+            "message": "Missing item type\nReturns the pixel buffer for a canvas",
+            "line": " src/image/filters.js:26"
+        },
+        {
+            "message": "Missing item type\nReturns a 32 bit number containing ARGB data at ith pixel in the\n1D array containing pixels data.",
+            "line": " src/image/filters.js:46"
+        },
+        {
+            "message": "Missing item type\nModifies pixels RGBA values to values contained in the data object.",
+            "line": " src/image/filters.js:67"
+        },
+        {
+            "message": "Missing item type\nReturns the ImageData object for a canvas\nhttps://developer.mozilla.org/en-US/docs/Web/API/ImageData",
+            "line": " src/image/filters.js:87"
+        },
+        {
+            "message": "Missing item type\nReturns a blank ImageData object.",
+            "line": " src/image/filters.js:107"
+        },
+        {
+            "message": "Missing item type\nApplys a filter function to a canvas.\n\nThe difference between this and the actual filter functions defined below\nis that the filter functions generally modify the pixel buffer but do\nnot actually put that data back to the canvas (where it would actually\nupdate what is visible). By contrast this method does make the changes\nactually visible in the canvas.\n\nThe apply method is the method that callers of this module would generally\nuse. It has been separated from the actual filters to support an advanced\nuse case of creating a filter chain that executes without actually updating\nthe canvas in between everystep.",
+            "line": " src/image/filters.js:122"
+        },
+        {
+            "message": "Missing item type\nConverts the image to black and white pixels depending if they are above or\nbelow the threshold defined by the level parameter. The parameter must be\nbetween 0.0 (black) and 1.0 (white). If no level is specified, 0.5 is used.\n\nBorrowed from http://www.html5rocks.com/en/tutorials/canvas/imagefilters/",
+            "line": " src/image/filters.js:159"
+        },
+        {
+            "message": "Missing item type\nConverts any colors in the image to grayscale equivalents.\nNo parameter is used.\n\nBorrowed from http://www.html5rocks.com/en/tutorials/canvas/imagefilters/",
+            "line": " src/image/filters.js:193"
+        },
+        {
+            "message": "Missing item type\nSets the alpha channel to entirely opaque. No parameter is used.",
+            "line": " src/image/filters.js:216"
+        },
+        {
+            "message": "Missing item type\nSets each pixel to its inverse value. No parameter is used.",
+            "line": " src/image/filters.js:232"
+        },
+        {
+            "message": "Missing item type\nLimits each channel of the image to the number of colors specified as\nthe parameter. The parameter can be set to values between 2 and 255, but\nresults are most noticeable in the lower ranges.\n\nAdapted from java based processing implementation",
+            "line": " src/image/filters.js:247"
+        },
+        {
+            "message": "Missing item type\nreduces the bright areas in an image",
+            "line": " src/image/filters.js:279"
+        },
+        {
+            "message": "Missing item type\nincreases the bright areas in an image",
+            "line": " src/image/filters.js:367"
+        },
+        {
+            "message": "Missing item type\nThis module defines the p5 methods for the p5.Image class\nfor drawing images to the main display canvas.",
+            "line": " src/image/image.js:8"
+        },
+        {
+            "message": "Missing item type\nValidates clipping params. Per drawImage spec sWidth and sHight cannot be\nnegative or greater than image intrinsic width and height",
+            "line": " src/image/loading_displaying.js:108"
+        },
+        {
+            "message": "Missing item type\nApply the current tint color to the input image, return the resulting\ncanvas.",
+            "line": " src/image/loading_displaying.js:420"
+        },
+        {
+            "message": "Missing item type\nThis module defines the p5.Image class and P5 methods for\ndrawing images to the main display canvas.",
+            "line": " src/image/p5.Image.js:9"
+        },
+        {
+            "message": "Missing item type\nHelper fxn for sharing pixel methods",
+            "line": " src/image/p5.Image.js:223"
+        },
+        {
+            "message": "Missing item type\nGenerate a blob of file data as a url to prepare for download.\nAccepts an array of data, a filename, and an extension (optional).\nThis is a private function because it does not do any formatting,\nbut it is used by saveStrings, saveJSON, saveTable etc.",
+            "line": " src/io/files.js:1527"
+        },
+        {
+            "message": "Missing item type\nReturns a file extension, or another string\nif the provided parameter has no extension.",
+            "line": " src/io/files.js:1595"
+        },
+        {
+            "message": "Missing item type\nReturns true if the browser is Safari, false if not.\nSafari makes trouble for downloading files.",
+            "line": " src/io/files.js:1628"
+        },
+        {
+            "message": "Missing item type\nHelper function, a callback for download that deletes\nan invisible anchor element from the DOM once the file\nhas been automatically downloaded.",
+            "line": " src/io/files.js:1640"
+        },
+        {
+            "message": "Missing item type\nTable Options\n<p>Generic class for handling tabular data, typically from a\nCSV, TSV, or other sort of spreadsheet file.</p>\n<p>CSV files are\n<a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">\ncomma separated values</a>, often with the data in quotes. TSV\nfiles use tabs as separators, and usually don't bother with the\nquotes.</p>\n<p>File names should end with .csv if they're comma separated.</p>\n<p>A rough \"spec\" for CSV can be found\n<a href=\"http://tools.ietf.org/html/rfc4180\">here</a>.</p>\n<p>To load files, use the loadTable method.</p>\n<p>To save tables to your computer, use the save method\n or the saveTable method.</p>\n\nPossible options include:\n<ul>\n<li>csv - parse the table as comma-separated values\n<li>tsv - parse the table as tab-separated values\n<li>header - this table has a header (title) row\n</ul>",
+            "line": " src/io/p5.Table.js:11"
+        },
+        {
+            "message": "Missing item type\nThis method is called while the parsing of XML (when loadXML() is\ncalled). The difference between this method and the setContent()\nmethod defined later is that this one is used to set the content\nwhen the node in question has more nodes under it and so on and\nnot directly text content. While in the other one is used when\nthe node in question directly has text inside it.",
+            "line": " src/io/p5.XML.js:767"
+        },
+        {
+            "message": "Missing item type\nThis method is called while the parsing of XML (when loadXML() is\ncalled). The XML node is passed and its attributes are stored in the\np5.XML's attribute Object.",
+            "line": " src/io/p5.XML.js:784"
+        },
+        {
+            "message": "Missing item type\nMultiplies a vector by a scalar and returns a new vector.",
+            "line": " src/math/p5.Vector.js:1090"
+        },
+        {
+            "message": "Missing item type\nDivides a vector by a scalar and returns a new vector.",
+            "line": " src/math/p5.Vector.js:1117"
+        },
+        {
+            "message": "Missing item type\nCalculates the dot product of two vectors.",
+            "line": " src/math/p5.Vector.js:1144"
+        },
+        {
+            "message": "Missing item type\nCalculates the cross product of two vectors.",
+            "line": " src/math/p5.Vector.js:1158"
+        },
+        {
+            "message": "Missing item type\nCalculates the Euclidean distance between two points (considering a\npoint as a vector object).",
+            "line": " src/math/p5.Vector.js:1172"
+        },
+        {
+            "message": "Missing item type\nLinear interpolate a vector to another vector and return the result as a\nnew vector.",
+            "line": " src/math/p5.Vector.js:1187"
+        },
+        {
+            "message": "Missing item type\nHelper function to measure ascent and descent.",
+            "line": " src/typography/attributes.js:251"
+        },
+        {
+            "message": "Missing item type\nReturns the set of opentype glyphs for the supplied string.\n\nNote that there is not a strict one-to-one mapping between characters\nand glyphs, so the list of returned glyphs can be larger or smaller\n than the length of the given string.",
+            "line": " src/typography/p5.Font.js:259"
+        },
+        {
+            "message": "Missing item type\nReturns an opentype path for the supplied string and position.",
+            "line": " src/typography/p5.Font.js:274"
+        },
+        {
+            "message": "Missing item type\nParse OBJ lines into model. For reference, this is what a simple model of a\nsquare might look like:\n\nv -0.5 -0.5 0.5\nv -0.5 -0.5 -0.5\nv -0.5 0.5 -0.5\nv -0.5 0.5 0.5\n\nf 4 3 2 1",
+            "line": " src/webgl/loading.js:103"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/webgl/material.js:367"
+        },
+        {
+            "message": "Missing item type\nCreate a 2D array for establishing stroke connections",
+            "line": " src/webgl/p5.Geometry.js:175"
+        },
+        {
+            "message": "Missing item type\nCreate 4 vertices for each stroke line, two at the beginning position\nand two at the end position. These vertices are displaced relative to\nthat line's normal on the GPU",
+            "line": " src/webgl/p5.Geometry.js:195"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/webgl/p5.Matrix.js:1"
+        },
+        {
+            "message": "Missing item type\nPRIVATE",
+            "line": " src/webgl/p5.Matrix.js:682"
+        },
+        {
+            "message": "Missing item type\nWelcome to RendererGL Immediate Mode.\nImmediate mode is used for drawing custom shapes\nfrom a set of vertices.  Immediate Mode is activated\nwhen you call beginShape() & de-activated when you call endShape().\nImmediate mode is a style of programming borrowed\nfrom OpenGL's (now-deprecated) immediate mode.\nIt differs from p5.js' default, Retained Mode, which caches\ngeometries and buffers on the CPU to reduce the number of webgl\ndraw calls. Retained mode is more efficient & performative,\nhowever, Immediate Mode is useful for sketching quick\ngeometric ideas.",
+            "line": " src/webgl/p5.RendererGL.Immediate.js:1"
+        },
+        {
+            "message": "Missing item type\nEnd shape drawing and render vertices to screen.",
+            "line": " src/webgl/p5.RendererGL.Immediate.js:104"
+        },
+        {
+            "message": "Missing item type\ninitializes buffer defaults. runs each time a new geometry is\nregistered",
+            "line": " src/webgl/p5.RendererGL.Retained.js:8"
+        },
+        {
+            "message": "Missing item type\ncreateBuffers description",
+            "line": " src/webgl/p5.RendererGL.Retained.js:47"
+        },
+        {
+            "message": "Missing item type\nDraws buffers given a geometry key ID",
+            "line": " src/webgl/p5.RendererGL.Retained.js:191"
+        },
+        {
+            "message": "Missing item type\nmodel view, projection, & normal\nmatrices",
+            "line": " src/webgl/p5.RendererGL.js:79"
+        },
+        {
+            "message": "Missing item type\n[background description]",
+            "line": " src/webgl/p5.RendererGL.js:416"
+        },
+        {
+            "message": "Missing item type\n[resize description]",
+            "line": " src/webgl/p5.RendererGL.js:652"
+        },
+        {
+            "message": "Missing item type\nclears color and depth buffers\nwith r,g,b,a",
+            "line": " src/webgl/p5.RendererGL.js:682"
+        },
+        {
+            "message": "Missing item type\n[translate description]",
+            "line": " src/webgl/p5.RendererGL.js:696"
+        },
+        {
+            "message": "Missing item type\nScales the Model View Matrix by a vector",
+            "line": " src/webgl/p5.RendererGL.js:715"
+        },
+        {
+            "message": "Missing item type\npushes a copy of the model view matrix onto the\nMV Matrix stack.",
+            "line": " src/webgl/p5.RendererGL.js:751"
+        },
+        {
+            "message": "Missing item type\n[pop description]",
+            "line": " src/webgl/p5.RendererGL.js:760"
+        },
+        {
+            "message": "Missing item type\nturn a two dimensional array into one dimensional array",
+            "line": " src/webgl/p5.RendererGL.js:991"
+        },
+        {
+            "message": "Missing item type\nturn a p5.Vector Array into a one dimensional number array",
+            "line": " src/webgl/p5.RendererGL.js:1028"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/webgl/primitives.js:250"
+        },
+        {
+            "message": "Missing item type\nDraw a line given two points",
+            "line": " src/webgl/primitives.js:938"
+        },
+        {
+            "message": "Missing item type\nHelper function for select and selectAll",
+            "line": " lib/addons/p5.dom.js:162"
+        },
+        {
+            "message": "Missing item type\nHelper function for getElement and getElements.",
+            "line": " lib/addons/p5.dom.js:178"
+        },
+        {
+            "message": "Missing item type\nHelpers for create methods.",
+            "line": " lib/addons/p5.dom.js:239"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:370"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:891"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:967"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:1007"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:2572"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:2638"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.dom.js:2700"
+        },
+        {
+            "message": "Missing item type\np5.sound\nhttps://p5js.org/reference/#/libraries/p5.sound\n\nFrom the Processing Foundation and contributors\nhttps://github.com/processing/p5.js-sound/graphs/contributors\n\nMIT License (MIT)\nhttps://github.com/processing/p5.js-sound/blob/master/LICENSE\n\nSome of the many audio libraries & resources that inspire p5.sound:\n - TONE.js (c) Yotam Mann. Licensed under The MIT License (MIT). https://github.com/TONEnoTONE/Tone.js\n - buzz.js (c) Jay Salvat. Licensed under The MIT License (MIT). http://buzz.jaysalvat.com/\n - Boris Smus Web Audio API book, 2013. Licensed under the Apache License http://www.apache.org/licenses/LICENSE-2.0\n - wavesurfer.js https://github.com/katspaugh/wavesurfer.js\n - Web Audio Components by Jordan Santell https://github.com/web-audio-components\n - Wilm Thoben's Sound library for Processing https://github.com/processing/processing/tree/master/java/libraries/sound\n\n Web Audio API: http://w3.org/TR/webaudio/",
+            "line": " lib/addons/p5.sound.js:46"
+        },
+        {
+            "message": "Missing item type\nDetermine which filetypes are supported (inspired by buzz.js)\nThe audio element (el) will only be used to test browser support for various audio formats",
+            "line": " lib/addons/p5.sound.js:226"
+        },
+        {
+            "message": "Missing item type\nMaster contains AudioContext and the master sound output.",
+            "line": " lib/addons/p5.sound.js:296"
+        },
+        {
+            "message": "Missing item type\na silent connection to the DesinationNode\nwhich will ensure that anything connected to it\nwill not be garbage collected",
+            "line": " lib/addons/p5.sound.js:391"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:407"
+        },
+        {
+            "message": "Missing item type\nUsed by Osc and Env to chain signal math",
+            "line": " lib/addons/p5.sound.js:583"
+        },
+        {
+            "message": "Missing item type\nThis is a helper function that the p5.SoundFile calls to load\nitself. Accepts a callback (the name of another function)\nas an optional parameter.",
+            "line": " lib/addons/p5.sound.js:903"
+        },
+        {
+            "message": "Missing item type\nStop playback on all of this soundfile's sources.",
+            "line": " lib/addons/p5.sound.js:1304"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:1741"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:2022"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3022"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3399"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3420"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3479"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3797"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:3969"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4127"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4168"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4238"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4426"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4483"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4651"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4699"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4730"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4751"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:4771"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:5478"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:5681"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7363"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7379"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7403"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7429"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7451"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7473"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7519"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7550"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7568"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7905"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:7927"
+        },
+        {
+            "message": "Missing item type\nThe p5.Effect class is built\n  using Tone.js CrossFade",
+            "line": " lib/addons/p5.sound.js:7997"
+        },
+        {
+            "message": "Missing item type\nIn classes that extend\np5.Effect, connect effect nodes\nto the wet parameter",
+            "line": " lib/addons/p5.sound.js:8003"
+        },
+        {
+            "message": "Missing item type\nEQFilter extends p5.Filter with constraints\nnecessary for the p5.EQ",
+            "line": " lib/addons/p5.sound.js:8381"
+        },
+        {
+            "message": "Missing item type\nInspired by Simple Reverb by Jordan Santell\nhttps://github.com/web-audio-components/simple-reverb/blob/master/index.js\n\nUtility function for building an impulse response\nbased on the module parameters.",
+            "line": " lib/addons/p5.sound.js:9471"
+        },
+        {
+            "message": "Missing item type\nPrivate method to load a buffer as an Impulse Response,\nassign it to the convolverNode, and add to the Array of .impulses.",
+            "line": " lib/addons/p5.sound.js:9635"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:9821"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/addons/p5.sound.js:9846"
+        },
+        {
+            "message": "Missing item type\nmusicalTimeMode variables\nmodify these only when the interval is specified in musicalTime format as a string",
+            "line": " lib/addons/p5.sound.js:10571"
+        },
+        {
+            "message": "Missing item type\nDo not initiate the callback if timeFromNow is < 0\nThis ususually occurs for a few milliseconds when the page\nis not fully loaded\n\nThe callback should only be called until maxIterations is reached",
+            "line": " lib/addons/p5.sound.js:10587"
+        },
+        {
+            "message": "Missing item type\ncallback invoked when the recording is over",
+            "line": " lib/addons/p5.sound.js:11072"
+        },
+        {
+            "message": "Missing item type\ninternal method called on audio process",
+            "line": " lib/addons/p5.sound.js:11158"
+        },
+        {
+            "message": "Missing item type\nPrivate method to ensure accurate values of this._voicesInUse\nAny time a new value is scheduled, it is necessary to increment all subsequent\nscheduledValues after attack, and decrement all subsequent\nscheduledValues after release",
+            "line": " lib/addons/p5.sound.js:12142"
+        },
+        {
+            "message": "Missing item type\np5.sound\nhttps://p5js.org/reference/#/libraries/p5.sound\n\nFrom the Processing Foundation and contributors\nhttps://github.com/processing/p5.js-sound/graphs/contributors\n\nMIT License (MIT)\nhttps://github.com/processing/p5.js-sound/blob/master/LICENSE\n\nSome of the many audio libraries & resources that inspire p5.sound:\n - TONE.js (c) Yotam Mann. Licensed under The MIT License (MIT). https://github.com/TONEnoTONE/Tone.js\n - buzz.js (c) Jay Salvat. Licensed under The MIT License (MIT). http://buzz.jaysalvat.com/\n - Boris Smus Web Audio API book, 2013. Licensed under the Apache License http://www.apache.org/licenses/LICENSE-2.0\n - wavesurfer.js https://github.com/katspaugh/wavesurfer.js\n - Web Audio Components by Jordan Santell https://github.com/web-audio-components\n - Wilm Thoben's Sound library for Processing https://github.com/processing/processing/tree/master/java/libraries/sound\n\n Web Audio API: http://w3.org/TR/webaudio/",
+            "line": " lib/addons/p5.sound.min.js:3"
+        }
+    ],
+    "consts": {
+        "RGB": [
+            "p5.colorMode"
+        ],
+        "HSB": [
+            "p5.colorMode"
+        ],
+        "HSL": [
+            "p5.colorMode"
+        ],
+        "CHORD": [
+            "p5.arc"
+        ],
+        "PIE": [
+            "p5.arc"
