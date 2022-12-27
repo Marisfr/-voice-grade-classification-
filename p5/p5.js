@@ -23790,3 +23790,984 @@ module.exports={
             "file": "lib/addons/p5.sound.js",
             "line": 12192,
             "description": "<p>Connect to a p5.sound / Web Audio object.</p>\n",
+            "itemtype": "method",
+            "name": "connect",
+            "params": [
+                {
+                    "name": "unit",
+                    "description": "<p>A p5.sound or Web Audio object</p>\n",
+                    "type": "Object"
+                }
+            ],
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12202,
+            "description": "<p>Disconnect all outputs</p>\n",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12210,
+            "description": "<p>Get rid of the MonoSynth and free up its resources / memory.</p>\n",
+            "itemtype": "method",
+            "name": "dispose",
+            "class": "p5.PolySynth",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12276,
+            "description": "<p>The p5.Distortion is built with a\n<a href=\"http://www.w3.org/TR/webaudio/#WaveShaperNode\">\nWeb Audio WaveShaper Node</a>.</p>\n",
+            "itemtype": "property",
+            "name": "WaveShaperNode",
+            "type": "AudioNode",
+            "class": "p5.Distortion",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12291,
+            "description": "<p>Process a sound source, optionally specify amount and oversample values.</p>\n",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "amount",
+                    "description": "<p>Unbounded distortion amount.\n                               Normal values range from 0-1.</p>\n",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0.25"
+                },
+                {
+                    "name": "oversample",
+                    "description": "<p>&#39;none&#39;, &#39;2x&#39;, or &#39;4x&#39;.</p>\n",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "'none'"
+                }
+            ],
+            "class": "p5.Distortion",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12303,
+            "description": "<p>Set the amount and oversample of the waveshaper distortion.</p>\n",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "amount",
+                    "description": "<p>Unbounded distortion amount.\n                               Normal values range from 0-1.</p>\n",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0.25"
+                },
+                {
+                    "name": "oversample",
+                    "description": "<p>&#39;none&#39;, &#39;2x&#39;, or &#39;4x&#39;.</p>\n",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "'none'"
+                }
+            ],
+            "class": "p5.Distortion",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12321,
+            "description": "<p>Return the distortion amount, typically between 0-1.</p>\n",
+            "itemtype": "method",
+            "name": "getAmount",
+            "return": {
+                "description": "Unbounded distortion amount.\n                 Normal values range from 0-1.",
+                "type": "Number"
+            },
+            "class": "p5.Distortion",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        },
+        {
+            "file": "lib/addons/p5.sound.js",
+            "line": 12331,
+            "description": "<p>Return the oversampling.</p>\n",
+            "itemtype": "method",
+            "name": "getOversample",
+            "return": {
+                "description": "Oversample can either be 'none', '2x', or '4x'.",
+                "type": "String"
+            },
+            "class": "p5.Distortion",
+            "module": "p5.sound",
+            "submodule": "p5.sound"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:16"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:61"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:91"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:121"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:320"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:351"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:388"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:485"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:515"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/creating_reading.js:555"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:54"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:83"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:110"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:137"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:164"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/p5.Color.js:595"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:15"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:185"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:223"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:344"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:495"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:536"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/color/setting.js:576"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:16"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:134"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:190"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:246"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:281"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:335"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/2d_primitives.js:406"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:14"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:83"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:111"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:180"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:209"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:246"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/attributes.js:313"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/constants.js:34"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/constants.js:53"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/constants.js:72"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/constants.js:91"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/constants.js:110"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/core.js:49"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/core.js:87"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/core.js:118"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/core.js:401"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:13"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:92"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:119"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:174"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:253"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:344"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:371"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/curves.js:466"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:22"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:49"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:77"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:109"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:170"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:268"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:293"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:310"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:327"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:343"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:359"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:437"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/core/environment.js:488"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:488"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/core/environment.js:534"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:534"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:591"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:622"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/environment.js:645"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:53"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:118"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:155"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:190"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:240"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:289"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:355"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:408"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:462"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:521"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:564"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:631"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:666"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:708"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:757"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:798"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:848"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:886"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/p5.Element.js:924"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/rendering.js:16"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/rendering.js:116"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/rendering.js:169"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/rendering.js:192"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/rendering.js:231"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/structure.js:15"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/structure.js:77"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/structure.js:132"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/structure.js:211"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/structure.js:282"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:14"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:136"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:162"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:208"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:240"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:272"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:304"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:379"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:421"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/transform.js:463"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:22"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:70"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:269"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:335"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:378"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:438"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:523"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/core/vertex.js:601"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:91"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:125"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:158"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:194"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:239"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:283"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:376"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:407"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/acceleration.js:466"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:18"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:45"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:74"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:107"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:198"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:254"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/keyboard.js:318"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:22"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:48"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:74"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:105"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:135"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:172"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:209"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:249"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:290"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:329"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:418"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:462"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:532"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:598"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:665"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:724"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/mouse.js:782"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/touch.js:57"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/touch.js:120"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/events/touch.js:182"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/image.js:18"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/image.js:98"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/image.js:178"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/loading_displaying.js:17"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/image/loading_displaying.js:108"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/loading_displaying.js:125"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/loading_displaying.js:296"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/loading_displaying.js:391"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/loading_displaying.js:457"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:91"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:118"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:152"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:232"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:268"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:316"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:361"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:399"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:483"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:563"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:626"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:662"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/p5.Image.js:784"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:14"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:83"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:176"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:235"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:413"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:489"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:525"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/image/pixels.js:599"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:19"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:154"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:253"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:586"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:1290"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:1341"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/files.js:1402"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:57"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:120"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:168"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:214"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:263"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:328"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:491"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:544"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:586"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:746"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:812"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:861"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:922"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:969"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:1014"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.Table.js:1063"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/io/p5.XML.js:11"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:12"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:36"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:76"
+        },
+        {
+            "message": "unknown tag: alt",
+            "line": " src/math/calculation.js:121"
