@@ -30621,3 +30621,940 @@ var getMacEncodingTable = function (encoding) {
  * @param {string} encoding
  * @returns {Array}
  */
+encode.MACSTRING = function(str, encoding) {
+    var table = getMacEncodingTable(encoding);
+    if (table === undefined) {
+        return undefined;
+    }
+
+    var result = [];
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+
+        // In all eight-bit Mac encodings, the characters 0x00..0x7F are
+        // mapped to U+0000..U+007F; we only need to look up the others.
+        if (c >= 0x80) {
+            c = table[c];
+            if (c === undefined) {
+                // str contains a Unicode character that cannot be encoded
+                // in the requested encoding.
+                return undefined;
+            }
+        }
+        result[i] = c;
+        // result.push(c);
+    }
+
+    return result;
+};
+
+/**
+ * @param {string} str
+ * @param {string} encoding
+ * @returns {number}
+ */
+sizeOf.MACSTRING = function(str, encoding) {
+    var b = encode.MACSTRING(str, encoding);
+    if (b !== undefined) {
+        return b.length;
+    } else {
+        return 0;
+    }
+};
+
+// Helper for encode.VARDELTAS
+function isByteEncodable(value) {
+    return value >= -128 && value <= 127;
+}
+
+// Helper for encode.VARDELTAS
+function encodeVarDeltaRunAsZeroes(deltas, pos, result) {
+    var runLength = 0;
+    var numDeltas = deltas.length;
+    while (pos < numDeltas && runLength < 64 && deltas[pos] === 0) {
+        ++pos;
+        ++runLength;
+    }
+    result.push(0x80 | (runLength - 1));
+    return pos;
+}
+
+// Helper for encode.VARDELTAS
+function encodeVarDeltaRunAsBytes(deltas, offset, result) {
+    var runLength = 0;
+    var numDeltas = deltas.length;
+    var pos = offset;
+    while (pos < numDeltas && runLength < 64) {
+        var value = deltas[pos];
+        if (!isByteEncodable(value)) {
+            break;
+        }
+
+        // Within a byte-encoded run of deltas, a single zero is best
+        // stored literally as 0x00 value. However, if we have two or
+        // more zeroes in a sequence, it is better to start a new run.
+        // Fore example, the sequence of deltas [15, 15, 0, 15, 15]
+        // becomes 6 bytes (04 0F 0F 00 0F 0F) when storing the zero
+        // within the current run, but 7 bytes (01 0F 0F 80 01 0F 0F)
+        // when starting a new run.
+        if (value === 0 && pos + 1 < numDeltas && deltas[pos + 1] === 0) {
+            break;
+        }
+
+        ++pos;
+        ++runLength;
+    }
+    result.push(runLength - 1);
+    for (var i = offset; i < pos; ++i) {
+        result.push((deltas[i] + 256) & 0xff);
+    }
+    return pos;
+}
+
+// Helper for encode.VARDELTAS
+function encodeVarDeltaRunAsWords(deltas, offset, result) {
+    var runLength = 0;
+    var numDeltas = deltas.length;
+    var pos = offset;
+    while (pos < numDeltas && runLength < 64) {
+        var value = deltas[pos];
+
+        // Within a word-encoded run of deltas, it is easiest to start
+        // a new run (with a different encoding) whenever we encounter
+        // a zero value. For example, the sequence [0x6666, 0, 0x7777]
+        // needs 7 bytes when storing the zero inside the current run
+        // (42 66 66 00 00 77 77), and equally 7 bytes when starting a
+        // new run (40 66 66 80 40 77 77).
+        if (value === 0) {
+            break;
+        }
+
+        // Within a word-encoded run of deltas, a single value in the
+        // range (-128..127) should be encoded within the current run
+        // because it is more compact. For example, the sequence
+        // [0x6666, 2, 0x7777] becomes 7 bytes when storing the value
+        // literally (42 66 66 00 02 77 77), but 8 bytes when starting
+        // a new run (40 66 66 00 02 40 77 77).
+        if (isByteEncodable(value) && pos + 1 < numDeltas && isByteEncodable(deltas[pos + 1])) {
+            break;
+        }
+
+        ++pos;
+        ++runLength;
+    }
+    result.push(0x40 | (runLength - 1));
+    for (var i = offset; i < pos; ++i) {
+        var val = deltas[i];
+        result.push(((val + 0x10000) >> 8) & 0xff, (val + 0x100) & 0xff);
+    }
+    return pos;
+}
+
+/**
+ * Encode a list of variation adjustment deltas.
+ *
+ * Variation adjustment deltas are used in ‘gvar’ and ‘cvar’ tables.
+ * They indicate how points (in ‘gvar’) or values (in ‘cvar’) get adjusted
+ * when generating instances of variation fonts.
+ *
+ * @see https://www.microsoft.com/typography/otspec/gvar.htm
+ * @see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6gvar.html
+ * @param {Array}
+ * @return {Array}
+ */
+encode.VARDELTAS = function(deltas) {
+    var pos = 0;
+    var result = [];
+    while (pos < deltas.length) {
+        var value = deltas[pos];
+        if (value === 0) {
+            pos = encodeVarDeltaRunAsZeroes(deltas, pos, result);
+        } else if (value >= -128 && value <= 127) {
+            pos = encodeVarDeltaRunAsBytes(deltas, pos, result);
+        } else {
+            pos = encodeVarDeltaRunAsWords(deltas, pos, result);
+        }
+    }
+    return result;
+};
+
+// Convert a list of values to a CFF INDEX structure.
+// The values should be objects containing name / type / value.
+/**
+ * @param {Array} l
+ * @returns {Array}
+ */
+encode.INDEX = function(l) {
+    //var offset, offsets, offsetEncoder, encodedOffsets, encodedOffset, data,
+    //    i, v;
+    // Because we have to know which data type to use to encode the offsets,
+    // we have to go through the values twice: once to encode the data and
+    // calculate the offsets, then again to encode the offsets using the fitting data type.
+    var offset = 1; // First offset is always 1.
+    var offsets = [offset];
+    var data = [];
+    for (var i = 0; i < l.length; i += 1) {
+        var v = encode.OBJECT(l[i]);
+        Array.prototype.push.apply(data, v);
+        offset += v.length;
+        offsets.push(offset);
+    }
+
+    if (data.length === 0) {
+        return [0, 0];
+    }
+
+    var encodedOffsets = [];
+    var offSize = (1 + Math.floor(Math.log(offset) / Math.log(2)) / 8) | 0;
+    var offsetEncoder = [undefined, encode.BYTE, encode.USHORT, encode.UINT24, encode.ULONG][offSize];
+    for (var i$1 = 0; i$1 < offsets.length; i$1 += 1) {
+        var encodedOffset = offsetEncoder(offsets[i$1]);
+        Array.prototype.push.apply(encodedOffsets, encodedOffset);
+    }
+
+    return Array.prototype.concat(encode.Card16(l.length),
+                           encode.OffSize(offSize),
+                           encodedOffsets,
+                           data);
+};
+
+/**
+ * @param {Array}
+ * @returns {number}
+ */
+sizeOf.INDEX = function(v) {
+    return encode.INDEX(v).length;
+};
+
+/**
+ * Convert an object to a CFF DICT structure.
+ * The keys should be numeric.
+ * The values should be objects containing name / type / value.
+ * @param {Object} m
+ * @returns {Array}
+ */
+encode.DICT = function(m) {
+    var d = [];
+    var keys = Object.keys(m);
+    var length = keys.length;
+
+    for (var i = 0; i < length; i += 1) {
+        // Object.keys() return string keys, but our keys are always numeric.
+        var k = parseInt(keys[i], 0);
+        var v = m[k];
+        // Value comes before the key.
+        d = d.concat(encode.OPERAND(v.value, v.type));
+        d = d.concat(encode.OPERATOR(k));
+    }
+
+    return d;
+};
+
+/**
+ * @param {Object}
+ * @returns {number}
+ */
+sizeOf.DICT = function(m) {
+    return encode.DICT(m).length;
+};
+
+/**
+ * @param {number}
+ * @returns {Array}
+ */
+encode.OPERATOR = function(v) {
+    if (v < 1200) {
+        return [v];
+    } else {
+        return [12, v - 1200];
+    }
+};
+
+/**
+ * @param {Array} v
+ * @param {string}
+ * @returns {Array}
+ */
+encode.OPERAND = function(v, type) {
+    var d = [];
+    if (Array.isArray(type)) {
+        for (var i = 0; i < type.length; i += 1) {
+            check.argument(v.length === type.length, 'Not enough arguments given for type' + type);
+            d = d.concat(encode.OPERAND(v[i], type[i]));
+        }
+    } else {
+        if (type === 'SID') {
+            d = d.concat(encode.NUMBER(v));
+        } else if (type === 'offset') {
+            // We make it easy for ourselves and always encode offsets as
+            // 4 bytes. This makes offset calculation for the top dict easier.
+            d = d.concat(encode.NUMBER32(v));
+        } else if (type === 'number') {
+            d = d.concat(encode.NUMBER(v));
+        } else if (type === 'real') {
+            d = d.concat(encode.REAL(v));
+        } else {
+            throw new Error('Unknown operand type ' + type);
+            // FIXME Add support for booleans
+        }
+    }
+
+    return d;
+};
+
+encode.OP = encode.BYTE;
+sizeOf.OP = sizeOf.BYTE;
+
+// memoize charstring encoding using WeakMap if available
+var wmm = typeof WeakMap === 'function' && new WeakMap();
+
+/**
+ * Convert a list of CharString operations to bytes.
+ * @param {Array}
+ * @returns {Array}
+ */
+encode.CHARSTRING = function(ops) {
+    // See encode.MACSTRING for why we don't do "if (wmm && wmm.has(ops))".
+    if (wmm) {
+        var cachedValue = wmm.get(ops);
+        if (cachedValue !== undefined) {
+            return cachedValue;
+        }
+    }
+
+    var d = [];
+    var length = ops.length;
+
+    for (var i = 0; i < length; i += 1) {
+        var op = ops[i];
+        d = d.concat(encode[op.type](op.value));
+    }
+
+    if (wmm) {
+        wmm.set(ops, d);
+    }
+
+    return d;
+};
+
+/**
+ * @param {Array}
+ * @returns {number}
+ */
+sizeOf.CHARSTRING = function(ops) {
+    return encode.CHARSTRING(ops).length;
+};
+
+// Utility functions ////////////////////////////////////////////////////////
+
+/**
+ * Convert an object containing name / type / value to bytes.
+ * @param {Object}
+ * @returns {Array}
+ */
+encode.OBJECT = function(v) {
+    var encodingFunction = encode[v.type];
+    check.argument(encodingFunction !== undefined, 'No encoding function for type ' + v.type);
+    return encodingFunction(v.value);
+};
+
+/**
+ * @param {Object}
+ * @returns {number}
+ */
+sizeOf.OBJECT = function(v) {
+    var sizeOfFunction = sizeOf[v.type];
+    check.argument(sizeOfFunction !== undefined, 'No sizeOf function for type ' + v.type);
+    return sizeOfFunction(v.value);
+};
+
+/**
+ * Convert a table object to bytes.
+ * A table contains a list of fields containing the metadata (name, type and default value).
+ * The table itself has the field values set as attributes.
+ * @param {opentype.Table}
+ * @returns {Array}
+ */
+encode.TABLE = function(table) {
+    var d = [];
+    var length = table.fields.length;
+    var subtables = [];
+    var subtableOffsets = [];
+
+    for (var i = 0; i < length; i += 1) {
+        var field = table.fields[i];
+        var encodingFunction = encode[field.type];
+        check.argument(encodingFunction !== undefined, 'No encoding function for field type ' + field.type + ' (' + field.name + ')');
+        var value = table[field.name];
+        if (value === undefined) {
+            value = field.value;
+        }
+
+        var bytes = encodingFunction(value);
+
+        if (field.type === 'TABLE') {
+            subtableOffsets.push(d.length);
+            d = d.concat([0, 0]);
+            subtables.push(bytes);
+        } else {
+            d = d.concat(bytes);
+        }
+    }
+
+    for (var i$1 = 0; i$1 < subtables.length; i$1 += 1) {
+        var o = subtableOffsets[i$1];
+        var offset = d.length;
+        check.argument(offset < 65536, 'Table ' + table.tableName + ' too big.');
+        d[o] = offset >> 8;
+        d[o + 1] = offset & 0xff;
+        d = d.concat(subtables[i$1]);
+    }
+
+    return d;
+};
+
+/**
+ * @param {opentype.Table}
+ * @returns {number}
+ */
+sizeOf.TABLE = function(table) {
+    var numBytes = 0;
+    var length = table.fields.length;
+
+    for (var i = 0; i < length; i += 1) {
+        var field = table.fields[i];
+        var sizeOfFunction = sizeOf[field.type];
+        check.argument(sizeOfFunction !== undefined, 'No sizeOf function for field type ' + field.type + ' (' + field.name + ')');
+        var value = table[field.name];
+        if (value === undefined) {
+            value = field.value;
+        }
+
+        numBytes += sizeOfFunction(value);
+
+        // Subtables take 2 more bytes for offsets.
+        if (field.type === 'TABLE') {
+            numBytes += 2;
+        }
+    }
+
+    return numBytes;
+};
+
+encode.RECORD = encode.TABLE;
+sizeOf.RECORD = sizeOf.TABLE;
+
+// Merge in a list of bytes.
+encode.LITERAL = function(v) {
+    return v;
+};
+
+sizeOf.LITERAL = function(v) {
+    return v.length;
+};
+
+// Table metadata
+
+/**
+ * @exports opentype.Table
+ * @class
+ * @param {string} tableName
+ * @param {Array} fields
+ * @param {Object} options
+ * @constructor
+ */
+function Table(tableName, fields, options) {
+    var this$1 = this;
+
+    for (var i = 0; i < fields.length; i += 1) {
+        var field = fields[i];
+        this$1[field.name] = field.value;
+    }
+
+    this.tableName = tableName;
+    this.fields = fields;
+    if (options) {
+        var optionKeys = Object.keys(options);
+        for (var i$1 = 0; i$1 < optionKeys.length; i$1 += 1) {
+            var k = optionKeys[i$1];
+            var v = options[k];
+            if (this$1[k] !== undefined) {
+                this$1[k] = v;
+            }
+        }
+    }
+}
+
+/**
+ * Encodes the table and returns an array of bytes
+ * @return {Array}
+ */
+Table.prototype.encode = function() {
+    return encode.TABLE(this);
+};
+
+/**
+ * Get the size of the table.
+ * @return {number}
+ */
+Table.prototype.sizeOf = function() {
+    return sizeOf.TABLE(this);
+};
+
+/**
+ * @private
+ */
+function ushortList(itemName, list, count) {
+    if (count === undefined) {
+        count = list.length;
+    }
+    var fields = new Array(list.length + 1);
+    fields[0] = {name: itemName + 'Count', type: 'USHORT', value: count};
+    for (var i = 0; i < list.length; i++) {
+        fields[i + 1] = {name: itemName + i, type: 'USHORT', value: list[i]};
+    }
+    return fields;
+}
+
+/**
+ * @private
+ */
+function tableList(itemName, records, itemCallback) {
+    var count = records.length;
+    var fields = new Array(count + 1);
+    fields[0] = {name: itemName + 'Count', type: 'USHORT', value: count};
+    for (var i = 0; i < count; i++) {
+        fields[i + 1] = {name: itemName + i, type: 'TABLE', value: itemCallback(records[i], i)};
+    }
+    return fields;
+}
+
+/**
+ * @private
+ */
+function recordList(itemName, records, itemCallback) {
+    var count = records.length;
+    var fields = [];
+    fields[0] = {name: itemName + 'Count', type: 'USHORT', value: count};
+    for (var i = 0; i < count; i++) {
+        fields = fields.concat(itemCallback(records[i], i));
+    }
+    return fields;
+}
+
+// Common Layout Tables
+
+/**
+ * @exports opentype.Coverage
+ * @class
+ * @param {opentype.Table}
+ * @constructor
+ * @extends opentype.Table
+ */
+function Coverage(coverageTable) {
+    if (coverageTable.format === 1) {
+        Table.call(this, 'coverageTable',
+            [{name: 'coverageFormat', type: 'USHORT', value: 1}]
+            .concat(ushortList('glyph', coverageTable.glyphs))
+        );
+    } else {
+        check.assert(false, 'Can\'t create coverage table format 2 yet.');
+    }
+}
+Coverage.prototype = Object.create(Table.prototype);
+Coverage.prototype.constructor = Coverage;
+
+function ScriptList(scriptListTable) {
+    Table.call(this, 'scriptListTable',
+        recordList('scriptRecord', scriptListTable, function(scriptRecord, i) {
+            var script = scriptRecord.script;
+            var defaultLangSys = script.defaultLangSys;
+            check.assert(!!defaultLangSys, 'Unable to write GSUB: script ' + scriptRecord.tag + ' has no default language system.');
+            return [
+                {name: 'scriptTag' + i, type: 'TAG', value: scriptRecord.tag},
+                {name: 'script' + i, type: 'TABLE', value: new Table('scriptTable', [
+                    {name: 'defaultLangSys', type: 'TABLE', value: new Table('defaultLangSys', [
+                        {name: 'lookupOrder', type: 'USHORT', value: 0},
+                        {name: 'reqFeatureIndex', type: 'USHORT', value: defaultLangSys.reqFeatureIndex}]
+                        .concat(ushortList('featureIndex', defaultLangSys.featureIndexes)))}
+                    ].concat(recordList('langSys', script.langSysRecords, function(langSysRecord, i) {
+                        var langSys = langSysRecord.langSys;
+                        return [
+                            {name: 'langSysTag' + i, type: 'TAG', value: langSysRecord.tag},
+                            {name: 'langSys' + i, type: 'TABLE', value: new Table('langSys', [
+                                {name: 'lookupOrder', type: 'USHORT', value: 0},
+                                {name: 'reqFeatureIndex', type: 'USHORT', value: langSys.reqFeatureIndex}
+                                ].concat(ushortList('featureIndex', langSys.featureIndexes)))}
+                        ];
+                    })))}
+            ];
+        })
+    );
+}
+ScriptList.prototype = Object.create(Table.prototype);
+ScriptList.prototype.constructor = ScriptList;
+
+/**
+ * @exports opentype.FeatureList
+ * @class
+ * @param {opentype.Table}
+ * @constructor
+ * @extends opentype.Table
+ */
+function FeatureList(featureListTable) {
+    Table.call(this, 'featureListTable',
+        recordList('featureRecord', featureListTable, function(featureRecord, i) {
+            var feature = featureRecord.feature;
+            return [
+                {name: 'featureTag' + i, type: 'TAG', value: featureRecord.tag},
+                {name: 'feature' + i, type: 'TABLE', value: new Table('featureTable', [
+                    {name: 'featureParams', type: 'USHORT', value: feature.featureParams} ].concat(ushortList('lookupListIndex', feature.lookupListIndexes)))}
+            ];
+        })
+    );
+}
+FeatureList.prototype = Object.create(Table.prototype);
+FeatureList.prototype.constructor = FeatureList;
+
+/**
+ * @exports opentype.LookupList
+ * @class
+ * @param {opentype.Table}
+ * @param {Object}
+ * @constructor
+ * @extends opentype.Table
+ */
+function LookupList(lookupListTable, subtableMakers) {
+    Table.call(this, 'lookupListTable', tableList('lookup', lookupListTable, function(lookupTable) {
+        var subtableCallback = subtableMakers[lookupTable.lookupType];
+        check.assert(!!subtableCallback, 'Unable to write GSUB lookup type ' + lookupTable.lookupType + ' tables.');
+        return new Table('lookupTable', [
+            {name: 'lookupType', type: 'USHORT', value: lookupTable.lookupType},
+            {name: 'lookupFlag', type: 'USHORT', value: lookupTable.lookupFlag}
+        ].concat(tableList('subtable', lookupTable.subtables, subtableCallback)));
+    }));
+}
+LookupList.prototype = Object.create(Table.prototype);
+LookupList.prototype.constructor = LookupList;
+
+// Record = same as Table, but inlined (a Table has an offset and its data is further in the stream)
+// Don't use offsets inside Records (probable bug), only in Tables.
+var table = {
+    Table: Table,
+    Record: Table,
+    Coverage: Coverage,
+    ScriptList: ScriptList,
+    FeatureList: FeatureList,
+    LookupList: LookupList,
+    ushortList: ushortList,
+    tableList: tableList,
+    recordList: recordList,
+};
+
+// Parsing utility functions
+
+// Retrieve an unsigned byte from the DataView.
+function getByte(dataView, offset) {
+    return dataView.getUint8(offset);
+}
+
+// Retrieve an unsigned 16-bit short from the DataView.
+// The value is stored in big endian.
+function getUShort(dataView, offset) {
+    return dataView.getUint16(offset, false);
+}
+
+// Retrieve a signed 16-bit short from the DataView.
+// The value is stored in big endian.
+function getShort(dataView, offset) {
+    return dataView.getInt16(offset, false);
+}
+
+// Retrieve an unsigned 32-bit long from the DataView.
+// The value is stored in big endian.
+function getULong(dataView, offset) {
+    return dataView.getUint32(offset, false);
+}
+
+// Retrieve a 32-bit signed fixed-point number (16.16) from the DataView.
+// The value is stored in big endian.
+function getFixed(dataView, offset) {
+    var decimal = dataView.getInt16(offset, false);
+    var fraction = dataView.getUint16(offset + 2, false);
+    return decimal + fraction / 65535;
+}
+
+// Retrieve a 4-character tag from the DataView.
+// Tags are used to identify tables.
+function getTag(dataView, offset) {
+    var tag = '';
+    for (var i = offset; i < offset + 4; i += 1) {
+        tag += String.fromCharCode(dataView.getInt8(i));
+    }
+
+    return tag;
+}
+
+// Retrieve an offset from the DataView.
+// Offsets are 1 to 4 bytes in length, depending on the offSize argument.
+function getOffset(dataView, offset, offSize) {
+    var v = 0;
+    for (var i = 0; i < offSize; i += 1) {
+        v <<= 8;
+        v += dataView.getUint8(offset + i);
+    }
+
+    return v;
+}
+
+// Retrieve a number of bytes from start offset to the end offset from the DataView.
+function getBytes(dataView, startOffset, endOffset) {
+    var bytes = [];
+    for (var i = startOffset; i < endOffset; i += 1) {
+        bytes.push(dataView.getUint8(i));
+    }
+
+    return bytes;
+}
+
+// Convert the list of bytes to a string.
+function bytesToString(bytes) {
+    var s = '';
+    for (var i = 0; i < bytes.length; i += 1) {
+        s += String.fromCharCode(bytes[i]);
+    }
+
+    return s;
+}
+
+var typeOffsets = {
+    byte: 1,
+    uShort: 2,
+    short: 2,
+    uLong: 4,
+    fixed: 4,
+    longDateTime: 8,
+    tag: 4
+};
+
+// A stateful parser that changes the offset whenever a value is retrieved.
+// The data is a DataView.
+function Parser(data, offset) {
+    this.data = data;
+    this.offset = offset;
+    this.relativeOffset = 0;
+}
+
+Parser.prototype.parseByte = function() {
+    var v = this.data.getUint8(this.offset + this.relativeOffset);
+    this.relativeOffset += 1;
+    return v;
+};
+
+Parser.prototype.parseChar = function() {
+    var v = this.data.getInt8(this.offset + this.relativeOffset);
+    this.relativeOffset += 1;
+    return v;
+};
+
+Parser.prototype.parseCard8 = Parser.prototype.parseByte;
+
+Parser.prototype.parseUShort = function() {
+    var v = this.data.getUint16(this.offset + this.relativeOffset);
+    this.relativeOffset += 2;
+    return v;
+};
+
+Parser.prototype.parseCard16 = Parser.prototype.parseUShort;
+Parser.prototype.parseSID = Parser.prototype.parseUShort;
+Parser.prototype.parseOffset16 = Parser.prototype.parseUShort;
+
+Parser.prototype.parseShort = function() {
+    var v = this.data.getInt16(this.offset + this.relativeOffset);
+    this.relativeOffset += 2;
+    return v;
+};
+
+Parser.prototype.parseF2Dot14 = function() {
+    var v = this.data.getInt16(this.offset + this.relativeOffset) / 16384;
+    this.relativeOffset += 2;
+    return v;
+};
+
+Parser.prototype.parseULong = function() {
+    var v = getULong(this.data, this.offset + this.relativeOffset);
+    this.relativeOffset += 4;
+    return v;
+};
+
+Parser.prototype.parseFixed = function() {
+    var v = getFixed(this.data, this.offset + this.relativeOffset);
+    this.relativeOffset += 4;
+    return v;
+};
+
+Parser.prototype.parseString = function(length) {
+    var dataView = this.data;
+    var offset = this.offset + this.relativeOffset;
+    var string = '';
+    this.relativeOffset += length;
+    for (var i = 0; i < length; i++) {
+        string += String.fromCharCode(dataView.getUint8(offset + i));
+    }
+
+    return string;
+};
+
+Parser.prototype.parseTag = function() {
+    return this.parseString(4);
+};
+
+// LONGDATETIME is a 64-bit integer.
+// JavaScript and unix timestamps traditionally use 32 bits, so we
+// only take the last 32 bits.
+// + Since until 2038 those bits will be filled by zeros we can ignore them.
+Parser.prototype.parseLongDateTime = function() {
+    var v = getULong(this.data, this.offset + this.relativeOffset + 4);
+    // Subtract seconds between 01/01/1904 and 01/01/1970
+    // to convert Apple Mac timestamp to Standard Unix timestamp
+    v -= 2082844800;
+    this.relativeOffset += 8;
+    return v;
+};
+
+Parser.prototype.parseVersion = function() {
+    var major = getUShort(this.data, this.offset + this.relativeOffset);
+
+    // How to interpret the minor version is very vague in the spec. 0x5000 is 5, 0x1000 is 1
+    // This returns the correct number if minor = 0xN000 where N is 0-9
+    var minor = getUShort(this.data, this.offset + this.relativeOffset + 2);
+    this.relativeOffset += 4;
+    return major + minor / 0x1000 / 10;
+};
+
+Parser.prototype.skip = function(type, amount) {
+    if (amount === undefined) {
+        amount = 1;
+    }
+
+    this.relativeOffset += typeOffsets[type] * amount;
+};
+
+///// Parsing lists and records ///////////////////////////////
+
+// Parse a list of 16 bit unsigned integers. The length of the list can be read on the stream
+// or provided as an argument.
+Parser.prototype.parseOffset16List =
+Parser.prototype.parseUShortList = function(count) {
+    if (count === undefined) { count = this.parseUShort(); }
+    var offsets = new Array(count);
+    var dataView = this.data;
+    var offset = this.offset + this.relativeOffset;
+    for (var i = 0; i < count; i++) {
+        offsets[i] = dataView.getUint16(offset);
+        offset += 2;
+    }
+
+    this.relativeOffset += count * 2;
+    return offsets;
+};
+
+// Parses a list of 16 bit signed integers.
+Parser.prototype.parseShortList = function(count) {
+    var list = new Array(count);
+    var dataView = this.data;
+    var offset = this.offset + this.relativeOffset;
+    for (var i = 0; i < count; i++) {
+        list[i] = dataView.getInt16(offset);
+        offset += 2;
+    }
+
+    this.relativeOffset += count * 2;
+    return list;
+};
+
+// Parses a list of bytes.
+Parser.prototype.parseByteList = function(count) {
+    var list = new Array(count);
+    var dataView = this.data;
+    var offset = this.offset + this.relativeOffset;
+    for (var i = 0; i < count; i++) {
+        list[i] = dataView.getUint8(offset++);
+    }
+
+    this.relativeOffset += count;
+    return list;
+};
+
+/**
+ * Parse a list of items.
+ * Record count is optional, if omitted it is read from the stream.
+ * itemCallback is one of the Parser methods.
+ */
+Parser.prototype.parseList = function(count, itemCallback) {
+    var this$1 = this;
+
+    if (!itemCallback) {
+        itemCallback = count;
+        count = this.parseUShort();
+    }
+    var list = new Array(count);
+    for (var i = 0; i < count; i++) {
+        list[i] = itemCallback.call(this$1);
+    }
+    return list;
+};
+
+/**
+ * Parse a list of records.
+ * Record count is optional, if omitted it is read from the stream.
+ * Example of recordDescription: { sequenceIndex: Parser.uShort, lookupListIndex: Parser.uShort }
+ */
+Parser.prototype.parseRecordList = function(count, recordDescription) {
+    var this$1 = this;
+
+    // If the count argument is absent, read it in the stream.
+    if (!recordDescription) {
+        recordDescription = count;
+        count = this.parseUShort();
+    }
+    var records = new Array(count);
+    var fields = Object.keys(recordDescription);
+    for (var i = 0; i < count; i++) {
+        var rec = {};
+        for (var j = 0; j < fields.length; j++) {
+            var fieldName = fields[j];
+            var fieldType = recordDescription[fieldName];
+            rec[fieldName] = fieldType.call(this$1);
+        }
+        records[i] = rec;
+    }
+    return records;
+};
+
+// Parse a data structure into an object
+// Example of description: { sequenceIndex: Parser.uShort, lookupListIndex: Parser.uShort }
+Parser.prototype.parseStruct = function(description) {
+    var this$1 = this;
+
+    if (typeof description === 'function') {
+        return description.call(this);
+    } else {
+        var fields = Object.keys(description);
+        var struct = {};
+        for (var j = 0; j < fields.length; j++) {
+            var fieldName = fields[j];
+            var fieldType = description[fieldName];
+            struct[fieldName] = fieldType.call(this$1);
+        }
+        return struct;
+    }
+};
+
+Parser.prototype.parsePointer = function(description) {
+    var structOffset = this.parseOffset16();
+    if (structOffset > 0) {                         // NULL offset => return undefined
+        return new Parser(this.data, this.offset + structOffset).parseStruct(description);
+    }
+    return undefined;
+};
