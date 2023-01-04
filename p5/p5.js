@@ -29658,3 +29658,966 @@ BoundingBox.prototype.addPoint = function(x, y) {
  * This extends the bounding box to include the X coordinate.
  * This function is used internally inside of addBezier.
  * @param {number} x - The X coordinate of the point.
+ */
+BoundingBox.prototype.addX = function(x) {
+    this.addPoint(x, null);
+};
+
+/**
+ * Add a Y coordinate to the bounding box.
+ * This extends the bounding box to include the Y coordinate.
+ * This function is used internally inside of addBezier.
+ * @param {number} y - The Y coordinate of the point.
+ */
+BoundingBox.prototype.addY = function(y) {
+    this.addPoint(null, y);
+};
+
+/**
+ * Add a Bézier curve to the bounding box.
+ * This extends the bounding box to include the entire Bézier.
+ * @param {number} x0 - The starting X coordinate.
+ * @param {number} y0 - The starting Y coordinate.
+ * @param {number} x1 - The X coordinate of the first control point.
+ * @param {number} y1 - The Y coordinate of the first control point.
+ * @param {number} x2 - The X coordinate of the second control point.
+ * @param {number} y2 - The Y coordinate of the second control point.
+ * @param {number} x - The ending X coordinate.
+ * @param {number} y - The ending Y coordinate.
+ */
+BoundingBox.prototype.addBezier = function(x0, y0, x1, y1, x2, y2, x, y) {
+    var this$1 = this;
+
+    // This code is based on http://nishiohirokazu.blogspot.com/2009/06/how-to-calculate-bezier-curves-bounding.html
+    // and https://github.com/icons8/svg-path-bounding-box
+
+    var p0 = [x0, y0];
+    var p1 = [x1, y1];
+    var p2 = [x2, y2];
+    var p3 = [x, y];
+
+    this.addPoint(x0, y0);
+    this.addPoint(x, y);
+
+    for (var i = 0; i <= 1; i++) {
+        var b = 6 * p0[i] - 12 * p1[i] + 6 * p2[i];
+        var a = -3 * p0[i] + 9 * p1[i] - 9 * p2[i] + 3 * p3[i];
+        var c = 3 * p1[i] - 3 * p0[i];
+
+        if (a === 0) {
+            if (b === 0) { continue; }
+            var t = -c / b;
+            if (0 < t && t < 1) {
+                if (i === 0) { this$1.addX(derive(p0[i], p1[i], p2[i], p3[i], t)); }
+                if (i === 1) { this$1.addY(derive(p0[i], p1[i], p2[i], p3[i], t)); }
+            }
+            continue;
+        }
+
+        var b2ac = Math.pow(b, 2) - 4 * c * a;
+        if (b2ac < 0) { continue; }
+        var t1 = (-b + Math.sqrt(b2ac)) / (2 * a);
+        if (0 < t1 && t1 < 1) {
+            if (i === 0) { this$1.addX(derive(p0[i], p1[i], p2[i], p3[i], t1)); }
+            if (i === 1) { this$1.addY(derive(p0[i], p1[i], p2[i], p3[i], t1)); }
+        }
+        var t2 = (-b - Math.sqrt(b2ac)) / (2 * a);
+        if (0 < t2 && t2 < 1) {
+            if (i === 0) { this$1.addX(derive(p0[i], p1[i], p2[i], p3[i], t2)); }
+            if (i === 1) { this$1.addY(derive(p0[i], p1[i], p2[i], p3[i], t2)); }
+        }
+    }
+};
+
+/**
+ * Add a quadratic curve to the bounding box.
+ * This extends the bounding box to include the entire quadratic curve.
+ * @param {number} x0 - The starting X coordinate.
+ * @param {number} y0 - The starting Y coordinate.
+ * @param {number} x1 - The X coordinate of the control point.
+ * @param {number} y1 - The Y coordinate of the control point.
+ * @param {number} x - The ending X coordinate.
+ * @param {number} y - The ending Y coordinate.
+ */
+BoundingBox.prototype.addQuad = function(x0, y0, x1, y1, x, y) {
+    var cp1x = x0 + 2 / 3 * (x1 - x0);
+    var cp1y = y0 + 2 / 3 * (y1 - y0);
+    var cp2x = cp1x + 1 / 3 * (x - x0);
+    var cp2y = cp1y + 1 / 3 * (y - y0);
+    this.addBezier(x0, y0, cp1x, cp1y, cp2x, cp2y, x, y);
+};
+
+// Geometric objects
+
+/**
+ * A bézier path containing a set of path commands similar to a SVG path.
+ * Paths can be drawn on a context using `draw`.
+ * @exports opentype.Path
+ * @class
+ * @constructor
+ */
+function Path() {
+    this.commands = [];
+    this.fill = 'black';
+    this.stroke = null;
+    this.strokeWidth = 1;
+}
+
+/**
+ * @param  {number} x
+ * @param  {number} y
+ */
+Path.prototype.moveTo = function(x, y) {
+    this.commands.push({
+        type: 'M',
+        x: x,
+        y: y
+    });
+};
+
+/**
+ * @param  {number} x
+ * @param  {number} y
+ */
+Path.prototype.lineTo = function(x, y) {
+    this.commands.push({
+        type: 'L',
+        x: x,
+        y: y
+    });
+};
+
+/**
+ * Draws cubic curve
+ * @function
+ * curveTo
+ * @memberof opentype.Path.prototype
+ * @param  {number} x1 - x of control 1
+ * @param  {number} y1 - y of control 1
+ * @param  {number} x2 - x of control 2
+ * @param  {number} y2 - y of control 2
+ * @param  {number} x - x of path point
+ * @param  {number} y - y of path point
+ */
+
+/**
+ * Draws cubic curve
+ * @function
+ * bezierCurveTo
+ * @memberof opentype.Path.prototype
+ * @param  {number} x1 - x of control 1
+ * @param  {number} y1 - y of control 1
+ * @param  {number} x2 - x of control 2
+ * @param  {number} y2 - y of control 2
+ * @param  {number} x - x of path point
+ * @param  {number} y - y of path point
+ * @see curveTo
+ */
+Path.prototype.curveTo = Path.prototype.bezierCurveTo = function(x1, y1, x2, y2, x, y) {
+    this.commands.push({
+        type: 'C',
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        x: x,
+        y: y
+    });
+};
+
+/**
+ * Draws quadratic curve
+ * @function
+ * quadraticCurveTo
+ * @memberof opentype.Path.prototype
+ * @param  {number} x1 - x of control
+ * @param  {number} y1 - y of control
+ * @param  {number} x - x of path point
+ * @param  {number} y - y of path point
+ */
+
+/**
+ * Draws quadratic curve
+ * @function
+ * quadTo
+ * @memberof opentype.Path.prototype
+ * @param  {number} x1 - x of control
+ * @param  {number} y1 - y of control
+ * @param  {number} x - x of path point
+ * @param  {number} y - y of path point
+ */
+Path.prototype.quadTo = Path.prototype.quadraticCurveTo = function(x1, y1, x, y) {
+    this.commands.push({
+        type: 'Q',
+        x1: x1,
+        y1: y1,
+        x: x,
+        y: y
+    });
+};
+
+/**
+ * Closes the path
+ * @function closePath
+ * @memberof opentype.Path.prototype
+ */
+
+/**
+ * Close the path
+ * @function close
+ * @memberof opentype.Path.prototype
+ */
+Path.prototype.close = Path.prototype.closePath = function() {
+    this.commands.push({
+        type: 'Z'
+    });
+};
+
+/**
+ * Add the given path or list of commands to the commands of this path.
+ * @param  {Array} pathOrCommands - another opentype.Path, an opentype.BoundingBox, or an array of commands.
+ */
+Path.prototype.extend = function(pathOrCommands) {
+    if (pathOrCommands.commands) {
+        pathOrCommands = pathOrCommands.commands;
+    } else if (pathOrCommands instanceof BoundingBox) {
+        var box = pathOrCommands;
+        this.moveTo(box.x1, box.y1);
+        this.lineTo(box.x2, box.y1);
+        this.lineTo(box.x2, box.y2);
+        this.lineTo(box.x1, box.y2);
+        this.close();
+        return;
+    }
+
+    Array.prototype.push.apply(this.commands, pathOrCommands);
+};
+
+/**
+ * Calculate the bounding box of the path.
+ * @returns {opentype.BoundingBox}
+ */
+Path.prototype.getBoundingBox = function() {
+    var this$1 = this;
+
+    var box = new BoundingBox();
+
+    var startX = 0;
+    var startY = 0;
+    var prevX = 0;
+    var prevY = 0;
+    for (var i = 0; i < this.commands.length; i++) {
+        var cmd = this$1.commands[i];
+        switch (cmd.type) {
+            case 'M':
+                box.addPoint(cmd.x, cmd.y);
+                startX = prevX = cmd.x;
+                startY = prevY = cmd.y;
+                break;
+            case 'L':
+                box.addPoint(cmd.x, cmd.y);
+                prevX = cmd.x;
+                prevY = cmd.y;
+                break;
+            case 'Q':
+                box.addQuad(prevX, prevY, cmd.x1, cmd.y1, cmd.x, cmd.y);
+                prevX = cmd.x;
+                prevY = cmd.y;
+                break;
+            case 'C':
+                box.addBezier(prevX, prevY, cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+                prevX = cmd.x;
+                prevY = cmd.y;
+                break;
+            case 'Z':
+                prevX = startX;
+                prevY = startY;
+                break;
+            default:
+                throw new Error('Unexpected path command ' + cmd.type);
+        }
+    }
+    if (box.isEmpty()) {
+        box.addPoint(0, 0);
+    }
+    return box;
+};
+
+/**
+ * Draw the path to a 2D context.
+ * @param {CanvasRenderingContext2D} ctx - A 2D drawing context.
+ */
+Path.prototype.draw = function(ctx) {
+    var this$1 = this;
+
+    ctx.beginPath();
+    for (var i = 0; i < this.commands.length; i += 1) {
+        var cmd = this$1.commands[i];
+        if (cmd.type === 'M') {
+            ctx.moveTo(cmd.x, cmd.y);
+        } else if (cmd.type === 'L') {
+            ctx.lineTo(cmd.x, cmd.y);
+        } else if (cmd.type === 'C') {
+            ctx.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+        } else if (cmd.type === 'Q') {
+            ctx.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
+        } else if (cmd.type === 'Z') {
+            ctx.closePath();
+        }
+    }
+
+    if (this.fill) {
+        ctx.fillStyle = this.fill;
+        ctx.fill();
+    }
+
+    if (this.stroke) {
+        ctx.strokeStyle = this.stroke;
+        ctx.lineWidth = this.strokeWidth;
+        ctx.stroke();
+    }
+};
+
+/**
+ * Convert the Path to a string of path data instructions
+ * See http://www.w3.org/TR/SVG/paths.html#PathData
+ * @param  {number} [decimalPlaces=2] - The amount of decimal places for floating-point values
+ * @return {string}
+ */
+Path.prototype.toPathData = function(decimalPlaces) {
+    var this$1 = this;
+
+    decimalPlaces = decimalPlaces !== undefined ? decimalPlaces : 2;
+
+    function floatToString(v) {
+        if (Math.round(v) === v) {
+            return '' + Math.round(v);
+        } else {
+            return v.toFixed(decimalPlaces);
+        }
+    }
+
+    function packValues() {
+        var arguments$1 = arguments;
+
+        var s = '';
+        for (var i = 0; i < arguments.length; i += 1) {
+            var v = arguments$1[i];
+            if (v >= 0 && i > 0) {
+                s += ' ';
+            }
+
+            s += floatToString(v);
+        }
+
+        return s;
+    }
+
+    var d = '';
+    for (var i = 0; i < this.commands.length; i += 1) {
+        var cmd = this$1.commands[i];
+        if (cmd.type === 'M') {
+            d += 'M' + packValues(cmd.x, cmd.y);
+        } else if (cmd.type === 'L') {
+            d += 'L' + packValues(cmd.x, cmd.y);
+        } else if (cmd.type === 'C') {
+            d += 'C' + packValues(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+        } else if (cmd.type === 'Q') {
+            d += 'Q' + packValues(cmd.x1, cmd.y1, cmd.x, cmd.y);
+        } else if (cmd.type === 'Z') {
+            d += 'Z';
+        }
+    }
+
+    return d;
+};
+
+/**
+ * Convert the path to an SVG <path> element, as a string.
+ * @param  {number} [decimalPlaces=2] - The amount of decimal places for floating-point values
+ * @return {string}
+ */
+Path.prototype.toSVG = function(decimalPlaces) {
+    var svg = '<path d="';
+    svg += this.toPathData(decimalPlaces);
+    svg += '"';
+    if (this.fill && this.fill !== 'black') {
+        if (this.fill === null) {
+            svg += ' fill="none"';
+        } else {
+            svg += ' fill="' + this.fill + '"';
+        }
+    }
+
+    if (this.stroke) {
+        svg += ' stroke="' + this.stroke + '" stroke-width="' + this.strokeWidth + '"';
+    }
+
+    svg += '/>';
+    return svg;
+};
+
+/**
+ * Convert the path to a DOM element.
+ * @param  {number} [decimalPlaces=2] - The amount of decimal places for floating-point values
+ * @return {SVGPathElement}
+ */
+Path.prototype.toDOMElement = function(decimalPlaces) {
+    var temporaryPath = this.toPathData(decimalPlaces);
+    var newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+    newPath.setAttribute('d', temporaryPath);
+
+    return newPath;
+};
+
+// Run-time checking of preconditions.
+
+function fail(message) {
+    throw new Error(message);
+}
+
+// Precondition function that checks if the given predicate is true.
+// If not, it will throw an error.
+function argument(predicate, message) {
+    if (!predicate) {
+        fail(message);
+    }
+}
+
+var check = { fail: fail, argument: argument, assert: argument };
+
+// Data types used in the OpenType font file.
+// All OpenType fonts use Motorola-style byte ordering (Big Endian)
+
+var LIMIT16 = 32768; // The limit at which a 16-bit number switches signs == 2^15
+var LIMIT32 = 2147483648; // The limit at which a 32-bit number switches signs == 2 ^ 31
+
+/**
+ * @exports opentype.decode
+ * @class
+ */
+var decode = {};
+/**
+ * @exports opentype.encode
+ * @class
+ */
+var encode = {};
+/**
+ * @exports opentype.sizeOf
+ * @class
+ */
+var sizeOf = {};
+
+// Return a function that always returns the same value.
+function constant(v) {
+    return function() {
+        return v;
+    };
+}
+
+// OpenType data types //////////////////////////////////////////////////////
+
+/**
+ * Convert an 8-bit unsigned integer to a list of 1 byte.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.BYTE = function(v) {
+    check.argument(v >= 0 && v <= 255, 'Byte value should be between 0 and 255.');
+    return [v];
+};
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.BYTE = constant(1);
+
+/**
+ * Convert a 8-bit signed integer to a list of 1 byte.
+ * @param {string}
+ * @returns {Array}
+ */
+encode.CHAR = function(v) {
+    return [v.charCodeAt(0)];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.CHAR = constant(1);
+
+/**
+ * Convert an ASCII string to a list of bytes.
+ * @param {string}
+ * @returns {Array}
+ */
+encode.CHARARRAY = function(v) {
+    var b = [];
+    for (var i = 0; i < v.length; i += 1) {
+        b[i] = v.charCodeAt(i);
+    }
+
+    return b;
+};
+
+/**
+ * @param {Array}
+ * @returns {number}
+ */
+sizeOf.CHARARRAY = function(v) {
+    return v.length;
+};
+
+/**
+ * Convert a 16-bit unsigned integer to a list of 2 bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.USHORT = function(v) {
+    return [(v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.USHORT = constant(2);
+
+/**
+ * Convert a 16-bit signed integer to a list of 2 bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.SHORT = function(v) {
+    // Two's complement
+    if (v >= LIMIT16) {
+        v = -(2 * LIMIT16 - v);
+    }
+
+    return [(v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.SHORT = constant(2);
+
+/**
+ * Convert a 24-bit unsigned integer to a list of 3 bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.UINT24 = function(v) {
+    return [(v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.UINT24 = constant(3);
+
+/**
+ * Convert a 32-bit unsigned integer to a list of 4 bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.ULONG = function(v) {
+    return [(v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.ULONG = constant(4);
+
+/**
+ * Convert a 32-bit unsigned integer to a list of 4 bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.LONG = function(v) {
+    // Two's complement
+    if (v >= LIMIT32) {
+        v = -(2 * LIMIT32 - v);
+    }
+
+    return [(v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.LONG = constant(4);
+
+encode.FIXED = encode.ULONG;
+sizeOf.FIXED = sizeOf.ULONG;
+
+encode.FWORD = encode.SHORT;
+sizeOf.FWORD = sizeOf.SHORT;
+
+encode.UFWORD = encode.USHORT;
+sizeOf.UFWORD = sizeOf.USHORT;
+
+/**
+ * Convert a 32-bit Apple Mac timestamp integer to a list of 8 bytes, 64-bit timestamp.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.LONGDATETIME = function(v) {
+    return [0, 0, 0, 0, (v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.LONGDATETIME = constant(8);
+
+/**
+ * Convert a 4-char tag to a list of 4 bytes.
+ * @param {string}
+ * @returns {Array}
+ */
+encode.TAG = function(v) {
+    check.argument(v.length === 4, 'Tag should be exactly 4 ASCII characters.');
+    return [v.charCodeAt(0),
+            v.charCodeAt(1),
+            v.charCodeAt(2),
+            v.charCodeAt(3)];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.TAG = constant(4);
+
+// CFF data types ///////////////////////////////////////////////////////////
+
+encode.Card8 = encode.BYTE;
+sizeOf.Card8 = sizeOf.BYTE;
+
+encode.Card16 = encode.USHORT;
+sizeOf.Card16 = sizeOf.USHORT;
+
+encode.OffSize = encode.BYTE;
+sizeOf.OffSize = sizeOf.BYTE;
+
+encode.SID = encode.USHORT;
+sizeOf.SID = sizeOf.USHORT;
+
+// Convert a numeric operand or charstring number to a variable-size list of bytes.
+/**
+ * Convert a numeric operand or charstring number to a variable-size list of bytes.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.NUMBER = function(v) {
+    if (v >= -107 && v <= 107) {
+        return [v + 139];
+    } else if (v >= 108 && v <= 1131) {
+        v = v - 108;
+        return [(v >> 8) + 247, v & 0xFF];
+    } else if (v >= -1131 && v <= -108) {
+        v = -v - 108;
+        return [(v >> 8) + 251, v & 0xFF];
+    } else if (v >= -32768 && v <= 32767) {
+        return encode.NUMBER16(v);
+    } else {
+        return encode.NUMBER32(v);
+    }
+};
+
+/**
+ * @param {number}
+ * @returns {number}
+ */
+sizeOf.NUMBER = function(v) {
+    return encode.NUMBER(v).length;
+};
+
+/**
+ * Convert a signed number between -32768 and +32767 to a three-byte value.
+ * This ensures we always use three bytes, but is not the most compact format.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.NUMBER16 = function(v) {
+    return [28, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.NUMBER16 = constant(3);
+
+/**
+ * Convert a signed number between -(2^31) and +(2^31-1) to a five-byte value.
+ * This is useful if you want to be sure you always use four bytes,
+ * at the expense of wasting a few bytes for smaller numbers.
+ * @param {number}
+ * @returns {Array}
+ */
+encode.NUMBER32 = function(v) {
+    return [29, (v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF];
+};
+
+/**
+ * @constant
+ * @type {number}
+ */
+sizeOf.NUMBER32 = constant(5);
+
+/**
+ * @param {number}
+ * @returns {Array}
+ */
+encode.REAL = function(v) {
+    var value = v.toString();
+
+    // Some numbers use an epsilon to encode the value. (e.g. JavaScript will store 0.0000001 as 1e-7)
+    // This code converts it back to a number without the epsilon.
+    var m = /\.(\d*?)(?:9{5,20}|0{5,20})\d{0,2}(?:e(.+)|$)/.exec(value);
+    if (m) {
+        var epsilon = parseFloat('1e' + ((m[2] ? +m[2] : 0) + m[1].length));
+        value = (Math.round(v * epsilon) / epsilon).toString();
+    }
+
+    var nibbles = '';
+    for (var i = 0, ii = value.length; i < ii; i += 1) {
+        var c = value[i];
+        if (c === 'e') {
+            nibbles += value[++i] === '-' ? 'c' : 'b';
+        } else if (c === '.') {
+            nibbles += 'a';
+        } else if (c === '-') {
+            nibbles += 'e';
+        } else {
+            nibbles += c;
+        }
+    }
+
+    nibbles += (nibbles.length & 1) ? 'f' : 'ff';
+    var out = [30];
+    for (var i$1 = 0, ii$1 = nibbles.length; i$1 < ii$1; i$1 += 2) {
+        out.push(parseInt(nibbles.substr(i$1, 2), 16));
+    }
+
+    return out;
+};
+
+/**
+ * @param {number}
+ * @returns {number}
+ */
+sizeOf.REAL = function(v) {
+    return encode.REAL(v).length;
+};
+
+encode.NAME = encode.CHARARRAY;
+sizeOf.NAME = sizeOf.CHARARRAY;
+
+encode.STRING = encode.CHARARRAY;
+sizeOf.STRING = sizeOf.CHARARRAY;
+
+/**
+ * @param {DataView} data
+ * @param {number} offset
+ * @param {number} numBytes
+ * @returns {string}
+ */
+decode.UTF8 = function(data, offset, numBytes) {
+    var codePoints = [];
+    var numChars = numBytes;
+    for (var j = 0; j < numChars; j++, offset += 1) {
+        codePoints[j] = data.getUint8(offset);
+    }
+
+    return String.fromCharCode.apply(null, codePoints);
+};
+
+/**
+ * @param {DataView} data
+ * @param {number} offset
+ * @param {number} numBytes
+ * @returns {string}
+ */
+decode.UTF16 = function(data, offset, numBytes) {
+    var codePoints = [];
+    var numChars = numBytes / 2;
+    for (var j = 0; j < numChars; j++, offset += 2) {
+        codePoints[j] = data.getUint16(offset);
+    }
+
+    return String.fromCharCode.apply(null, codePoints);
+};
+
+/**
+ * Convert a JavaScript string to UTF16-BE.
+ * @param {string}
+ * @returns {Array}
+ */
+encode.UTF16 = function(v) {
+    var b = [];
+    for (var i = 0; i < v.length; i += 1) {
+        var codepoint = v.charCodeAt(i);
+        b[b.length] = (codepoint >> 8) & 0xFF;
+        b[b.length] = codepoint & 0xFF;
+    }
+
+    return b;
+};
+
+/**
+ * @param {string}
+ * @returns {number}
+ */
+sizeOf.UTF16 = function(v) {
+    return v.length * 2;
+};
+
+// Data for converting old eight-bit Macintosh encodings to Unicode.
+// This representation is optimized for decoding; encoding is slower
+// and needs more memory. The assumption is that all opentype.js users
+// want to open fonts, but saving a font will be comparatively rare
+// so it can be more expensive. Keyed by IANA character set name.
+//
+// Python script for generating these strings:
+//
+//     s = u''.join([chr(c).decode('mac_greek') for c in range(128, 256)])
+//     print(s.encode('utf-8'))
+/**
+ * @private
+ */
+var eightBitMacEncodings = {
+    'x-mac-croatian':  // Python: 'mac_croatian'
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®Š™´¨≠ŽØ∞±≤≥∆µ∂∑∏š∫ªºΩžø' +
+    '¿¡¬√ƒ≈Ć«Č… ÀÃÕŒœĐ—“”‘’÷◊©⁄€‹›Æ»–·‚„‰ÂćÁčÈÍÎÏÌÓÔđÒÚÛÙıˆ˜¯πË˚¸Êæˇ',
+    'x-mac-cyrillic':  // Python: 'mac_cyrillic'
+    'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ†°Ґ£§•¶І®©™Ђђ≠Ѓѓ∞±≤≥іµґЈЄєЇїЉљЊњ' +
+    'јЅ¬√ƒ≈∆«»… ЋћЌќѕ–—“”‘’÷„ЎўЏџ№Ёёяабвгдежзийклмнопрстуфхцчшщъыьэю',
+    'x-mac-gaelic': // http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/GAELIC.TXT
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØḂ±≤≥ḃĊċḊḋḞḟĠġṀæø' +
+    'ṁṖṗɼƒſṠ«»… ÀÃÕŒœ–—“”‘’ṡẛÿŸṪ€‹›Ŷŷṫ·Ỳỳ⁊ÂÊÁËÈÍÎÏÌÓÔ♣ÒÚÛÙıÝýŴŵẄẅẀẁẂẃ',
+    'x-mac-greek':  // Python: 'mac_greek'
+    'Ä¹²É³ÖÜ΅àâä΄¨çéèêë£™îï•½‰ôö¦€ùûü†ΓΔΘΛΞΠß®©ΣΪ§≠°·Α±≤≥¥ΒΕΖΗΙΚΜΦΫΨΩ' +
+    'άΝ¬ΟΡ≈Τ«»… ΥΧΆΈœ–―“”‘’÷ΉΊΌΎέήίόΏύαβψδεφγηιξκλμνοπώρστθωςχυζϊϋΐΰ\u00AD',
+    'x-mac-icelandic':  // Python: 'mac_iceland'
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûüÝ°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø' +
+    '¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€ÐðÞþý·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ',
+    'x-mac-inuit': // http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/INUIT.TXT
+    'ᐃᐄᐅᐆᐊᐋᐱᐲᐳᐴᐸᐹᑉᑎᑏᑐᑑᑕᑖᑦᑭᑮᑯᑰᑲᑳᒃᒋᒌᒍᒎᒐᒑ°ᒡᒥᒦ•¶ᒧ®©™ᒨᒪᒫᒻᓂᓃᓄᓅᓇᓈᓐᓯᓰᓱᓲᓴᓵᔅᓕᓖᓗ' +
+    'ᓘᓚᓛᓪᔨᔩᔪᔫᔭ… ᔮᔾᕕᕖᕗ–—“”‘’ᕘᕙᕚᕝᕆᕇᕈᕉᕋᕌᕐᕿᖀᖁᖂᖃᖄᖅᖏᖐᖑᖒᖓᖔᖕᙱᙲᙳᙴᙵᙶᖖᖠᖡᖢᖣᖤᖥᖦᕼŁł',
+    'x-mac-ce':  // Python: 'mac_latin2'
+    'ÄĀāÉĄÖÜáąČäčĆćéŹźĎíďĒēĖóėôöõúĚěü†°Ę£§•¶ß®©™ę¨≠ģĮįĪ≤≥īĶ∂∑łĻļĽľĹĺŅ' +
+    'ņŃ¬√ńŇ∆«»… ňŐÕőŌ–—“”‘’÷◊ōŔŕŘ‹›řŖŗŠ‚„šŚśÁŤťÍŽžŪÓÔūŮÚůŰűŲųÝýķŻŁżĢˇ',
+    macintosh:  // Python: 'mac_roman'
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø' +
+    '¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ',
+    'x-mac-romanian':  // Python: 'mac_romanian'
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ĂȘ∞±≤≥¥µ∂∑∏π∫ªºΩăș' +
+    '¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›Țț‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ',
+    'x-mac-turkish':  // Python: 'mac_turkish'
+    'ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø' +
+    '¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸĞğİıŞş‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙˆ˜¯˘˙˚¸˝˛ˇ'
+};
+
+/**
+ * Decodes an old-style Macintosh string. Returns either a Unicode JavaScript
+ * string, or 'undefined' if the encoding is unsupported. For example, we do
+ * not support Chinese, Japanese or Korean because these would need large
+ * mapping tables.
+ * @param {DataView} dataView
+ * @param {number} offset
+ * @param {number} dataLength
+ * @param {string} encoding
+ * @returns {string}
+ */
+decode.MACSTRING = function(dataView, offset, dataLength, encoding) {
+    var table = eightBitMacEncodings[encoding];
+    if (table === undefined) {
+        return undefined;
+    }
+
+    var result = '';
+    for (var i = 0; i < dataLength; i++) {
+        var c = dataView.getUint8(offset + i);
+        // In all eight-bit Mac encodings, the characters 0x00..0x7F are
+        // mapped to U+0000..U+007F; we only need to look up the others.
+        if (c <= 0x7F) {
+            result += String.fromCharCode(c);
+        } else {
+            result += table[c & 0x7F];
+        }
+    }
+
+    return result;
+};
+
+// Helper function for encode.MACSTRING. Returns a dictionary for mapping
+// Unicode character codes to their 8-bit MacOS equivalent. This table
+// is not exactly a super cheap data structure, but we do not care because
+// encoding Macintosh strings is only rarely needed in typical applications.
+var macEncodingTableCache = typeof WeakMap === 'function' && new WeakMap();
+var macEncodingCacheKeys;
+var getMacEncodingTable = function (encoding) {
+    // Since we use encoding as a cache key for WeakMap, it has to be
+    // a String object and not a literal. And at least on NodeJS 2.10.1,
+    // WeakMap requires that the same String instance is passed for cache hits.
+    if (!macEncodingCacheKeys) {
+        macEncodingCacheKeys = {};
+        for (var e in eightBitMacEncodings) {
+            /*jshint -W053 */  // Suppress "Do not use String as a constructor."
+            macEncodingCacheKeys[e] = new String(e);
+        }
+    }
+
+    var cacheKey = macEncodingCacheKeys[encoding];
+    if (cacheKey === undefined) {
+        return undefined;
+    }
+
+    // We can't do "if (cache.has(key)) {return cache.get(key)}" here:
+    // since garbage collection may run at any time, it could also kick in
+    // between the calls to cache.has() and cache.get(). In that case,
+    // we would return 'undefined' even though we do support the encoding.
+    if (macEncodingTableCache) {
+        var cachedTable = macEncodingTableCache.get(cacheKey);
+        if (cachedTable !== undefined) {
+            return cachedTable;
+        }
+    }
+
+    var decodingTable = eightBitMacEncodings[encoding];
+    if (decodingTable === undefined) {
+        return undefined;
+    }
+
+    var encodingTable = {};
+    for (var i = 0; i < decodingTable.length; i++) {
+        encodingTable[decodingTable.charCodeAt(i)] = i + 0x80;
+    }
+
+    if (macEncodingTableCache) {
+        macEncodingTableCache.set(cacheKey, encodingTable);
+    }
+
+    return encodingTable;
+};
+
+/**
+ * Encodes an old-style Macintosh string. Returns a byte array upon success.
+ * If the requested encoding is unsupported, or if the input string contains
+ * a character that cannot be expressed in the encoding, the function returns
+ * 'undefined'.
+ * @param {string} str
+ * @param {string} encoding
+ * @returns {Array}
+ */
