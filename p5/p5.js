@@ -28619,3 +28619,1042 @@ Promise$2.prototype = {
       // failure
     }
     ```
+  
+    Errback Example
+  
+    ```js
+    findResult(function(result, err){
+      if (err) {
+        // failure
+      } else {
+        // success
+      }
+    });
+    ```
+  
+    Promise Example;
+  
+    ```javascript
+    findResult().then(function(result){
+      // success
+    }, function(reason){
+      // failure
+    });
+    ```
+  
+    Advanced Example
+    --------------
+  
+    Synchronous Example
+  
+    ```javascript
+    let author, books;
+  
+    try {
+      author = findAuthor();
+      books  = findBooksByAuthor(author);
+      // success
+    } catch(reason) {
+      // failure
+    }
+    ```
+  
+    Errback Example
+  
+    ```js
+  
+    function foundBooks(books) {
+  
+    }
+  
+    function failure(reason) {
+  
+    }
+  
+    findAuthor(function(author, err){
+      if (err) {
+        failure(err);
+        // failure
+      } else {
+        try {
+          findBoooksByAuthor(author, function(books, err) {
+            if (err) {
+              failure(err);
+            } else {
+              try {
+                foundBooks(books);
+              } catch(reason) {
+                failure(reason);
+              }
+            }
+          });
+        } catch(error) {
+          failure(err);
+        }
+        // success
+      }
+    });
+    ```
+  
+    Promise Example;
+  
+    ```javascript
+    findAuthor().
+      then(findBooksByAuthor).
+      then(function(books){
+        // found books
+    }).catch(function(reason){
+      // something went wrong
+    });
+    ```
+  
+    @method then
+    @param {Function} onFulfilled
+    @param {Function} onRejected
+    Useful for tooling.
+    @return {Promise}
+  */
+  then: then,
+
+  /**
+    `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
+    as the catch block of a try/catch statement.
+  
+    ```js
+    function findAuthor(){
+      throw new Error('couldn't find that author');
+    }
+  
+    // synchronous
+    try {
+      findAuthor();
+    } catch(reason) {
+      // something went wrong
+    }
+  
+    // async with promises
+    findAuthor().catch(function(reason){
+      // something went wrong
+    });
+    ```
+  
+    @method catch
+    @param {Function} onRejection
+    Useful for tooling.
+    @return {Promise}
+  */
+  'catch': function _catch(onRejection) {
+    return this.then(null, onRejection);
+  }
+};
+
+/*global self*/
+function polyfill$1() {
+    var local = undefined;
+
+    if (typeof global !== 'undefined') {
+        local = global;
+    } else if (typeof self !== 'undefined') {
+        local = self;
+    } else {
+        try {
+            local = Function('return this')();
+        } catch (e) {
+            throw new Error('polyfill failed because global object is unavailable in this environment');
+        }
+    }
+
+    var P = local.Promise;
+
+    if (P) {
+        var promiseToString = null;
+        try {
+            promiseToString = Object.prototype.toString.call(P.resolve());
+        } catch (e) {
+            // silently ignored
+        }
+
+        if (promiseToString === '[object Promise]' && !P.cast) {
+            return;
+        }
+    }
+
+    local.Promise = Promise$2;
+}
+
+// Strange compat..
+Promise$2.polyfill = polyfill$1;
+Promise$2.Promise = Promise$2;
+
+return Promise$2;
+
+})));
+
+
+
+}).call(this,_dereq_('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":11}],6:[function(_dereq_,module,exports){
+(function (global, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['exports', 'module'], factory);
+  } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
+    factory(exports, module);
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, mod);
+    global.fetchJsonp = mod.exports;
+  }
+})(this, function (exports, module) {
+  'use strict';
+
+  var defaultOptions = {
+    timeout: 5000,
+    jsonpCallback: 'callback',
+    jsonpCallbackFunction: null
+  };
+
+  function generateCallbackFunction() {
+    return 'jsonp_' + Date.now() + '_' + Math.ceil(Math.random() * 100000);
+  }
+
+  function clearFunction(functionName) {
+    // IE8 throws an exception when you try to delete a property on window
+    // http://stackoverflow.com/a/1824228/751089
+    try {
+      delete window[functionName];
+    } catch (e) {
+      window[functionName] = undefined;
+    }
+  }
+
+  function removeScript(scriptId) {
+    var script = document.getElementById(scriptId);
+    if (script) {
+      document.getElementsByTagName('head')[0].removeChild(script);
+    }
+  }
+
+  function fetchJsonp(_url) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    // to avoid param reassign
+    var url = _url;
+    var timeout = options.timeout || defaultOptions.timeout;
+    var jsonpCallback = options.jsonpCallback || defaultOptions.jsonpCallback;
+
+    var timeoutId = undefined;
+
+    return new Promise(function (resolve, reject) {
+      var callbackFunction = options.jsonpCallbackFunction || generateCallbackFunction();
+      var scriptId = jsonpCallback + '_' + callbackFunction;
+
+      window[callbackFunction] = function (response) {
+        resolve({
+          ok: true,
+          // keep consistent with fetch API
+          json: function json() {
+            return Promise.resolve(response);
+          }
+        });
+
+        if (timeoutId) clearTimeout(timeoutId);
+
+        removeScript(scriptId);
+
+        clearFunction(callbackFunction);
+      };
+
+      // Check if the user set their own params, and if not add a ? to start a list of params
+      url += url.indexOf('?') === -1 ? '?' : '&';
+
+      var jsonpScript = document.createElement('script');
+      jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
+      if (options.charset) {
+        jsonpScript.setAttribute('charset', options.charset);
+      }
+      jsonpScript.id = scriptId;
+      document.getElementsByTagName('head')[0].appendChild(jsonpScript);
+
+      timeoutId = setTimeout(function () {
+        reject(new Error('JSONP request to ' + _url + ' timed out'));
+
+        clearFunction(callbackFunction);
+        removeScript(scriptId);
+        window[callbackFunction] = function () {
+          clearFunction(callbackFunction);
+        };
+      }, timeout);
+
+      // Caught if got 404/500
+      jsonpScript.onerror = function () {
+        reject(new Error('JSONP request to ' + _url + ' failed'));
+
+        clearFunction(callbackFunction);
+        removeScript(scriptId);
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+    });
+  }
+
+  // export as global function
+  /*
+  let local;
+  if (typeof global !== 'undefined') {
+    local = global;
+  } else if (typeof self !== 'undefined') {
+    local = self;
+  } else {
+    try {
+      local = Function('return this')();
+    } catch (e) {
+      throw new Error('polyfill failed because global object is unavailable in this environment');
+    }
+  }
+  local.fetchJsonp = fetchJsonp;
+  */
+
+  module.exports = fetchJsonp;
+});
+},{}],7:[function(_dereq_,module,exports){
+/* FileSaver.js
+ * A saveAs() FileSaver implementation.
+ * 1.3.2
+ * 2016-06-16 18:25:19
+ *
+ * By Eli Grey, http://eligrey.com
+ * License: MIT
+ *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = saveAs || (function(view) {
+	"use strict";
+	// IE <10 is explicitly unsupported
+	if (typeof view === "undefined" || typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
+	}
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = "download" in save_link
+		, click = function(node) {
+			var event = new MouseEvent("click");
+			node.dispatchEvent(event);
+		}
+		, is_safari = /constructor/i.test(view.HTMLElement) || view.safari
+		, is_chrome_ios =/CriOS\/[\d]+/.test(navigator.userAgent)
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		// the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
+		, arbitrary_revoke_timeout = 1000 * 40 // in ms
+		, revoke = function(file) {
+			var revoker = function() {
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			};
+			setTimeout(revoker, arbitrary_revoke_timeout);
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, auto_bom = function(blob) {
+			// prepend BOM for UTF-8 XML and text/* types (including HTML)
+			// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				return new Blob([String.fromCharCode(0xFEFF), blob], {type: blob.type});
+			}
+			return blob;
+		}
+		, FileSaver = function(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, force = type === force_saveable_type
+				, object_url
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					if ((is_chrome_ios || (force && is_safari)) && view.FileReader) {
+						// Safari doesn't allow downloading of blob urls
+						var reader = new FileReader();
+						reader.onloadend = function() {
+							var url = is_chrome_ios ? reader.result : reader.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
+							var popup = view.open(url, '_blank');
+							if(!popup) view.location.href = url;
+							url=undefined; // release reference before dispatching
+							filesaver.readyState = filesaver.DONE;
+							dispatch_all();
+						};
+						reader.readAsDataURL(blob);
+						filesaver.readyState = filesaver.INIT;
+						return;
+					}
+					// don't create more object URLs than needed
+					if (!object_url) {
+						object_url = get_URL().createObjectURL(blob);
+					}
+					if (force) {
+						view.location.href = object_url;
+					} else {
+						var opened = view.open(object_url, "_blank");
+						if (!opened) {
+							// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
+							view.location.href = object_url;
+						}
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+					revoke(object_url);
+				}
+			;
+			filesaver.readyState = filesaver.INIT;
+
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				setTimeout(function() {
+					save_link.href = object_url;
+					save_link.download = name;
+					click(save_link);
+					dispatch_all();
+					revoke(object_url);
+					filesaver.readyState = filesaver.DONE;
+				});
+				return;
+			}
+
+			fs_error();
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name, no_auto_bom) {
+			return new FileSaver(blob, name || blob.name || "download", no_auto_bom);
+		}
+	;
+	// IE 10+ (native saveAs)
+	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+		return function(blob, name, no_auto_bom) {
+			name = name || blob.name || "download";
+
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			return navigator.msSaveOrOpenBlob(blob, name);
+		};
+	}
+
+	FS_proto.abort = function(){};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
+
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
+
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports.saveAs = saveAs;
+} else if ((typeof define !== "undefined" && define !== null) && (define.amd !== null)) {
+  define("FileSaver.js", function() {
+    return saveAs;
+  });
+}
+
+},{}],8:[function(_dereq_,module,exports){
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+},{}],9:[function(_dereq_,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],10:[function(_dereq_,module,exports){
+(function (Buffer){
+/**
+ * https://opentype.js.org v0.7.3 | (c) Frederik De Bleser and other contributors | MIT License | Uses tiny-inflate by Devon Govett
+ */
+
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.opentype = global.opentype || {})));
+}(this, (function (exports) { 'use strict';
+
+var TINF_OK = 0;
+var TINF_DATA_ERROR = -3;
+
+function Tree() {
+  this.table = new Uint16Array(16);   /* table of code length counts */
+  this.trans = new Uint16Array(288);  /* code -> symbol translation table */
+}
+
+function Data(source, dest) {
+  this.source = source;
+  this.sourceIndex = 0;
+  this.tag = 0;
+  this.bitcount = 0;
+  
+  this.dest = dest;
+  this.destLen = 0;
+  
+  this.ltree = new Tree();  /* dynamic length/symbol tree */
+  this.dtree = new Tree();  /* dynamic distance tree */
+}
+
+/* --------------------------------------------------- *
+ * -- uninitialized global data (static structures) -- *
+ * --------------------------------------------------- */
+
+var sltree = new Tree();
+var sdtree = new Tree();
+
+/* extra bits and base tables for length codes */
+var length_bits = new Uint8Array(30);
+var length_base = new Uint16Array(30);
+
+/* extra bits and base tables for distance codes */
+var dist_bits = new Uint8Array(30);
+var dist_base = new Uint16Array(30);
+
+/* special ordering of code length codes */
+var clcidx = new Uint8Array([
+  16, 17, 18, 0, 8, 7, 9, 6,
+  10, 5, 11, 4, 12, 3, 13, 2,
+  14, 1, 15
+]);
+
+/* used by tinf_decode_trees, avoids allocations every call */
+var code_tree = new Tree();
+var lengths = new Uint8Array(288 + 32);
+
+/* ----------------------- *
+ * -- utility functions -- *
+ * ----------------------- */
+
+/* build extra bits and base tables */
+function tinf_build_bits_base(bits, base, delta, first) {
+  var i, sum;
+
+  /* build bits table */
+  for (i = 0; i < delta; ++i) { bits[i] = 0; }
+  for (i = 0; i < 30 - delta; ++i) { bits[i + delta] = i / delta | 0; }
+
+  /* build base table */
+  for (sum = first, i = 0; i < 30; ++i) {
+    base[i] = sum;
+    sum += 1 << bits[i];
+  }
+}
+
+/* build the fixed huffman trees */
+function tinf_build_fixed_trees(lt, dt) {
+  var i;
+
+  /* build fixed length tree */
+  for (i = 0; i < 7; ++i) { lt.table[i] = 0; }
+
+  lt.table[7] = 24;
+  lt.table[8] = 152;
+  lt.table[9] = 112;
+
+  for (i = 0; i < 24; ++i) { lt.trans[i] = 256 + i; }
+  for (i = 0; i < 144; ++i) { lt.trans[24 + i] = i; }
+  for (i = 0; i < 8; ++i) { lt.trans[24 + 144 + i] = 280 + i; }
+  for (i = 0; i < 112; ++i) { lt.trans[24 + 144 + 8 + i] = 144 + i; }
+
+  /* build fixed distance tree */
+  for (i = 0; i < 5; ++i) { dt.table[i] = 0; }
+
+  dt.table[5] = 32;
+
+  for (i = 0; i < 32; ++i) { dt.trans[i] = i; }
+}
+
+/* given an array of code lengths, build a tree */
+var offs = new Uint16Array(16);
+
+function tinf_build_tree(t, lengths, off, num) {
+  var i, sum;
+
+  /* clear code length count table */
+  for (i = 0; i < 16; ++i) { t.table[i] = 0; }
+
+  /* scan symbol lengths, and sum code length counts */
+  for (i = 0; i < num; ++i) { t.table[lengths[off + i]]++; }
+
+  t.table[0] = 0;
+
+  /* compute offset table for distribution sort */
+  for (sum = 0, i = 0; i < 16; ++i) {
+    offs[i] = sum;
+    sum += t.table[i];
+  }
+
+  /* create code->symbol translation table (symbols sorted by code) */
+  for (i = 0; i < num; ++i) {
+    if (lengths[off + i]) { t.trans[offs[lengths[off + i]]++] = i; }
+  }
+}
+
+/* ---------------------- *
+ * -- decode functions -- *
+ * ---------------------- */
+
+/* get one bit from source stream */
+function tinf_getbit(d) {
+  /* check if tag is empty */
+  if (!d.bitcount--) {
+    /* load next tag */
+    d.tag = d.source[d.sourceIndex++];
+    d.bitcount = 7;
+  }
+
+  /* shift bit out of tag */
+  var bit = d.tag & 1;
+  d.tag >>>= 1;
+
+  return bit;
+}
+
+/* read a num bit value from a stream and add base */
+function tinf_read_bits(d, num, base) {
+  if (!num)
+    { return base; }
+
+  while (d.bitcount < 24) {
+    d.tag |= d.source[d.sourceIndex++] << d.bitcount;
+    d.bitcount += 8;
+  }
+
+  var val = d.tag & (0xffff >>> (16 - num));
+  d.tag >>>= num;
+  d.bitcount -= num;
+  return val + base;
+}
+
+/* given a data stream and a tree, decode a symbol */
+function tinf_decode_symbol(d, t) {
+  while (d.bitcount < 24) {
+    d.tag |= d.source[d.sourceIndex++] << d.bitcount;
+    d.bitcount += 8;
+  }
+  
+  var sum = 0, cur = 0, len = 0;
+  var tag = d.tag;
+
+  /* get more bits while code value is above sum */
+  do {
+    cur = 2 * cur + (tag & 1);
+    tag >>>= 1;
+    ++len;
+
+    sum += t.table[len];
+    cur -= t.table[len];
+  } while (cur >= 0);
+  
+  d.tag = tag;
+  d.bitcount -= len;
+
+  return t.trans[sum + cur];
+}
+
+/* given a data stream, decode dynamic trees from it */
+function tinf_decode_trees(d, lt, dt) {
+  var hlit, hdist, hclen;
+  var i, num, length;
+
+  /* get 5 bits HLIT (257-286) */
+  hlit = tinf_read_bits(d, 5, 257);
+
+  /* get 5 bits HDIST (1-32) */
+  hdist = tinf_read_bits(d, 5, 1);
+
+  /* get 4 bits HCLEN (4-19) */
+  hclen = tinf_read_bits(d, 4, 4);
+
+  for (i = 0; i < 19; ++i) { lengths[i] = 0; }
+
+  /* read code lengths for code length alphabet */
+  for (i = 0; i < hclen; ++i) {
+    /* get 3 bits code length (0-7) */
+    var clen = tinf_read_bits(d, 3, 0);
+    lengths[clcidx[i]] = clen;
+  }
+
+  /* build code length tree */
+  tinf_build_tree(code_tree, lengths, 0, 19);
+
+  /* decode code lengths for the dynamic trees */
+  for (num = 0; num < hlit + hdist;) {
+    var sym = tinf_decode_symbol(d, code_tree);
+
+    switch (sym) {
+      case 16:
+        /* copy previous code length 3-6 times (read 2 bits) */
+        var prev = lengths[num - 1];
+        for (length = tinf_read_bits(d, 2, 3); length; --length) {
+          lengths[num++] = prev;
+        }
+        break;
+      case 17:
+        /* repeat code length 0 for 3-10 times (read 3 bits) */
+        for (length = tinf_read_bits(d, 3, 3); length; --length) {
+          lengths[num++] = 0;
+        }
+        break;
+      case 18:
+        /* repeat code length 0 for 11-138 times (read 7 bits) */
+        for (length = tinf_read_bits(d, 7, 11); length; --length) {
+          lengths[num++] = 0;
+        }
+        break;
+      default:
+        /* values 0-15 represent the actual code lengths */
+        lengths[num++] = sym;
+        break;
+    }
+  }
+
+  /* build dynamic trees */
+  tinf_build_tree(lt, lengths, 0, hlit);
+  tinf_build_tree(dt, lengths, hlit, hdist);
+}
+
+/* ----------------------------- *
+ * -- block inflate functions -- *
+ * ----------------------------- */
+
+/* given a stream and two trees, inflate a block of data */
+function tinf_inflate_block_data(d, lt, dt) {
+  while (1) {
+    var sym = tinf_decode_symbol(d, lt);
+
+    /* check for end of block */
+    if (sym === 256) {
+      return TINF_OK;
+    }
+
+    if (sym < 256) {
+      d.dest[d.destLen++] = sym;
+    } else {
+      var length, dist, offs;
+      var i;
+
+      sym -= 257;
+
+      /* possibly get more bits from length code */
+      length = tinf_read_bits(d, length_bits[sym], length_base[sym]);
+
+      dist = tinf_decode_symbol(d, dt);
+
+      /* possibly get more bits from distance code */
+      offs = d.destLen - tinf_read_bits(d, dist_bits[dist], dist_base[dist]);
+
+      /* copy match */
+      for (i = offs; i < offs + length; ++i) {
+        d.dest[d.destLen++] = d.dest[i];
+      }
+    }
+  }
+}
+
+/* inflate an uncompressed block of data */
+function tinf_inflate_uncompressed_block(d) {
+  var length, invlength;
+  var i;
+  
+  /* unread from bitbuffer */
+  while (d.bitcount > 8) {
+    d.sourceIndex--;
+    d.bitcount -= 8;
+  }
+
+  /* get length */
+  length = d.source[d.sourceIndex + 1];
+  length = 256 * length + d.source[d.sourceIndex];
+
+  /* get one's complement of length */
+  invlength = d.source[d.sourceIndex + 3];
+  invlength = 256 * invlength + d.source[d.sourceIndex + 2];
+
+  /* check length */
+  if (length !== (~invlength & 0x0000ffff))
+    { return TINF_DATA_ERROR; }
+
+  d.sourceIndex += 4;
+
+  /* copy block */
+  for (i = length; i; --i)
+    { d.dest[d.destLen++] = d.source[d.sourceIndex++]; }
+
+  /* make sure we start next block on a byte boundary */
+  d.bitcount = 0;
+
+  return TINF_OK;
+}
+
+/* inflate stream from source to dest */
+function tinf_uncompress(source, dest) {
+  var d = new Data(source, dest);
+  var bfinal, btype, res;
+
+  do {
+    /* read final block flag */
+    bfinal = tinf_getbit(d);
+
+    /* read block type (2 bits) */
+    btype = tinf_read_bits(d, 2, 0);
+
+    /* decompress block */
+    switch (btype) {
+      case 0:
+        /* decompress uncompressed block */
+        res = tinf_inflate_uncompressed_block(d);
+        break;
+      case 1:
+        /* decompress block with fixed huffman trees */
+        res = tinf_inflate_block_data(d, sltree, sdtree);
+        break;
+      case 2:
+        /* decompress block with dynamic huffman trees */
+        tinf_decode_trees(d, d.ltree, d.dtree);
+        res = tinf_inflate_block_data(d, d.ltree, d.dtree);
+        break;
+      default:
+        res = TINF_DATA_ERROR;
+    }
+
+    if (res !== TINF_OK)
+      { throw new Error('Data error'); }
+
+  } while (!bfinal);
+
+  if (d.destLen < d.dest.length) {
+    if (typeof d.dest.slice === 'function')
+      { return d.dest.slice(0, d.destLen); }
+    else
+      { return d.dest.subarray(0, d.destLen); }
+  }
+  
+  return d.dest;
+}
+
+/* -------------------- *
+ * -- initialization -- *
+ * -------------------- */
+
+/* build fixed huffman trees */
+tinf_build_fixed_trees(sltree, sdtree);
+
+/* build extra bits and base tables */
+tinf_build_bits_base(length_bits, length_base, 4, 3);
+tinf_build_bits_base(dist_bits, dist_base, 2, 1);
+
+/* fix a special case */
+length_bits[28] = 0;
+length_base[28] = 258;
+
+var index = tinf_uncompress;
+
+// The Bounding Box object
+
+function derive(v0, v1, v2, v3, t) {
+    return Math.pow(1 - t, 3) * v0 +
+        3 * Math.pow(1 - t, 2) * t * v1 +
+        3 * (1 - t) * Math.pow(t, 2) * v2 +
+        Math.pow(t, 3) * v3;
+}
+/**
+ * A bounding box is an enclosing box that describes the smallest measure within which all the points lie.
+ * It is used to calculate the bounding box of a glyph or text path.
+ *
+ * On initialization, x1/y1/x2/y2 will be NaN. Check if the bounding box is empty using `isEmpty()`.
+ *
+ * @exports opentype.BoundingBox
+ * @class
+ * @constructor
+ */
+function BoundingBox() {
+    this.x1 = Number.NaN;
+    this.y1 = Number.NaN;
+    this.x2 = Number.NaN;
+    this.y2 = Number.NaN;
+}
+
+/**
+ * Returns true if the bounding box is empty, that is, no points have been added to the box yet.
+ */
+BoundingBox.prototype.isEmpty = function() {
+    return isNaN(this.x1) || isNaN(this.y1) || isNaN(this.x2) || isNaN(this.y2);
+};
+
+/**
+ * Add the point to the bounding box.
+ * The x1/y1/x2/y2 coordinates of the bounding box will now encompass the given point.
+ * @param {number} x - The X coordinate of the point.
+ * @param {number} y - The Y coordinate of the point.
+ */
+BoundingBox.prototype.addPoint = function(x, y) {
+    if (typeof x === 'number') {
+        if (isNaN(this.x1) || isNaN(this.x2)) {
+            this.x1 = x;
+            this.x2 = x;
+        }
+        if (x < this.x1) {
+            this.x1 = x;
+        }
+        if (x > this.x2) {
+            this.x2 = x;
+        }
+    }
+    if (typeof y === 'number') {
+        if (isNaN(this.y1) || isNaN(this.y2)) {
+            this.y1 = y;
+            this.y2 = y;
+        }
+        if (y < this.y1) {
+            this.y1 = y;
+        }
+        if (y > this.y2) {
+            this.y2 = y;
+        }
+    }
+};
+
+/**
+ * Add a X coordinate to the bounding box.
+ * This extends the bounding box to include the X coordinate.
+ * This function is used internally inside of addBezier.
+ * @param {number} x - The X coordinate of the point.
