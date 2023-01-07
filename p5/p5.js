@@ -32554,3 +32554,988 @@ function parseGlyfTable(data, start, loca, font) {
     for (var i = 0; i < loca.length - 1; i += 1) {
         var offset = loca[i];
         var nextOffset = loca[i + 1];
+        if (offset !== nextOffset) {
+            glyphs.push(i, glyphset.ttfGlyphLoader(font, i, parseGlyph, data, start + offset, buildPath));
+        } else {
+            glyphs.push(i, glyphset.glyphLoader(font, i));
+        }
+    }
+
+    return glyphs;
+}
+
+var glyf = { getPath: getPath, parse: parseGlyfTable };
+
+// The Glyph object
+
+function getPathDefinition(glyph, path) {
+    var _path = path || {commands: []};
+    return {
+        configurable: true,
+
+        get: function() {
+            if (typeof _path === 'function') {
+                _path = _path();
+            }
+
+            return _path;
+        },
+
+        set: function(p) {
+            _path = p;
+        }
+    };
+}
+/**
+ * @typedef GlyphOptions
+ * @type Object
+ * @property {string} [name] - The glyph name
+ * @property {number} [unicode]
+ * @property {Array} [unicodes]
+ * @property {number} [xMin]
+ * @property {number} [yMin]
+ * @property {number} [xMax]
+ * @property {number} [yMax]
+ * @property {number} [advanceWidth]
+ */
+
+// A Glyph is an individual mark that often corresponds to a character.
+// Some glyphs, such as ligatures, are a combination of many characters.
+// Glyphs are the basic building blocks of a font.
+//
+// The `Glyph` class contains utility methods for drawing the path and its points.
+/**
+ * @exports opentype.Glyph
+ * @class
+ * @param {GlyphOptions}
+ * @constructor
+ */
+function Glyph(options) {
+    // By putting all the code on a prototype function (which is only declared once)
+    // we reduce the memory requirements for larger fonts by some 2%
+    this.bindConstructorValues(options);
+}
+
+/**
+ * @param  {GlyphOptions}
+ */
+Glyph.prototype.bindConstructorValues = function(options) {
+    this.index = options.index || 0;
+
+    // These three values cannot be deferred for memory optimization:
+    this.name = options.name || null;
+    this.unicode = options.unicode || undefined;
+    this.unicodes = options.unicodes || options.unicode !== undefined ? [options.unicode] : [];
+
+    // But by binding these values only when necessary, we reduce can
+    // the memory requirements by almost 3% for larger fonts.
+    if (options.xMin) {
+        this.xMin = options.xMin;
+    }
+
+    if (options.yMin) {
+        this.yMin = options.yMin;
+    }
+
+    if (options.xMax) {
+        this.xMax = options.xMax;
+    }
+
+    if (options.yMax) {
+        this.yMax = options.yMax;
+    }
+
+    if (options.advanceWidth) {
+        this.advanceWidth = options.advanceWidth;
+    }
+
+    // The path for a glyph is the most memory intensive, and is bound as a value
+    // with a getter/setter to ensure we actually do path parsing only once the
+    // path is actually needed by anything.
+    Object.defineProperty(this, 'path', getPathDefinition(this, options.path));
+};
+
+/**
+ * @param {number}
+ */
+Glyph.prototype.addUnicode = function(unicode) {
+    if (this.unicodes.length === 0) {
+        this.unicode = unicode;
+    }
+
+    this.unicodes.push(unicode);
+};
+
+/**
+ * Calculate the minimum bounding box for this glyph.
+ * @return {opentype.BoundingBox}
+ */
+Glyph.prototype.getBoundingBox = function() {
+    return this.path.getBoundingBox();
+};
+
+/**
+ * Convert the glyph to a Path we can draw on a drawing context.
+ * @param  {number} [x=0] - Horizontal position of the beginning of the text.
+ * @param  {number} [y=0] - Vertical position of the *baseline* of the text.
+ * @param  {number} [fontSize=72] - Font size in pixels. We scale the glyph units by `1 / unitsPerEm * fontSize`.
+ * @param  {Object=} options - xScale, yScale to stretch the glyph.
+ * @param  {opentype.Font} if hinting is to be used, the font
+ * @return {opentype.Path}
+ */
+Glyph.prototype.getPath = function(x, y, fontSize, options, font) {
+    x = x !== undefined ? x : 0;
+    y = y !== undefined ? y : 0;
+    fontSize = fontSize !== undefined ? fontSize : 72;
+    var commands;
+    var hPoints;
+    if (!options) { options = { }; }
+    var xScale = options.xScale;
+    var yScale = options.yScale;
+
+    if (options.hinting && font && font.hinting) {
+        // in case of hinting, the hinting engine takes care
+        // of scaling the points (not the path) before hinting.
+        hPoints = this.path && font.hinting.exec(this, fontSize);
+        // in case the hinting engine failed hPoints is undefined
+        // and thus reverts to plain rending
+    }
+
+    if (hPoints) {
+        commands = glyf.getPath(hPoints).commands;
+        x = Math.round(x);
+        y = Math.round(y);
+        // TODO in case of hinting xyScaling is not yet supported
+        xScale = yScale = 1;
+    } else {
+        commands = this.path.commands;
+        var scale = 1 / this.path.unitsPerEm * fontSize;
+        if (xScale === undefined) { xScale = scale; }
+        if (yScale === undefined) { yScale = scale; }
+    }
+
+    var p = new Path();
+    for (var i = 0; i < commands.length; i += 1) {
+        var cmd = commands[i];
+        if (cmd.type === 'M') {
+            p.moveTo(x + (cmd.x * xScale), y + (-cmd.y * yScale));
+        } else if (cmd.type === 'L') {
+            p.lineTo(x + (cmd.x * xScale), y + (-cmd.y * yScale));
+        } else if (cmd.type === 'Q') {
+            p.quadraticCurveTo(x + (cmd.x1 * xScale), y + (-cmd.y1 * yScale),
+                               x + (cmd.x * xScale), y + (-cmd.y * yScale));
+        } else if (cmd.type === 'C') {
+            p.curveTo(x + (cmd.x1 * xScale), y + (-cmd.y1 * yScale),
+                      x + (cmd.x2 * xScale), y + (-cmd.y2 * yScale),
+                      x + (cmd.x * xScale), y + (-cmd.y * yScale));
+        } else if (cmd.type === 'Z') {
+            p.closePath();
+        }
+    }
+
+    return p;
+};
+
+/**
+ * Split the glyph into contours.
+ * This function is here for backwards compatibility, and to
+ * provide raw access to the TrueType glyph outlines.
+ * @return {Array}
+ */
+Glyph.prototype.getContours = function() {
+    var this$1 = this;
+
+    if (this.points === undefined) {
+        return [];
+    }
+
+    var contours = [];
+    var currentContour = [];
+    for (var i = 0; i < this.points.length; i += 1) {
+        var pt = this$1.points[i];
+        currentContour.push(pt);
+        if (pt.lastPointOfContour) {
+            contours.push(currentContour);
+            currentContour = [];
+        }
+    }
+
+    check.argument(currentContour.length === 0, 'There are still points left in the current contour.');
+    return contours;
+};
+
+/**
+ * Calculate the xMin/yMin/xMax/yMax/lsb/rsb for a Glyph.
+ * @return {Object}
+ */
+Glyph.prototype.getMetrics = function() {
+    var commands = this.path.commands;
+    var xCoords = [];
+    var yCoords = [];
+    for (var i = 0; i < commands.length; i += 1) {
+        var cmd = commands[i];
+        if (cmd.type !== 'Z') {
+            xCoords.push(cmd.x);
+            yCoords.push(cmd.y);
+        }
+
+        if (cmd.type === 'Q' || cmd.type === 'C') {
+            xCoords.push(cmd.x1);
+            yCoords.push(cmd.y1);
+        }
+
+        if (cmd.type === 'C') {
+            xCoords.push(cmd.x2);
+            yCoords.push(cmd.y2);
+        }
+    }
+
+    var metrics = {
+        xMin: Math.min.apply(null, xCoords),
+        yMin: Math.min.apply(null, yCoords),
+        xMax: Math.max.apply(null, xCoords),
+        yMax: Math.max.apply(null, yCoords),
+        leftSideBearing: this.leftSideBearing
+    };
+
+    if (!isFinite(metrics.xMin)) {
+        metrics.xMin = 0;
+    }
+
+    if (!isFinite(metrics.xMax)) {
+        metrics.xMax = this.advanceWidth;
+    }
+
+    if (!isFinite(metrics.yMin)) {
+        metrics.yMin = 0;
+    }
+
+    if (!isFinite(metrics.yMax)) {
+        metrics.yMax = 0;
+    }
+
+    metrics.rightSideBearing = this.advanceWidth - metrics.leftSideBearing - (metrics.xMax - metrics.xMin);
+    return metrics;
+};
+
+/**
+ * Draw the glyph on the given context.
+ * @param  {CanvasRenderingContext2D} ctx - A 2D drawing context, like Canvas.
+ * @param  {number} [x=0] - Horizontal position of the beginning of the text.
+ * @param  {number} [y=0] - Vertical position of the *baseline* of the text.
+ * @param  {number} [fontSize=72] - Font size in pixels. We scale the glyph units by `1 / unitsPerEm * fontSize`.
+ * @param  {Object=} options - xScale, yScale to stretch the glyph.
+ */
+Glyph.prototype.draw = function(ctx, x, y, fontSize, options) {
+    this.getPath(x, y, fontSize, options).draw(ctx);
+};
+
+/**
+ * Draw the points of the glyph.
+ * On-curve points will be drawn in blue, off-curve points will be drawn in red.
+ * @param  {CanvasRenderingContext2D} ctx - A 2D drawing context, like Canvas.
+ * @param  {number} [x=0] - Horizontal position of the beginning of the text.
+ * @param  {number} [y=0] - Vertical position of the *baseline* of the text.
+ * @param  {number} [fontSize=72] - Font size in pixels. We scale the glyph units by `1 / unitsPerEm * fontSize`.
+ */
+Glyph.prototype.drawPoints = function(ctx, x, y, fontSize) {
+    function drawCircles(l, x, y, scale) {
+        var PI_SQ = Math.PI * 2;
+        ctx.beginPath();
+        for (var j = 0; j < l.length; j += 1) {
+            ctx.moveTo(x + (l[j].x * scale), y + (l[j].y * scale));
+            ctx.arc(x + (l[j].x * scale), y + (l[j].y * scale), 2, 0, PI_SQ, false);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    x = x !== undefined ? x : 0;
+    y = y !== undefined ? y : 0;
+    fontSize = fontSize !== undefined ? fontSize : 24;
+    var scale = 1 / this.path.unitsPerEm * fontSize;
+
+    var blueCircles = [];
+    var redCircles = [];
+    var path = this.path;
+    for (var i = 0; i < path.commands.length; i += 1) {
+        var cmd = path.commands[i];
+        if (cmd.x !== undefined) {
+            blueCircles.push({x: cmd.x, y: -cmd.y});
+        }
+
+        if (cmd.x1 !== undefined) {
+            redCircles.push({x: cmd.x1, y: -cmd.y1});
+        }
+
+        if (cmd.x2 !== undefined) {
+            redCircles.push({x: cmd.x2, y: -cmd.y2});
+        }
+    }
+
+    ctx.fillStyle = 'blue';
+    drawCircles(blueCircles, x, y, scale);
+    ctx.fillStyle = 'red';
+    drawCircles(redCircles, x, y, scale);
+};
+
+/**
+ * Draw lines indicating important font measurements.
+ * Black lines indicate the origin of the coordinate system (point 0,0).
+ * Blue lines indicate the glyph bounding box.
+ * Green line indicates the advance width of the glyph.
+ * @param  {CanvasRenderingContext2D} ctx - A 2D drawing context, like Canvas.
+ * @param  {number} [x=0] - Horizontal position of the beginning of the text.
+ * @param  {number} [y=0] - Vertical position of the *baseline* of the text.
+ * @param  {number} [fontSize=72] - Font size in pixels. We scale the glyph units by `1 / unitsPerEm * fontSize`.
+ */
+Glyph.prototype.drawMetrics = function(ctx, x, y, fontSize) {
+    var scale;
+    x = x !== undefined ? x : 0;
+    y = y !== undefined ? y : 0;
+    fontSize = fontSize !== undefined ? fontSize : 24;
+    scale = 1 / this.path.unitsPerEm * fontSize;
+    ctx.lineWidth = 1;
+
+    // Draw the origin
+    ctx.strokeStyle = 'black';
+    draw.line(ctx, x, -10000, x, 10000);
+    draw.line(ctx, -10000, y, 10000, y);
+
+    // This code is here due to memory optimization: by not using
+    // defaults in the constructor, we save a notable amount of memory.
+    var xMin = this.xMin || 0;
+    var yMin = this.yMin || 0;
+    var xMax = this.xMax || 0;
+    var yMax = this.yMax || 0;
+    var advanceWidth = this.advanceWidth || 0;
+
+    // Draw the glyph box
+    ctx.strokeStyle = 'blue';
+    draw.line(ctx, x + (xMin * scale), -10000, x + (xMin * scale), 10000);
+    draw.line(ctx, x + (xMax * scale), -10000, x + (xMax * scale), 10000);
+    draw.line(ctx, -10000, y + (-yMin * scale), 10000, y + (-yMin * scale));
+    draw.line(ctx, -10000, y + (-yMax * scale), 10000, y + (-yMax * scale));
+
+    // Draw the advance width
+    ctx.strokeStyle = 'green';
+    draw.line(ctx, x + (advanceWidth * scale), -10000, x + (advanceWidth * scale), 10000);
+};
+
+// The GlyphSet object
+
+// Define a property on the glyph that depends on the path being loaded.
+function defineDependentProperty(glyph, externalName, internalName) {
+    Object.defineProperty(glyph, externalName, {
+        get: function() {
+            // Request the path property to make sure the path is loaded.
+            glyph.path; // jshint ignore:line
+            return glyph[internalName];
+        },
+        set: function(newValue) {
+            glyph[internalName] = newValue;
+        },
+        enumerable: true,
+        configurable: true
+    });
+}
+
+/**
+ * A GlyphSet represents all glyphs available in the font, but modelled using
+ * a deferred glyph loader, for retrieving glyphs only once they are absolutely
+ * necessary, to keep the memory footprint down.
+ * @exports opentype.GlyphSet
+ * @class
+ * @param {opentype.Font}
+ * @param {Array}
+ */
+function GlyphSet(font, glyphs) {
+    var this$1 = this;
+
+    this.font = font;
+    this.glyphs = {};
+    if (Array.isArray(glyphs)) {
+        for (var i = 0; i < glyphs.length; i++) {
+            this$1.glyphs[i] = glyphs[i];
+        }
+    }
+
+    this.length = (glyphs && glyphs.length) || 0;
+}
+
+/**
+ * @param  {number} index
+ * @return {opentype.Glyph}
+ */
+GlyphSet.prototype.get = function(index) {
+    if (typeof this.glyphs[index] === 'function') {
+        this.glyphs[index] = this.glyphs[index]();
+    }
+
+    return this.glyphs[index];
+};
+
+/**
+ * @param  {number} index
+ * @param  {Object}
+ */
+GlyphSet.prototype.push = function(index, loader) {
+    this.glyphs[index] = loader;
+    this.length++;
+};
+
+/**
+ * @alias opentype.glyphLoader
+ * @param  {opentype.Font} font
+ * @param  {number} index
+ * @return {opentype.Glyph}
+ */
+function glyphLoader(font, index) {
+    return new Glyph({index: index, font: font});
+}
+
+/**
+ * Generate a stub glyph that can be filled with all metadata *except*
+ * the "points" and "path" properties, which must be loaded only once
+ * the glyph's path is actually requested for text shaping.
+ * @alias opentype.ttfGlyphLoader
+ * @param  {opentype.Font} font
+ * @param  {number} index
+ * @param  {Function} parseGlyph
+ * @param  {Object} data
+ * @param  {number} position
+ * @param  {Function} buildPath
+ * @return {opentype.Glyph}
+ */
+function ttfGlyphLoader(font, index, parseGlyph, data, position, buildPath) {
+    return function() {
+        var glyph = new Glyph({index: index, font: font});
+
+        glyph.path = function() {
+            parseGlyph(glyph, data, position);
+            var path = buildPath(font.glyphs, glyph);
+            path.unitsPerEm = font.unitsPerEm;
+            return path;
+        };
+
+        defineDependentProperty(glyph, 'xMin', '_xMin');
+        defineDependentProperty(glyph, 'xMax', '_xMax');
+        defineDependentProperty(glyph, 'yMin', '_yMin');
+        defineDependentProperty(glyph, 'yMax', '_yMax');
+
+        return glyph;
+    };
+}
+/**
+ * @alias opentype.cffGlyphLoader
+ * @param  {opentype.Font} font
+ * @param  {number} index
+ * @param  {Function} parseCFFCharstring
+ * @param  {string} charstring
+ * @return {opentype.Glyph}
+ */
+function cffGlyphLoader(font, index, parseCFFCharstring, charstring) {
+    return function() {
+        var glyph = new Glyph({index: index, font: font});
+
+        glyph.path = function() {
+            var path = parseCFFCharstring(font, glyph, charstring);
+            path.unitsPerEm = font.unitsPerEm;
+            return path;
+        };
+
+        return glyph;
+    };
+}
+
+var glyphset = { GlyphSet: GlyphSet, glyphLoader: glyphLoader, ttfGlyphLoader: ttfGlyphLoader, cffGlyphLoader: cffGlyphLoader };
+
+// The `CFF` table contains the glyph outlines in PostScript format.
+// https://www.microsoft.com/typography/OTSPEC/cff.htm
+// http://download.microsoft.com/download/8/0/1/801a191c-029d-4af3-9642-555f6fe514ee/cff.pdf
+// http://download.microsoft.com/download/8/0/1/801a191c-029d-4af3-9642-555f6fe514ee/type2.pdf
+
+// Custom equals function that can also check lists.
+function equals(a, b) {
+    if (a === b) {
+        return true;
+    } else if (Array.isArray(a) && Array.isArray(b)) {
+        if (a.length !== b.length) {
+            return false;
+        }
+
+        for (var i = 0; i < a.length; i += 1) {
+            if (!equals(a[i], b[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Subroutines are encoded using the negative half of the number space.
+// See type 2 chapter 4.7 "Subroutine operators".
+function calcCFFSubroutineBias(subrs) {
+    var bias;
+    if (subrs.length < 1240) {
+        bias = 107;
+    } else if (subrs.length < 33900) {
+        bias = 1131;
+    } else {
+        bias = 32768;
+    }
+
+    return bias;
+}
+
+// Parse a `CFF` INDEX array.
+// An index array consists of a list of offsets, then a list of objects at those offsets.
+function parseCFFIndex(data, start, conversionFn) {
+    var offsets = [];
+    var objects = [];
+    var count = parse.getCard16(data, start);
+    var objectOffset;
+    var endOffset;
+    if (count !== 0) {
+        var offsetSize = parse.getByte(data, start + 2);
+        objectOffset = start + ((count + 1) * offsetSize) + 2;
+        var pos = start + 3;
+        for (var i = 0; i < count + 1; i += 1) {
+            offsets.push(parse.getOffset(data, pos, offsetSize));
+            pos += offsetSize;
+        }
+
+        // The total size of the index array is 4 header bytes + the value of the last offset.
+        endOffset = objectOffset + offsets[count];
+    } else {
+        endOffset = start + 2;
+    }
+
+    for (var i$1 = 0; i$1 < offsets.length - 1; i$1 += 1) {
+        var value = parse.getBytes(data, objectOffset + offsets[i$1], objectOffset + offsets[i$1 + 1]);
+        if (conversionFn) {
+            value = conversionFn(value);
+        }
+
+        objects.push(value);
+    }
+
+    return {objects: objects, startOffset: start, endOffset: endOffset};
+}
+
+// Parse a `CFF` DICT real value.
+function parseFloatOperand(parser) {
+    var s = '';
+    var eof = 15;
+    var lookup = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'E', 'E-', null, '-'];
+    while (true) {
+        var b = parser.parseByte();
+        var n1 = b >> 4;
+        var n2 = b & 15;
+
+        if (n1 === eof) {
+            break;
+        }
+
+        s += lookup[n1];
+
+        if (n2 === eof) {
+            break;
+        }
+
+        s += lookup[n2];
+    }
+
+    return parseFloat(s);
+}
+
+// Parse a `CFF` DICT operand.
+function parseOperand(parser, b0) {
+    var b1;
+    var b2;
+    var b3;
+    var b4;
+    if (b0 === 28) {
+        b1 = parser.parseByte();
+        b2 = parser.parseByte();
+        return b1 << 8 | b2;
+    }
+
+    if (b0 === 29) {
+        b1 = parser.parseByte();
+        b2 = parser.parseByte();
+        b3 = parser.parseByte();
+        b4 = parser.parseByte();
+        return b1 << 24 | b2 << 16 | b3 << 8 | b4;
+    }
+
+    if (b0 === 30) {
+        return parseFloatOperand(parser);
+    }
+
+    if (b0 >= 32 && b0 <= 246) {
+        return b0 - 139;
+    }
+
+    if (b0 >= 247 && b0 <= 250) {
+        b1 = parser.parseByte();
+        return (b0 - 247) * 256 + b1 + 108;
+    }
+
+    if (b0 >= 251 && b0 <= 254) {
+        b1 = parser.parseByte();
+        return -(b0 - 251) * 256 - b1 - 108;
+    }
+
+    throw new Error('Invalid b0 ' + b0);
+}
+
+// Convert the entries returned by `parseDict` to a proper dictionary.
+// If a value is a list of one, it is unpacked.
+function entriesToObject(entries) {
+    var o = {};
+    for (var i = 0; i < entries.length; i += 1) {
+        var key = entries[i][0];
+        var values = entries[i][1];
+        var value = (void 0);
+        if (values.length === 1) {
+            value = values[0];
+        } else {
+            value = values;
+        }
+
+        if (o.hasOwnProperty(key) && !isNaN(o[key])) {
+            throw new Error('Object ' + o + ' already has key ' + key);
+        }
+
+        o[key] = value;
+    }
+
+    return o;
+}
+
+// Parse a `CFF` DICT object.
+// A dictionary contains key-value pairs in a compact tokenized format.
+function parseCFFDict(data, start, size) {
+    start = start !== undefined ? start : 0;
+    var parser = new parse.Parser(data, start);
+    var entries = [];
+    var operands = [];
+    size = size !== undefined ? size : data.length;
+
+    while (parser.relativeOffset < size) {
+        var op = parser.parseByte();
+
+        // The first byte for each dict item distinguishes between operator (key) and operand (value).
+        // Values <= 21 are operators.
+        if (op <= 21) {
+            // Two-byte operators have an initial escape byte of 12.
+            if (op === 12) {
+                op = 1200 + parser.parseByte();
+            }
+
+            entries.push([op, operands]);
+            operands = [];
+        } else {
+            // Since the operands (values) come before the operators (keys), we store all operands in a list
+            // until we encounter an operator.
+            operands.push(parseOperand(parser, op));
+        }
+    }
+
+    return entriesToObject(entries);
+}
+
+// Given a String Index (SID), return the value of the string.
+// Strings below index 392 are standard CFF strings and are not encoded in the font.
+function getCFFString(strings, index) {
+    if (index <= 390) {
+        index = cffStandardStrings[index];
+    } else {
+        index = strings[index - 391];
+    }
+
+    return index;
+}
+
+// Interpret a dictionary and return a new dictionary with readable keys and values for missing entries.
+// This function takes `meta` which is a list of objects containing `operand`, `name` and `default`.
+function interpretDict(dict, meta, strings) {
+    var newDict = {};
+    var value;
+
+    // Because we also want to include missing values, we start out from the meta list
+    // and lookup values in the dict.
+    for (var i = 0; i < meta.length; i += 1) {
+        var m = meta[i];
+
+        if (Array.isArray(m.type)) {
+            var values = [];
+            values.length = m.type.length;
+            for (var j = 0; j < m.type.length; j++) {
+                value = dict[m.op] !== undefined ? dict[m.op][j] : undefined;
+                if (value === undefined) {
+                    value = m.value !== undefined && m.value[j] !== undefined ? m.value[j] : null;
+                }
+                if (m.type[j] === 'SID') {
+                    value = getCFFString(strings, value);
+                }
+                values[j] = value;
+            }
+            newDict[m.name] = values;
+        } else {
+            value = dict[m.op];
+            if (value === undefined) {
+                value = m.value !== undefined ? m.value : null;
+            }
+
+            if (m.type === 'SID') {
+                value = getCFFString(strings, value);
+            }
+            newDict[m.name] = value;
+        }
+    }
+
+    return newDict;
+}
+
+// Parse the CFF header.
+function parseCFFHeader(data, start) {
+    var header = {};
+    header.formatMajor = parse.getCard8(data, start);
+    header.formatMinor = parse.getCard8(data, start + 1);
+    header.size = parse.getCard8(data, start + 2);
+    header.offsetSize = parse.getCard8(data, start + 3);
+    header.startOffset = start;
+    header.endOffset = start + 4;
+    return header;
+}
+
+var TOP_DICT_META = [
+    {name: 'version', op: 0, type: 'SID'},
+    {name: 'notice', op: 1, type: 'SID'},
+    {name: 'copyright', op: 1200, type: 'SID'},
+    {name: 'fullName', op: 2, type: 'SID'},
+    {name: 'familyName', op: 3, type: 'SID'},
+    {name: 'weight', op: 4, type: 'SID'},
+    {name: 'isFixedPitch', op: 1201, type: 'number', value: 0},
+    {name: 'italicAngle', op: 1202, type: 'number', value: 0},
+    {name: 'underlinePosition', op: 1203, type: 'number', value: -100},
+    {name: 'underlineThickness', op: 1204, type: 'number', value: 50},
+    {name: 'paintType', op: 1205, type: 'number', value: 0},
+    {name: 'charstringType', op: 1206, type: 'number', value: 2},
+    {
+        name: 'fontMatrix',
+        op: 1207,
+        type: ['real', 'real', 'real', 'real', 'real', 'real'],
+        value: [0.001, 0, 0, 0.001, 0, 0]
+    },
+    {name: 'uniqueId', op: 13, type: 'number'},
+    {name: 'fontBBox', op: 5, type: ['number', 'number', 'number', 'number'], value: [0, 0, 0, 0]},
+    {name: 'strokeWidth', op: 1208, type: 'number', value: 0},
+    {name: 'xuid', op: 14, type: [], value: null},
+    {name: 'charset', op: 15, type: 'offset', value: 0},
+    {name: 'encoding', op: 16, type: 'offset', value: 0},
+    {name: 'charStrings', op: 17, type: 'offset', value: 0},
+    {name: 'private', op: 18, type: ['number', 'offset'], value: [0, 0]},
+    {name: 'ros', op: 1230, type: ['SID', 'SID', 'number']},
+    {name: 'cidFontVersion', op: 1231, type: 'number', value: 0},
+    {name: 'cidFontRevision', op: 1232, type: 'number', value: 0},
+    {name: 'cidFontType', op: 1233, type: 'number', value: 0},
+    {name: 'cidCount', op: 1234, type: 'number', value: 8720},
+    {name: 'uidBase', op: 1235, type: 'number'},
+    {name: 'fdArray', op: 1236, type: 'offset'},
+    {name: 'fdSelect', op: 1237, type: 'offset'},
+    {name: 'fontName', op: 1238, type: 'SID'}
+];
+
+var PRIVATE_DICT_META = [
+    {name: 'subrs', op: 19, type: 'offset', value: 0},
+    {name: 'defaultWidthX', op: 20, type: 'number', value: 0},
+    {name: 'nominalWidthX', op: 21, type: 'number', value: 0}
+];
+
+// Parse the CFF top dictionary. A CFF table can contain multiple fonts, each with their own top dictionary.
+// The top dictionary contains the essential metadata for the font, together with the private dictionary.
+function parseCFFTopDict(data, strings) {
+    var dict = parseCFFDict(data, 0, data.byteLength);
+    return interpretDict(dict, TOP_DICT_META, strings);
+}
+
+// Parse the CFF private dictionary. We don't fully parse out all the values, only the ones we need.
+function parseCFFPrivateDict(data, start, size, strings) {
+    var dict = parseCFFDict(data, start, size);
+    return interpretDict(dict, PRIVATE_DICT_META, strings);
+}
+
+// Returns a list of "Top DICT"s found using an INDEX list.
+// Used to read both the usual high-level Top DICTs and also the FDArray
+// discovered inside CID-keyed fonts.  When a Top DICT has a reference to
+// a Private DICT that is read and saved into the Top DICT.
+//
+// In addition to the expected/optional values as outlined in TOP_DICT_META
+// the following values might be saved into the Top DICT.
+//
+//    _subrs []        array of local CFF subroutines from Private DICT
+//    _subrsBias       bias value computed from number of subroutines
+//                      (see calcCFFSubroutineBias() and parseCFFCharstring())
+//    _defaultWidthX   default widths for CFF characters
+//    _nominalWidthX   bias added to width embedded within glyph description
+//
+//    _privateDict     saved copy of parsed Private DICT from Top DICT
+function gatherCFFTopDicts(data, start, cffIndex, strings) {
+    var topDictArray = [];
+    for (var iTopDict = 0; iTopDict < cffIndex.length; iTopDict += 1) {
+        var topDictData = new DataView(new Uint8Array(cffIndex[iTopDict]).buffer);
+        var topDict = parseCFFTopDict(topDictData, strings);
+        topDict._subrs = [];
+        topDict._subrsBias = 0;
+        var privateSize = topDict.private[0];
+        var privateOffset = topDict.private[1];
+        if (privateSize !== 0 && privateOffset !== 0) {
+            var privateDict = parseCFFPrivateDict(data, privateOffset + start, privateSize, strings);
+            topDict._defaultWidthX = privateDict.defaultWidthX;
+            topDict._nominalWidthX = privateDict.nominalWidthX;
+            if (privateDict.subrs !== 0) {
+                var subrOffset = privateOffset + privateDict.subrs;
+                var subrIndex = parseCFFIndex(data, subrOffset + start);
+                topDict._subrs = subrIndex.objects;
+                topDict._subrsBias = calcCFFSubroutineBias(topDict._subrs);
+            }
+            topDict._privateDict = privateDict;
+        }
+        topDictArray.push(topDict);
+    }
+    return topDictArray;
+}
+
+// Parse the CFF charset table, which contains internal names for all the glyphs.
+// This function will return a list of glyph names.
+// See Adobe TN #5176 chapter 13, "Charsets".
+function parseCFFCharset(data, start, nGlyphs, strings) {
+    var sid;
+    var count;
+    var parser = new parse.Parser(data, start);
+
+    // The .notdef glyph is not included, so subtract 1.
+    nGlyphs -= 1;
+    var charset = ['.notdef'];
+
+    var format = parser.parseCard8();
+    if (format === 0) {
+        for (var i = 0; i < nGlyphs; i += 1) {
+            sid = parser.parseSID();
+            charset.push(getCFFString(strings, sid));
+        }
+    } else if (format === 1) {
+        while (charset.length <= nGlyphs) {
+            sid = parser.parseSID();
+            count = parser.parseCard8();
+            for (var i$1 = 0; i$1 <= count; i$1 += 1) {
+                charset.push(getCFFString(strings, sid));
+                sid += 1;
+            }
+        }
+    } else if (format === 2) {
+        while (charset.length <= nGlyphs) {
+            sid = parser.parseSID();
+            count = parser.parseCard16();
+            for (var i$2 = 0; i$2 <= count; i$2 += 1) {
+                charset.push(getCFFString(strings, sid));
+                sid += 1;
+            }
+        }
+    } else {
+        throw new Error('Unknown charset format ' + format);
+    }
+
+    return charset;
+}
+
+// Parse the CFF encoding data. Only one encoding can be specified per font.
+// See Adobe TN #5176 chapter 12, "Encodings".
+function parseCFFEncoding(data, start, charset) {
+    var code;
+    var enc = {};
+    var parser = new parse.Parser(data, start);
+    var format = parser.parseCard8();
+    if (format === 0) {
+        var nCodes = parser.parseCard8();
+        for (var i = 0; i < nCodes; i += 1) {
+            code = parser.parseCard8();
+            enc[code] = i;
+        }
+    } else if (format === 1) {
+        var nRanges = parser.parseCard8();
+        code = 1;
+        for (var i$1 = 0; i$1 < nRanges; i$1 += 1) {
+            var first = parser.parseCard8();
+            var nLeft = parser.parseCard8();
+            for (var j = first; j <= first + nLeft; j += 1) {
+                enc[j] = code;
+                code += 1;
+            }
+        }
+    } else {
+        throw new Error('Unknown encoding format ' + format);
+    }
+
+    return new CffEncoding(enc, charset);
+}
+
+// Take in charstring code and return a Glyph object.
+// The encoding is described in the Type 2 Charstring Format
+// https://www.microsoft.com/typography/OTSPEC/charstr2.htm
+function parseCFFCharstring(font, glyph, code) {
+    var c1x;
+    var c1y;
+    var c2x;
+    var c2y;
+    var p = new Path();
+    var stack = [];
+    var nStems = 0;
+    var haveWidth = false;
+    var open = false;
+    var x = 0;
+    var y = 0;
+    var subrs;
+    var subrsBias;
+    var defaultWidthX;
+    var nominalWidthX;
+    if (font.isCIDFont) {
+        var fdIndex = font.tables.cff.topDict._fdSelect[glyph.index];
+        var fdDict = font.tables.cff.topDict._fdArray[fdIndex];
+        subrs = fdDict._subrs;
+        subrsBias = fdDict._subrsBias;
+        defaultWidthX = fdDict._defaultWidthX;
+        nominalWidthX = fdDict._nominalWidthX;
+    } else {
+        subrs = font.tables.cff.topDict._subrs;
+        subrsBias = font.tables.cff.topDict._subrsBias;
+        defaultWidthX = font.tables.cff.topDict._defaultWidthX;
+        nominalWidthX = font.tables.cff.topDict._nominalWidthX;
+    }
+    var width = defaultWidthX;
+
+    function newContour(x, y) {
+        if (open) {
+            p.closePath();
+        }
+
+        p.moveTo(x, y);
+        open = true;
+    }
+
+    function parseStems() {
+        var hasWidthArg;
+
+        // The number of stem operators on the stack is always even.
+        // If the value is uneven, that means a width is specified.
+        hasWidthArg = stack.length % 2 !== 0;
+        if (hasWidthArg && !haveWidth) {
+            width = stack.shift() + nominalWidthX;
+        }
