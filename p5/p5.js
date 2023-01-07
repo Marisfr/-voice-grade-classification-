@@ -31558,3 +31558,999 @@ Parser.prototype.parsePointer = function(description) {
     }
     return undefined;
 };
+
+/**
+ * Parse a list of offsets to lists of 16-bit integers,
+ * or a list of offsets to lists of offsets to any kind of items.
+ * If itemCallback is not provided, a list of list of UShort is assumed.
+ * If provided, itemCallback is called on each item and must parse the item.
+ * See examples in tables/gsub.js
+ */
+Parser.prototype.parseListOfLists = function(itemCallback) {
+    var this$1 = this;
+
+    var offsets = this.parseOffset16List();
+    var count = offsets.length;
+    var relativeOffset = this.relativeOffset;
+    var list = new Array(count);
+    for (var i = 0; i < count; i++) {
+        var start = offsets[i];
+        if (start === 0) {                  // NULL offset
+            list[i] = undefined;            // Add i as owned property to list. Convenient with assert.
+            continue;
+        }
+        this$1.relativeOffset = start;
+        if (itemCallback) {
+            var subOffsets = this$1.parseOffset16List();
+            var subList = new Array(subOffsets.length);
+            for (var j = 0; j < subOffsets.length; j++) {
+                this$1.relativeOffset = start + subOffsets[j];
+                subList[j] = itemCallback.call(this$1);
+            }
+            list[i] = subList;
+        } else {
+            list[i] = this$1.parseUShortList();
+        }
+    }
+    this.relativeOffset = relativeOffset;
+    return list;
+};
+
+///// Complex tables parsing //////////////////////////////////
+
+// Parse a coverage table in a GSUB, GPOS or GDEF table.
+// https://www.microsoft.com/typography/OTSPEC/chapter2.htm
+// parser.offset must point to the start of the table containing the coverage.
+Parser.prototype.parseCoverage = function() {
+    var this$1 = this;
+
+    var startOffset = this.offset + this.relativeOffset;
+    var format = this.parseUShort();
+    var count = this.parseUShort();
+    if (format === 1) {
+        return {
+            format: 1,
+            glyphs: this.parseUShortList(count)
+        };
+    } else if (format === 2) {
+        var ranges = new Array(count);
+        for (var i = 0; i < count; i++) {
+            ranges[i] = {
+                start: this$1.parseUShort(),
+                end: this$1.parseUShort(),
+                index: this$1.parseUShort()
+            };
+        }
+        return {
+            format: 2,
+            ranges: ranges
+        };
+    }
+    throw new Error('0x' + startOffset.toString(16) + ': Coverage format must be 1 or 2.');
+};
+
+// Parse a Class Definition Table in a GSUB, GPOS or GDEF table.
+// https://www.microsoft.com/typography/OTSPEC/chapter2.htm
+Parser.prototype.parseClassDef = function() {
+    var startOffset = this.offset + this.relativeOffset;
+    var format = this.parseUShort();
+    if (format === 1) {
+        return {
+            format: 1,
+            startGlyph: this.parseUShort(),
+            classes: this.parseUShortList()
+        };
+    } else if (format === 2) {
+        return {
+            format: 2,
+            ranges: this.parseRecordList({
+                start: Parser.uShort,
+                end: Parser.uShort,
+                classId: Parser.uShort
+            })
+        };
+    }
+    throw new Error('0x' + startOffset.toString(16) + ': ClassDef format must be 1 or 2.');
+};
+
+///// Static methods ///////////////////////////////////
+// These convenience methods can be used as callbacks and should be called with "this" context set to a Parser instance.
+
+Parser.list = function(count, itemCallback) {
+    return function() {
+        return this.parseList(count, itemCallback);
+    };
+};
+
+Parser.recordList = function(count, recordDescription) {
+    return function() {
+        return this.parseRecordList(count, recordDescription);
+    };
+};
+
+Parser.pointer = function(description) {
+    return function() {
+        return this.parsePointer(description);
+    };
+};
+
+Parser.tag = Parser.prototype.parseTag;
+Parser.byte = Parser.prototype.parseByte;
+Parser.uShort = Parser.offset16 = Parser.prototype.parseUShort;
+Parser.uShortList = Parser.prototype.parseUShortList;
+Parser.struct = Parser.prototype.parseStruct;
+Parser.coverage = Parser.prototype.parseCoverage;
+Parser.classDef = Parser.prototype.parseClassDef;
+
+///// Script, Feature, Lookup lists ///////////////////////////////////////////////
+// https://www.microsoft.com/typography/OTSPEC/chapter2.htm
+
+var langSysTable = {
+    reserved: Parser.uShort,
+    reqFeatureIndex: Parser.uShort,
+    featureIndexes: Parser.uShortList
+};
+
+Parser.prototype.parseScriptList = function() {
+    return this.parsePointer(Parser.recordList({
+        tag: Parser.tag,
+        script: Parser.pointer({
+            defaultLangSys: Parser.pointer(langSysTable),
+            langSysRecords: Parser.recordList({
+                tag: Parser.tag,
+                langSys: Parser.pointer(langSysTable)
+            })
+        })
+    }));
+};
+
+Parser.prototype.parseFeatureList = function() {
+    return this.parsePointer(Parser.recordList({
+        tag: Parser.tag,
+        feature: Parser.pointer({
+            featureParams: Parser.offset16,
+            lookupListIndexes: Parser.uShortList
+        })
+    }));
+};
+
+Parser.prototype.parseLookupList = function(lookupTableParsers) {
+    return this.parsePointer(Parser.list(Parser.pointer(function() {
+        var lookupType = this.parseUShort();
+        check.argument(1 <= lookupType && lookupType <= 8, 'GSUB lookup type ' + lookupType + ' unknown.');
+        var lookupFlag = this.parseUShort();
+        var useMarkFilteringSet = lookupFlag & 0x10;
+        return {
+            lookupType: lookupType,
+            lookupFlag: lookupFlag,
+            subtables: this.parseList(Parser.pointer(lookupTableParsers[lookupType])),
+            markFilteringSet: useMarkFilteringSet ? this.parseUShort() : undefined
+        };
+    })));
+};
+
+var parse = {
+    getByte: getByte,
+    getCard8: getByte,
+    getUShort: getUShort,
+    getCard16: getUShort,
+    getShort: getShort,
+    getULong: getULong,
+    getFixed: getFixed,
+    getTag: getTag,
+    getOffset: getOffset,
+    getBytes: getBytes,
+    bytesToString: bytesToString,
+    Parser: Parser,
+};
+
+// The `cmap` table stores the mappings from characters to glyphs.
+// https://www.microsoft.com/typography/OTSPEC/cmap.htm
+
+function parseCmapTableFormat12(cmap, p) {
+    //Skip reserved.
+    p.parseUShort();
+
+    // Length in bytes of the sub-tables.
+    cmap.length = p.parseULong();
+    cmap.language = p.parseULong();
+
+    var groupCount;
+    cmap.groupCount = groupCount = p.parseULong();
+    cmap.glyphIndexMap = {};
+
+    for (var i = 0; i < groupCount; i += 1) {
+        var startCharCode = p.parseULong();
+        var endCharCode = p.parseULong();
+        var startGlyphId = p.parseULong();
+
+        for (var c = startCharCode; c <= endCharCode; c += 1) {
+            cmap.glyphIndexMap[c] = startGlyphId;
+            startGlyphId++;
+        }
+    }
+}
+
+function parseCmapTableFormat4(cmap, p, data, start, offset) {
+    // Length in bytes of the sub-tables.
+    cmap.length = p.parseUShort();
+    cmap.language = p.parseUShort();
+
+    // segCount is stored x 2.
+    var segCount;
+    cmap.segCount = segCount = p.parseUShort() >> 1;
+
+    // Skip searchRange, entrySelector, rangeShift.
+    p.skip('uShort', 3);
+
+    // The "unrolled" mapping from character codes to glyph indices.
+    cmap.glyphIndexMap = {};
+    var endCountParser = new parse.Parser(data, start + offset + 14);
+    var startCountParser = new parse.Parser(data, start + offset + 16 + segCount * 2);
+    var idDeltaParser = new parse.Parser(data, start + offset + 16 + segCount * 4);
+    var idRangeOffsetParser = new parse.Parser(data, start + offset + 16 + segCount * 6);
+    var glyphIndexOffset = start + offset + 16 + segCount * 8;
+    for (var i = 0; i < segCount - 1; i += 1) {
+        var glyphIndex = (void 0);
+        var endCount = endCountParser.parseUShort();
+        var startCount = startCountParser.parseUShort();
+        var idDelta = idDeltaParser.parseShort();
+        var idRangeOffset = idRangeOffsetParser.parseUShort();
+        for (var c = startCount; c <= endCount; c += 1) {
+            if (idRangeOffset !== 0) {
+                // The idRangeOffset is relative to the current position in the idRangeOffset array.
+                // Take the current offset in the idRangeOffset array.
+                glyphIndexOffset = (idRangeOffsetParser.offset + idRangeOffsetParser.relativeOffset - 2);
+
+                // Add the value of the idRangeOffset, which will move us into the glyphIndex array.
+                glyphIndexOffset += idRangeOffset;
+
+                // Then add the character index of the current segment, multiplied by 2 for USHORTs.
+                glyphIndexOffset += (c - startCount) * 2;
+                glyphIndex = parse.getUShort(data, glyphIndexOffset);
+                if (glyphIndex !== 0) {
+                    glyphIndex = (glyphIndex + idDelta) & 0xFFFF;
+                }
+            } else {
+                glyphIndex = (c + idDelta) & 0xFFFF;
+            }
+
+            cmap.glyphIndexMap[c] = glyphIndex;
+        }
+    }
+}
+
+// Parse the `cmap` table. This table stores the mappings from characters to glyphs.
+// There are many available formats, but we only support the Windows format 4 and 12.
+// This function returns a `CmapEncoding` object or null if no supported format could be found.
+function parseCmapTable(data, start) {
+    var cmap = {};
+    cmap.version = parse.getUShort(data, start);
+    check.argument(cmap.version === 0, 'cmap table version should be 0.');
+
+    // The cmap table can contain many sub-tables, each with their own format.
+    // We're only interested in a "platform 3" table. This is a Windows format.
+    cmap.numTables = parse.getUShort(data, start + 2);
+    var offset = -1;
+    for (var i = cmap.numTables - 1; i >= 0; i -= 1) {
+        var platformId = parse.getUShort(data, start + 4 + (i * 8));
+        var encodingId = parse.getUShort(data, start + 4 + (i * 8) + 2);
+        if (platformId === 3 && (encodingId === 0 || encodingId === 1 || encodingId === 10)) {
+            offset = parse.getULong(data, start + 4 + (i * 8) + 4);
+            break;
+        }
+    }
+
+    if (offset === -1) {
+        // There is no cmap table in the font that we support.
+        throw new Error('No valid cmap sub-tables found.');
+    }
+
+    var p = new parse.Parser(data, start + offset);
+    cmap.format = p.parseUShort();
+
+    if (cmap.format === 12) {
+        parseCmapTableFormat12(cmap, p);
+    } else if (cmap.format === 4) {
+        parseCmapTableFormat4(cmap, p, data, start, offset);
+    } else {
+        throw new Error('Only format 4 and 12 cmap tables are supported (found format ' + cmap.format + ').');
+    }
+
+    return cmap;
+}
+
+function addSegment(t, code, glyphIndex) {
+    t.segments.push({
+        end: code,
+        start: code,
+        delta: -(code - glyphIndex),
+        offset: 0
+    });
+}
+
+function addTerminatorSegment(t) {
+    t.segments.push({
+        end: 0xFFFF,
+        start: 0xFFFF,
+        delta: 1,
+        offset: 0
+    });
+}
+
+function makeCmapTable(glyphs) {
+    var t = new table.Table('cmap', [
+        {name: 'version', type: 'USHORT', value: 0},
+        {name: 'numTables', type: 'USHORT', value: 1},
+        {name: 'platformID', type: 'USHORT', value: 3},
+        {name: 'encodingID', type: 'USHORT', value: 1},
+        {name: 'offset', type: 'ULONG', value: 12},
+        {name: 'format', type: 'USHORT', value: 4},
+        {name: 'length', type: 'USHORT', value: 0},
+        {name: 'language', type: 'USHORT', value: 0},
+        {name: 'segCountX2', type: 'USHORT', value: 0},
+        {name: 'searchRange', type: 'USHORT', value: 0},
+        {name: 'entrySelector', type: 'USHORT', value: 0},
+        {name: 'rangeShift', type: 'USHORT', value: 0}
+    ]);
+
+    t.segments = [];
+    for (var i = 0; i < glyphs.length; i += 1) {
+        var glyph = glyphs.get(i);
+        for (var j = 0; j < glyph.unicodes.length; j += 1) {
+            addSegment(t, glyph.unicodes[j], i);
+        }
+
+        t.segments = t.segments.sort(function(a, b) {
+            return a.start - b.start;
+        });
+    }
+
+    addTerminatorSegment(t);
+
+    var segCount;
+    segCount = t.segments.length;
+    t.segCountX2 = segCount * 2;
+    t.searchRange = Math.pow(2, Math.floor(Math.log(segCount) / Math.log(2))) * 2;
+    t.entrySelector = Math.log(t.searchRange / 2) / Math.log(2);
+    t.rangeShift = t.segCountX2 - t.searchRange;
+
+    // Set up parallel segment arrays.
+    var endCounts = [];
+    var startCounts = [];
+    var idDeltas = [];
+    var idRangeOffsets = [];
+    var glyphIds = [];
+
+    for (var i$1 = 0; i$1 < segCount; i$1 += 1) {
+        var segment = t.segments[i$1];
+        endCounts = endCounts.concat({name: 'end_' + i$1, type: 'USHORT', value: segment.end});
+        startCounts = startCounts.concat({name: 'start_' + i$1, type: 'USHORT', value: segment.start});
+        idDeltas = idDeltas.concat({name: 'idDelta_' + i$1, type: 'SHORT', value: segment.delta});
+        idRangeOffsets = idRangeOffsets.concat({name: 'idRangeOffset_' + i$1, type: 'USHORT', value: segment.offset});
+        if (segment.glyphId !== undefined) {
+            glyphIds = glyphIds.concat({name: 'glyph_' + i$1, type: 'USHORT', value: segment.glyphId});
+        }
+    }
+
+    t.fields = t.fields.concat(endCounts);
+    t.fields.push({name: 'reservedPad', type: 'USHORT', value: 0});
+    t.fields = t.fields.concat(startCounts);
+    t.fields = t.fields.concat(idDeltas);
+    t.fields = t.fields.concat(idRangeOffsets);
+    t.fields = t.fields.concat(glyphIds);
+
+    t.length = 14 + // Subtable header
+        endCounts.length * 2 +
+        2 + // reservedPad
+        startCounts.length * 2 +
+        idDeltas.length * 2 +
+        idRangeOffsets.length * 2 +
+        glyphIds.length * 2;
+
+    return t;
+}
+
+var cmap = { parse: parseCmapTable, make: makeCmapTable };
+
+// Glyph encoding
+
+var cffStandardStrings = [
+    '.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright',
+    'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two',
+    'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater',
+    'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+    'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore',
+    'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+    'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'exclamdown', 'cent', 'sterling',
+    'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle', 'quotedblleft', 'guillemotleft',
+    'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'endash', 'dagger', 'daggerdbl', 'periodcentered', 'paragraph',
+    'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright', 'guillemotright', 'ellipsis', 'perthousand',
+    'questiondown', 'grave', 'acute', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'dieresis', 'ring',
+    'cedilla', 'hungarumlaut', 'ogonek', 'caron', 'emdash', 'AE', 'ordfeminine', 'Lslash', 'Oslash', 'OE',
+    'ordmasculine', 'ae', 'dotlessi', 'lslash', 'oslash', 'oe', 'germandbls', 'onesuperior', 'logicalnot', 'mu',
+    'trademark', 'Eth', 'onehalf', 'plusminus', 'Thorn', 'onequarter', 'divide', 'brokenbar', 'degree', 'thorn',
+    'threequarters', 'twosuperior', 'registered', 'minus', 'eth', 'multiply', 'threesuperior', 'copyright',
+    'Aacute', 'Acircumflex', 'Adieresis', 'Agrave', 'Aring', 'Atilde', 'Ccedilla', 'Eacute', 'Ecircumflex',
+    'Edieresis', 'Egrave', 'Iacute', 'Icircumflex', 'Idieresis', 'Igrave', 'Ntilde', 'Oacute', 'Ocircumflex',
+    'Odieresis', 'Ograve', 'Otilde', 'Scaron', 'Uacute', 'Ucircumflex', 'Udieresis', 'Ugrave', 'Yacute',
+    'Ydieresis', 'Zcaron', 'aacute', 'acircumflex', 'adieresis', 'agrave', 'aring', 'atilde', 'ccedilla', 'eacute',
+    'ecircumflex', 'edieresis', 'egrave', 'iacute', 'icircumflex', 'idieresis', 'igrave', 'ntilde', 'oacute',
+    'ocircumflex', 'odieresis', 'ograve', 'otilde', 'scaron', 'uacute', 'ucircumflex', 'udieresis', 'ugrave',
+    'yacute', 'ydieresis', 'zcaron', 'exclamsmall', 'Hungarumlautsmall', 'dollaroldstyle', 'dollarsuperior',
+    'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', '266 ff', 'onedotenleader',
+    'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle',
+    'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'commasuperior', 'threequartersemdash', 'periodsuperior',
+    'questionsmall', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior',
+    'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'ffi', 'ffl',
+    'parenleftinferior', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall',
+    'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall',
+    'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall',
+    'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', 'exclamdownsmall',
+    'centoldstyle', 'Lslashsmall', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall', 'Brevesmall', 'Caronsmall',
+    'Dotaccentsmall', 'Macronsmall', 'figuredash', 'hypheninferior', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall',
+    'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds',
+    'zerosuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior',
+    'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior',
+    'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior',
+    'commainferior', 'Agravesmall', 'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall',
+    'Aringsmall', 'AEsmall', 'Ccedillasmall', 'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall',
+    'Igravesmall', 'Iacutesmall', 'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall',
+    'Oacutesmall', 'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall',
+    'Uacutesmall', 'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall', '001.000',
+    '001.001', '001.002', '001.003', 'Black', 'Bold', 'Book', 'Light', 'Medium', 'Regular', 'Roman', 'Semibold'];
+
+var cffStandardEncoding = [
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    '', '', '', '', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright',
+    'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two',
+    'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater',
+    'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+    'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore',
+    'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+    'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', '', '', '', '', '', '', '', '',
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    'exclamdown', 'cent', 'sterling', 'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle',
+    'quotedblleft', 'guillemotleft', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', '', 'endash', 'dagger',
+    'daggerdbl', 'periodcentered', '', 'paragraph', 'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright',
+    'guillemotright', 'ellipsis', 'perthousand', '', 'questiondown', '', 'grave', 'acute', 'circumflex', 'tilde',
+    'macron', 'breve', 'dotaccent', 'dieresis', '', 'ring', 'cedilla', '', 'hungarumlaut', 'ogonek', 'caron',
+    'emdash', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'AE', '', 'ordfeminine', '', '', '',
+    '', 'Lslash', 'Oslash', 'OE', 'ordmasculine', '', '', '', '', '', 'ae', '', '', '', 'dotlessi', '', '',
+    'lslash', 'oslash', 'oe', 'germandbls'];
+
+var cffExpertEncoding = [
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    '', '', '', '', 'space', 'exclamsmall', 'Hungarumlautsmall', '', 'dollaroldstyle', 'dollarsuperior',
+    'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader',
+    'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle',
+    'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon',
+    'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'questionsmall', '', 'asuperior',
+    'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', '', '', 'isuperior', '', '', 'lsuperior', 'msuperior',
+    'nsuperior', 'osuperior', '', '', 'rsuperior', 'ssuperior', 'tsuperior', '', 'ff', 'fi', 'fl', 'ffi', 'ffl',
+    'parenleftinferior', '', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall',
+    'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall',
+    'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall',
+    'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', '', '', '', '', '', '', '',
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    'exclamdownsmall', 'centoldstyle', 'Lslashsmall', '', '', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall',
+    'Brevesmall', 'Caronsmall', '', 'Dotaccentsmall', '', '', 'Macronsmall', '', '', 'figuredash', 'hypheninferior',
+    '', '', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall', '', '', '', 'onequarter', 'onehalf', 'threequarters',
+    'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', '',
+    '', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior',
+    'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior',
+    'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior',
+    'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior', 'Agravesmall',
+    'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall', 'Aringsmall', 'AEsmall', 'Ccedillasmall',
+    'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall', 'Igravesmall', 'Iacutesmall',
+    'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall', 'Oacutesmall',
+    'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall', 'Uacutesmall',
+    'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall'];
+
+var standardNames = [
+    '.notdef', '.null', 'nonmarkingreturn', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent',
+    'ampersand', 'quotesingle', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash',
+    'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less',
+    'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright',
+    'asciicircum', 'underscore', 'grave', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde',
+    'Adieresis', 'Aring', 'Ccedilla', 'Eacute', 'Ntilde', 'Odieresis', 'Udieresis', 'aacute', 'agrave',
+    'acircumflex', 'adieresis', 'atilde', 'aring', 'ccedilla', 'eacute', 'egrave', 'ecircumflex', 'edieresis',
+    'iacute', 'igrave', 'icircumflex', 'idieresis', 'ntilde', 'oacute', 'ograve', 'ocircumflex', 'odieresis',
+    'otilde', 'uacute', 'ugrave', 'ucircumflex', 'udieresis', 'dagger', 'degree', 'cent', 'sterling', 'section',
+    'bullet', 'paragraph', 'germandbls', 'registered', 'copyright', 'trademark', 'acute', 'dieresis', 'notequal',
+    'AE', 'Oslash', 'infinity', 'plusminus', 'lessequal', 'greaterequal', 'yen', 'mu', 'partialdiff', 'summation',
+    'product', 'pi', 'integral', 'ordfeminine', 'ordmasculine', 'Omega', 'ae', 'oslash', 'questiondown',
+    'exclamdown', 'logicalnot', 'radical', 'florin', 'approxequal', 'Delta', 'guillemotleft', 'guillemotright',
+    'ellipsis', 'nonbreakingspace', 'Agrave', 'Atilde', 'Otilde', 'OE', 'oe', 'endash', 'emdash', 'quotedblleft',
+    'quotedblright', 'quoteleft', 'quoteright', 'divide', 'lozenge', 'ydieresis', 'Ydieresis', 'fraction',
+    'currency', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'daggerdbl', 'periodcentered', 'quotesinglbase',
+    'quotedblbase', 'perthousand', 'Acircumflex', 'Ecircumflex', 'Aacute', 'Edieresis', 'Egrave', 'Iacute',
+    'Icircumflex', 'Idieresis', 'Igrave', 'Oacute', 'Ocircumflex', 'apple', 'Ograve', 'Uacute', 'Ucircumflex',
+    'Ugrave', 'dotlessi', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'ring', 'cedilla', 'hungarumlaut',
+    'ogonek', 'caron', 'Lslash', 'lslash', 'Scaron', 'scaron', 'Zcaron', 'zcaron', 'brokenbar', 'Eth', 'eth',
+    'Yacute', 'yacute', 'Thorn', 'thorn', 'minus', 'multiply', 'onesuperior', 'twosuperior', 'threesuperior',
+    'onehalf', 'onequarter', 'threequarters', 'franc', 'Gbreve', 'gbreve', 'Idotaccent', 'Scedilla', 'scedilla',
+    'Cacute', 'cacute', 'Ccaron', 'ccaron', 'dcroat'];
+
+/**
+ * This is the encoding used for fonts created from scratch.
+ * It loops through all glyphs and finds the appropriate unicode value.
+ * Since it's linear time, other encodings will be faster.
+ * @exports opentype.DefaultEncoding
+ * @class
+ * @constructor
+ * @param {opentype.Font}
+ */
+function DefaultEncoding(font) {
+    this.font = font;
+}
+
+DefaultEncoding.prototype.charToGlyphIndex = function(c) {
+    var code = c.charCodeAt(0);
+    var glyphs = this.font.glyphs;
+    if (glyphs) {
+        for (var i = 0; i < glyphs.length; i += 1) {
+            var glyph = glyphs.get(i);
+            for (var j = 0; j < glyph.unicodes.length; j += 1) {
+                if (glyph.unicodes[j] === code) {
+                    return i;
+                }
+            }
+        }
+    }
+    return null;
+};
+
+/**
+ * @exports opentype.CmapEncoding
+ * @class
+ * @constructor
+ * @param {Object} cmap - a object with the cmap encoded data
+ */
+function CmapEncoding(cmap) {
+    this.cmap = cmap;
+}
+
+/**
+ * @param  {string} c - the character
+ * @return {number} The glyph index.
+ */
+CmapEncoding.prototype.charToGlyphIndex = function(c) {
+    return this.cmap.glyphIndexMap[c.charCodeAt(0)] || 0;
+};
+
+/**
+ * @exports opentype.CffEncoding
+ * @class
+ * @constructor
+ * @param {string} encoding - The encoding
+ * @param {Array} charset - The character set.
+ */
+function CffEncoding(encoding, charset) {
+    this.encoding = encoding;
+    this.charset = charset;
+}
+
+/**
+ * @param  {string} s - The character
+ * @return {number} The index.
+ */
+CffEncoding.prototype.charToGlyphIndex = function(s) {
+    var code = s.charCodeAt(0);
+    var charName = this.encoding[code];
+    return this.charset.indexOf(charName);
+};
+
+/**
+ * @exports opentype.GlyphNames
+ * @class
+ * @constructor
+ * @param {Object} post
+ */
+function GlyphNames(post) {
+    var this$1 = this;
+
+    switch (post.version) {
+        case 1:
+            this.names = standardNames.slice();
+            break;
+        case 2:
+            this.names = new Array(post.numberOfGlyphs);
+            for (var i = 0; i < post.numberOfGlyphs; i++) {
+                if (post.glyphNameIndex[i] < standardNames.length) {
+                    this$1.names[i] = standardNames[post.glyphNameIndex[i]];
+                } else {
+                    this$1.names[i] = post.names[post.glyphNameIndex[i] - standardNames.length];
+                }
+            }
+
+            break;
+        case 2.5:
+            this.names = new Array(post.numberOfGlyphs);
+            for (var i$1 = 0; i$1 < post.numberOfGlyphs; i$1++) {
+                this$1.names[i$1] = standardNames[i$1 + post.glyphNameIndex[i$1]];
+            }
+
+            break;
+        case 3:
+            this.names = [];
+            break;
+        default:
+            this.names = [];
+            break;
+    }
+}
+
+/**
+ * Gets the index of a glyph by name.
+ * @param  {string} name - The glyph name
+ * @return {number} The index
+ */
+GlyphNames.prototype.nameToGlyphIndex = function(name) {
+    return this.names.indexOf(name);
+};
+
+/**
+ * @param  {number} gid
+ * @return {string}
+ */
+GlyphNames.prototype.glyphIndexToName = function(gid) {
+    return this.names[gid];
+};
+
+/**
+ * @alias opentype.addGlyphNames
+ * @param {opentype.Font}
+ */
+function addGlyphNames(font) {
+    var glyph;
+    var glyphIndexMap = font.tables.cmap.glyphIndexMap;
+    var charCodes = Object.keys(glyphIndexMap);
+
+    for (var i = 0; i < charCodes.length; i += 1) {
+        var c = charCodes[i];
+        var glyphIndex = glyphIndexMap[c];
+        glyph = font.glyphs.get(glyphIndex);
+        glyph.addUnicode(parseInt(c));
+    }
+
+    for (var i$1 = 0; i$1 < font.glyphs.length; i$1 += 1) {
+        glyph = font.glyphs.get(i$1);
+        if (font.cffEncoding) {
+            if (font.isCIDFont) {
+                glyph.name = 'gid' + i$1;
+            } else {
+                glyph.name = font.cffEncoding.charset[i$1];
+            }
+        } else if (font.glyphNames.names) {
+            glyph.name = font.glyphNames.glyphIndexToName(i$1);
+        }
+    }
+}
+
+// Drawing utility functions.
+
+// Draw a line on the given context from point `x1,y1` to point `x2,y2`.
+function line(ctx, x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}
+
+var draw = { line: line };
+
+// The `glyf` table describes the glyphs in TrueType outline format.
+// http://www.microsoft.com/typography/otspec/glyf.htm
+
+// Parse the coordinate data for a glyph.
+function parseGlyphCoordinate(p, flag, previousValue, shortVectorBitMask, sameBitMask) {
+    var v;
+    if ((flag & shortVectorBitMask) > 0) {
+        // The coordinate is 1 byte long.
+        v = p.parseByte();
+        // The `same` bit is re-used for short values to signify the sign of the value.
+        if ((flag & sameBitMask) === 0) {
+            v = -v;
+        }
+
+        v = previousValue + v;
+    } else {
+        //  The coordinate is 2 bytes long.
+        // If the `same` bit is set, the coordinate is the same as the previous coordinate.
+        if ((flag & sameBitMask) > 0) {
+            v = previousValue;
+        } else {
+            // Parse the coordinate as a signed 16-bit delta value.
+            v = previousValue + p.parseShort();
+        }
+    }
+
+    return v;
+}
+
+// Parse a TrueType glyph.
+function parseGlyph(glyph, data, start) {
+    var p = new parse.Parser(data, start);
+    glyph.numberOfContours = p.parseShort();
+    glyph._xMin = p.parseShort();
+    glyph._yMin = p.parseShort();
+    glyph._xMax = p.parseShort();
+    glyph._yMax = p.parseShort();
+    var flags;
+    var flag;
+
+    if (glyph.numberOfContours > 0) {
+        // This glyph is not a composite.
+        var endPointIndices = glyph.endPointIndices = [];
+        for (var i = 0; i < glyph.numberOfContours; i += 1) {
+            endPointIndices.push(p.parseUShort());
+        }
+
+        glyph.instructionLength = p.parseUShort();
+        glyph.instructions = [];
+        for (var i$1 = 0; i$1 < glyph.instructionLength; i$1 += 1) {
+            glyph.instructions.push(p.parseByte());
+        }
+
+        var numberOfCoordinates = endPointIndices[endPointIndices.length - 1] + 1;
+        flags = [];
+        for (var i$2 = 0; i$2 < numberOfCoordinates; i$2 += 1) {
+            flag = p.parseByte();
+            flags.push(flag);
+            // If bit 3 is set, we repeat this flag n times, where n is the next byte.
+            if ((flag & 8) > 0) {
+                var repeatCount = p.parseByte();
+                for (var j = 0; j < repeatCount; j += 1) {
+                    flags.push(flag);
+                    i$2 += 1;
+                }
+            }
+        }
+
+        check.argument(flags.length === numberOfCoordinates, 'Bad flags.');
+
+        if (endPointIndices.length > 0) {
+            var points = [];
+            var point;
+            // X/Y coordinates are relative to the previous point, except for the first point which is relative to 0,0.
+            if (numberOfCoordinates > 0) {
+                for (var i$3 = 0; i$3 < numberOfCoordinates; i$3 += 1) {
+                    flag = flags[i$3];
+                    point = {};
+                    point.onCurve = !!(flag & 1);
+                    point.lastPointOfContour = endPointIndices.indexOf(i$3) >= 0;
+                    points.push(point);
+                }
+
+                var px = 0;
+                for (var i$4 = 0; i$4 < numberOfCoordinates; i$4 += 1) {
+                    flag = flags[i$4];
+                    point = points[i$4];
+                    point.x = parseGlyphCoordinate(p, flag, px, 2, 16);
+                    px = point.x;
+                }
+
+                var py = 0;
+                for (var i$5 = 0; i$5 < numberOfCoordinates; i$5 += 1) {
+                    flag = flags[i$5];
+                    point = points[i$5];
+                    point.y = parseGlyphCoordinate(p, flag, py, 4, 32);
+                    py = point.y;
+                }
+            }
+
+            glyph.points = points;
+        } else {
+            glyph.points = [];
+        }
+    } else if (glyph.numberOfContours === 0) {
+        glyph.points = [];
+    } else {
+        glyph.isComposite = true;
+        glyph.points = [];
+        glyph.components = [];
+        var moreComponents = true;
+        while (moreComponents) {
+            flags = p.parseUShort();
+            var component = {
+                glyphIndex: p.parseUShort(),
+                xScale: 1,
+                scale01: 0,
+                scale10: 0,
+                yScale: 1,
+                dx: 0,
+                dy: 0
+            };
+            if ((flags & 1) > 0) {
+                // The arguments are words
+                if ((flags & 2) > 0) {
+                    // values are offset
+                    component.dx = p.parseShort();
+                    component.dy = p.parseShort();
+                } else {
+                    // values are matched points
+                    component.matchedPoints = [p.parseUShort(), p.parseUShort()];
+                }
+
+            } else {
+                // The arguments are bytes
+                if ((flags & 2) > 0) {
+                    // values are offset
+                    component.dx = p.parseChar();
+                    component.dy = p.parseChar();
+                } else {
+                    // values are matched points
+                    component.matchedPoints = [p.parseByte(), p.parseByte()];
+                }
+            }
+
+            if ((flags & 8) > 0) {
+                // We have a scale
+                component.xScale = component.yScale = p.parseF2Dot14();
+            } else if ((flags & 64) > 0) {
+                // We have an X / Y scale
+                component.xScale = p.parseF2Dot14();
+                component.yScale = p.parseF2Dot14();
+            } else if ((flags & 128) > 0) {
+                // We have a 2x2 transformation
+                component.xScale = p.parseF2Dot14();
+                component.scale01 = p.parseF2Dot14();
+                component.scale10 = p.parseF2Dot14();
+                component.yScale = p.parseF2Dot14();
+            }
+
+            glyph.components.push(component);
+            moreComponents = !!(flags & 32);
+        }
+        if (flags & 0x100) {
+            // We have instructions
+            glyph.instructionLength = p.parseUShort();
+            glyph.instructions = [];
+            for (var i$6 = 0; i$6 < glyph.instructionLength; i$6 += 1) {
+                glyph.instructions.push(p.parseByte());
+            }
+        }
+    }
+}
+
+// Transform an array of points and return a new array.
+function transformPoints(points, transform) {
+    var newPoints = [];
+    for (var i = 0; i < points.length; i += 1) {
+        var pt = points[i];
+        var newPt = {
+            x: transform.xScale * pt.x + transform.scale01 * pt.y + transform.dx,
+            y: transform.scale10 * pt.x + transform.yScale * pt.y + transform.dy,
+            onCurve: pt.onCurve,
+            lastPointOfContour: pt.lastPointOfContour
+        };
+        newPoints.push(newPt);
+    }
+
+    return newPoints;
+}
+
+function getContours(points) {
+    var contours = [];
+    var currentContour = [];
+    for (var i = 0; i < points.length; i += 1) {
+        var pt = points[i];
+        currentContour.push(pt);
+        if (pt.lastPointOfContour) {
+            contours.push(currentContour);
+            currentContour = [];
+        }
+    }
+
+    check.argument(currentContour.length === 0, 'There are still points left in the current contour.');
+    return contours;
+}
+
+// Convert the TrueType glyph outline to a Path.
+function getPath(points) {
+    var p = new Path();
+    if (!points) {
+        return p;
+    }
+
+    var contours = getContours(points);
+
+    for (var contourIndex = 0; contourIndex < contours.length; ++contourIndex) {
+        var contour = contours[contourIndex];
+
+        var prev = null;
+        var curr = contour[contour.length - 1];
+        var next = contour[0];
+
+        if (curr.onCurve) {
+            p.moveTo(curr.x, curr.y);
+        } else {
+            if (next.onCurve) {
+                p.moveTo(next.x, next.y);
+            } else {
+                // If both first and last points are off-curve, start at their middle.
+                var start = {x: (curr.x + next.x) * 0.5, y: (curr.y + next.y) * 0.5};
+                p.moveTo(start.x, start.y);
+            }
+        }
+
+        for (var i = 0; i < contour.length; ++i) {
+            prev = curr;
+            curr = next;
+            next = contour[(i + 1) % contour.length];
+
+            if (curr.onCurve) {
+                // This is a straight line.
+                p.lineTo(curr.x, curr.y);
+            } else {
+                var prev2 = prev;
+                var next2 = next;
+
+                if (!prev.onCurve) {
+                    prev2 = { x: (curr.x + prev.x) * 0.5, y: (curr.y + prev.y) * 0.5 };
+                    p.lineTo(prev2.x, prev2.y);
+                }
+
+                if (!next.onCurve) {
+                    next2 = { x: (curr.x + next.x) * 0.5, y: (curr.y + next.y) * 0.5 };
+                }
+
+                p.lineTo(prev2.x, prev2.y);
+                p.quadraticCurveTo(curr.x, curr.y, next2.x, next2.y);
+            }
+        }
+
+        p.closePath();
+    }
+    return p;
+}
+
+function buildPath(glyphs, glyph) {
+    if (glyph.isComposite) {
+        for (var j = 0; j < glyph.components.length; j += 1) {
+            var component = glyph.components[j];
+            var componentGlyph = glyphs.get(component.glyphIndex);
+            // Force the ttfGlyphLoader to parse the glyph.
+            componentGlyph.getPath();
+            if (componentGlyph.points) {
+                var transformedPoints = (void 0);
+                if (component.matchedPoints === undefined) {
+                    // component positioned by offset
+                    transformedPoints = transformPoints(componentGlyph.points, component);
+                } else {
+                    // component positioned by matched points
+                    if ((component.matchedPoints[0] > glyph.points.length - 1) ||
+                        (component.matchedPoints[1] > componentGlyph.points.length - 1)) {
+                        throw Error('Matched points out of range in ' + glyph.name);
+                    }
+                    var firstPt = glyph.points[component.matchedPoints[0]];
+                    var secondPt = componentGlyph.points[component.matchedPoints[1]];
+                    var transform = {
+                        xScale: component.xScale, scale01: component.scale01,
+                        scale10: component.scale10, yScale: component.yScale,
+                        dx: 0, dy: 0
+                    };
+                    secondPt = transformPoints([secondPt], transform)[0];
+                    transform.dx = firstPt.x - secondPt.x;
+                    transform.dy = firstPt.y - secondPt.y;
+                    transformedPoints = transformPoints(componentGlyph.points, transform);
+                }
+                glyph.points = glyph.points.concat(transformedPoints);
+            }
+        }
+    }
+
+    return getPath(glyph.points);
+}
+
+// Parse all the glyphs according to the offsets from the `loca` table.
+function parseGlyfTable(data, start, loca, font) {
+    var glyphs = new glyphset.GlyphSet(font);
+
+    // The last element of the loca table is invalid.
+    for (var i = 0; i < loca.length - 1; i += 1) {
+        var offset = loca[i];
+        var nextOffset = loca[i + 1];
