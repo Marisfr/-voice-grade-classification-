@@ -36422,3 +36422,996 @@ Layout.prototype = {
      */
     getDefaultScriptName: function() {
         var layout = this.getTable();
+        if (!layout) { return; }
+        var hasLatn = false;
+        for (var i = 0; i < layout.scripts.length; i++) {
+            var name = layout.scripts[i].tag;
+            if (name === 'DFLT') { return name; }
+            if (name === 'latn') { hasLatn = true; }
+        }
+        if (hasLatn) { return 'latn'; }
+    },
+
+    /**
+     * Returns all LangSysRecords in the given script.
+     * @instance
+     * @param {string} [script='DFLT']
+     * @param {boolean} create - forces the creation of this script table if it doesn't exist.
+     * @return {Object} An object with tag and script properties.
+     */
+    getScriptTable: function(script, create) {
+        var layout = this.getTable(create);
+        if (layout) {
+            script = script || 'DFLT';
+            var scripts = layout.scripts;
+            var pos = searchTag(layout.scripts, script);
+            if (pos >= 0) {
+                return scripts[pos].script;
+            } else if (create) {
+                var scr = {
+                    tag: script,
+                    script: {
+                        defaultLangSys: {reserved: 0, reqFeatureIndex: 0xffff, featureIndexes: []},
+                        langSysRecords: []
+                    }
+                };
+                scripts.splice(-1 - pos, 0, scr);
+                return scr.script;
+            }
+        }
+    },
+
+    /**
+     * Returns a language system table
+     * @instance
+     * @param {string} [script='DFLT']
+     * @param {string} [language='dlft']
+     * @param {boolean} create - forces the creation of this langSysTable if it doesn't exist.
+     * @return {Object}
+     */
+    getLangSysTable: function(script, language, create) {
+        var scriptTable = this.getScriptTable(script, create);
+        if (scriptTable) {
+            if (!language || language === 'dflt' || language === 'DFLT') {
+                return scriptTable.defaultLangSys;
+            }
+            var pos = searchTag(scriptTable.langSysRecords, language);
+            if (pos >= 0) {
+                return scriptTable.langSysRecords[pos].langSys;
+            } else if (create) {
+                var langSysRecord = {
+                    tag: language,
+                    langSys: {reserved: 0, reqFeatureIndex: 0xffff, featureIndexes: []}
+                };
+                scriptTable.langSysRecords.splice(-1 - pos, 0, langSysRecord);
+                return langSysRecord.langSys;
+            }
+        }
+    },
+
+    /**
+     * Get a specific feature table.
+     * @instance
+     * @param {string} [script='DFLT']
+     * @param {string} [language='dlft']
+     * @param {string} feature - One of the codes listed at https://www.microsoft.com/typography/OTSPEC/featurelist.htm
+     * @param {boolean} create - forces the creation of the feature table if it doesn't exist.
+     * @return {Object}
+     */
+    getFeatureTable: function(script, language, feature, create) {
+        var langSysTable = this.getLangSysTable(script, language, create);
+        if (langSysTable) {
+            var featureRecord;
+            var featIndexes = langSysTable.featureIndexes;
+            var allFeatures = this.font.tables[this.tableName].features;
+            // The FeatureIndex array of indices is in arbitrary order,
+            // even if allFeatures is sorted alphabetically by feature tag.
+            for (var i = 0; i < featIndexes.length; i++) {
+                featureRecord = allFeatures[featIndexes[i]];
+                if (featureRecord.tag === feature) {
+                    return featureRecord.feature;
+                }
+            }
+            if (create) {
+                var index = allFeatures.length;
+                // Automatic ordering of features would require to shift feature indexes in the script list.
+                check.assert(index === 0 || feature >= allFeatures[index - 1].tag, 'Features must be added in alphabetical order.');
+                featureRecord = {
+                    tag: feature,
+                    feature: { params: 0, lookupListIndexes: [] }
+                };
+                allFeatures.push(featureRecord);
+                featIndexes.push(index);
+                return featureRecord.feature;
+            }
+        }
+    },
+
+    /**
+     * Get the lookup tables of a given type for a script/language/feature.
+     * @instance
+     * @param {string} [script='DFLT']
+     * @param {string} [language='dlft']
+     * @param {string} feature - 4-letter feature code
+     * @param {number} lookupType - 1 to 8
+     * @param {boolean} create - forces the creation of the lookup table if it doesn't exist, with no subtables.
+     * @return {Object[]}
+     */
+    getLookupTables: function(script, language, feature, lookupType, create) {
+        var featureTable = this.getFeatureTable(script, language, feature, create);
+        var tables = [];
+        if (featureTable) {
+            var lookupTable;
+            var lookupListIndexes = featureTable.lookupListIndexes;
+            var allLookups = this.font.tables[this.tableName].lookups;
+            // lookupListIndexes are in no particular order, so use naive search.
+            for (var i = 0; i < lookupListIndexes.length; i++) {
+                lookupTable = allLookups[lookupListIndexes[i]];
+                if (lookupTable.lookupType === lookupType) {
+                    tables.push(lookupTable);
+                }
+            }
+            if (tables.length === 0 && create) {
+                lookupTable = {
+                    lookupType: lookupType,
+                    lookupFlag: 0,
+                    subtables: [],
+                    markFilteringSet: undefined
+                };
+                var index = allLookups.length;
+                allLookups.push(lookupTable);
+                lookupListIndexes.push(index);
+                return [lookupTable];
+            }
+        }
+        return tables;
+    },
+
+    /**
+     * Returns the list of glyph indexes of a coverage table.
+     * Format 1: the list is stored raw
+     * Format 2: compact list as range records.
+     * @instance
+     * @param  {Object} coverageTable
+     * @return {Array}
+     */
+    expandCoverage: function(coverageTable) {
+        if (coverageTable.format === 1) {
+            return coverageTable.glyphs;
+        } else {
+            var glyphs = [];
+            var ranges = coverageTable.ranges;
+            for (var i = 0; i < ranges.length; i++) {
+                var range = ranges[i];
+                var start = range.start;
+                var end = range.end;
+                for (var j = start; j <= end; j++) {
+                    glyphs.push(j);
+                }
+            }
+            return glyphs;
+        }
+    }
+
+};
+
+// The Substitution object provides utility methods to manipulate
+// the GSUB substitution table.
+
+/**
+ * @exports opentype.Substitution
+ * @class
+ * @extends opentype.Layout
+ * @param {opentype.Font}
+ * @constructor
+ */
+function Substitution(font) {
+    Layout.call(this, font, 'gsub');
+}
+
+// Check if 2 arrays of primitives are equal.
+function arraysEqual(ar1, ar2) {
+    var n = ar1.length;
+    if (n !== ar2.length) { return false; }
+    for (var i = 0; i < n; i++) {
+        if (ar1[i] !== ar2[i]) { return false; }
+    }
+    return true;
+}
+
+// Find the first subtable of a lookup table in a particular format.
+function getSubstFormat(lookupTable, format, defaultSubtable) {
+    var subtables = lookupTable.subtables;
+    for (var i = 0; i < subtables.length; i++) {
+        var subtable = subtables[i];
+        if (subtable.substFormat === format) {
+            return subtable;
+        }
+    }
+    if (defaultSubtable) {
+        subtables.push(defaultSubtable);
+        return defaultSubtable;
+    }
+    return undefined;
+}
+
+Substitution.prototype = Layout.prototype;
+
+/**
+ * Create a default GSUB table.
+ * @return {Object} gsub - The GSUB table.
+ */
+Substitution.prototype.createDefaultTable = function() {
+    // Generate a default empty GSUB table with just a DFLT script and dflt lang sys.
+    return {
+        version: 1,
+        scripts: [{
+            tag: 'DFLT',
+            script: {
+                defaultLangSys: { reserved: 0, reqFeatureIndex: 0xffff, featureIndexes: [] },
+                langSysRecords: []
+            }
+        }],
+        features: [],
+        lookups: []
+    };
+};
+
+/**
+ * List all single substitutions (lookup type 1) for a given script, language, and feature.
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ * @param {string} feature - 4-character feature name ('aalt', 'salt', 'ss01'...)
+ * @return {Array} substitutions - The list of substitutions.
+ */
+Substitution.prototype.getSingle = function(feature, script, language) {
+    var this$1 = this;
+
+    var substitutions = [];
+    var lookupTables = this.getLookupTables(script, language, feature, 1);
+    for (var idx = 0; idx < lookupTables.length; idx++) {
+        var subtables = lookupTables[idx].subtables;
+        for (var i = 0; i < subtables.length; i++) {
+            var subtable = subtables[i];
+            var glyphs = this$1.expandCoverage(subtable.coverage);
+            var j = (void 0);
+            if (subtable.substFormat === 1) {
+                var delta = subtable.deltaGlyphId;
+                for (j = 0; j < glyphs.length; j++) {
+                    var glyph = glyphs[j];
+                    substitutions.push({ sub: glyph, by: glyph + delta });
+                }
+            } else {
+                var substitute = subtable.substitute;
+                for (j = 0; j < glyphs.length; j++) {
+                    substitutions.push({ sub: glyphs[j], by: substitute[j] });
+                }
+            }
+        }
+    }
+    return substitutions;
+};
+
+/**
+ * List all alternates (lookup type 3) for a given script, language, and feature.
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ * @param {string} feature - 4-character feature name ('aalt', 'salt'...)
+ * @return {Array} alternates - The list of alternates
+ */
+Substitution.prototype.getAlternates = function(feature, script, language) {
+    var this$1 = this;
+
+    var alternates = [];
+    var lookupTables = this.getLookupTables(script, language, feature, 3);
+    for (var idx = 0; idx < lookupTables.length; idx++) {
+        var subtables = lookupTables[idx].subtables;
+        for (var i = 0; i < subtables.length; i++) {
+            var subtable = subtables[i];
+            var glyphs = this$1.expandCoverage(subtable.coverage);
+            var alternateSets = subtable.alternateSets;
+            for (var j = 0; j < glyphs.length; j++) {
+                alternates.push({ sub: glyphs[j], by: alternateSets[j] });
+            }
+        }
+    }
+    return alternates;
+};
+
+/**
+ * List all ligatures (lookup type 4) for a given script, language, and feature.
+ * The result is an array of ligature objects like { sub: [ids], by: id }
+ * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ * @return {Array} ligatures - The list of ligatures.
+ */
+Substitution.prototype.getLigatures = function(feature, script, language) {
+    var this$1 = this;
+
+    var ligatures = [];
+    var lookupTables = this.getLookupTables(script, language, feature, 4);
+    for (var idx = 0; idx < lookupTables.length; idx++) {
+        var subtables = lookupTables[idx].subtables;
+        for (var i = 0; i < subtables.length; i++) {
+            var subtable = subtables[i];
+            var glyphs = this$1.expandCoverage(subtable.coverage);
+            var ligatureSets = subtable.ligatureSets;
+            for (var j = 0; j < glyphs.length; j++) {
+                var startGlyph = glyphs[j];
+                var ligSet = ligatureSets[j];
+                for (var k = 0; k < ligSet.length; k++) {
+                    var lig = ligSet[k];
+                    ligatures.push({
+                        sub: [startGlyph].concat(lig.components),
+                        by: lig.ligGlyph
+                    });
+                }
+            }
+        }
+    }
+    return ligatures;
+};
+
+/**
+ * Add or modify a single substitution (lookup type 1)
+ * Format 2, more flexible, is always used.
+ * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
+ * @param {Object} substitution - { sub: id, delta: number } for format 1 or { sub: id, by: id } for format 2.
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ */
+Substitution.prototype.addSingle = function(feature, substitution, script, language) {
+    var lookupTable = this.getLookupTables(script, language, feature, 1, true)[0];
+    var subtable = getSubstFormat(lookupTable, 2, {                // lookup type 1 subtable, format 2, coverage format 1
+        substFormat: 2,
+        coverage: {format: 1, glyphs: []},
+        substitute: []
+    });
+    check.assert(subtable.coverage.format === 1, 'Ligature: unable to modify coverage table format ' + subtable.coverage.format);
+    var coverageGlyph = substitution.sub;
+    var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
+    if (pos < 0) {
+        pos = -1 - pos;
+        subtable.coverage.glyphs.splice(pos, 0, coverageGlyph);
+        subtable.substitute.splice(pos, 0, 0);
+    }
+    subtable.substitute[pos] = substitution.by;
+};
+
+/**
+ * Add or modify an alternate substitution (lookup type 1)
+ * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
+ * @param {Object} substitution - { sub: id, by: [ids] }
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ */
+Substitution.prototype.addAlternate = function(feature, substitution, script, language) {
+    var lookupTable = this.getLookupTables(script, language, feature, 3, true)[0];
+    var subtable = getSubstFormat(lookupTable, 1, {                // lookup type 3 subtable, format 1, coverage format 1
+        substFormat: 1,
+        coverage: {format: 1, glyphs: []},
+        alternateSets: []
+    });
+    check.assert(subtable.coverage.format === 1, 'Ligature: unable to modify coverage table format ' + subtable.coverage.format);
+    var coverageGlyph = substitution.sub;
+    var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
+    if (pos < 0) {
+        pos = -1 - pos;
+        subtable.coverage.glyphs.splice(pos, 0, coverageGlyph);
+        subtable.alternateSets.splice(pos, 0, 0);
+    }
+    subtable.alternateSets[pos] = substitution.by;
+};
+
+/**
+ * Add a ligature (lookup type 4)
+ * Ligatures with more components must be stored ahead of those with fewer components in order to be found
+ * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
+ * @param {Object} ligature - { sub: [ids], by: id }
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ */
+Substitution.prototype.addLigature = function(feature, ligature, script, language) {
+    var lookupTable = this.getLookupTables(script, language, feature, 4, true)[0];
+    var subtable = lookupTable.subtables[0];
+    if (!subtable) {
+        subtable = {                // lookup type 4 subtable, format 1, coverage format 1
+            substFormat: 1,
+            coverage: { format: 1, glyphs: [] },
+            ligatureSets: []
+        };
+        lookupTable.subtables[0] = subtable;
+    }
+    check.assert(subtable.coverage.format === 1, 'Ligature: unable to modify coverage table format ' + subtable.coverage.format);
+    var coverageGlyph = ligature.sub[0];
+    var ligComponents = ligature.sub.slice(1);
+    var ligatureTable = {
+        ligGlyph: ligature.by,
+        components: ligComponents
+    };
+    var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
+    if (pos >= 0) {
+        // ligatureSet already exists
+        var ligatureSet = subtable.ligatureSets[pos];
+        for (var i = 0; i < ligatureSet.length; i++) {
+            // If ligature already exists, return.
+            if (arraysEqual(ligatureSet[i].components, ligComponents)) {
+                return;
+            }
+        }
+        // ligature does not exist: add it.
+        ligatureSet.push(ligatureTable);
+    } else {
+        // Create a new ligatureSet and add coverage for the first glyph.
+        pos = -1 - pos;
+        subtable.coverage.glyphs.splice(pos, 0, coverageGlyph);
+        subtable.ligatureSets.splice(pos, 0, [ligatureTable]);
+    }
+};
+
+/**
+ * List all feature data for a given script and language.
+ * @param {string} feature - 4-letter feature name
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ * @return {Array} substitutions - The list of substitutions.
+ */
+Substitution.prototype.getFeature = function(feature, script, language) {
+    if (/ss\d\d/.test(feature)) {               // ss01 - ss20
+        return this.getSingle(feature, script, language);
+    }
+    switch (feature) {
+        case 'aalt':
+        case 'salt':
+            return this.getSingle(feature, script, language)
+                    .concat(this.getAlternates(feature, script, language));
+        case 'dlig':
+        case 'liga':
+        case 'rlig': return this.getLigatures(feature, script, language);
+    }
+    return undefined;
+};
+
+/**
+ * Add a substitution to a feature for a given script and language.
+ * @param {string} feature - 4-letter feature name
+ * @param {Object} sub - the substitution to add (an object like { sub: id or [ids], by: id or [ids] })
+ * @param {string} [script='DFLT']
+ * @param {string} [language='dflt']
+ */
+Substitution.prototype.add = function(feature, sub, script, language) {
+    if (/ss\d\d/.test(feature)) {               // ss01 - ss20
+        return this.addSingle(feature, sub, script, language);
+    }
+    switch (feature) {
+        case 'aalt':
+        case 'salt':
+            if (typeof sub.by === 'number') {
+                return this.addSingle(feature, sub, script, language);
+            }
+            return this.addAlternate(feature, sub, script, language);
+        case 'dlig':
+        case 'liga':
+        case 'rlig':
+            return this.addLigature(feature, sub, script, language);
+    }
+    return undefined;
+};
+
+function isBrowser() {
+    return typeof window !== 'undefined';
+}
+
+function nodeBufferToArrayBuffer(buffer) {
+    var ab = new ArrayBuffer(buffer.length);
+    var view = new Uint8Array(ab);
+    for (var i = 0; i < buffer.length; ++i) {
+        view[i] = buffer[i];
+    }
+
+    return ab;
+}
+
+function arrayBufferToNodeBuffer(ab) {
+    var buffer = new Buffer(ab.byteLength);
+    var view = new Uint8Array(ab);
+    for (var i = 0; i < buffer.length; ++i) {
+        buffer[i] = view[i];
+    }
+
+    return buffer;
+}
+
+function checkArgument(expression, message) {
+    if (!expression) {
+        throw message;
+    }
+}
+
+/* A TrueType font hinting interpreter.
+*
+* (c) 2017 Axel Kittenberger
+*
+* This interpreter has been implemented according to this documentation:
+* https://developer.apple.com/fonts/TrueType-Reference-Manual/RM05/Chap5.html
+*
+* According to the documentation F24DOT6 values are used for pixels.
+* That means calculation is 1/64 pixel accurate and uses integer operations.
+* However, Javascript has floating point operations by default and only
+* those are available. One could make a case to simulate the 1/64 accuracy
+* exactly by truncating after every division operation
+* (for example with << 0) to get pixel exactly results as other TrueType
+* implementations. It may make sense since some fonts are pixel optimized
+* by hand using DELTAP instructions. The current implementation doesn't
+* and rather uses full floating point precision.
+*
+* xScale, yScale and rotation is currently ignored.
+*
+* A few non-trivial instructions are missing as I didn't encounter yet
+* a font that used them to test a possible implementation.
+*
+* Some fonts seem to use undocumented features regarding the twilight zone.
+* Only some of them are implemented as they were encountered.
+*
+* The exports.DEBUG statements are removed on the minified distribution file.
+*/
+var instructionTable;
+var exec;
+var execGlyph;
+var execComponent;
+
+/*
+* Creates a hinting object.
+*
+* There ought to be exactly one
+* for each truetype font that is used for hinting.
+*/
+function Hinting(font) {
+    // the font this hinting object is for
+    this.font = font;
+
+    // cached states
+    this._fpgmState  =
+    this._prepState  =
+        undefined;
+
+    // errorState
+    // 0 ... all okay
+    // 1 ... had an error in a glyf,
+    //       continue working but stop spamming
+    //       the console
+    // 2 ... error at prep, stop hinting at this ppem
+    // 3 ... error at fpeg, stop hinting for this font at all
+    this._errorState = 0;
+}
+
+/*
+* Not rounding.
+*/
+function roundOff(v) {
+    return v;
+}
+
+/*
+* Rounding to grid.
+*/
+function roundToGrid(v) {
+    //Rounding in TT is supposed to "symmetrical around zero"
+    return Math.sign(v) * Math.round(Math.abs(v));
+}
+
+/*
+* Rounding to double grid.
+*/
+function roundToDoubleGrid(v) {
+    return Math.sign(v) * Math.round(Math.abs(v * 2)) / 2;
+}
+
+/*
+* Rounding to half grid.
+*/
+function roundToHalfGrid(v) {
+    return Math.sign(v) * (Math.round(Math.abs(v) + 0.5) - 0.5);
+}
+
+/*
+* Rounding to up to grid.
+*/
+function roundUpToGrid(v) {
+    return Math.sign(v) * Math.ceil(Math.abs(v));
+}
+
+/*
+* Rounding to down to grid.
+*/
+function roundDownToGrid(v) {
+    return Math.sign(v) * Math.floor(Math.abs(v));
+}
+
+/*
+* Super rounding.
+*/
+var roundSuper = function (v) {
+    var period = this.srPeriod;
+    var phase = this.srPhase;
+    var threshold = this.srThreshold;
+    var sign = 1;
+
+    if (v < 0) {
+        v = -v;
+        sign = -1;
+    }
+
+    v += threshold - phase;
+
+    v = Math.trunc(v / period) * period;
+
+    v += phase;
+
+    // according to http://xgridfit.sourceforge.net/round.html
+    if (sign > 0 && v < 0) { return phase; }
+    if (sign < 0 && v > 0) { return -phase; }
+
+    return v * sign;
+};
+
+/*
+* Unit vector of x-axis.
+*/
+var xUnitVector = {
+    x: 1,
+
+    y: 0,
+
+    axis: 'x',
+
+    // Gets the projected distance between two points.
+    // o1/o2 ... if true, respective original position is used.
+    distance: function (p1, p2, o1, o2) {
+        return (o1 ? p1.xo : p1.x) - (o2 ? p2.xo : p2.x);
+    },
+
+    // Moves point p so the moved position has the same relative
+    // position to the moved positions of rp1 and rp2 than the
+    // original positions had.
+    //
+    // See APPENDIX on INTERPOLATE at the bottom of this file.
+    interpolate: function (p, rp1, rp2, pv) {
+        var do1;
+        var do2;
+        var doa1;
+        var doa2;
+        var dm1;
+        var dm2;
+        var dt;
+
+        if (!pv || pv === this) {
+            do1 = p.xo - rp1.xo;
+            do2 = p.xo - rp2.xo;
+            dm1 = rp1.x - rp1.xo;
+            dm2 = rp2.x - rp2.xo;
+            doa1 = Math.abs(do1);
+            doa2 = Math.abs(do2);
+            dt = doa1 + doa2;
+
+            if (dt === 0) {
+                p.x = p.xo + (dm1 + dm2) / 2;
+                return;
+            }
+
+            p.x = p.xo + (dm1 * doa2 + dm2 * doa1) / dt;
+            return;
+        }
+
+        do1 = pv.distance(p, rp1, true, true);
+        do2 = pv.distance(p, rp2, true, true);
+        dm1 = pv.distance(rp1, rp1, false, true);
+        dm2 = pv.distance(rp2, rp2, false, true);
+        doa1 = Math.abs(do1);
+        doa2 = Math.abs(do2);
+        dt = doa1 + doa2;
+
+        if (dt === 0) {
+            xUnitVector.setRelative(p, p, (dm1 + dm2) / 2, pv, true);
+            return;
+        }
+
+        xUnitVector.setRelative(p, p, (dm1 * doa2 + dm2 * doa1) / dt, pv, true);
+    },
+
+    // Slope of line normal to this
+    normalSlope: Number.NEGATIVE_INFINITY,
+
+    // Sets the point 'p' relative to point 'rp'
+    // by the distance 'd'.
+    //
+    // See APPENDIX on SETRELATIVE at the bottom of this file.
+    //
+    // p   ... point to set
+    // rp  ... reference point
+    // d   ... distance on projection vector
+    // pv  ... projection vector (undefined = this)
+    // org ... if true, uses the original position of rp as reference.
+    setRelative: function (p, rp, d, pv, org) {
+        if (!pv || pv === this) {
+            p.x = (org ? rp.xo : rp.x) + d;
+            return;
+        }
+
+        var rpx = org ? rp.xo : rp.x;
+        var rpy = org ? rp.yo : rp.y;
+        var rpdx = rpx + d * pv.x;
+        var rpdy = rpy + d * pv.y;
+
+        p.x = rpdx + (p.y - rpdy) / pv.normalSlope;
+    },
+
+    // Slope of vector line.
+    slope: 0,
+
+    // Touches the point p.
+    touch: function (p) {
+        p.xTouched = true;
+    },
+
+    // Tests if a point p is touched.
+    touched: function (p) {
+        return p.xTouched;
+    },
+
+    // Untouches the point p.
+    untouch: function (p) {
+        p.xTouched = false;
+    }
+};
+
+/*
+* Unit vector of y-axis.
+*/
+var yUnitVector = {
+    x: 0,
+
+    y: 1,
+
+    axis: 'y',
+
+    // Gets the projected distance between two points.
+    // o1/o2 ... if true, respective original position is used.
+    distance: function (p1, p2, o1, o2) {
+        return (o1 ? p1.yo : p1.y) - (o2 ? p2.yo : p2.y);
+    },
+
+    // Moves point p so the moved position has the same relative
+    // position to the moved positions of rp1 and rp2 than the
+    // original positions had.
+    //
+    // See APPENDIX on INTERPOLATE at the bottom of this file.
+    interpolate: function (p, rp1, rp2, pv) {
+        var do1;
+        var do2;
+        var doa1;
+        var doa2;
+        var dm1;
+        var dm2;
+        var dt;
+
+        if (!pv || pv === this) {
+            do1 = p.yo - rp1.yo;
+            do2 = p.yo - rp2.yo;
+            dm1 = rp1.y - rp1.yo;
+            dm2 = rp2.y - rp2.yo;
+            doa1 = Math.abs(do1);
+            doa2 = Math.abs(do2);
+            dt = doa1 + doa2;
+
+            if (dt === 0) {
+                p.y = p.yo + (dm1 + dm2) / 2;
+                return;
+            }
+
+            p.y = p.yo + (dm1 * doa2 + dm2 * doa1) / dt;
+            return;
+        }
+
+        do1 = pv.distance(p, rp1, true, true);
+        do2 = pv.distance(p, rp2, true, true);
+        dm1 = pv.distance(rp1, rp1, false, true);
+        dm2 = pv.distance(rp2, rp2, false, true);
+        doa1 = Math.abs(do1);
+        doa2 = Math.abs(do2);
+        dt = doa1 + doa2;
+
+        if (dt === 0) {
+            yUnitVector.setRelative(p, p, (dm1 + dm2) / 2, pv, true);
+            return;
+        }
+
+        yUnitVector.setRelative(p, p, (dm1 * doa2 + dm2 * doa1) / dt, pv, true);
+    },
+
+    // Slope of line normal to this.
+    normalSlope: 0,
+
+    // Sets the point 'p' relative to point 'rp'
+    // by the distance 'd'
+    //
+    // See APPENDIX on SETRELATIVE at the bottom of this file.
+    //
+    // p   ... point to set
+    // rp  ... reference point
+    // d   ... distance on projection vector
+    // pv  ... projection vector (undefined = this)
+    // org ... if true, uses the original position of rp as reference.
+    setRelative: function (p, rp, d, pv, org) {
+        if (!pv || pv === this) {
+            p.y = (org ? rp.yo : rp.y) + d;
+            return;
+        }
+
+        var rpx = org ? rp.xo : rp.x;
+        var rpy = org ? rp.yo : rp.y;
+        var rpdx = rpx + d * pv.x;
+        var rpdy = rpy + d * pv.y;
+
+        p.y = rpdy + pv.normalSlope * (p.x - rpdx);
+    },
+
+    // Slope of vector line.
+    slope: Number.POSITIVE_INFINITY,
+
+    // Touches the point p.
+    touch: function (p) {
+        p.yTouched = true;
+    },
+
+    // Tests if a point p is touched.
+    touched: function (p) {
+        return p.yTouched;
+    },
+
+    // Untouches the point p.
+    untouch: function (p) {
+        p.yTouched = false;
+    }
+};
+
+Object.freeze(xUnitVector);
+Object.freeze(yUnitVector);
+
+/*
+* Creates a unit vector that is not x- or y-axis.
+*/
+function UnitVector(x, y) {
+    this.x = x;
+    this.y = y;
+    this.axis = undefined;
+    this.slope = y / x;
+    this.normalSlope = -x / y;
+    Object.freeze(this);
+}
+
+/*
+* Gets the projected distance between two points.
+* o1/o2 ... if true, respective original position is used.
+*/
+UnitVector.prototype.distance = function(p1, p2, o1, o2) {
+    return (
+        this.x * xUnitVector.distance(p1, p2, o1, o2) +
+        this.y * yUnitVector.distance(p1, p2, o1, o2)
+    );
+};
+
+/*
+* Moves point p so the moved position has the same relative
+* position to the moved positions of rp1 and rp2 than the
+* original positions had.
+*
+* See APPENDIX on INTERPOLATE at the bottom of this file.
+*/
+UnitVector.prototype.interpolate = function(p, rp1, rp2, pv) {
+    var dm1;
+    var dm2;
+    var do1;
+    var do2;
+    var doa1;
+    var doa2;
+    var dt;
+
+    do1 = pv.distance(p, rp1, true, true);
+    do2 = pv.distance(p, rp2, true, true);
+    dm1 = pv.distance(rp1, rp1, false, true);
+    dm2 = pv.distance(rp2, rp2, false, true);
+    doa1 = Math.abs(do1);
+    doa2 = Math.abs(do2);
+    dt = doa1 + doa2;
+
+    if (dt === 0) {
+        this.setRelative(p, p, (dm1 + dm2) / 2, pv, true);
+        return;
+    }
+
+    this.setRelative(p, p, (dm1 * doa2 + dm2 * doa1) / dt, pv, true);
+};
+
+/*
+* Sets the point 'p' relative to point 'rp'
+* by the distance 'd'
+*
+* See APPENDIX on SETRELATIVE at the bottom of this file.
+*
+* p   ...  point to set
+* rp  ... reference point
+* d   ... distance on projection vector
+* pv  ... projection vector (undefined = this)
+* org ... if true, uses the original position of rp as reference.
+*/
+UnitVector.prototype.setRelative = function(p, rp, d, pv, org) {
+    pv = pv || this;
+
+    var rpx = org ? rp.xo : rp.x;
+    var rpy = org ? rp.yo : rp.y;
+    var rpdx = rpx + d * pv.x;
+    var rpdy = rpy + d * pv.y;
+
+    var pvns = pv.normalSlope;
+    var fvs = this.slope;
+
+    var px = p.x;
+    var py = p.y;
+
+    p.x = (fvs * px - pvns * rpdx + rpdy - py) / (fvs - pvns);
+    p.y = fvs * (p.x - px) + py;
+};
+
+/*
+* Touches the point p.
+*/
+UnitVector.prototype.touch = function(p) {
+    p.xTouched = true;
+    p.yTouched = true;
+};
+
+/*
+* Returns a unit vector with x/y coordinates.
+*/
+function getUnitVector(x, y) {
+    var d = Math.sqrt(x * x + y * y);
+
+    x /= d;
+    y /= d;
+
+    if (x === 1 && y === 0) { return xUnitVector; }
+    else if (x === 0 && y === 1) { return yUnitVector; }
+    else { return new UnitVector(x, y); }
+}
+
+/*
+* Creates a point in the hinting engine.
+*/
+function HPoint(
+    x,
+    y,
+    lastPointOfContour,
+    onCurve
+) {
+    this.x = this.xo = Math.round(x * 64) / 64; // hinted x value and original x-value
+    this.y = this.yo = Math.round(y * 64) / 64; // hinted y value and original y-value
+
+    this.lastPointOfContour = lastPointOfContour;
+    this.onCurve = onCurve;
+    this.prevPointOnContour = undefined;
+    this.nextPointOnContour = undefined;
+    this.xTouched = false;
+    this.yTouched = false;
+
+    Object.preventExtensions(this);
+}
+
+/*
+* Returns the next touched point on the contour.
+*
+* v  ... unit vector to test touch axis.
+*/
+HPoint.prototype.nextTouched = function(v) {
+    var p = this.nextPointOnContour;
