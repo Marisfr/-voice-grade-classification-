@@ -37415,3 +37415,1010 @@ function HPoint(
 */
 HPoint.prototype.nextTouched = function(v) {
     var p = this.nextPointOnContour;
+
+    while (!v.touched(p) && p !== this) { p = p.nextPointOnContour; }
+
+    return p;
+};
+
+/*
+* Returns the previous touched point on the contour
+*
+* v  ... unit vector to test touch axis.
+*/
+HPoint.prototype.prevTouched = function(v) {
+    var p = this.prevPointOnContour;
+
+    while (!v.touched(p) && p !== this) { p = p.prevPointOnContour; }
+
+    return p;
+};
+
+/*
+* The zero point.
+*/
+var HPZero = Object.freeze(new HPoint(0, 0));
+
+/*
+* The default state of the interpreter.
+*
+* Note: Freezing the defaultState and then deriving from it
+* makes the V8 Javascript engine going awkward,
+* so this is avoided, albeit the defaultState shouldn't
+* ever change.
+*/
+var defaultState = {
+    cvCutIn: 17 / 16,    // control value cut in
+    deltaBase: 9,
+    deltaShift: 0.125,
+    loop: 1,             // loops some instructions
+    minDis: 1,           // minimum distance
+    autoFlip: true
+};
+
+/*
+* The current state of the interpreter.
+*
+* env  ... 'fpgm' or 'prep' or 'glyf'
+* prog ... the program
+*/
+function State(env, prog) {
+    this.env = env;
+    this.stack = [];
+    this.prog = prog;
+
+    switch (env) {
+        case 'glyf' :
+            this.zp0 = this.zp1 = this.zp2 = 1;
+            this.rp0 = this.rp1 = this.rp2 = 0;
+            /* fall through */
+        case 'prep' :
+            this.fv = this.pv = this.dpv = xUnitVector;
+            this.round = roundToGrid;
+    }
+}
+
+/*
+* Executes a glyph program.
+*
+* This does the hinting for each glyph.
+*
+* Returns an array of moved points.
+*
+* glyph: the glyph to hint
+* ppem: the size the glyph is rendered for
+*/
+Hinting.prototype.exec = function(glyph, ppem) {
+    if (typeof ppem !== 'number') {
+        throw new Error('Point size is not a number!');
+    }
+
+    // Received a fatal error, don't do any hinting anymore.
+    if (this._errorState > 2) { return; }
+
+    var font = this.font;
+    var prepState = this._prepState;
+
+    if (!prepState || prepState.ppem !== ppem) {
+        var fpgmState = this._fpgmState;
+
+        if (!fpgmState) {
+            // Executes the fpgm state.
+            // This is used by fonts to define functions.
+            State.prototype = defaultState;
+
+            fpgmState =
+            this._fpgmState =
+                new State('fpgm', font.tables.fpgm);
+
+            fpgmState.funcs = [ ];
+            fpgmState.font = font;
+
+            if (exports.DEBUG) {
+                console.log('---EXEC FPGM---');
+                fpgmState.step = -1;
+            }
+
+            try {
+                exec(fpgmState);
+            } catch (e) {
+                console.log('Hinting error in FPGM:' + e);
+                this._errorState = 3;
+                return;
+            }
+        }
+
+        // Executes the prep program for this ppem setting.
+        // This is used by fonts to set cvt values
+        // depending on to be rendered font size.
+
+        State.prototype = fpgmState;
+        prepState =
+        this._prepState =
+            new State('prep', font.tables.prep);
+
+        prepState.ppem = ppem;
+
+        // Creates a copy of the cvt table
+        // and scales it to the current ppem setting.
+        var oCvt = font.tables.cvt;
+        if (oCvt) {
+            var cvt = prepState.cvt = new Array(oCvt.length);
+            var scale = ppem / font.unitsPerEm;
+            for (var c = 0; c < oCvt.length; c++) {
+                cvt[c] = oCvt[c] * scale;
+            }
+        } else {
+            prepState.cvt = [];
+        }
+
+        if (exports.DEBUG) {
+            console.log('---EXEC PREP---');
+            prepState.step = -1;
+        }
+
+        try {
+            exec(prepState);
+        } catch (e) {
+            if (this._errorState < 2) {
+                console.log('Hinting error in PREP:' + e);
+            }
+            this._errorState = 2;
+        }
+    }
+
+    if (this._errorState > 1) { return; }
+
+    try {
+        return execGlyph(glyph, prepState);
+    } catch (e) {
+        if (this._errorState < 1) {
+            console.log('Hinting error:' + e);
+            console.log('Note: further hinting errors are silenced');
+        }
+        this._errorState = 1;
+        return undefined;
+    }
+};
+
+/*
+* Executes the hinting program for a glyph.
+*/
+execGlyph = function(glyph, prepState) {
+    // original point positions
+    var xScale = prepState.ppem / prepState.font.unitsPerEm;
+    var yScale = xScale;
+    var components = glyph.components;
+    var contours;
+    var gZone;
+    var state;
+
+    State.prototype = prepState;
+    if (!components) {
+        state = new State('glyf', glyph.instructions);
+        if (exports.DEBUG) {
+            console.log('---EXEC GLYPH---');
+            state.step = -1;
+        }
+        execComponent(glyph, state, xScale, yScale);
+        gZone = state.gZone;
+    } else {
+        var font = prepState.font;
+        gZone = [];
+        contours = [];
+        for (var i = 0; i < components.length; i++) {
+            var c = components[i];
+            var cg = font.glyphs.get(c.glyphIndex);
+
+            state = new State('glyf', cg.instructions);
+
+            if (exports.DEBUG) {
+                console.log('---EXEC COMP ' + i + '---');
+                state.step = -1;
+            }
+
+            execComponent(cg, state, xScale, yScale);
+            // appends the computed points to the result array
+            // post processes the component points
+            var dx = Math.round(c.dx * xScale);
+            var dy = Math.round(c.dy * yScale);
+            var gz = state.gZone;
+            var cc = state.contours;
+            for (var pi = 0; pi < gz.length; pi++) {
+                var p = gz[pi];
+                p.xTouched = p.yTouched = false;
+                p.xo = p.x = p.x + dx;
+                p.yo = p.y = p.y + dy;
+            }
+
+            var gLen = gZone.length;
+            gZone.push.apply(gZone, gz);
+            for (var j = 0; j < cc.length; j++) {
+                contours.push(cc[j] + gLen);
+            }
+        }
+
+        if (glyph.instructions && !state.inhibitGridFit) {
+            // the composite has instructions on its own
+            state = new State('glyf', glyph.instructions);
+
+            state.gZone = state.z0 = state.z1 = state.z2 = gZone;
+
+            state.contours = contours;
+
+            // note: HPZero cannot be used here, since
+            //       the point might be modified
+            gZone.push(
+                new HPoint(0, 0),
+                new HPoint(Math.round(glyph.advanceWidth * xScale), 0)
+            );
+
+            if (exports.DEBUG) {
+                console.log('---EXEC COMPOSITE---');
+                state.step = -1;
+            }
+
+            exec(state);
+
+            gZone.length -= 2;
+        }
+    }
+
+    return gZone;
+};
+
+/*
+* Executes the hinting program for a component of a multi-component glyph
+* or of the glyph itself by a non-component glyph.
+*/
+execComponent = function(glyph, state, xScale, yScale)
+{
+    var points = glyph.points || [];
+    var pLen = points.length;
+    var gZone = state.gZone = state.z0 = state.z1 = state.z2 = [];
+    var contours = state.contours = [];
+
+    // Scales the original points and
+    // makes copies for the hinted points.
+    var cp; // current point
+    for (var i = 0; i < pLen; i++) {
+        cp = points[i];
+
+        gZone[i] = new HPoint(
+            cp.x * xScale,
+            cp.y * yScale,
+            cp.lastPointOfContour,
+            cp.onCurve
+        );
+    }
+
+    // Chain links the contours.
+    var sp; // start point
+    var np; // next point
+
+    for (var i$1 = 0; i$1 < pLen; i$1++) {
+        cp = gZone[i$1];
+
+        if (!sp) {
+            sp = cp;
+            contours.push(i$1);
+        }
+
+        if (cp.lastPointOfContour) {
+            cp.nextPointOnContour = sp;
+            sp.prevPointOnContour = cp;
+            sp = undefined;
+        } else {
+            np = gZone[i$1 + 1];
+            cp.nextPointOnContour = np;
+            np.prevPointOnContour = cp;
+        }
+    }
+
+    if (state.inhibitGridFit) { return; }
+
+    gZone.push(
+        new HPoint(0, 0),
+        new HPoint(Math.round(glyph.advanceWidth * xScale), 0)
+    );
+
+    exec(state);
+
+    // Removes the extra points.
+    gZone.length -= 2;
+
+    if (exports.DEBUG) {
+        console.log('FINISHED GLYPH', state.stack);
+        for (var i$2 = 0; i$2 < pLen; i$2++) {
+            console.log(i$2, gZone[i$2].x, gZone[i$2].y);
+        }
+    }
+};
+
+/*
+* Executes the program loaded in state.
+*/
+exec = function(state) {
+    var prog = state.prog;
+
+    if (!prog) { return; }
+
+    var pLen = prog.length;
+    var ins;
+
+    for (state.ip = 0; state.ip < pLen; state.ip++) {
+        if (exports.DEBUG) { state.step++; }
+        ins = instructionTable[prog[state.ip]];
+
+        if (!ins) {
+            throw new Error(
+                'unknown instruction: 0x' +
+                Number(prog[state.ip]).toString(16)
+            );
+        }
+
+        ins(state);
+
+        // very extensive debugging for each step
+        /*
+        if (exports.DEBUG) {
+            var da;
+            if (state.gZone) {
+                da = [];
+                for (let i = 0; i < state.gZone.length; i++)
+                {
+                    da.push(i + ' ' +
+                        state.gZone[i].x * 64 + ' ' +
+                        state.gZone[i].y * 64 + ' ' +
+                        (state.gZone[i].xTouched ? 'x' : '') +
+                        (state.gZone[i].yTouched ? 'y' : '')
+                    );
+                }
+                console.log('GZ', da);
+            }
+
+            if (state.tZone) {
+                da = [];
+                for (let i = 0; i < state.tZone.length; i++) {
+                    da.push(i + ' ' +
+                        state.tZone[i].x * 64 + ' ' +
+                        state.tZone[i].y * 64 + ' ' +
+                        (state.tZone[i].xTouched ? 'x' : '') +
+                        (state.tZone[i].yTouched ? 'y' : '')
+                    );
+                }
+                console.log('TZ', da);
+            }
+
+            if (state.stack.length > 10) {
+                console.log(
+                    state.stack.length,
+                    '...', state.stack.slice(state.stack.length - 10)
+                );
+            } else {
+                console.log(state.stack.length, state.stack);
+            }
+        }
+        */
+    }
+};
+
+/*
+* Initializes the twilight zone.
+*
+* This is only done if a SZPx instruction
+* refers to the twilight zone.
+*/
+function initTZone(state)
+{
+    var tZone = state.tZone = new Array(state.gZone.length);
+
+    // no idea if this is actually correct...
+    for (var i = 0; i < tZone.length; i++)
+    {
+        tZone[i] = new HPoint(0, 0);
+    }
+}
+
+/*
+* Skips the instruction pointer ahead over an IF/ELSE block.
+* handleElse .. if true breaks on matching ELSE
+*/
+function skip(state, handleElse)
+{
+    var prog = state.prog;
+    var ip = state.ip;
+    var nesting = 1;
+    var ins;
+
+    do {
+        ins = prog[++ip];
+        if (ins === 0x58) // IF
+            { nesting++; }
+        else if (ins === 0x59) // EIF
+            { nesting--; }
+        else if (ins === 0x40) // NPUSHB
+            { ip += prog[ip + 1] + 1; }
+        else if (ins === 0x41) // NPUSHW
+            { ip += 2 * prog[ip + 1] + 1; }
+        else if (ins >= 0xB0 && ins <= 0xB7) // PUSHB
+            { ip += ins - 0xB0 + 1; }
+        else if (ins >= 0xB8 && ins <= 0xBF) // PUSHW
+            { ip += (ins - 0xB8 + 1) * 2; }
+        else if (handleElse && nesting === 1 && ins === 0x1B) // ELSE
+            { break; }
+    } while (nesting > 0);
+
+    state.ip = ip;
+}
+
+/*----------------------------------------------------------*
+*          And then a lot of instructions...                *
+*----------------------------------------------------------*/
+
+// SVTCA[a] Set freedom and projection Vectors To Coordinate Axis
+// 0x00-0x01
+function SVTCA(v, state) {
+    if (exports.DEBUG) { console.log(state.step, 'SVTCA[' + v.axis + ']'); }
+
+    state.fv = state.pv = state.dpv = v;
+}
+
+// SPVTCA[a] Set Projection Vector to Coordinate Axis
+// 0x02-0x03
+function SPVTCA(v, state) {
+    if (exports.DEBUG) { console.log(state.step, 'SPVTCA[' + v.axis + ']'); }
+
+    state.pv = state.dpv = v;
+}
+
+// SFVTCA[a] Set Freedom Vector to Coordinate Axis
+// 0x04-0x05
+function SFVTCA(v, state) {
+    if (exports.DEBUG) { console.log(state.step, 'SFVTCA[' + v.axis + ']'); }
+
+    state.fv = v;
+}
+
+// SPVTL[a] Set Projection Vector To Line
+// 0x06-0x07
+function SPVTL(a, state) {
+    var stack = state.stack;
+    var p2i = stack.pop();
+    var p1i = stack.pop();
+    var p2 = state.z2[p2i];
+    var p1 = state.z1[p1i];
+
+    if (exports.DEBUG) { console.log('SPVTL[' + a + ']', p2i, p1i); }
+
+    var dx;
+    var dy;
+
+    if (!a) {
+        dx = p1.x - p2.x;
+        dy = p1.y - p2.y;
+    } else {
+        dx = p2.y - p1.y;
+        dy = p1.x - p2.x;
+    }
+
+    state.pv = state.dpv = getUnitVector(dx, dy);
+}
+
+// SFVTL[a] Set Freedom Vector To Line
+// 0x08-0x09
+function SFVTL(a, state) {
+    var stack = state.stack;
+    var p2i = stack.pop();
+    var p1i = stack.pop();
+    var p2 = state.z2[p2i];
+    var p1 = state.z1[p1i];
+
+    if (exports.DEBUG) { console.log('SFVTL[' + a + ']', p2i, p1i); }
+
+    var dx;
+    var dy;
+
+    if (!a) {
+        dx = p1.x - p2.x;
+        dy = p1.y - p2.y;
+    } else {
+        dx = p2.y - p1.y;
+        dy = p1.x - p2.x;
+    }
+
+    state.fv = getUnitVector(dx, dy);
+}
+
+// SPVFS[] Set Projection Vector From Stack
+// 0x0A
+function SPVFS(state) {
+    var stack = state.stack;
+    var y = stack.pop();
+    var x = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SPVFS[]', y, x); }
+
+    state.pv = state.dpv = getUnitVector(x, y);
+}
+
+// SFVFS[] Set Freedom Vector From Stack
+// 0x0B
+function SFVFS(state) {
+    var stack = state.stack;
+    var y = stack.pop();
+    var x = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SPVFS[]', y, x); }
+
+    state.fv = getUnitVector(x, y);
+}
+
+// GPV[] Get Projection Vector
+// 0x0C
+function GPV(state) {
+    var stack = state.stack;
+    var pv = state.pv;
+
+    if (exports.DEBUG) { console.log(state.step, 'GPV[]'); }
+
+    stack.push(pv.x * 0x4000);
+    stack.push(pv.y * 0x4000);
+}
+
+// GFV[] Get Freedom Vector
+// 0x0C
+function GFV(state) {
+    var stack = state.stack;
+    var fv = state.fv;
+
+    if (exports.DEBUG) { console.log(state.step, 'GFV[]'); }
+
+    stack.push(fv.x * 0x4000);
+    stack.push(fv.y * 0x4000);
+}
+
+// SFVTPV[] Set Freedom Vector To Projection Vector
+// 0x0E
+function SFVTPV(state) {
+    state.fv = state.pv;
+
+    if (exports.DEBUG) { console.log(state.step, 'SFVTPV[]'); }
+}
+
+// ISECT[] moves point p to the InterSECTion of two lines
+// 0x0F
+function ISECT(state)
+{
+    var stack = state.stack;
+    var pa0i = stack.pop();
+    var pa1i = stack.pop();
+    var pb0i = stack.pop();
+    var pb1i = stack.pop();
+    var pi = stack.pop();
+    var z0 = state.z0;
+    var z1 = state.z1;
+    var pa0 = z0[pa0i];
+    var pa1 = z0[pa1i];
+    var pb0 = z1[pb0i];
+    var pb1 = z1[pb1i];
+    var p = state.z2[pi];
+
+    if (exports.DEBUG) { console.log('ISECT[], ', pa0i, pa1i, pb0i, pb1i, pi); }
+
+    // math from
+    // en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
+
+    var x1 = pa0.x;
+    var y1 = pa0.y;
+    var x2 = pa1.x;
+    var y2 = pa1.y;
+    var x3 = pb0.x;
+    var y3 = pb0.y;
+    var x4 = pb1.x;
+    var y4 = pb1.y;
+
+    var div = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    var f1 = x1 * y2 - y1 * x2;
+    var f2 = x3 * y4 - y3 * x4;
+
+    p.x = (f1 * (x3 - x4) - f2 * (x1 - x2)) / div;
+    p.y = (f1 * (y3 - y4) - f2 * (y1 - y2)) / div;
+}
+
+// SRP0[] Set Reference Point 0
+// 0x10
+function SRP0(state) {
+    state.rp0 = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SRP0[]', state.rp0); }
+}
+
+// SRP1[] Set Reference Point 1
+// 0x11
+function SRP1(state) {
+    state.rp1 = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SRP1[]', state.rp1); }
+}
+
+// SRP1[] Set Reference Point 2
+// 0x12
+function SRP2(state) {
+    state.rp2 = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SRP2[]', state.rp2); }
+}
+
+// SZP0[] Set Zone Pointer 0
+// 0x13
+function SZP0(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SZP0[]', n); }
+
+    state.zp0 = n;
+
+    switch (n) {
+        case 0:
+            if (!state.tZone) { initTZone(state); }
+            state.z0 = state.tZone;
+            break;
+        case 1 :
+            state.z0 = state.gZone;
+            break;
+        default :
+            throw new Error('Invalid zone pointer');
+    }
+}
+
+// SZP1[] Set Zone Pointer 1
+// 0x14
+function SZP1(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SZP1[]', n); }
+
+    state.zp1 = n;
+
+    switch (n) {
+        case 0:
+            if (!state.tZone) { initTZone(state); }
+            state.z1 = state.tZone;
+            break;
+        case 1 :
+            state.z1 = state.gZone;
+            break;
+        default :
+            throw new Error('Invalid zone pointer');
+    }
+}
+
+// SZP2[] Set Zone Pointer 2
+// 0x15
+function SZP2(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SZP2[]', n); }
+
+    state.zp2 = n;
+
+    switch (n) {
+        case 0:
+            if (!state.tZone) { initTZone(state); }
+            state.z2 = state.tZone;
+            break;
+        case 1 :
+            state.z2 = state.gZone;
+            break;
+        default :
+            throw new Error('Invalid zone pointer');
+    }
+}
+
+// SZPS[] Set Zone PointerS
+// 0x16
+function SZPS(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SZPS[]', n); }
+
+    state.zp0 = state.zp1 = state.zp2 = n;
+
+    switch (n) {
+        case 0:
+            if (!state.tZone) { initTZone(state); }
+            state.z0 = state.z1 = state.z2 = state.tZone;
+            break;
+        case 1 :
+            state.z0 = state.z1 = state.z2 = state.gZone;
+            break;
+        default :
+            throw new Error('Invalid zone pointer');
+    }
+}
+
+// SLOOP[] Set LOOP variable
+// 0x17
+function SLOOP(state) {
+    state.loop = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SLOOP[]', state.loop); }
+}
+
+// RTG[] Round To Grid
+// 0x18
+function RTG(state) {
+    if (exports.DEBUG) { console.log(state.step, 'RTG[]'); }
+
+    state.round = roundToGrid;
+}
+
+// RTHG[] Round To Half Grid
+// 0x19
+function RTHG(state) {
+    if (exports.DEBUG) { console.log(state.step, 'RTHG[]'); }
+
+    state.round = roundToHalfGrid;
+}
+
+// SMD[] Set Minimum Distance
+// 0x1A
+function SMD(state) {
+    var d = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SMD[]', d); }
+
+    state.minDis = d / 0x40;
+}
+
+// ELSE[] ELSE clause
+// 0x1B
+function ELSE(state) {
+    // This instruction has been reached by executing a then branch
+    // so it just skips ahead until matching EIF.
+    //
+    // In case the IF was negative the IF[] instruction already
+    // skipped forward over the ELSE[]
+
+    if (exports.DEBUG) { console.log(state.step, 'ELSE[]'); }
+
+    skip(state, false);
+}
+
+// JMPR[] JuMP Relative
+// 0x1C
+function JMPR(state) {
+    var o = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'JMPR[]', o); }
+
+    // A jump by 1 would do nothing.
+    state.ip += o - 1;
+}
+
+// SCVTCI[] Set Control Value Table Cut-In
+// 0x1D
+function SCVTCI(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SCVTCI[]', n); }
+
+    state.cvCutIn = n / 0x40;
+}
+
+// DUP[] DUPlicate top stack element
+// 0x20
+function DUP(state) {
+    var stack = state.stack;
+
+    if (exports.DEBUG) { console.log(state.step, 'DUP[]'); }
+
+    stack.push(stack[stack.length - 1]);
+}
+
+// POP[] POP top stack element
+// 0x21
+function POP(state) {
+    if (exports.DEBUG) { console.log(state.step, 'POP[]'); }
+
+    state.stack.pop();
+}
+
+// CLEAR[] CLEAR the stack
+// 0x22
+function CLEAR(state) {
+    if (exports.DEBUG) { console.log(state.step, 'CLEAR[]'); }
+
+    state.stack.length = 0;
+}
+
+// SWAP[] SWAP the top two elements on the stack
+// 0x23
+function SWAP(state) {
+    var stack = state.stack;
+
+    var a = stack.pop();
+    var b = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SWAP[]'); }
+
+    stack.push(a);
+    stack.push(b);
+}
+
+// DEPTH[] DEPTH of the stack
+// 0x24
+function DEPTH(state) {
+    var stack = state.stack;
+
+    if (exports.DEBUG) { console.log(state.step, 'DEPTH[]'); }
+
+    stack.push(stack.length);
+}
+
+// LOOPCALL[] LOOPCALL function
+// 0x2A
+function LOOPCALL(state) {
+    var stack = state.stack;
+    var fn = stack.pop();
+    var c = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'LOOPCALL[]', fn, c); }
+
+    // saves callers program
+    var cip = state.ip;
+    var cprog = state.prog;
+
+    state.prog = state.funcs[fn];
+
+    // executes the function
+    for (var i = 0; i < c; i++) {
+        exec(state);
+
+        if (exports.DEBUG) { console.log(
+            ++state.step,
+            i + 1 < c ? 'next loopcall' : 'done loopcall',
+            i
+        ); }
+    }
+
+    // restores the callers program
+    state.ip = cip;
+    state.prog = cprog;
+}
+
+// CALL[] CALL function
+// 0x2B
+function CALL(state) {
+    var fn = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'CALL[]', fn); }
+
+    // saves callers program
+    var cip = state.ip;
+    var cprog = state.prog;
+
+    state.prog = state.funcs[fn];
+
+    // executes the function
+    exec(state);
+
+    // restores the callers program
+    state.ip = cip;
+    state.prog = cprog;
+
+    if (exports.DEBUG) { console.log(++state.step, 'returning from', fn); }
+}
+
+// CINDEX[] Copy the INDEXed element to the top of the stack
+// 0x25
+function CINDEX(state) {
+    var stack = state.stack;
+    var k = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'CINDEX[]', k); }
+
+    // In case of k == 1, it copies the last element after popping
+    // thus stack.length - k.
+    stack.push(stack[stack.length - k]);
+}
+
+// MINDEX[] Move the INDEXed element to the top of the stack
+// 0x26
+function MINDEX(state) {
+    var stack = state.stack;
+    var k = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'MINDEX[]', k); }
+
+    stack.push(stack.splice(stack.length - k, 1)[0]);
+}
+
+// FDEF[] Function DEFinition
+// 0x2C
+function FDEF(state) {
+    if (state.env !== 'fpgm') { throw new Error('FDEF not allowed here'); }
+    var stack = state.stack;
+    var prog = state.prog;
+    var ip = state.ip;
+
+    var fn = stack.pop();
+    var ipBegin = ip;
+
+    if (exports.DEBUG) { console.log(state.step, 'FDEF[]', fn); }
+
+    while (prog[++ip] !== 0x2D){  }
+
+    state.ip = ip;
+    state.funcs[fn] = prog.slice(ipBegin + 1, ip);
+}
+
+// MDAP[a] Move Direct Absolute Point
+// 0x2E-0x2F
+function MDAP(round, state) {
+    var pi = state.stack.pop();
+    var p = state.z0[pi];
+    var fv = state.fv;
+    var pv = state.pv;
+
+    if (exports.DEBUG) { console.log(state.step, 'MDAP[' + round + ']', pi); }
+
+    var d = pv.distance(p, HPZero);
+
+    if (round) { d = state.round(d); }
+
+    fv.setRelative(p, HPZero, d, pv);
+    fv.touch(p);
+
+    state.rp0 = state.rp1 = pi;
+}
+
+// IUP[a] Interpolate Untouched Points through the outline
+// 0x30
+function IUP(v, state) {
+    var z2 = state.z2;
+    var pLen = z2.length - 2;
+    var cp;
+    var pp;
+    var np;
+
+    if (exports.DEBUG) { console.log(state.step, 'IUP[' + v.axis + ']'); }
+
+    for (var i = 0; i < pLen; i++) {
+        cp = z2[i]; // current point
+
+        // if this point has been touched go on
+        if (v.touched(cp)) { continue; }
+
+        pp = cp.prevTouched(v);
+
+        // no point on the contour has been touched?
+        if (pp === cp) { continue; }
+
+        np = cp.nextTouched(v);
+
+        if (pp === np) {
+            // only one point on the contour has been touched
+            // so simply moves the point like that
+
+            v.setRelative(cp, cp, v.distance(pp, pp, false, true), v, true);
+        }
+
+        v.interpolate(cp, pp, np, v);
+    }
+}
+
+// SHP[] SHift Point using reference point
+// 0x32-0x33
+function SHP(a, state) {
+    var stack = state.stack;
+    var rpi = a ? state.rp1 : state.rp2;
+    var rp = (a ? state.z0 : state.z1)[rpi];
+    var fv = state.fv;
+    var pv = state.pv;
+    var loop = state.loop;
+    var z2 = state.z2;
+
+    while (loop--)
+    {
