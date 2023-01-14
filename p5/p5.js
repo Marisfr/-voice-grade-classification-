@@ -38422,3 +38422,1006 @@ function SHP(a, state) {
 
     while (loop--)
     {
+        var pi = stack.pop();
+        var p = z2[pi];
+
+        var d = pv.distance(rp, rp, false, true);
+        fv.setRelative(p, p, d, pv);
+        fv.touch(p);
+
+        if (exports.DEBUG) {
+            console.log(
+                state.step,
+                (state.loop > 1 ?
+                   'loop ' + (state.loop - loop) + ': ' :
+                   ''
+                ) +
+                'SHP[' + (a ? 'rp1' : 'rp2') + ']', pi
+            );
+        }
+    }
+
+    state.loop = 1;
+}
+
+// SHC[] SHift Contour using reference point
+// 0x36-0x37
+function SHC(a, state) {
+    var stack = state.stack;
+    var rpi = a ? state.rp1 : state.rp2;
+    var rp = (a ? state.z0 : state.z1)[rpi];
+    var fv = state.fv;
+    var pv = state.pv;
+    var ci = stack.pop();
+    var sp = state.z2[state.contours[ci]];
+    var p = sp;
+
+    if (exports.DEBUG) { console.log(state.step, 'SHC[' + a + ']', ci); }
+
+    var d = pv.distance(rp, rp, false, true);
+
+    do {
+        if (p !== rp) { fv.setRelative(p, p, d, pv); }
+        p = p.nextPointOnContour;
+    } while (p !== sp);
+}
+
+// SHZ[] SHift Zone using reference point
+// 0x36-0x37
+function SHZ(a, state) {
+    var stack = state.stack;
+    var rpi = a ? state.rp1 : state.rp2;
+    var rp = (a ? state.z0 : state.z1)[rpi];
+    var fv = state.fv;
+    var pv = state.pv;
+
+    var e = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SHZ[' + a + ']', e); }
+
+    var z;
+    switch (e) {
+        case 0 : z = state.tZone; break;
+        case 1 : z = state.gZone; break;
+        default : throw new Error('Invalid zone');
+    }
+
+    var p;
+    var d = pv.distance(rp, rp, false, true);
+    var pLen = z.length - 2;
+    for (var i = 0; i < pLen; i++)
+    {
+        p = z[i];
+        if (p !== rp) { fv.setRelative(p, p, d, pv); }
+    }
+}
+
+// SHPIX[] SHift point by a PIXel amount
+// 0x38
+function SHPIX(state) {
+    var stack = state.stack;
+    var loop = state.loop;
+    var fv = state.fv;
+    var d = stack.pop() / 0x40;
+    var z2 = state.z2;
+
+    while (loop--) {
+        var pi = stack.pop();
+        var p = z2[pi];
+
+        if (exports.DEBUG) {
+            console.log(
+                state.step,
+                (state.loop > 1 ? 'loop ' + (state.loop - loop) + ': ' : '') +
+                'SHPIX[]', pi, d
+            );
+        }
+
+        fv.setRelative(p, p, d);
+        fv.touch(p);
+    }
+
+    state.loop = 1;
+}
+
+// IP[] Interpolate Point
+// 0x39
+function IP(state) {
+    var stack = state.stack;
+    var rp1i = state.rp1;
+    var rp2i = state.rp2;
+    var loop = state.loop;
+    var rp1 = state.z0[rp1i];
+    var rp2 = state.z1[rp2i];
+    var fv = state.fv;
+    var pv = state.dpv;
+    var z2 = state.z2;
+
+    while (loop--) {
+        var pi = stack.pop();
+        var p = z2[pi];
+
+        if (exports.DEBUG) {
+            console.log(
+                state.step,
+                (state.loop > 1 ? 'loop ' + (state.loop - loop) + ': ' : '') +
+                'IP[]', pi, rp1i, '<->', rp2i
+            );
+        }
+
+        fv.interpolate(p, rp1, rp2, pv);
+
+        fv.touch(p);
+    }
+
+    state.loop = 1;
+}
+
+// MSIRP[a] Move Stack Indirect Relative Point
+// 0x3A-0x3B
+function MSIRP(a, state) {
+    var stack = state.stack;
+    var d = stack.pop() / 64;
+    var pi = stack.pop();
+    var p = state.z1[pi];
+    var rp0 = state.z0[state.rp0];
+    var fv = state.fv;
+    var pv = state.pv;
+
+    fv.setRelative(p, rp0, d, pv);
+    fv.touch(p);
+
+    if (exports.DEBUG) { console.log(state.step, 'MSIRP[' + a + ']', d, pi); }
+
+    state.rp1 = state.rp0;
+    state.rp2 = pi;
+    if (a) { state.rp0 = pi; }
+}
+
+// ALIGNRP[] Align to reference point.
+// 0x3C
+function ALIGNRP(state) {
+    var stack = state.stack;
+    var rp0i = state.rp0;
+    var rp0 = state.z0[rp0i];
+    var loop = state.loop;
+    var fv = state.fv;
+    var pv = state.pv;
+    var z1 = state.z1;
+
+    while (loop--) {
+        var pi = stack.pop();
+        var p = z1[pi];
+
+        if (exports.DEBUG) {
+            console.log(
+                state.step,
+                (state.loop > 1 ? 'loop ' + (state.loop - loop) + ': ' : '') +
+                'ALIGNRP[]', pi
+            );
+        }
+
+        fv.setRelative(p, rp0, 0, pv);
+        fv.touch(p);
+    }
+
+    state.loop = 1;
+}
+
+// RTG[] Round To Double Grid
+// 0x3D
+function RTDG(state) {
+    if (exports.DEBUG) { console.log(state.step, 'RTDG[]'); }
+
+    state.round = roundToDoubleGrid;
+}
+
+// MIAP[a] Move Indirect Absolute Point
+// 0x3E-0x3F
+function MIAP(round, state) {
+    var stack = state.stack;
+    var n = stack.pop();
+    var pi = stack.pop();
+    var p = state.z0[pi];
+    var fv = state.fv;
+    var pv = state.pv;
+    var cv = state.cvt[n];
+
+    // TODO cvtcutin should be considered here
+    if (round) { cv = state.round(cv); }
+
+    if (exports.DEBUG) {
+        console.log(
+            state.step,
+            'MIAP[' + round + ']',
+            n, '(', cv, ')', pi
+        );
+    }
+
+    fv.setRelative(p, HPZero, cv, pv);
+
+    if (state.zp0 === 0) {
+        p.xo = p.x;
+        p.yo = p.y;
+    }
+
+    fv.touch(p);
+
+    state.rp0 = state.rp1 = pi;
+}
+
+// NPUSB[] PUSH N Bytes
+// 0x40
+function NPUSHB(state) {
+    var prog = state.prog;
+    var ip = state.ip;
+    var stack = state.stack;
+
+    var n = prog[++ip];
+
+    if (exports.DEBUG) { console.log(state.step, 'NPUSHB[]', n); }
+
+    for (var i = 0; i < n; i++) { stack.push(prog[++ip]); }
+
+    state.ip = ip;
+}
+
+// NPUSHW[] PUSH N Words
+// 0x41
+function NPUSHW(state) {
+    var ip = state.ip;
+    var prog = state.prog;
+    var stack = state.stack;
+    var n = prog[++ip];
+
+    if (exports.DEBUG) { console.log(state.step, 'NPUSHW[]', n); }
+
+    for (var i = 0; i < n; i++) {
+        var w = (prog[++ip] << 8) | prog[++ip];
+        if (w & 0x8000) { w = -((w ^ 0xffff) + 1); }
+        stack.push(w);
+    }
+
+    state.ip = ip;
+}
+
+// WS[] Write Store
+// 0x42
+function WS(state) {
+    var stack = state.stack;
+    var store = state.store;
+
+    if (!store) { store = state.store = []; }
+
+    var v = stack.pop();
+    var l = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'WS', v, l); }
+
+    store[l] = v;
+}
+
+// RS[] Read Store
+// 0x43
+function RS(state) {
+    var stack = state.stack;
+    var store = state.store;
+
+    var l = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'RS', l); }
+
+    var v = (store && store[l]) || 0;
+
+    stack.push(v);
+}
+
+// WCVTP[] Write Control Value Table in Pixel units
+// 0x44
+function WCVTP(state) {
+    var stack = state.stack;
+
+    var v = stack.pop();
+    var l = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'WCVTP', v, l); }
+
+    state.cvt[l] = v / 0x40;
+}
+
+// RCVT[] Read Control Value Table entry
+// 0x45
+function RCVT(state) {
+    var stack = state.stack;
+    var cvte = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'RCVT', cvte); }
+
+    stack.push(state.cvt[cvte] * 0x40);
+}
+
+// GC[] Get Coordinate projected onto the projection vector
+// 0x46-0x47
+function GC(a, state) {
+    var stack = state.stack;
+    var pi = stack.pop();
+    var p = state.z2[pi];
+
+    if (exports.DEBUG) { console.log(state.step, 'GC[' + a + ']', pi); }
+
+    stack.push(state.dpv.distance(p, HPZero, a, false) * 0x40);
+}
+
+// MD[a] Measure Distance
+// 0x49-0x4A
+function MD(a, state) {
+    var stack = state.stack;
+    var pi2 = stack.pop();
+    var pi1 = stack.pop();
+    var p2 = state.z1[pi2];
+    var p1 = state.z0[pi1];
+    var d = state.dpv.distance(p1, p2, a, a);
+
+    if (exports.DEBUG) { console.log(state.step, 'MD[' + a + ']', pi2, pi1, '->', d); }
+
+    state.stack.push(Math.round(d * 64));
+}
+
+// MPPEM[] Measure Pixels Per EM
+// 0x4B
+function MPPEM(state) {
+    if (exports.DEBUG) { console.log(state.step, 'MPPEM[]'); }
+    state.stack.push(state.ppem);
+}
+
+// FLIPON[] set the auto FLIP Boolean to ON
+// 0x4D
+function FLIPON(state) {
+    if (exports.DEBUG) { console.log(state.step, 'FLIPON[]'); }
+    state.autoFlip = true;
+}
+
+// LT[] Less Than
+// 0x50
+function LT(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'LT[]', e2, e1); }
+
+    stack.push(e1 < e2 ? 1 : 0);
+}
+
+// LTEQ[] Less Than or EQual
+// 0x53
+function LTEQ(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'LTEQ[]', e2, e1); }
+
+    stack.push(e1 <= e2 ? 1 : 0);
+}
+
+// GTEQ[] Greater Than
+// 0x52
+function GT(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'GT[]', e2, e1); }
+
+    stack.push(e1 > e2 ? 1 : 0);
+}
+
+// GTEQ[] Greater Than or EQual
+// 0x53
+function GTEQ(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'GTEQ[]', e2, e1); }
+
+    stack.push(e1 >= e2 ? 1 : 0);
+}
+
+// EQ[] EQual
+// 0x54
+function EQ(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'EQ[]', e2, e1); }
+
+    stack.push(e2 === e1 ? 1 : 0);
+}
+
+// NEQ[] Not EQual
+// 0x55
+function NEQ(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'NEQ[]', e2, e1); }
+
+    stack.push(e2 !== e1 ? 1 : 0);
+}
+
+// ODD[] ODD
+// 0x56
+function ODD(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'ODD[]', n); }
+
+    stack.push(Math.trunc(n) % 2 ? 1 : 0);
+}
+
+// EVEN[] EVEN
+// 0x57
+function EVEN(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'EVEN[]', n); }
+
+    stack.push(Math.trunc(n) % 2 ? 0 : 1);
+}
+
+// IF[] IF test
+// 0x58
+function IF(state) {
+    var test = state.stack.pop();
+    var ins;
+
+    if (exports.DEBUG) { console.log(state.step, 'IF[]', test); }
+
+    // if test is true it just continues
+    // if not the ip is skipped until matching ELSE or EIF
+    if (!test) {
+        skip(state, true);
+
+        if (exports.DEBUG) { console.log(state.step, ins === 0x1B ? 'ELSE[]' : 'EIF[]'); }
+    }
+}
+
+// EIF[] End IF
+// 0x59
+function EIF(state) {
+    // this can be reached normally when
+    // executing an else branch.
+    // -> just ignore it
+
+    if (exports.DEBUG) { console.log(state.step, 'EIF[]'); }
+}
+
+// AND[] logical AND
+// 0x5A
+function AND(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'AND[]', e2, e1); }
+
+    stack.push(e2 && e1 ? 1 : 0);
+}
+
+// OR[] logical OR
+// 0x5B
+function OR(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'OR[]', e2, e1); }
+
+    stack.push(e2 || e1 ? 1 : 0);
+}
+
+// NOT[] logical NOT
+// 0x5C
+function NOT(state) {
+    var stack = state.stack;
+    var e = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'NOT[]', e); }
+
+    stack.push(e ? 0 : 1);
+}
+
+// DELTAP1[] DELTA exception P1
+// DELTAP2[] DELTA exception P2
+// DELTAP3[] DELTA exception P3
+// 0x5D, 0x71, 0x72
+function DELTAP123(b, state) {
+    var stack = state.stack;
+    var n = stack.pop();
+    var fv = state.fv;
+    var pv = state.pv;
+    var ppem = state.ppem;
+    var base = state.deltaBase + (b - 1) * 16;
+    var ds = state.deltaShift;
+    var z0 = state.z0;
+
+    if (exports.DEBUG) { console.log(state.step, 'DELTAP[' + b + ']', n, stack); }
+
+    for (var i = 0; i < n; i++)
+    {
+        var pi = stack.pop();
+        var arg = stack.pop();
+        var appem = base + ((arg & 0xF0) >> 4);
+        if (appem !== ppem) { continue; }
+
+        var mag = (arg & 0x0F) - 8;
+        if (mag >= 0) { mag++; }
+        if (exports.DEBUG) { console.log(state.step, 'DELTAPFIX', pi, 'by', mag * ds); }
+
+        var p = z0[pi];
+        fv.setRelative(p, p, mag * ds, pv);
+    }
+}
+
+// SDB[] Set Delta Base in the graphics state
+// 0x5E
+function SDB(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SDB[]', n); }
+
+    state.deltaBase = n;
+}
+
+// SDS[] Set Delta Shift in the graphics state
+// 0x5F
+function SDS(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SDS[]', n); }
+
+    state.deltaShift = Math.pow(0.5, n);
+}
+
+// ADD[] ADD
+// 0x60
+function ADD(state) {
+    var stack = state.stack;
+    var n2 = stack.pop();
+    var n1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'ADD[]', n2, n1); }
+
+    stack.push(n1 + n2);
+}
+
+// SUB[] SUB
+// 0x61
+function SUB(state) {
+    var stack = state.stack;
+    var n2 = stack.pop();
+    var n1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SUB[]', n2, n1); }
+
+    stack.push(n1 - n2);
+}
+
+// DIV[] DIV
+// 0x62
+function DIV(state) {
+    var stack = state.stack;
+    var n2 = stack.pop();
+    var n1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'DIV[]', n2, n1); }
+
+    stack.push(n1 * 64 / n2);
+}
+
+// MUL[] MUL
+// 0x63
+function MUL(state) {
+    var stack = state.stack;
+    var n2 = stack.pop();
+    var n1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'MUL[]', n2, n1); }
+
+    stack.push(n1 * n2 / 64);
+}
+
+// ABS[] ABSolute value
+// 0x64
+function ABS(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'ABS[]', n); }
+
+    stack.push(Math.abs(n));
+}
+
+// NEG[] NEGate
+// 0x65
+function NEG(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'NEG[]', n); }
+
+    stack.push(-n);
+}
+
+// FLOOR[] FLOOR
+// 0x66
+function FLOOR(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'FLOOR[]', n); }
+
+    stack.push(Math.floor(n / 0x40) * 0x40);
+}
+
+// CEILING[] CEILING
+// 0x67
+function CEILING(state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'CEILING[]', n); }
+
+    stack.push(Math.ceil(n / 0x40) * 0x40);
+}
+
+// ROUND[ab] ROUND value
+// 0x68-0x6B
+function ROUND(dt, state) {
+    var stack = state.stack;
+    var n = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'ROUND[]'); }
+
+    stack.push(state.round(n / 0x40) * 0x40);
+}
+
+// WCVTF[] Write Control Value Table in Funits
+// 0x70
+function WCVTF(state) {
+    var stack = state.stack;
+    var v = stack.pop();
+    var l = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'WCVTF[]', v, l); }
+
+    state.cvt[l] = v * state.ppem / state.font.unitsPerEm;
+}
+
+// DELTAC1[] DELTA exception C1
+// DELTAC2[] DELTA exception C2
+// DELTAC3[] DELTA exception C3
+// 0x73, 0x74, 0x75
+function DELTAC123(b, state) {
+    var stack = state.stack;
+    var n = stack.pop();
+    var ppem = state.ppem;
+    var base = state.deltaBase + (b - 1) * 16;
+    var ds = state.deltaShift;
+
+    if (exports.DEBUG) { console.log(state.step, 'DELTAC[' + b + ']', n, stack); }
+
+    for (var i = 0; i < n; i++) {
+        var c = stack.pop();
+        var arg = stack.pop();
+        var appem = base + ((arg & 0xF0) >> 4);
+        if (appem !== ppem) { continue; }
+
+        var mag = (arg & 0x0F) - 8;
+        if (mag >= 0) { mag++; }
+
+        var delta = mag * ds;
+
+        if (exports.DEBUG) { console.log(state.step, 'DELTACFIX', c, 'by', delta); }
+
+        state.cvt[c] += delta;
+    }
+}
+
+// SROUND[] Super ROUND
+// 0x76
+function SROUND(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'SROUND[]', n); }
+
+    state.round = roundSuper;
+
+    var period;
+
+    switch (n & 0xC0) {
+        case 0x00:
+            period = 0.5;
+            break;
+        case 0x40:
+            period = 1;
+            break;
+        case 0x80:
+            period = 2;
+            break;
+        default:
+            throw new Error('invalid SROUND value');
+    }
+
+    state.srPeriod = period;
+
+    switch (n & 0x30) {
+        case 0x00:
+            state.srPhase = 0;
+            break;
+        case 0x10:
+            state.srPhase = 0.25 * period;
+            break;
+        case 0x20:
+            state.srPhase = 0.5  * period;
+            break;
+        case 0x30:
+            state.srPhase = 0.75 * period;
+            break;
+        default: throw new Error('invalid SROUND value');
+    }
+
+    n &= 0x0F;
+
+    if (n === 0) { state.srThreshold = 0; }
+    else { state.srThreshold = (n / 8 - 0.5) * period; }
+}
+
+// S45ROUND[] Super ROUND 45 degrees
+// 0x77
+function S45ROUND(state) {
+    var n = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'S45ROUND[]', n); }
+
+    state.round = roundSuper;
+
+    var period;
+
+    switch (n & 0xC0) {
+        case 0x00:
+            period = Math.sqrt(2) / 2;
+            break;
+        case 0x40:
+            period = Math.sqrt(2);
+            break;
+        case 0x80:
+            period = 2 * Math.sqrt(2);
+            break;
+        default:
+            throw new Error('invalid S45ROUND value');
+    }
+
+    state.srPeriod = period;
+
+    switch (n & 0x30) {
+        case 0x00:
+            state.srPhase = 0;
+            break;
+        case 0x10:
+            state.srPhase = 0.25 * period;
+            break;
+        case 0x20:
+            state.srPhase = 0.5  * period;
+            break;
+        case 0x30:
+            state.srPhase = 0.75 * period;
+            break;
+        default:
+            throw new Error('invalid S45ROUND value');
+    }
+
+    n &= 0x0F;
+
+    if (n === 0) { state.srThreshold = 0; }
+    else { state.srThreshold = (n / 8 - 0.5) * period; }
+}
+
+// ROFF[] Round Off
+// 0x7A
+function ROFF(state) {
+    if (exports.DEBUG) { console.log(state.step, 'ROFF[]'); }
+
+    state.round = roundOff;
+}
+
+// RUTG[] Round Up To Grid
+// 0x7C
+function RUTG(state) {
+    if (exports.DEBUG) { console.log(state.step, 'RUTG[]'); }
+
+    state.round = roundUpToGrid;
+}
+
+// RDTG[] Round Down To Grid
+// 0x7D
+function RDTG(state) {
+    if (exports.DEBUG) { console.log(state.step, 'RDTG[]'); }
+
+    state.round = roundDownToGrid;
+}
+
+// SCANCTRL[] SCAN conversion ConTRoL
+// 0x85
+function SCANCTRL(state) {
+    var n = state.stack.pop();
+
+    // ignored by opentype.js
+
+    if (exports.DEBUG) { console.log(state.step, 'SCANCTRL[]', n); }
+}
+
+// SDPVTL[a] Set Dual Projection Vector To Line
+// 0x86-0x87
+function SDPVTL(a, state) {
+    var stack = state.stack;
+    var p2i = stack.pop();
+    var p1i = stack.pop();
+    var p2 = state.z2[p2i];
+    var p1 = state.z1[p1i];
+
+    if (exports.DEBUG) { console.log('SDPVTL[' + a + ']', p2i, p1i); }
+
+    var dx;
+    var dy;
+
+    if (!a) {
+        dx = p1.x - p2.x;
+        dy = p1.y - p2.y;
+    } else {
+        dx = p2.y - p1.y;
+        dy = p1.x - p2.x;
+    }
+
+    state.dpv = getUnitVector(dx, dy);
+}
+
+// GETINFO[] GET INFOrmation
+// 0x88
+function GETINFO(state) {
+    var stack = state.stack;
+    var sel = stack.pop();
+    var r = 0;
+
+    if (exports.DEBUG) { console.log(state.step, 'GETINFO[]', sel); }
+
+    // v35 as in no subpixel hinting
+    if (sel & 0x01) { r = 35; }
+
+    // TODO rotation and stretch currently not supported
+    // and thus those GETINFO are always 0.
+
+    // opentype.js is always gray scaling
+    if (sel & 0x20) { r |= 0x1000; }
+
+    stack.push(r);
+}
+
+// ROLL[] ROLL the top three stack elements
+// 0x8A
+function ROLL(state) {
+    var stack = state.stack;
+    var a = stack.pop();
+    var b = stack.pop();
+    var c = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'ROLL[]'); }
+
+    stack.push(b);
+    stack.push(a);
+    stack.push(c);
+}
+
+// MAX[] MAXimum of top two stack elements
+// 0x8B
+function MAX(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'MAX[]', e2, e1); }
+
+    stack.push(Math.max(e1, e2));
+}
+
+// MIN[] MINimum of top two stack elements
+// 0x8C
+function MIN(state) {
+    var stack = state.stack;
+    var e2 = stack.pop();
+    var e1 = stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'MIN[]', e2, e1); }
+
+    stack.push(Math.min(e1, e2));
+}
+
+// SCANTYPE[] SCANTYPE
+// 0x8D
+function SCANTYPE(state) {
+    var n = state.stack.pop();
+    // ignored by opentype.js
+    if (exports.DEBUG) { console.log(state.step, 'SCANTYPE[]', n); }
+}
+
+// INSTCTRL[] INSTCTRL
+// 0x8D
+function INSTCTRL(state) {
+    var s = state.stack.pop();
+    var v = state.stack.pop();
+
+    if (exports.DEBUG) { console.log(state.step, 'INSTCTRL[]', s, v); }
+
+    switch (s) {
+        case 1 : state.inhibitGridFit = !!v; return;
+        case 2 : state.ignoreCvt = !!v; return;
+        default: throw new Error('invalid INSTCTRL[] selector');
+    }
+}
+
+// PUSHB[abc] PUSH Bytes
+// 0xB0-0xB7
+function PUSHB(n, state) {
+    var stack = state.stack;
+    var prog = state.prog;
+    var ip = state.ip;
+
+    if (exports.DEBUG) { console.log(state.step, 'PUSHB[' + n + ']'); }
+
+    for (var i = 0; i < n; i++) { stack.push(prog[++ip]); }
+
+    state.ip = ip;
+}
+
+// PUSHW[abc] PUSH Words
+// 0xB8-0xBF
+function PUSHW(n, state) {
+    var ip = state.ip;
+    var prog = state.prog;
+    var stack = state.stack;
+
+    if (exports.DEBUG) { console.log(state.ip, 'PUSHW[' + n + ']'); }
+
+    for (var i = 0; i < n; i++) {
+        var w = (prog[++ip] << 8) | prog[++ip];
+        if (w & 0x8000) { w = -((w ^ 0xffff) + 1); }
+        stack.push(w);
+    }
+
+    state.ip = ip;
+}
+
+// MDRP[abcde] Move Direct Relative Point
+// 0xD0-0xEF
+// (if indirect is 0)
+//
+// and
+//
+// MIRP[abcde] Move Indirect Relative Point
+// 0xE0-0xFF
+// (if indirect is 1)
+
+function MDRP_MIRP(indirect, setRp0, keepD, ro, dt, state) {
+    var stack = state.stack;
+    var cvte = indirect && stack.pop();
+    var pi = stack.pop();
+    var rp0i = state.rp0;
+    var rp = state.z0[rp0i];
