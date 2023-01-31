@@ -49180,3 +49180,973 @@ p5.Element.prototype.touchStarted = function(fxn) {
  *                                the element.
  *                                if `false` is passed instead, the previously
  *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.touchMoved(changeGray); // attach listener for
+ *   // canvas click only
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ * }
+ *
+ * // this function fires only when cnv is clicked
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.touchMoved = function(fxn) {
+  adjustListener('touchmove', fxn, this);
+  adjustListener('mousemove', fxn, this);
+  return this;
+};
+
+/**
+ * The .touchEnded() function is called once after every time a touch is
+ * registered. This can be used to attach element specific event listeners.
+ *
+ * @method touchEnded
+ * @param  {Function|Boolean} fxn function to be fired when a touch ends
+ *                                over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.touchEnded(changeGray); // attach listener for
+ *   // canvas click only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires with any touch anywhere
+ * function touchEnded() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires only when cnv is clicked
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.touchEnded = function(fxn) {
+  adjustListener('touchend', fxn, this);
+  adjustListener('mouseup', fxn, this);
+  return this;
+};
+
+/**
+ * The .dragOver() function is called once after every time a
+ * file is dragged over the element. This can be used to attach an
+ * element specific event listener.
+ *
+ * @method dragOver
+ * @param  {Function|Boolean} fxn function to be fired when a file is
+ *                                dragged over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div><code>
+ * // To test this sketch, simply drag a
+ * // file over the canvas
+ * function setup() {
+ *   var c = createCanvas(100, 100);
+ *   background(200);
+ *   textAlign(CENTER);
+ *   text('Drag file', width / 2, height / 2);
+ *   c.dragOver(dragOverCallback);
+ * }
+ *
+ * // This function will be called whenever
+ * // a file is dragged over the canvas
+ * function dragOverCallback() {
+ *   background(240);
+ *   text('Dragged over', width / 2, height / 2);
+ * }
+ * </code></div>
+ * @alt
+ * nothing displayed
+ */
+p5.Element.prototype.dragOver = function(fxn) {
+  adjustListener('dragover', fxn, this);
+  return this;
+};
+
+/**
+ * The .dragLeave() function is called once after every time a
+ * dragged file leaves the element area. This can be used to attach an
+ * element specific event listener.
+ *
+ * @method dragLeave
+ * @param  {Function|Boolean} fxn function to be fired when a file is
+ *                                dragged off the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div><code>
+ * // To test this sketch, simply drag a file
+ * // over and then out of the canvas area
+ * function setup() {
+ *   var c = createCanvas(100, 100);
+ *   background(200);
+ *   textAlign(CENTER);
+ *   text('Drag file', width / 2, height / 2);
+ *   c.dragLeave(dragLeaveCallback);
+ * }
+ *
+ * // This function will be called whenever
+ * // a file is dragged out of the canvas
+ * function dragLeaveCallback() {
+ *   background(240);
+ *   text('Dragged off', width / 2, height / 2);
+ * }
+ * </code></div>
+ * @alt
+ * nothing displayed
+ */
+p5.Element.prototype.dragLeave = function(fxn) {
+  adjustListener('dragleave', fxn, this);
+  return this;
+};
+
+/**
+ * The .drop() function is called for each file dropped on the element.
+ * It requires a callback that is passed a p5.File object.  You can
+ * optionally pass two callbacks, the first one (required) is triggered
+ * for each file dropped when the file is loaded.  The second (optional)
+ * is triggered just once when a file (or files) are dropped.
+ *
+ * @method drop
+ * @param  {Function} callback  callback triggered when files are dropped.
+ * @param  {Function} [fxn]       callback to receive loaded file.
+ * @chainable
+ * @example
+ * <div><code>
+ * function setup() {
+ *   var c = createCanvas(100, 100);
+ *   background(200);
+ *   textAlign(CENTER);
+ *   text('drop image', width / 2, height / 2);
+ *   c.drop(gotFile);
+ * }
+ *
+ * function gotFile(file) {
+ *   var img = createImg(file.data).hide();
+ *   // Draw the image onto the canvas
+ *   image(img, 0, 0, width, height);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * Canvas turns into whatever image is dragged/dropped onto it.
+ *
+ */
+p5.Element.prototype.drop = function(callback, fxn) {
+  // Make a file loader callback and trigger user's callback
+  function makeLoader(theFile) {
+    // Making a p5.File object
+    var p5file = new p5.File(theFile);
+    return function(e) {
+      p5file.data = e.target.result;
+      callback(p5file);
+    };
+  }
+
+  // Is the file stuff supported?
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    // If you want to be able to drop you've got to turn off
+    // a lot of default behavior
+    attachListener(
+      'dragover',
+      function(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+      },
+      this
+    );
+
+    // If this is a drag area we need to turn off the default behavior
+    attachListener(
+      'dragleave',
+      function(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+      },
+      this
+    );
+
+    // If just one argument it's the callback for the files
+    if (typeof fxn !== 'undefined') {
+      attachListener('drop', fxn, this);
+    }
+
+    // Deal with the files
+    attachListener(
+      'drop',
+      function(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        // A FileList
+        var files = evt.dataTransfer.files;
+
+        // Load each one and trigger the callback
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          var reader = new FileReader();
+          reader.onload = makeLoader(f);
+
+          // Text or data?
+          // This should likely be improved
+          if (f.type.indexOf('text') > -1) {
+            reader.readAsText(f);
+          } else {
+            reader.readAsDataURL(f);
+          }
+        }
+      },
+      this
+    );
+  } else {
+    console.log('The File APIs are not fully supported in this browser.');
+  }
+
+  return this;
+};
+
+// General handler for event attaching and detaching
+function adjustListener(ev, fxn, ctx) {
+  if (fxn === false) {
+    detachListener(ev, ctx);
+  } else {
+    attachListener(ev, fxn, ctx);
+  }
+  return this;
+}
+
+function attachListener(ev, fxn, ctx) {
+  // LM removing, not sure why we had this?
+  // var _this = ctx;
+  // var f = function (e) { fxn(e, _this); };
+
+  // detach the old listener if there was one
+  if (ctx._events[ev]) {
+    detachListener(ev, ctx);
+  }
+  var f = fxn.bind(ctx);
+  ctx.elt.addEventListener(ev, f, false);
+  ctx._events[ev] = f;
+}
+
+function detachListener(ev, ctx) {
+  var f = ctx._events[ev];
+  ctx.elt.removeEventListener(ev, f, false);
+  ctx._events[ev] = null;
+}
+
+/**
+ * Helper fxn for sharing pixel methods
+ *
+ */
+p5.Element.prototype._setProperty = function(prop, value) {
+  this[prop] = value;
+};
+
+module.exports = p5.Element;
+
+},{"./core":22}],28:[function(_dereq_,module,exports){
+/**
+ * @module Rendering
+ * @submodule Rendering
+ * @for p5
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+
+/**
+ * Thin wrapper around a renderer, to be used for creating a
+ * graphics buffer object. Use this class if you need
+ * to draw into an off-screen graphics buffer. The two parameters define the
+ * width and height in pixels. The fields and methods for this class are
+ * extensive, but mirror the normal drawing API for p5.
+ *
+ * @class p5.Graphics
+ * @constructor
+ * @extends p5.Element
+ * @param {Number} w            width
+ * @param {Number} h            height
+ * @param {Constant} renderer   the renderer to use, either P2D or WEBGL
+ * @param {p5} [pInst]          pointer to p5 instance
+ */
+p5.Graphics = function(w, h, renderer, pInst) {
+  var r = renderer || constants.P2D;
+
+  this.canvas = document.createElement('canvas');
+  var node = pInst._userNode || document.body;
+  node.appendChild(this.canvas);
+
+  p5.Element.call(this, this.canvas, pInst, false);
+
+  // bind methods and props of p5 to the new object
+  for (var p in p5.prototype) {
+    if (!this[p]) {
+      if (typeof p5.prototype[p] === 'function') {
+        this[p] = p5.prototype[p].bind(this);
+      } else {
+        this[p] = p5.prototype[p];
+      }
+    }
+  }
+
+  p5.prototype._initializeInstanceVariables.apply(this);
+  this.width = w;
+  this.height = h;
+  this._pixelDensity = pInst._pixelDensity;
+
+  if (r === constants.WEBGL) {
+    this._renderer = new p5.RendererGL(this.canvas, this, false);
+  } else {
+    this._renderer = new p5.Renderer2D(this.canvas, this, false);
+  }
+  pInst._elements.push(this);
+
+  this._renderer.resize(w, h);
+  this._renderer._applyDefaults();
+
+  this.name = 'p5.Graphics'; // for friendly debugger system
+  return this;
+};
+
+p5.Graphics.prototype = Object.create(p5.Element.prototype);
+
+/**
+ * @method remove
+ */
+p5.Graphics.prototype.remove = function() {
+  if (this.elt.parentNode) {
+    this.elt.parentNode.removeChild(this.elt);
+  }
+  for (var elt_ev in this._events) {
+    this.elt.removeEventListener(elt_ev, this._events[elt_ev]);
+  }
+};
+
+module.exports = p5.Graphics;
+
+},{"./constants":21,"./core":22}],29:[function(_dereq_,module,exports){
+/**
+ * @module Rendering
+ * @submodule Rendering
+ * @for p5
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('../core/constants');
+
+/**
+ * Main graphics and rendering context, as well as the base API
+ * implementation for p5.js "core". To be used as the superclass for
+ * Renderer2D and Renderer3D classes, respecitvely.
+ *
+ * @class p5.Renderer
+ * @constructor
+ * @extends p5.Element
+ * @param {String} elt DOM node that is wrapped
+ * @param {p5} [pInst] pointer to p5 instance
+ * @param {Boolean} [isMainCanvas] whether we're using it as main canvas
+ */
+p5.Renderer = function(elt, pInst, isMainCanvas) {
+  p5.Element.call(this, elt, pInst);
+  this.name = 'p5.Renderer'; // for friendly debugger system
+  this.canvas = elt;
+  this._pInst = pInst;
+  if (isMainCanvas) {
+    this._isMainCanvas = true;
+    // for pixel method sharing with pimage
+    this._pInst._setProperty('_curElement', this);
+    this._pInst._setProperty('canvas', this.canvas);
+    this._pInst._setProperty('width', this.width);
+    this._pInst._setProperty('height', this.height);
+  } else {
+    // hide if offscreen buffer by default
+    this.canvas.style.display = 'none';
+    this._styles = []; // non-main elt styles stored in p5.Renderer
+  }
+
+  this._textSize = 12;
+  this._textLeading = 15;
+  this._textFont = 'sans-serif';
+  this._textStyle = constants.NORMAL;
+  this._textAscent = null;
+  this._textDescent = null;
+
+  this._rectMode = constants.CORNER;
+  this._ellipseMode = constants.CENTER;
+  this._curveTightness = 0;
+  this._imageMode = constants.CORNER;
+
+  this._tint = null;
+  this._doStroke = true;
+  this._doFill = true;
+  this._strokeSet = false;
+  this._fillSet = false;
+};
+
+p5.Renderer.prototype = Object.create(p5.Element.prototype);
+
+/**
+ * Resize our canvas element.
+ */
+p5.Renderer.prototype.resize = function(w, h) {
+  this.width = w;
+  this.height = h;
+  this.elt.width = w * this._pInst._pixelDensity;
+  this.elt.height = h * this._pInst._pixelDensity;
+  this.elt.style.width = w + 'px';
+  this.elt.style.height = h + 'px';
+  if (this._isMainCanvas) {
+    this._pInst._setProperty('width', this.width);
+    this._pInst._setProperty('height', this.height);
+  }
+};
+
+p5.Renderer.prototype.textLeading = function(l) {
+  if (typeof l === 'number') {
+    this._setProperty('_textLeading', l);
+    return this;
+  }
+
+  return this._textLeading;
+};
+
+p5.Renderer.prototype.textSize = function(s) {
+  if (typeof s === 'number') {
+    this._setProperty('_textSize', s);
+    this._setProperty('_textLeading', s * constants._DEFAULT_LEADMULT);
+    return this._applyTextProperties();
+  }
+
+  return this._textSize;
+};
+
+p5.Renderer.prototype.textStyle = function(s) {
+  if (s) {
+    if (
+      s === constants.NORMAL ||
+      s === constants.ITALIC ||
+      s === constants.BOLD
+    ) {
+      this._setProperty('_textStyle', s);
+    }
+
+    return this._applyTextProperties();
+  }
+
+  return this._textStyle;
+};
+
+p5.Renderer.prototype.textAscent = function() {
+  if (this._textAscent === null) {
+    this._updateTextMetrics();
+  }
+  return this._textAscent;
+};
+
+p5.Renderer.prototype.textDescent = function() {
+  if (this._textDescent === null) {
+    this._updateTextMetrics();
+  }
+  return this._textDescent;
+};
+
+p5.Renderer.prototype._applyDefaults = function() {
+  return this;
+};
+
+/**
+ * Helper fxn to check font type (system or otf)
+ */
+p5.Renderer.prototype._isOpenType = function(f) {
+  f = f || this._textFont;
+  return typeof f === 'object' && f.font && f.font.supported;
+};
+
+p5.Renderer.prototype._updateTextMetrics = function() {
+  if (this._isOpenType()) {
+    this._setProperty('_textAscent', this._textFont._textAscent());
+    this._setProperty('_textDescent', this._textFont._textDescent());
+    return this;
+  }
+
+  // Adapted from http://stackoverflow.com/a/25355178
+  var text = document.createElement('span');
+  text.style.fontFamily = this._textFont;
+  text.style.fontSize = this._textSize + 'px';
+  text.innerHTML = 'ABCjgq|';
+
+  var block = document.createElement('div');
+  block.style.display = 'inline-block';
+  block.style.width = '1px';
+  block.style.height = '0px';
+
+  var container = document.createElement('div');
+  container.appendChild(text);
+  container.appendChild(block);
+
+  container.style.height = '0px';
+  container.style.overflow = 'hidden';
+  document.body.appendChild(container);
+
+  block.style.verticalAlign = 'baseline';
+  var blockOffset = calculateOffset(block);
+  var textOffset = calculateOffset(text);
+  var ascent = blockOffset[1] - textOffset[1];
+
+  block.style.verticalAlign = 'bottom';
+  blockOffset = calculateOffset(block);
+  textOffset = calculateOffset(text);
+  var height = blockOffset[1] - textOffset[1];
+  var descent = height - ascent;
+
+  document.body.removeChild(container);
+
+  this._setProperty('_textAscent', ascent);
+  this._setProperty('_textDescent', descent);
+
+  return this;
+};
+
+/**
+ * Helper fxn to measure ascent and descent.
+ * Adapted from http://stackoverflow.com/a/25355178
+ */
+function calculateOffset(object) {
+  var currentLeft = 0,
+    currentTop = 0;
+  if (object.offsetParent) {
+    do {
+      currentLeft += object.offsetLeft;
+      currentTop += object.offsetTop;
+    } while ((object = object.offsetParent));
+  } else {
+    currentLeft += object.offsetLeft;
+    currentTop += object.offsetTop;
+  }
+  return [currentLeft, currentTop];
+}
+
+module.exports = p5.Renderer;
+
+},{"../core/constants":21,"./core":22}],30:[function(_dereq_,module,exports){
+'use strict';
+
+var p5 = _dereq_('./core');
+var canvas = _dereq_('./canvas');
+var constants = _dereq_('./constants');
+var filters = _dereq_('../image/filters');
+
+_dereq_('./p5.Renderer');
+
+/**
+ * p5.Renderer2D
+ * The 2D graphics canvas renderer class.
+ * extends p5.Renderer
+ */
+var styleEmpty = 'rgba(0,0,0,0)';
+// var alphaThreshold = 0.00125; // minimum visible
+
+p5.Renderer2D = function(elt, pInst, isMainCanvas) {
+  p5.Renderer.call(this, elt, pInst, isMainCanvas);
+  this.name = 'p5.Renderer2D'; // for friendly debugger system
+  this.drawingContext = this.canvas.getContext('2d');
+  this._pInst._setProperty('drawingContext', this.drawingContext);
+  return this;
+};
+
+p5.Renderer2D.prototype = Object.create(p5.Renderer.prototype);
+
+p5.Renderer2D.prototype._applyDefaults = function() {
+  this._cachedFillStyle = this._cachedStrokeStyle = undefined;
+  this._setFill(constants._DEFAULT_FILL);
+  this._setStroke(constants._DEFAULT_STROKE);
+  this.drawingContext.lineCap = constants.ROUND;
+  this.drawingContext.font = 'normal 12px sans-serif';
+};
+
+p5.Renderer2D.prototype.resize = function(w, h) {
+  p5.Renderer.prototype.resize.call(this, w, h);
+  this.drawingContext.scale(
+    this._pInst._pixelDensity,
+    this._pInst._pixelDensity
+  );
+};
+
+//////////////////////////////////////////////
+// COLOR | Setting
+//////////////////////////////////////////////
+
+p5.Renderer2D.prototype.background = function() {
+  this.drawingContext.save();
+  this.drawingContext.setTransform(1, 0, 0, 1, 0, 0);
+  this.drawingContext.scale(
+    this._pInst._pixelDensity,
+    this._pInst._pixelDensity
+  );
+
+  if (arguments[0] instanceof p5.Image) {
+    this._pInst.image(arguments[0], 0, 0, this.width, this.height);
+  } else {
+    var curFill = this._getFill();
+    // create background rect
+    var color = this._pInst.color.apply(this._pInst, arguments);
+    var newFill = color.toString();
+    this._setFill(newFill);
+    this.drawingContext.fillRect(0, 0, this.width, this.height);
+    // reset fill
+    this._setFill(curFill);
+  }
+  this.drawingContext.restore();
+};
+
+p5.Renderer2D.prototype.clear = function() {
+  this.drawingContext.clearRect(0, 0, this.width, this.height);
+};
+
+p5.Renderer2D.prototype.fill = function() {
+  var color = this._pInst.color.apply(this._pInst, arguments);
+  this._setFill(color.toString());
+};
+
+p5.Renderer2D.prototype.stroke = function() {
+  var color = this._pInst.color.apply(this._pInst, arguments);
+  this._setStroke(color.toString());
+};
+
+//////////////////////////////////////////////
+// IMAGE | Loading & Displaying
+//////////////////////////////////////////////
+
+p5.Renderer2D.prototype.image = function(
+  img,
+  sx,
+  sy,
+  sWidth,
+  sHeight,
+  dx,
+  dy,
+  dWidth,
+  dHeight
+) {
+  var cnv;
+  try {
+    if (this._tint) {
+      if (p5.MediaElement && img instanceof p5.MediaElement) {
+        img.loadPixels();
+      }
+      if (img.canvas) {
+        cnv = this._getTintedImageCanvas(img);
+      }
+    }
+    if (!cnv) {
+      cnv = img.canvas || img.elt;
+    }
+    this.drawingContext.drawImage(
+      cnv,
+      sx,
+      sy,
+      sWidth,
+      sHeight,
+      dx,
+      dy,
+      dWidth,
+      dHeight
+    );
+  } catch (e) {
+    if (e.name !== 'NS_ERROR_NOT_AVAILABLE') {
+      throw e;
+    }
+  }
+};
+
+p5.Renderer2D.prototype._getTintedImageCanvas = function(img) {
+  if (!img.canvas) {
+    return img;
+  }
+  var pixels = filters._toPixels(img.canvas);
+  var tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = img.canvas.width;
+  tmpCanvas.height = img.canvas.height;
+  var tmpCtx = tmpCanvas.getContext('2d');
+  var id = tmpCtx.createImageData(img.canvas.width, img.canvas.height);
+  var newPixels = id.data;
+  for (var i = 0; i < pixels.length; i += 4) {
+    var r = pixels[i];
+    var g = pixels[i + 1];
+    var b = pixels[i + 2];
+    var a = pixels[i + 3];
+    newPixels[i] = r * this._tint[0] / 255;
+    newPixels[i + 1] = g * this._tint[1] / 255;
+    newPixels[i + 2] = b * this._tint[2] / 255;
+    newPixels[i + 3] = a * this._tint[3] / 255;
+  }
+  tmpCtx.putImageData(id, 0, 0);
+  return tmpCanvas;
+};
+
+//////////////////////////////////////////////
+// IMAGE | Pixels
+//////////////////////////////////////////////
+
+p5.Renderer2D.prototype.blendMode = function(mode) {
+  this.drawingContext.globalCompositeOperation = mode;
+};
+p5.Renderer2D.prototype.blend = function() {
+  var currBlend = this.drawingContext.globalCompositeOperation;
+  var blendMode = arguments[arguments.length - 1];
+
+  var copyArgs = Array.prototype.slice.call(arguments, 0, arguments.length - 1);
+
+  this.drawingContext.globalCompositeOperation = blendMode;
+  if (this._pInst) {
+    this._pInst.copy.apply(this._pInst, copyArgs);
+  } else {
+    this.copy.apply(this, copyArgs);
+  }
+  this.drawingContext.globalCompositeOperation = currBlend;
+};
+
+p5.Renderer2D.prototype.copy = function() {
+  var srcImage, sx, sy, sw, sh, dx, dy, dw, dh;
+  if (arguments.length === 9) {
+    srcImage = arguments[0];
+    sx = arguments[1];
+    sy = arguments[2];
+    sw = arguments[3];
+    sh = arguments[4];
+    dx = arguments[5];
+    dy = arguments[6];
+    dw = arguments[7];
+    dh = arguments[8];
+  } else if (arguments.length === 8) {
+    srcImage = this._pInst;
+    sx = arguments[0];
+    sy = arguments[1];
+    sw = arguments[2];
+    sh = arguments[3];
+    dx = arguments[4];
+    dy = arguments[5];
+    dw = arguments[6];
+    dh = arguments[7];
+  } else {
+    throw new Error('Signature not supported');
+  }
+  p5.Renderer2D._copyHelper(this, srcImage, sx, sy, sw, sh, dx, dy, dw, dh);
+};
+
+p5.Renderer2D._copyHelper = function(
+  dstImage,
+  srcImage,
+  sx,
+  sy,
+  sw,
+  sh,
+  dx,
+  dy,
+  dw,
+  dh
+) {
+  srcImage.loadPixels();
+  var s = srcImage.canvas.width / srcImage.width;
+  dstImage.drawingContext.drawImage(
+    srcImage.canvas,
+    s * sx,
+    s * sy,
+    s * sw,
+    s * sh,
+    dx,
+    dy,
+    dw,
+    dh
+  );
+};
+
+p5.Renderer2D.prototype.get = function(x, y, w, h) {
+  if (
+    x === undefined &&
+    y === undefined &&
+    w === undefined &&
+    h === undefined
+  ) {
+    x = 0;
+    y = 0;
+    w = this.width;
+    h = this.height;
+  } else if (w === undefined && h === undefined) {
+    w = 1;
+    h = 1;
+  }
+
+  // if the section does not overlap the canvas
+  if (x + w < 0 || y + h < 0 || x > this.width || y > this.height) {
+    return [0, 0, 0, 255];
+  }
+
+  var ctx = this._pInst || this;
+  ctx.loadPixels();
+
+  var pd = ctx._pixelDensity;
+
+  // round down to get integer numbers
+  x = Math.floor(x);
+  y = Math.floor(y);
+  w = Math.floor(w);
+  h = Math.floor(h);
+
+  var sx = x * pd;
+  var sy = y * pd;
+  if (w === 1 && h === 1 && !(this instanceof p5.RendererGL)) {
+    var imageData = this.drawingContext.getImageData(sx, sy, 1, 1).data;
+    //imageData = [0,0,0,0];
+    return [imageData[0], imageData[1], imageData[2], imageData[3]];
+  } else {
+    //auto constrain the width and height to
+    //dimensions of the source image
+    var dw = Math.min(w, ctx.width);
+    var dh = Math.min(h, ctx.height);
+    var sw = dw * pd;
+    var sh = dh * pd;
+
+    var region = new p5.Image(dw, dh);
+    region.canvas
+      .getContext('2d')
+      .drawImage(this.canvas, sx, sy, sw, sh, 0, 0, dw, dh);
+
+    return region;
+  }
+};
+
+p5.Renderer2D.prototype.loadPixels = function() {
+  var pd = this._pixelDensity || this._pInst._pixelDensity;
+  var w = this.width * pd;
+  var h = this.height * pd;
+  var imageData = this.drawingContext.getImageData(0, 0, w, h);
+  // @todo this should actually set pixels per object, so diff buffers can
+  // have diff pixel arrays.
+  if (this._pInst) {
+    this._pInst._setProperty('imageData', imageData);
+    this._pInst._setProperty('pixels', imageData.data);
+  } else {
+    // if called by p5.Image
+    this._setProperty('imageData', imageData);
+    this._setProperty('pixels', imageData.data);
+  }
+};
+
+p5.Renderer2D.prototype.set = function(x, y, imgOrCol) {
+  // round down to get integer numbers
+  x = Math.floor(x);
+  y = Math.floor(y);
+  if (imgOrCol instanceof p5.Image) {
+    this.drawingContext.save();
+    this.drawingContext.setTransform(1, 0, 0, 1, 0, 0);
+    this.drawingContext.scale(
+      this._pInst._pixelDensity,
+      this._pInst._pixelDensity
+    );
+    this.drawingContext.drawImage(imgOrCol.canvas, x, y);
+    this.loadPixels.call(this._pInst);
+    this.drawingContext.restore();
+  } else {
+    var ctx = this._pInst || this;
+    var r = 0,
+      g = 0,
+      b = 0,
+      a = 0;
+    var idx =
+      4 *
+      (y * ctx._pixelDensity * (this.width * ctx._pixelDensity) +
+        x * ctx._pixelDensity);
+    if (!ctx.imageData) {
+      ctx.loadPixels.call(ctx);
+    }
+    if (typeof imgOrCol === 'number') {
+      if (idx < ctx.pixels.length) {
+        r = imgOrCol;
+        g = imgOrCol;
+        b = imgOrCol;
+        a = 255;
+        //this.updatePixels.call(this);
+      }
+    } else if (imgOrCol instanceof Array) {
+      if (imgOrCol.length < 4) {
+        throw new Error('pixel array must be of the form [R, G, B, A]');
+      }
+      if (idx < ctx.pixels.length) {
+        r = imgOrCol[0];
+        g = imgOrCol[1];
+        b = imgOrCol[2];
+        a = imgOrCol[3];
+        //this.updatePixels.call(this);
+      }
+    } else if (imgOrCol instanceof p5.Color) {
+      if (idx < ctx.pixels.length) {
+        r = imgOrCol.levels[0];
+        g = imgOrCol.levels[1];
+        b = imgOrCol.levels[2];
+        a = imgOrCol.levels[3];
+        //this.updatePixels.call(this);
+      }
+    }
+    // loop over pixelDensity * pixelDensity
+    for (var i = 0; i < ctx._pixelDensity; i++) {
+      for (var j = 0; j < ctx._pixelDensity; j++) {
+        // loop over
+        idx =
+          4 *
+          ((y * ctx._pixelDensity + j) * this.width * ctx._pixelDensity +
+            (x * ctx._pixelDensity + i));
+        ctx.pixels[idx] = r;
+        ctx.pixels[idx + 1] = g;
+        ctx.pixels[idx + 2] = b;
+        ctx.pixels[idx + 3] = a;
+      }
+    }
+  }
+};
+
+p5.Renderer2D.prototype.updatePixels = function(x, y, w, h) {
+  var pd = this._pixelDensity || this._pInst._pixelDensity;
