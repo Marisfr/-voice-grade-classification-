@@ -43290,3 +43290,1948 @@ var namedColors = {
   darkseagreen: '#8fbc8f',
   darkslateblue: '#483d8b',
   darkslategray: '#2f4f4f',
+  darkslategrey: '#2f4f4f',
+  darkturquoise: '#00ced1',
+  darkviolet: '#9400d3',
+  deeppink: '#ff1493',
+  deepskyblue: '#00bfff',
+  dimgray: '#696969',
+  dimgrey: '#696969',
+  dodgerblue: '#1e90ff',
+  firebrick: '#b22222',
+  floralwhite: '#fffaf0',
+  forestgreen: '#228b22',
+  fuchsia: '#ff00ff',
+  gainsboro: '#dcdcdc',
+  ghostwhite: '#f8f8ff',
+  gold: '#ffd700',
+  goldenrod: '#daa520',
+  gray: '#808080',
+  green: '#008000',
+  greenyellow: '#adff2f',
+  grey: '#808080',
+  honeydew: '#f0fff0',
+  hotpink: '#ff69b4',
+  indianred: '#cd5c5c',
+  indigo: '#4b0082',
+  ivory: '#fffff0',
+  khaki: '#f0e68c',
+  lavender: '#e6e6fa',
+  lavenderblush: '#fff0f5',
+  lawngreen: '#7cfc00',
+  lemonchiffon: '#fffacd',
+  lightblue: '#add8e6',
+  lightcoral: '#f08080',
+  lightcyan: '#e0ffff',
+  lightgoldenrodyellow: '#fafad2',
+  lightgray: '#d3d3d3',
+  lightgreen: '#90ee90',
+  lightgrey: '#d3d3d3',
+  lightpink: '#ffb6c1',
+  lightsalmon: '#ffa07a',
+  lightseagreen: '#20b2aa',
+  lightskyblue: '#87cefa',
+  lightslategray: '#778899',
+  lightslategrey: '#778899',
+  lightsteelblue: '#b0c4de',
+  lightyellow: '#ffffe0',
+  lime: '#00ff00',
+  limegreen: '#32cd32',
+  linen: '#faf0e6',
+  magenta: '#ff00ff',
+  maroon: '#800000',
+  mediumaquamarine: '#66cdaa',
+  mediumblue: '#0000cd',
+  mediumorchid: '#ba55d3',
+  mediumpurple: '#9370db',
+  mediumseagreen: '#3cb371',
+  mediumslateblue: '#7b68ee',
+  mediumspringgreen: '#00fa9a',
+  mediumturquoise: '#48d1cc',
+  mediumvioletred: '#c71585',
+  midnightblue: '#191970',
+  mintcream: '#f5fffa',
+  mistyrose: '#ffe4e1',
+  moccasin: '#ffe4b5',
+  navajowhite: '#ffdead',
+  navy: '#000080',
+  oldlace: '#fdf5e6',
+  olive: '#808000',
+  olivedrab: '#6b8e23',
+  orange: '#ffa500',
+  orangered: '#ff4500',
+  orchid: '#da70d6',
+  palegoldenrod: '#eee8aa',
+  palegreen: '#98fb98',
+  paleturquoise: '#afeeee',
+  palevioletred: '#db7093',
+  papayawhip: '#ffefd5',
+  peachpuff: '#ffdab9',
+  peru: '#cd853f',
+  pink: '#ffc0cb',
+  plum: '#dda0dd',
+  powderblue: '#b0e0e6',
+  purple: '#800080',
+  red: '#ff0000',
+  rosybrown: '#bc8f8f',
+  royalblue: '#4169e1',
+  saddlebrown: '#8b4513',
+  salmon: '#fa8072',
+  sandybrown: '#f4a460',
+  seagreen: '#2e8b57',
+  seashell: '#fff5ee',
+  sienna: '#a0522d',
+  silver: '#c0c0c0',
+  skyblue: '#87ceeb',
+  slateblue: '#6a5acd',
+  slategray: '#708090',
+  slategrey: '#708090',
+  snow: '#fffafa',
+  springgreen: '#00ff7f',
+  steelblue: '#4682b4',
+  tan: '#d2b48c',
+  teal: '#008080',
+  thistle: '#d8bfd8',
+  tomato: '#ff6347',
+  turquoise: '#40e0d0',
+  violet: '#ee82ee',
+  wheat: '#f5deb3',
+  white: '#ffffff',
+  whitesmoke: '#f5f5f5',
+  yellow: '#ffff00',
+  yellowgreen: '#9acd32'
+};
+
+/**
+ * These regular expressions are used to build up the patterns for matching
+ * viable CSS color strings: fragmenting the regexes in this way increases the
+ * legibility and comprehensibility of the code.
+ *
+ * Note that RGB values of .9 are not parsed by IE, but are supported here for
+ * color string consistency.
+ */
+var WHITESPACE = /\s*/; // Match zero or more whitespace characters.
+var INTEGER = /(\d{1,3})/; // Match integers: 79, 255, etc.
+var DECIMAL = /((?:\d+(?:\.\d+)?)|(?:\.\d+))/; // Match 129.6, 79, .9, etc.
+var PERCENT = new RegExp(DECIMAL.source + '%'); // Match 12.9%, 79%, .9%, etc.
+
+/**
+ * Full color string patterns. The capture groups are necessary.
+ */
+var colorPatterns = {
+  // Match colors in format #XXX, e.g. #416.
+  HEX3: /^#([a-f0-9])([a-f0-9])([a-f0-9])$/i,
+
+  // Match colors in format #XXXX, e.g. #5123.
+  HEX4: /^#([a-f0-9])([a-f0-9])([a-f0-9])([a-f0-9])$/i,
+
+  // Match colors in format #XXXXXX, e.g. #b4d455.
+  HEX6: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i,
+
+  // Match colors in format #XXXXXXXX, e.g. #b4d45535.
+  HEX8: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i,
+
+  // Match colors in format rgb(R, G, B), e.g. rgb(255, 0, 128).
+  RGB: new RegExp(
+    [
+      '^rgb\\(',
+      INTEGER.source,
+      ',',
+      INTEGER.source,
+      ',',
+      INTEGER.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format rgb(R%, G%, B%), e.g. rgb(100%, 0%, 28.9%).
+  RGB_PERCENT: new RegExp(
+    [
+      '^rgb\\(',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format rgb(R, G, B, A), e.g. rgb(255, 0, 128, 0.25).
+  RGBA: new RegExp(
+    [
+      '^rgba\\(',
+      INTEGER.source,
+      ',',
+      INTEGER.source,
+      ',',
+      INTEGER.source,
+      ',',
+      DECIMAL.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format rgb(R%, G%, B%, A), e.g. rgb(100%, 0%, 28.9%, 0.5).
+  RGBA_PERCENT: new RegExp(
+    [
+      '^rgba\\(',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      ',',
+      DECIMAL.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format hsla(H, S%, L%), e.g. hsl(100, 40%, 28.9%).
+  HSL: new RegExp(
+    [
+      '^hsl\\(',
+      INTEGER.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format hsla(H, S%, L%, A), e.g. hsla(100, 40%, 28.9%, 0.5).
+  HSLA: new RegExp(
+    [
+      '^hsla\\(',
+      INTEGER.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      ',',
+      DECIMAL.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format hsb(H, S%, B%), e.g. hsb(100, 40%, 28.9%).
+  HSB: new RegExp(
+    [
+      '^hsb\\(',
+      INTEGER.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  ),
+
+  // Match colors in format hsba(H, S%, B%, A), e.g. hsba(100, 40%, 28.9%, 0.5).
+  HSBA: new RegExp(
+    [
+      '^hsba\\(',
+      INTEGER.source,
+      ',',
+      PERCENT.source,
+      ',',
+      PERCENT.source,
+      ',',
+      DECIMAL.source,
+      '\\)$'
+    ].join(WHITESPACE.source),
+    'i'
+  )
+};
+
+/**
+ * For a number of different inputs, returns a color formatted as [r, g, b, a]
+ * arrays, with each component normalized between 0 and 1.
+ *
+ * @private
+ * @param {Array} [...args] An 'array-like' object that represents a list of
+ *                          arguments
+ * @return {Number[]}       a color formatted as [r, g, b, a]
+ *                          Example:
+ *                          input        ==> output
+ *                          g            ==> [g, g, g, 255]
+ *                          g,a          ==> [g, g, g, a]
+ *                          r, g, b      ==> [r, g, b, 255]
+ *                          r, g, b, a   ==> [r, g, b, a]
+ *                          [g]          ==> [g, g, g, 255]
+ *                          [g, a]       ==> [g, g, g, a]
+ *                          [r, g, b]    ==> [r, g, b, 255]
+ *                          [r, g, b, a] ==> [r, g, b, a]
+ * @example
+ * <div>
+ * <code>
+ * // todo
+ * </code>
+ * </div>
+ *
+ * @alt
+ * //todo
+ *
+ */
+p5.Color._parseInputs = function(r, g, b, a) {
+  var numArgs = arguments.length;
+  var mode = this.mode;
+  var maxes = this.maxes;
+  var results = [];
+
+  if (numArgs >= 3) {
+    // Argument is a list of component values.
+
+    results[0] = r / maxes[mode][0];
+    results[1] = g / maxes[mode][1];
+    results[2] = b / maxes[mode][2];
+
+    // Alpha may be undefined, so default it to 100%.
+    if (typeof a === 'number') {
+      results[3] = a / maxes[mode][3];
+    } else {
+      results[3] = 1;
+    }
+
+    // Constrain components to the range [0,1].
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+
+    // Convert to RGBA and return.
+    if (mode === constants.HSL) {
+      return color_conversion._hslaToRGBA(results);
+    } else if (mode === constants.HSB) {
+      return color_conversion._hsbaToRGBA(results);
+    } else {
+      return results;
+    }
+  } else if (numArgs === 1 && typeof r === 'string') {
+    var str = r.trim().toLowerCase();
+
+    // Return if string is a named colour.
+    if (namedColors[str]) {
+      return p5.Color._parseInputs.call(this, namedColors[str]);
+    }
+
+    // Try RGBA pattern matching.
+    if (colorPatterns.HEX3.test(str)) {
+      // #rgb
+      results = colorPatterns.HEX3.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return parseInt(color + color, 16) / 255;
+        });
+      results[3] = 1;
+      return results;
+    } else if (colorPatterns.HEX6.test(str)) {
+      // #rrggbb
+      results = colorPatterns.HEX6.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return parseInt(color, 16) / 255;
+        });
+      results[3] = 1;
+      return results;
+    } else if (colorPatterns.HEX4.test(str)) {
+      // #rgba
+      results = colorPatterns.HEX4.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return parseInt(color + color, 16) / 255;
+        });
+      return results;
+    } else if (colorPatterns.HEX8.test(str)) {
+      // #rrggbbaa
+      results = colorPatterns.HEX8.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return parseInt(color, 16) / 255;
+        });
+      return results;
+    } else if (colorPatterns.RGB.test(str)) {
+      // rgb(R,G,B)
+      results = colorPatterns.RGB.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return color / 255;
+        });
+      results[3] = 1;
+      return results;
+    } else if (colorPatterns.RGB_PERCENT.test(str)) {
+      // rgb(R%,G%,B%)
+      results = colorPatterns.RGB_PERCENT.exec(str)
+        .slice(1)
+        .map(function(color) {
+          return parseFloat(color) / 100;
+        });
+      results[3] = 1;
+      return results;
+    } else if (colorPatterns.RGBA.test(str)) {
+      // rgba(R,G,B,A)
+      results = colorPatterns.RGBA.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 3) {
+            return parseFloat(color);
+          }
+          return color / 255;
+        });
+      return results;
+    } else if (colorPatterns.RGBA_PERCENT.test(str)) {
+      // rgba(R%,G%,B%,A%)
+      results = colorPatterns.RGBA_PERCENT.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 3) {
+            return parseFloat(color);
+          }
+          return parseFloat(color) / 100;
+        });
+      return results;
+    }
+
+    // Try HSLA pattern matching.
+    if (colorPatterns.HSL.test(str)) {
+      // hsl(H,S,L)
+      results = colorPatterns.HSL.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 0) {
+            return parseInt(color, 10) / 360;
+          }
+          return parseInt(color, 10) / 100;
+        });
+      results[3] = 1;
+    } else if (colorPatterns.HSLA.test(str)) {
+      // hsla(H,S,L,A)
+      results = colorPatterns.HSLA.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 0) {
+            return parseInt(color, 10) / 360;
+          } else if (idx === 3) {
+            return parseFloat(color);
+          }
+          return parseInt(color, 10) / 100;
+        });
+    }
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+    if (results.length) {
+      return color_conversion._hslaToRGBA(results);
+    }
+
+    // Try HSBA pattern matching.
+    if (colorPatterns.HSB.test(str)) {
+      // hsb(H,S,B)
+      results = colorPatterns.HSB.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 0) {
+            return parseInt(color, 10) / 360;
+          }
+          return parseInt(color, 10) / 100;
+        });
+      results[3] = 1;
+    } else if (colorPatterns.HSBA.test(str)) {
+      // hsba(H,S,B,A)
+      results = colorPatterns.HSBA.exec(str)
+        .slice(1)
+        .map(function(color, idx) {
+          if (idx === 0) {
+            return parseInt(color, 10) / 360;
+          } else if (idx === 3) {
+            return parseFloat(color);
+          }
+          return parseInt(color, 10) / 100;
+        });
+    }
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+
+    if (results.length) {
+      return color_conversion._hsbaToRGBA(results);
+    }
+
+    // Input did not match any CSS color pattern: default to white.
+    results = [1, 1, 1, 1];
+  } else if ((numArgs === 1 || numArgs === 2) && typeof r === 'number') {
+    // 'Grayscale' mode.
+
+    /**
+     * For HSB and HSL, interpret the gray level as a brightness/lightness
+     * value (they are equivalent when chroma is zero). For RGB, normalize the
+     * gray level according to the blue maximum.
+     */
+    results[0] = r / maxes[mode][2];
+    results[1] = r / maxes[mode][2];
+    results[2] = r / maxes[mode][2];
+
+    // Alpha may be undefined, so default it to 100%.
+    if (typeof g === 'number') {
+      results[3] = g / maxes[mode][3];
+    } else {
+      results[3] = 1;
+    }
+
+    // Constrain components to the range [0,1].
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+  } else {
+    throw new Error(arguments + 'is not a valid color representation.');
+  }
+
+  return results;
+};
+
+module.exports = p5.Color;
+
+},{"../core/constants":21,"../core/core":22,"./color_conversion":14}],17:[function(_dereq_,module,exports){
+/**
+ * @module Color
+ * @submodule Setting
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+_dereq_('./p5.Color');
+
+/**
+ * The background() function sets the color used for the background of the
+ * p5.js canvas. The default background is light gray. This function is
+ * typically used within draw() to clear the display window at the beginning
+ * of each frame, but it can be used inside setup() to set the background on
+ * the first frame of animation or if the background need only be set once.
+ * <br><br>
+ * The color is either specified in terms of the RGB, HSB, or HSL color
+ * depending on the current colorMode. (The default color space is RGB, with
+ * each value in the range from 0 to 255). The alpha range by default is also 0 to 255.
+ * <br><br>
+ * If a single string argument is provided, RGB, RGBA and Hex CSS color strings
+ * and all named color strings are supported. In this case, an alpha number
+ * value as a second argument is not supported, the RGBA form should be used.
+ * <br><br>
+ * A p5.Color object can also be provided to set the background color.
+ * <br><br>
+ * A p5.Image can also be provided to set the background iamge.
+ *
+ * @method background
+ * @param {p5.Color} color     any value created by the color() function
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * // Grayscale integer value
+ * background(51);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // R, G & B integer values
+ * background(255, 204, 0);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // H, S & B integer values
+ * colorMode(HSB);
+ * background(255, 204, 100);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // Named SVG/CSS color string
+ * background('red');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // three-digit hexadecimal RGB notation
+ * background('#fae');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // six-digit hexadecimal RGB notation
+ * background('#222222');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGB notation
+ * background('rgb(0,255,0)');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGBA notation
+ * background('rgba(0,255,0, 0.25)');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGB notation
+ * background('rgb(100%,0%,10%)');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGBA notation
+ * background('rgba(100%,0%,100%,0.5)');
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // p5 Color object
+ * background(color(0, 0, 255));
+ * </code>
+ * </div>
+ *
+ * @alt
+ * canvas with darkest charcoal grey background.
+ * canvas with yellow background.
+ * canvas with royal blue background.
+ * canvas with red background.
+ * canvas with pink background.
+ * canvas with black background.
+ * canvas with bright green background.
+ * canvas with soft green background.
+ * canvas with red background.
+ * canvas with light purple background.
+ * canvas with blue background.
+ */
+
+/**
+ * @method background
+ * @param {String} colorstring color string, possible formats include: integer
+ *                         rgb() or rgba(), percentage rgb() or rgba(),
+ *                         3-digit hex, 6-digit hex
+ * @param {Number} [a]         opacity of the background relative to current
+ *                             color range (default is 0-255)
+ * @chainable
+ */
+
+/**
+ * @method background
+ * @param {Number} gray   specifies a value between white and black
+ * @param {Number} [a]
+ * @chainable
+ */
+
+/**
+ * @method background
+ * @param {Number} v1     red or hue value (depending on the current color
+ *                        mode)
+ * @param {Number} v2     green or saturation value (depending on the current
+ *                        color mode)
+ * @param {Number} v3     blue or brightness value (depending on the current
+ *                        color mode)
+ * @param  {Number} [a]
+ * @chainable
+ */
+
+/**
+ * @method background
+ * @param  {Number[]}      values  an array containing the red,green,blue &
+ *                                 and alpha components of the color
+ * @chainable
+ */
+
+/**
+ * @method background
+ * @param {p5.Image} image     image created with loadImage() or createImage(),
+ *                             to set as background
+ *                             (must be same size as the sketch window)
+ * @param  {Number}  [a]
+ * @chainable
+ */
+
+p5.prototype.background = function() {
+  if (arguments[0] instanceof p5.Image) {
+    this.image(arguments[0], 0, 0, this.width, this.height);
+  } else {
+    this._renderer.background.apply(this._renderer, arguments);
+  }
+  return this;
+};
+
+/**
+ * Clears the pixels within a buffer. This function only works on p5.Canvas
+ * objects created with the createCanvas() function; it won't work with the
+ * main display window. Unlike the main graphics context, pixels in
+ * additional graphics areas created with createGraphics() can be entirely
+ * or partially transparent. This function clears everything to make all of
+ * the pixels 100% transparent.
+ *
+ * @method clear
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * // Clear the screen on mouse press.
+ * function setup() {
+ *   createCanvas(100, 100);
+ * }
+ *
+ * function draw() {
+ *   ellipse(mouseX, mouseY, 20, 20);
+ * }
+ *
+ * function mousePressed() {
+ *   clear();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 20x20 white ellipses are continually drawn at mouse x and y coordinates.
+ *
+ */
+
+p5.prototype.clear = function() {
+  this._renderer.clear();
+  return this;
+};
+
+/**
+ * colorMode() changes the way p5.js interprets color data. By default, the
+ * parameters for fill(), stroke(), background(), and color() are defined by
+ * values between 0 and 255 using the RGB color model. This is equivalent to
+ * setting colorMode(RGB, 255). Setting colorMode(HSB) lets you use the HSB
+ * system instead. By default, this is colorMode(HSB, 360, 100, 100, 1). You
+ * can also use HSL.
+ * <br><br>
+ * Note: existing color objects remember the mode that they were created in,
+ * so you can change modes as you like without affecting their appearance.
+ *
+ *
+ * @method colorMode
+ * @param {Constant} mode   either RGB, HSB or HSL, corresponding to
+ *                          Red/Green/Blue and Hue/Saturation/Brightness
+ *                          (or Lightness)
+ * @param {Number}  [max]  range for all values
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * noStroke();
+ * colorMode(RGB, 100);
+ * for (var i = 0; i < 100; i++) {
+ *   for (var j = 0; j < 100; j++) {
+ *     stroke(i, j, 0);
+ *     point(i, j);
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noStroke();
+ * colorMode(HSB, 100);
+ * for (var i = 0; i < 100; i++) {
+ *   for (var j = 0; j < 100; j++) {
+ *     stroke(i, j, 100);
+ *     point(i, j);
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * colorMode(RGB, 255);
+ * var c = color(127, 255, 0);
+ *
+ * colorMode(RGB, 1);
+ * var myColor = c._getRed();
+ * text(myColor, 10, 10, 80, 80);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * colorMode(RGB, 255, 255, 255, 1);
+ * background(255);
+ *
+ * strokeWeight(4);
+ * stroke(255, 0, 10, 0.3);
+ * ellipse(40, 40, 50, 50);
+ * ellipse(50, 50, 40, 40);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *Green to red gradient from bottom L to top R. shading originates from top left.
+ *Rainbow gradient from left to right. Brightness increasing to white at top.
+ *unknown image.
+ *50x50 ellipse at middle L & 40x40 ellipse at center. Transluscent pink outlines.
+ *
+ */
+/**
+ * @method colorMode
+ * @param {Constant} mode
+ * @param {Number} max1     range for the red or hue depending on the
+ *                              current color mode
+ * @param {Number} max2     range for the green or saturation depending
+ *                              on the current color mode
+ * @param {Number} max3     range for the blue or brightness/lighntess
+ *                              depending on the current color mode
+ * @param {Number} [maxA]   range for the alpha
+ * @chainable
+ */
+p5.prototype.colorMode = function(mode, max1, max2, max3, maxA) {
+  p5._validateParameters('colorMode', arguments);
+  if (
+    mode === constants.RGB ||
+    mode === constants.HSB ||
+    mode === constants.HSL
+  ) {
+    // Set color mode.
+    this._colorMode = mode;
+
+    // Set color maxes.
+    var maxes = this._colorMaxes[mode];
+    if (arguments.length === 2) {
+      maxes[0] = max1; // Red
+      maxes[1] = max1; // Green
+      maxes[2] = max1; // Blue
+      maxes[3] = max1; // Alpha
+    } else if (arguments.length === 4) {
+      maxes[0] = max1; // Red
+      maxes[1] = max2; // Green
+      maxes[2] = max3; // Blue
+    } else if (arguments.length === 5) {
+      maxes[0] = max1; // Red
+      maxes[1] = max2; // Green
+      maxes[2] = max3; // Blue
+      maxes[3] = maxA; // Alpha
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Sets the color used to fill shapes. For example, if you run
+ * fill(204, 102, 0), all subsequent shapes will be filled with orange. This
+ * color is either specified in terms of the RGB or HSB color depending on
+ * the current colorMode(). (The default color space is RGB, with each value
+ * in the range from 0 to 255). The alpha range by default is also 0 to 255.
+ * <br><br>
+ * If a single string argument is provided, RGB, RGBA and Hex CSS color strings
+ * and all named color strings are supported. In this case, an alpha number
+ * value as a second argument is not supported, the RGBA form should be used.
+ * <br><br>
+ * A p5 Color object can also be provided to set the fill color.
+ *
+ * @method fill
+ * @param  {Number}        v1      red or hue value relative to
+ *                                 the current color range
+ * @param  {Number}        v2      green or saturation value
+ *                                 relative to the current color range
+ * @param  {Number}        v3      blue or brightness value
+ *                                 relative to the current color range
+ * @param  {Number}        [alpha]
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * // Grayscale integer value
+ * fill(51);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // R, G & B integer values
+ * fill(255, 204, 0);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // H, S & B integer values
+ * colorMode(HSB);
+ * fill(255, 204, 100);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // Named SVG/CSS color string
+ * fill('red');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // three-digit hexadecimal RGB notation
+ * fill('#fae');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // six-digit hexadecimal RGB notation
+ * fill('#222222');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGB notation
+ * fill('rgb(0,255,0)');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGBA notation
+ * fill('rgba(0,255,0, 0.25)');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGB notation
+ * fill('rgb(100%,0%,10%)');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGBA notation
+ * fill('rgba(100%,0%,100%,0.5)');
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // p5 Color object
+ * fill(color(0, 0, 255));
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ * @alt
+ * 60x60 dark charcoal grey rect with black outline in center of canvas.
+ * 60x60 yellow rect with black outline in center of canvas.
+ * 60x60 royal blue rect with black outline in center of canvas.
+ * 60x60 red rect with black outline in center of canvas.
+ * 60x60 pink rect with black outline in center of canvas.
+ * 60x60 black rect with black outline in center of canvas.
+ * 60x60 light green rect with black outline in center of canvas.
+ * 60x60 soft green rect with black outline in center of canvas.
+ * 60x60 red rect with black outline in center of canvas.
+ * 60x60 dark fushcia rect with black outline in center of canvas.
+ * 60x60 blue rect with black outline in center of canvas.
+ */
+
+/**
+ * @method fill
+ * @param  {String}        value   a color string
+ * @param  {Number}        [alpha]
+ * @chainable
+ */
+
+/**
+ * @method fill
+ * @param  {Number[]}      values  an array containing the red,green,blue &
+ *                                 and alpha components of the color
+ * @chainable
+ */
+
+/**
+ * @method fill
+ * @param  {p5.Color}      color   the fill color
+ * @chainable
+ */
+p5.prototype.fill = function() {
+  this._renderer._setProperty('_fillSet', true);
+  this._renderer._setProperty('_doFill', true);
+  this._renderer.fill.apply(this._renderer, arguments);
+  return this;
+};
+
+/**
+ * Disables filling geometry. If both noStroke() and noFill() are called,
+ * nothing will be drawn to the screen.
+ *
+ * @method noFill
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * rect(15, 10, 55, 55);
+ * noFill();
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div modernizr='webgl'>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   noFill();
+ *   stroke(100, 100, 240);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   box(45, 45, 45);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white rect top middle and noFill rect center. Both 60x60 with black outlines.
+ * black canvas with purple cube wireframe spinning
+ */
+p5.prototype.noFill = function() {
+  this._renderer._setProperty('_doFill', false);
+  return this;
+};
+
+/**
+ * Disables drawing the stroke (outline). If both noStroke() and noFill()
+ * are called, nothing will be drawn to the screen.
+ *
+ * @method noStroke
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noStroke();
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div modernizr='webgl'>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   noStroke();
+ *   fill(240, 150, 150);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   box(45, 45, 45);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 60x60 white rect at center. no outline.
+ * black canvas with pink cube spinning
+ */
+p5.prototype.noStroke = function() {
+  this._renderer._setProperty('_doStroke', false);
+  return this;
+};
+
+/**
+ * Sets the color used to draw lines and borders around shapes. This color
+ * is either specified in terms of the RGB or HSB color depending on the
+ * current colorMode() (the default color space is RGB, with each value in
+ * the range from 0 to 255). The alpha range by default is also 0 to 255.
+ * <br><br>
+ * If a single string argument is provided, RGB, RGBA and Hex CSS color
+ * strings and all named color strings are supported. In this case, an alpha
+ * number value as a second argument is not supported, the RGBA form should be
+ * used.
+ * <br><br>
+ * A p5 Color object can also be provided to set the stroke color.
+ *
+ *
+ * @method stroke
+ * @param  {Number}        v1      red or hue value relative to
+ *                                 the current color range
+ * @param  {Number}        v2      green or saturation value
+ *                                 relative to the current color range
+ * @param  {Number}        v3      blue or brightness value
+ *                                 relative to the current color range
+ * @param  {Number}        [alpha]
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * // Grayscale integer value
+ * strokeWeight(4);
+ * stroke(51);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // R, G & B integer values
+ * stroke(255, 204, 0);
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // H, S & B integer values
+ * colorMode(HSB);
+ * strokeWeight(4);
+ * stroke(255, 204, 100);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // Named SVG/CSS color string
+ * stroke('red');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // three-digit hexadecimal RGB notation
+ * stroke('#fae');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // six-digit hexadecimal RGB notation
+ * stroke('#222222');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGB notation
+ * stroke('rgb(0,255,0)');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // integer RGBA notation
+ * stroke('rgba(0,255,0,0.25)');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGB notation
+ * stroke('rgb(100%,0%,10%)');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // percentage RGBA notation
+ * stroke('rgba(100%,0%,100%,0.5)');
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // p5 Color object
+ * stroke(color(0, 0, 255));
+ * strokeWeight(4);
+ * rect(20, 20, 60, 60);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 60x60 white rect at center. Dark charcoal grey outline.
+ * 60x60 white rect at center. Yellow outline.
+ * 60x60 white rect at center. Royal blue outline.
+ * 60x60 white rect at center. Red outline.
+ * 60x60 white rect at center. Pink outline.
+ * 60x60 white rect at center. Black outline.
+ * 60x60 white rect at center. Bright green outline.
+ * 60x60 white rect at center. Soft green outline.
+ * 60x60 white rect at center. Red outline.
+ * 60x60 white rect at center. Dark fushcia outline.
+ * 60x60 white rect at center. Blue outline.
+ */
+
+/**
+ * @method stroke
+ * @param  {String}        value   a color string
+ * @param  {Number}        [alpha]
+ * @chainable
+ */
+
+/**
+ * @method stroke
+ * @param  {Number[]}      values  an array containing the red,green,blue &
+ *                                 and alpha components of the color
+ * @chainable
+ */
+
+/**
+ * @method stroke
+ * @param  {p5.Color}      color   the stroke color
+ * @chainable
+ */
+
+p5.prototype.stroke = function() {
+  this._renderer._setProperty('_strokeSet', true);
+  this._renderer._setProperty('_doStroke', true);
+  this._renderer.stroke.apply(this._renderer, arguments);
+  return this;
+};
+
+module.exports = p5;
+
+},{"../core/constants":21,"../core/core":22,"./p5.Color":16}],18:[function(_dereq_,module,exports){
+/**
+ * @module Shape
+ * @submodule 2D Primitives
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+var canvas = _dereq_('./canvas');
+_dereq_('./error_helpers');
+
+/**
+ * Draw an arc to the screen. If called with only x, y, w, h, start, and
+ * stop, the arc will be drawn and filled as an open pie segment. If a mode parameter is provided, the arc
+ * will be filled like an open semi-circle (OPEN) , a closed semi-circle (CHORD), or as a closed pie segment (PIE). The
+ * origin may be changed with the ellipseMode() function.<br><br>
+ * Note that drawing a full circle (ex: 0 to TWO_PI) will appear blank
+ * because 0 and TWO_PI are the same position on the unit circle. The
+ * best way to handle this is by using the ellipse() function instead
+ * to create a closed ellipse, and to use the arc() function
+ * only to draw parts of an ellipse.
+ *
+ * @method arc
+ * @param  {Number} x      x-coordinate of the arc's ellipse
+ * @param  {Number} y      y-coordinate of the arc's ellipse
+ * @param  {Number} w      width of the arc's ellipse by default
+ * @param  {Number} h      height of the arc's ellipse by default
+ * @param  {Number} start  angle to start the arc, specified in radians
+ * @param  {Number} stop   angle to stop the arc, specified in radians
+ * @param  {Constant} [mode] optional parameter to determine the way of drawing
+ *                         the arc. either CHORD, PIE or OPEN
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * arc(50, 55, 50, 50, 0, HALF_PI);
+ * noFill();
+ * arc(50, 55, 60, 60, HALF_PI, PI);
+ * arc(50, 55, 70, 70, PI, PI + QUARTER_PI);
+ * arc(50, 55, 80, 80, PI + QUARTER_PI, TWO_PI);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * arc(50, 50, 80, 80, 0, PI + QUARTER_PI);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * arc(50, 50, 80, 80, 0, PI + QUARTER_PI, OPEN);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * arc(50, 50, 80, 80, 0, PI + QUARTER_PI, CHORD);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * arc(50, 50, 80, 80, 0, PI + QUARTER_PI, PIE);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *shattered outline of an ellipse with a quarter of a white circle bottom-right.
+ *white ellipse with top right quarter missing.
+ *white ellipse with black outline with top right missing.
+ *white ellipse with top right missing with black outline around shape.
+ *white ellipse with top right quarter missing with black outline around the shape.
+ *
+ */
+p5.prototype.arc = function(x, y, w, h, start, stop, mode) {
+  p5._validateParameters('arc', arguments);
+  if (!this._renderer._doStroke && !this._renderer._doFill) {
+    return this;
+  }
+  if (this._angleMode === constants.DEGREES) {
+    start = this.radians(start);
+    stop = this.radians(stop);
+  }
+
+  // Make all angles positive...
+  while (start < 0) {
+    start += constants.TWO_PI;
+  }
+  while (stop < 0) {
+    stop += constants.TWO_PI;
+  }
+  // ...and confine them to the interval [0,TWO_PI).
+  start %= constants.TWO_PI;
+  stop %= constants.TWO_PI;
+
+  // account for full circle
+  if (stop === start) {
+    stop += constants.TWO_PI;
+  }
+
+  // Adjust angles to counter linear scaling.
+  if (start <= constants.HALF_PI) {
+    start = Math.atan(w / h * Math.tan(start));
+  } else if (start > constants.HALF_PI && start <= 3 * constants.HALF_PI) {
+    start = Math.atan(w / h * Math.tan(start)) + constants.PI;
+  } else {
+    start = Math.atan(w / h * Math.tan(start)) + constants.TWO_PI;
+  }
+  if (stop <= constants.HALF_PI) {
+    stop = Math.atan(w / h * Math.tan(stop));
+  } else if (stop > constants.HALF_PI && stop <= 3 * constants.HALF_PI) {
+    stop = Math.atan(w / h * Math.tan(stop)) + constants.PI;
+  } else {
+    stop = Math.atan(w / h * Math.tan(stop)) + constants.TWO_PI;
+  }
+
+  // Exceed the interval if necessary in order to preserve the size and
+  // orientation of the arc.
+  if (start > stop) {
+    stop += constants.TWO_PI;
+  }
+  // p5 supports negative width and heights for ellipses
+  w = Math.abs(w);
+  h = Math.abs(h);
+  this._renderer.arc(x, y, w, h, start, stop, mode);
+  return this;
+};
+
+/**
+ * Draws an ellipse (oval) to the screen. An ellipse with equal width and
+ * height is a circle. By default, the first two parameters set the location,
+ * and the third and fourth parameters set the shape's width and height. If
+ * no height is specified, the value of width is used for both the width and
+ * height. If a negative height or width is specified, the absolute value is taken.
+ * The origin may be changed with the ellipseMode() function.
+ *
+ * @method ellipse
+ * @param  {Number} x x-coordinate of the ellipse.
+ * @param  {Number} y y-coordinate of the ellipse.
+ * @param  {Number} w width of the ellipse.
+ * @param  {Number} [h] height of the ellipse.
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * ellipse(56, 46, 55, 55);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *white ellipse with black outline in middle-right of canvas that is 55x55.
+ *
+ */
+/**
+ * @method ellipse
+ * @param  {Number} x
+ * @param  {Number} y
+ * @param  {Number} w
+ * @param  {Number} h
+ * @param  {Integer} detailX number of segments in the x-direction
+ * @param  {Integer} [detailY] number of segments in the y-direction
+ */
+p5.prototype.ellipse = function(x, y, w, h, detailX, detailY) {
+  p5._validateParameters('ellipse', arguments);
+
+  // p5 supports negative width and heights for rects
+  if (w < 0) {
+    w = Math.abs(w);
+  }
+
+  if (typeof h === 'undefined') {
+    // Duplicate 3rd argument if only 3 given.
+    h = w;
+  } else if (h < 0) {
+    h = Math.abs(h);
+  }
+
+  if (this._renderer._doStroke || this._renderer._doFill) {
+    var vals = canvas.modeAdjust(x, y, w, h, this._renderer._ellipseMode);
+    this._renderer.ellipse([vals.x, vals.y, vals.w, vals.h, detailX, detailY]);
+  }
+
+  return this;
+};
+/**
+ * Draws a line (a direct path between two points) to the screen. The version
+ * of line() with four parameters draws the line in 2D. To color a line, use
+ * the stroke() function. A line cannot be filled, therefore the fill()
+ * function will not affect the color of a line. 2D lines are drawn with a
+ * width of one pixel by default, but this can be changed with the
+ * strokeWeight() function.
+ *
+ * @method line
+ * @param  {Number} x1 the x-coordinate of the first point
+ * @param  {Number} y1 the y-coordinate of the first point
+ * @param  {Number} x2 the x-coordinate of the second point
+ * @param  {Number} y2 the y-coordinate of the second point
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * line(30, 20, 85, 75);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * line(30, 20, 85, 20);
+ * stroke(126);
+ * line(85, 20, 85, 75);
+ * stroke(255);
+ * line(85, 75, 30, 75);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *line 78 pixels long running from mid-top to bottom-right of canvas.
+ *3 lines of various stroke sizes. Form top, bottom and right sides of a square.
+ *
+ */
+/**
+ * @method line
+ * @param  {Number} x1
+ * @param  {Number} y1
+ * @param  {Number} z1 the z-coordinate of the first point
+ * @param  {Number} x2
+ * @param  {Number} y2
+ * @param  {Number} z2 the z-coordinate of the second point
+ * @chainable
+ */
+p5.prototype.line = function() {
+  p5._validateParameters('line', arguments);
+
+  if (this._renderer._doStroke) {
+    this._renderer.line.apply(this._renderer, arguments);
+  }
+
+  return this;
+};
+
+/**
+ * Draws a point, a coordinate in space at the dimension of one pixel.
+ * The first parameter is the horizontal value for the point, the second
+ * value is the vertical value for the point. The color of the point is
+ * determined by the current stroke.
+ *
+ * @method point
+ * @param  {Number} x the x-coordinate
+ * @param  {Number} y the y-coordinate
+ * @param  {Number} [z] the z-coordinate (for WEBGL mode)
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * point(30, 20);
+ * point(85, 20);
+ * point(85, 75);
+ * point(30, 75);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *4 points centered in the middle-right of the canvas.
+ *
+ */
+p5.prototype.point = function() {
+  p5._validateParameters('point', arguments);
+
+  if (this._renderer._doStroke) {
+    this._renderer.point.apply(this._renderer, arguments);
+  }
+
+  return this;
+};
+
+/**
+ * Draw a quad. A quad is a quadrilateral, a four sided polygon. It is
+ * similar to a rectangle, but the angles between its edges are not
+ * constrained to ninety degrees. The first pair of parameters (x1,y1)
+ * sets the first vertex and the subsequent pairs should proceed
+ * clockwise or counter-clockwise around the defined shape.
+ *
+ * @method quad
+ * @param {Number} x1 the x-coordinate of the first point
+ * @param {Number} y1 the y-coordinate of the first point
+ * @param {Number} x2 the x-coordinate of the second point
+ * @param {Number} y2 the y-coordinate of the second point
+ * @param {Number} x3 the x-coordinate of the third point
+ * @param {Number} y3 the y-coordinate of the third point
+ * @param {Number} x4 the x-coordinate of the fourth point
+ * @param {Number} y4 the y-coordinate of the fourth point
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * quad(38, 31, 86, 20, 69, 63, 30, 76);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *irregular white quadrilateral shape with black outline mid-right of canvas.
+ *
+ */
+/**
+ * @method quad
+ * @param {Number} x1
+ * @param {Number} y1
+ * @param {Number} z1
+ * @param {Number} x2
+ * @param {Number} y2
+ * @param {Number} z2
+ * @param {Number} x3
+ * @param {Number} y3
+ * @param {Number} z3
+ * @param {Number} x4
+ * @param {Number} y4
+ * @param {Number} z4
+ * @chainable
+ */
+p5.prototype.quad = function() {
+  p5._validateParameters('quad', arguments);
+
+  if (this._renderer._doStroke || this._renderer._doFill) {
+    this._renderer.quad.apply(this._renderer, arguments);
+  }
+
+  return this;
+};
+
+/**
+ * Draws a rectangle to the screen. A rectangle is a four-sided shape with
+ * every angle at ninety degrees. By default, the first two parameters set
+ * the location of the upper-left corner, the third sets the width, and the
+ * fourth sets the height. The way these parameters are interpreted, however,
+ * may be changed with the rectMode() function.
+ * <br><br>
+ * The fifth, sixth, seventh and eighth parameters, if specified,
+ * determine corner radius for the top-right, top-left, lower-right and
+ * lower-left corners, respectively. An omitted corner radius parameter is set
+ * to the value of the previously specified radius value in the parameter list.
+ *
+ * @method rect
+ * @param  {Number} x  x-coordinate of the rectangle.
+ * @param  {Number} y  y-coordinate of the rectangle.
+ * @param  {Number} w  width of the rectangle.
+ * @param  {Number} h  height of the rectangle.
+ * @param  {Number} [tl] optional radius of top-left corner.
+ * @param  {Number} [tr] optional radius of top-right corner.
+ * @param  {Number} [br] optional radius of bottom-right corner.
+ * @param  {Number} [bl] optional radius of bottom-left corner.
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * // Draw a rectangle at location (30, 20) with a width and height of 55.
+ * rect(30, 20, 55, 55);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // Draw a rectangle with rounded corners, each having a radius of 20.
+ * rect(30, 20, 55, 55, 20);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // Draw a rectangle with rounded corners having the following radii:
+ * // top-left = 20, top-right = 15, bottom-right = 10, bottom-left = 5.
+ * rect(30, 20, 55, 55, 20, 15, 10, 5);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 55x55 white rect with black outline in mid-right of canvas.
+ * 55x55 white rect with black outline and rounded edges in mid-right of canvas.
+ * 55x55 white rect with black outline and rounded edges of different radii.
+ */
+/**
+ * @method rect
+ * @param  {Number} x
+ * @param  {Number} y
+ * @param  {Number} w
+ * @param  {Number} h
+ * @param  {Integer} [detailX] number of segments in the x-direction
+ * @param  {Integer} [detailY] number of segments in the y-direction
+ * @chainable
+ */
+p5.prototype.rect = function(x, y, w, h, detailX, detailY) {
+  p5._validateParameters('rect', arguments);
+
+  if (this._renderer._doStroke || this._renderer._doFill) {
+    var vals = canvas.modeAdjust(x, y, w, h, this._renderer._rectMode);
+    this._renderer.rect([vals.x, vals.y, vals.w, vals.h, detailX, detailY]);
+  }
+
+  return this;
+};
+
+/**
+ * A triangle is a plane created by connecting three points. The first two
+ * arguments specify the first point, the middle two arguments specify the
+ * second point, and the last two arguments specify the third point.
+ *
+ * @method triangle
+ * @param  {Number} x1 x-coordinate of the first point
+ * @param  {Number} y1 y-coordinate of the first point
+ * @param  {Number} x2 x-coordinate of the second point
+ * @param  {Number} y2 y-coordinate of the second point
+ * @param  {Number} x3 x-coordinate of the third point
+ * @param  {Number} y3 y-coordinate of the third point
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * triangle(30, 75, 58, 20, 86, 75);
+ * </code>
+ * </div>
+ *
+ *@alt
+ * white triangle with black outline in mid-right of canvas.
+ *
+ */
+p5.prototype.triangle = function() {
+  p5._validateParameters('triangle', arguments);
+
+  if (this._renderer._doStroke || this._renderer._doFill) {
+    this._renderer.triangle(arguments);
+  }
+
+  return this;
+};
+
+module.exports = p5;
+
+},{"./canvas":20,"./constants":21,"./core":22,"./error_helpers":25}],19:[function(_dereq_,module,exports){
+/**
+ * @module Shape
+ * @submodule Attributes
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+
+/**
+ * Modifies the location from which ellipses are drawn by changing the way
+ * in which parameters given to ellipse() are interpreted.
+ * <br><br>
+ * The default mode is ellipseMode(CENTER), which interprets the first two
+ * parameters of ellipse() as the shape's center point, while the third and
+ * fourth parameters are its width and height.
+ * <br><br>
+ * ellipseMode(RADIUS) also uses the first two parameters of ellipse() as
+ * the shape's center point, but uses the third and fourth parameters to
+ * specify half of the shapes's width and height.
+ * <br><br>
+ * ellipseMode(CORNER) interprets the first two parameters of ellipse() as
+ * the upper-left corner of the shape, while the third and fourth parameters
+ * are its width and height.
+ * <br><br>
+ * ellipseMode(CORNERS) interprets the first two parameters of ellipse() as
+ * the location of one corner of the ellipse's bounding box, and the third
+ * and fourth parameters as the location of the opposite corner.
+ * <br><br>
+ * The parameter must be written in ALL CAPS because Javascript is a
+ * case-sensitive language.
+ *
+ * @method ellipseMode
+ * @param  {Constant} mode either CENTER, RADIUS, CORNER, or CORNERS
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * ellipseMode(RADIUS); // Set ellipseMode to RADIUS
+ * fill(255); // Set fill to white
+ * ellipse(50, 50, 30, 30); // Draw white ellipse using RADIUS mode
+ *
+ * ellipseMode(CENTER); // Set ellipseMode to CENTER
+ * fill(100); // Set fill to gray
+ * ellipse(50, 50, 30, 30); // Draw gray ellipse using CENTER mode
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * ellipseMode(CORNER); // Set ellipseMode is CORNER
+ * fill(255); // Set fill to white
+ * ellipse(25, 25, 50, 50); // Draw white ellipse using CORNER mode
+ *
+ * ellipseMode(CORNERS); // Set ellipseMode to CORNERS
+ * fill(100); // Set fill to gray
+ * ellipse(25, 25, 50, 50); // Draw gray ellipse using CORNERS mode
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 60x60 white ellipse and 30x30 grey ellipse with black outlines at center.
+ * 60x60 white ellipse @center and 30x30 grey ellipse top-right, black outlines.
+ *
+ */
+p5.prototype.ellipseMode = function(m) {
+  p5._validateParameters('ellipseMode', arguments);
+  if (
+    m === constants.CORNER ||
+    m === constants.CORNERS ||
+    m === constants.RADIUS ||
+    m === constants.CENTER
+  ) {
+    this._renderer._ellipseMode = m;
+  }
+  return this;
+};
+
+/**
+ * Draws all geometry with jagged (aliased) edges. Note that smooth() is
+ * active by default, so it is necessary to call noSmooth() to disable
+ * smoothing of geometry, images, and fonts.
+ *
+ * @method noSmooth
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * background(0);
+ * noStroke();
+ * smooth();
+ * ellipse(30, 48, 36, 36);
+ * noSmooth();
+ * ellipse(70, 48, 36, 36);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 2 pixelated 36x36 white ellipses to left & right of center, black background
+ *
+ */
+p5.prototype.noSmooth = function() {
+  this._renderer.noSmooth();
+  return this;
+};
+
+/**
+ * Modifies the location from which rectangles are drawn by changing the way
+ * in which parameters given to rect() are interpreted.
+ * <br><br>
+ * The default mode is rectMode(CORNER), which interprets the first two
+ * parameters of rect() as the upper-left corner of the shape, while the
+ * third and fourth parameters are its width and height.
+ * <br><br>
+ * rectMode(CORNERS) interprets the first two parameters of rect() as the
+ * location of one corner, and the third and fourth parameters as the
+ * location of the opposite corner.
+ * <br><br>
+ * rectMode(CENTER) interprets the first two parameters of rect() as the
+ * shape's center point, while the third and fourth parameters are its
+ * width and height.
+ * <br><br>
+ * rectMode(RADIUS) also uses the first two parameters of rect() as the
+ * shape's center point, but uses the third and fourth parameters to specify
+ * half of the shapes's width and height.
+ * <br><br>
+ * The parameter must be written in ALL CAPS because Javascript is a
+ * case-sensitive language.
+ *
+ * @method rectMode
+ * @param  {Constant} mode either CORNER, CORNERS, CENTER, or RADIUS
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * rectMode(CORNER); // Default rectMode is CORNER
+ * fill(255); // Set fill to white
+ * rect(25, 25, 50, 50); // Draw white rect using CORNER mode
+ *
+ * rectMode(CORNERS); // Set rectMode to CORNERS
+ * fill(100); // Set fill to gray
+ * rect(25, 25, 50, 50); // Draw gray rect using CORNERS mode
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * rectMode(RADIUS); // Set rectMode to RADIUS
+ * fill(255); // Set fill to white
+ * rect(50, 50, 30, 30); // Draw white rect using RADIUS mode
+ *
+ * rectMode(CENTER); // Set rectMode to CENTER
+ * fill(100); // Set fill to gray
+ * rect(50, 50, 30, 30); // Draw gray rect using CENTER mode
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 50x50 white rect at center and 25x25 grey rect in the top left of the other.
+ * 50x50 white rect at center and 25x25 grey rect in the center of the other.
+ *
+ */
+p5.prototype.rectMode = function(m) {
+  p5._validateParameters('rectMode', arguments);
+  if (
+    m === constants.CORNER ||
+    m === constants.CORNERS ||
+    m === constants.RADIUS ||
+    m === constants.CENTER
+  ) {
+    this._renderer._rectMode = m;
+  }
+  return this;
+};
+
+/**
+ * Draws all geometry with smooth (anti-aliased) edges. smooth() will also
+ * improve image quality of resized images. Note that smooth() is active by
+ * default; noSmooth() can be used to disable smoothing of geometry,
+ * images, and fonts.
+ *
+ * @method smooth
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * background(0);
+ * noStroke();
+ * smooth();
+ * ellipse(30, 48, 36, 36);
+ * noSmooth();
+ * ellipse(70, 48, 36, 36);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 2 pixelated 36x36 white ellipses one left one right of center. On black.
+ *
+ */
+p5.prototype.smooth = function() {
+  this._renderer.smooth();
+  return this;
+};
+
+/**
+ * Sets the style for rendering line endings. These ends are either squared,
+ * extended, or rounded, each of which specified with the corresponding
+ * parameters: SQUARE, PROJECT, and ROUND. The default cap is ROUND.
+ *
+ * @method strokeCap
+ * @param  {Constant} cap either SQUARE, PROJECT, or ROUND
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * strokeWeight(12.0);
+ * strokeCap(ROUND);
+ * line(20, 30, 80, 30);
+ * strokeCap(SQUARE);
+ * line(20, 50, 80, 50);
+ * strokeCap(PROJECT);
+ * line(20, 70, 80, 70);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3 lines. Top line: rounded ends, mid: squared, bottom:longer squared ends.
+ *
+ */
+p5.prototype.strokeCap = function(cap) {
+  p5._validateParameters('strokeCap', arguments);
+  if (
+    cap === constants.ROUND ||
+    cap === constants.SQUARE ||
+    cap === constants.PROJECT
+  ) {
+    this._renderer.strokeCap(cap);
+  }
+  return this;
+};
+
+/**
+ * Sets the style of the joints which connect line segments. These joints
+ * are either mitered, beveled, or rounded and specified with the
+ * corresponding parameters MITER, BEVEL, and ROUND. The default joint is
+ * MITER.
