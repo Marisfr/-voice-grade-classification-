@@ -41382,3 +41382,972 @@ var process = module.exports = {};
 // don't break things.  But we need to wrap it in a try catch in case it is
 // wrapped in strict mode code which doesn't define any globals.  It's inside a
 // function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],12:[function(_dereq_,module,exports){
+(function(self) {
+  'use strict';
+
+  if (self.fetch) {
+    return
+  }
+
+  var support = {
+    searchParams: 'URLSearchParams' in self,
+    iterable: 'Symbol' in self && 'iterator' in Symbol,
+    blob: 'FileReader' in self && 'Blob' in self && (function() {
+      try {
+        new Blob()
+        return true
+      } catch(e) {
+        return false
+      }
+    })(),
+    formData: 'FormData' in self,
+    arrayBuffer: 'ArrayBuffer' in self
+  }
+
+  if (support.arrayBuffer) {
+    var viewClasses = [
+      '[object Int8Array]',
+      '[object Uint8Array]',
+      '[object Uint8ClampedArray]',
+      '[object Int16Array]',
+      '[object Uint16Array]',
+      '[object Int32Array]',
+      '[object Uint32Array]',
+      '[object Float32Array]',
+      '[object Float64Array]'
+    ]
+
+    var isDataView = function(obj) {
+      return obj && DataView.prototype.isPrototypeOf(obj)
+    }
+
+    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
+      return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+    }
+  }
+
+  function normalizeName(name) {
+    if (typeof name !== 'string') {
+      name = String(name)
+    }
+    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+      throw new TypeError('Invalid character in header field name')
+    }
+    return name.toLowerCase()
+  }
+
+  function normalizeValue(value) {
+    if (typeof value !== 'string') {
+      value = String(value)
+    }
+    return value
+  }
+
+  // Build a destructive iterator for the value list
+  function iteratorFor(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift()
+        return {done: value === undefined, value: value}
+      }
+    }
+
+    if (support.iterable) {
+      iterator[Symbol.iterator] = function() {
+        return iterator
+      }
+    }
+
+    return iterator
+  }
+
+  function Headers(headers) {
+    this.map = {}
+
+    if (headers instanceof Headers) {
+      headers.forEach(function(value, name) {
+        this.append(name, value)
+      }, this)
+    } else if (Array.isArray(headers)) {
+      headers.forEach(function(header) {
+        this.append(header[0], header[1])
+      }, this)
+    } else if (headers) {
+      Object.getOwnPropertyNames(headers).forEach(function(name) {
+        this.append(name, headers[name])
+      }, this)
+    }
+  }
+
+  Headers.prototype.append = function(name, value) {
+    name = normalizeName(name)
+    value = normalizeValue(value)
+    var oldValue = this.map[name]
+    this.map[name] = oldValue ? oldValue+','+value : value
+  }
+
+  Headers.prototype['delete'] = function(name) {
+    delete this.map[normalizeName(name)]
+  }
+
+  Headers.prototype.get = function(name) {
+    name = normalizeName(name)
+    return this.has(name) ? this.map[name] : null
+  }
+
+  Headers.prototype.has = function(name) {
+    return this.map.hasOwnProperty(normalizeName(name))
+  }
+
+  Headers.prototype.set = function(name, value) {
+    this.map[normalizeName(name)] = normalizeValue(value)
+  }
+
+  Headers.prototype.forEach = function(callback, thisArg) {
+    for (var name in this.map) {
+      if (this.map.hasOwnProperty(name)) {
+        callback.call(thisArg, this.map[name], name, this)
+      }
+    }
+  }
+
+  Headers.prototype.keys = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push(name) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.values = function() {
+    var items = []
+    this.forEach(function(value) { items.push(value) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.entries = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push([name, value]) })
+    return iteratorFor(items)
+  }
+
+  if (support.iterable) {
+    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+  }
+
+  function consumed(body) {
+    if (body.bodyUsed) {
+      return Promise.reject(new TypeError('Already read'))
+    }
+    body.bodyUsed = true
+  }
+
+  function fileReaderReady(reader) {
+    return new Promise(function(resolve, reject) {
+      reader.onload = function() {
+        resolve(reader.result)
+      }
+      reader.onerror = function() {
+        reject(reader.error)
+      }
+    })
+  }
+
+  function readBlobAsArrayBuffer(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsArrayBuffer(blob)
+    return promise
+  }
+
+  function readBlobAsText(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsText(blob)
+    return promise
+  }
+
+  function readArrayBufferAsText(buf) {
+    var view = new Uint8Array(buf)
+    var chars = new Array(view.length)
+
+    for (var i = 0; i < view.length; i++) {
+      chars[i] = String.fromCharCode(view[i])
+    }
+    return chars.join('')
+  }
+
+  function bufferClone(buf) {
+    if (buf.slice) {
+      return buf.slice(0)
+    } else {
+      var view = new Uint8Array(buf.byteLength)
+      view.set(new Uint8Array(buf))
+      return view.buffer
+    }
+  }
+
+  function Body() {
+    this.bodyUsed = false
+
+    this._initBody = function(body) {
+      this._bodyInit = body
+      if (!body) {
+        this._bodyText = ''
+      } else if (typeof body === 'string') {
+        this._bodyText = body
+      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+        this._bodyBlob = body
+      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+        this._bodyFormData = body
+      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+        this._bodyText = body.toString()
+      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
+        this._bodyArrayBuffer = bufferClone(body.buffer)
+        // IE 10-11 can't handle a DataView body.
+        this._bodyInit = new Blob([this._bodyArrayBuffer])
+      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+        this._bodyArrayBuffer = bufferClone(body)
+      } else {
+        throw new Error('unsupported BodyInit type')
+      }
+
+      if (!this.headers.get('content-type')) {
+        if (typeof body === 'string') {
+          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+        } else if (this._bodyBlob && this._bodyBlob.type) {
+          this.headers.set('content-type', this._bodyBlob.type)
+        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+        }
+      }
+    }
+
+    if (support.blob) {
+      this.blob = function() {
+        var rejected = consumed(this)
+        if (rejected) {
+          return rejected
+        }
+
+        if (this._bodyBlob) {
+          return Promise.resolve(this._bodyBlob)
+        } else if (this._bodyArrayBuffer) {
+          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+        } else if (this._bodyFormData) {
+          throw new Error('could not read FormData body as blob')
+        } else {
+          return Promise.resolve(new Blob([this._bodyText]))
+        }
+      }
+
+      this.arrayBuffer = function() {
+        if (this._bodyArrayBuffer) {
+          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
+        } else {
+          return this.blob().then(readBlobAsArrayBuffer)
+        }
+      }
+    }
+
+    this.text = function() {
+      var rejected = consumed(this)
+      if (rejected) {
+        return rejected
+      }
+
+      if (this._bodyBlob) {
+        return readBlobAsText(this._bodyBlob)
+      } else if (this._bodyArrayBuffer) {
+        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
+      } else if (this._bodyFormData) {
+        throw new Error('could not read FormData body as text')
+      } else {
+        return Promise.resolve(this._bodyText)
+      }
+    }
+
+    if (support.formData) {
+      this.formData = function() {
+        return this.text().then(decode)
+      }
+    }
+
+    this.json = function() {
+      return this.text().then(JSON.parse)
+    }
+
+    return this
+  }
+
+  // HTTP methods whose capitalization should be normalized
+  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+  function normalizeMethod(method) {
+    var upcased = method.toUpperCase()
+    return (methods.indexOf(upcased) > -1) ? upcased : method
+  }
+
+  function Request(input, options) {
+    options = options || {}
+    var body = options.body
+
+    if (input instanceof Request) {
+      if (input.bodyUsed) {
+        throw new TypeError('Already read')
+      }
+      this.url = input.url
+      this.credentials = input.credentials
+      if (!options.headers) {
+        this.headers = new Headers(input.headers)
+      }
+      this.method = input.method
+      this.mode = input.mode
+      if (!body && input._bodyInit != null) {
+        body = input._bodyInit
+        input.bodyUsed = true
+      }
+    } else {
+      this.url = String(input)
+    }
+
+    this.credentials = options.credentials || this.credentials || 'omit'
+    if (options.headers || !this.headers) {
+      this.headers = new Headers(options.headers)
+    }
+    this.method = normalizeMethod(options.method || this.method || 'GET')
+    this.mode = options.mode || this.mode || null
+    this.referrer = null
+
+    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+      throw new TypeError('Body not allowed for GET or HEAD requests')
+    }
+    this._initBody(body)
+  }
+
+  Request.prototype.clone = function() {
+    return new Request(this, { body: this._bodyInit })
+  }
+
+  function decode(body) {
+    var form = new FormData()
+    body.trim().split('&').forEach(function(bytes) {
+      if (bytes) {
+        var split = bytes.split('=')
+        var name = split.shift().replace(/\+/g, ' ')
+        var value = split.join('=').replace(/\+/g, ' ')
+        form.append(decodeURIComponent(name), decodeURIComponent(value))
+      }
+    })
+    return form
+  }
+
+  function parseHeaders(rawHeaders) {
+    var headers = new Headers()
+    rawHeaders.split(/\r?\n/).forEach(function(line) {
+      var parts = line.split(':')
+      var key = parts.shift().trim()
+      if (key) {
+        var value = parts.join(':').trim()
+        headers.append(key, value)
+      }
+    })
+    return headers
+  }
+
+  Body.call(Request.prototype)
+
+  function Response(bodyInit, options) {
+    if (!options) {
+      options = {}
+    }
+
+    this.type = 'default'
+    this.status = 'status' in options ? options.status : 200
+    this.ok = this.status >= 200 && this.status < 300
+    this.statusText = 'statusText' in options ? options.statusText : 'OK'
+    this.headers = new Headers(options.headers)
+    this.url = options.url || ''
+    this._initBody(bodyInit)
+  }
+
+  Body.call(Response.prototype)
+
+  Response.prototype.clone = function() {
+    return new Response(this._bodyInit, {
+      status: this.status,
+      statusText: this.statusText,
+      headers: new Headers(this.headers),
+      url: this.url
+    })
+  }
+
+  Response.error = function() {
+    var response = new Response(null, {status: 0, statusText: ''})
+    response.type = 'error'
+    return response
+  }
+
+  var redirectStatuses = [301, 302, 303, 307, 308]
+
+  Response.redirect = function(url, status) {
+    if (redirectStatuses.indexOf(status) === -1) {
+      throw new RangeError('Invalid status code')
+    }
+
+    return new Response(null, {status: status, headers: {location: url}})
+  }
+
+  self.Headers = Headers
+  self.Request = Request
+  self.Response = Response
+
+  self.fetch = function(input, init) {
+    return new Promise(function(resolve, reject) {
+      var request = new Request(input, init)
+      var xhr = new XMLHttpRequest()
+
+      xhr.onload = function() {
+        var options = {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
+        }
+        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
+        var body = 'response' in xhr ? xhr.response : xhr.responseText
+        resolve(new Response(body, options))
+      }
+
+      xhr.onerror = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.ontimeout = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.open(request.method, request.url, true)
+
+      if (request.credentials === 'include') {
+        xhr.withCredentials = true
+      }
+
+      if ('responseType' in xhr && support.blob) {
+        xhr.responseType = 'blob'
+      }
+
+      request.headers.forEach(function(value, name) {
+        xhr.setRequestHeader(name, value)
+      })
+
+      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+    })
+  }
+  self.fetch.polyfill = true
+})(typeof self !== 'undefined' ? self : this);
+
+},{}],13:[function(_dereq_,module,exports){
+'use strict';
+
+var p5 = _dereq_('./core/core');
+_dereq_('./color/p5.Color');
+_dereq_('./core/p5.Element');
+_dereq_('./typography/p5.Font');
+_dereq_('./core/p5.Graphics');
+_dereq_('./core/p5.Renderer2D');
+
+_dereq_('./image/p5.Image');
+_dereq_('./math/p5.Vector');
+_dereq_('./io/p5.TableRow');
+_dereq_('./io/p5.Table');
+_dereq_('./io/p5.XML');
+
+_dereq_('./color/creating_reading');
+_dereq_('./color/setting');
+_dereq_('./core/constants');
+_dereq_('./utilities/conversion');
+_dereq_('./utilities/array_functions');
+_dereq_('./utilities/string_functions');
+_dereq_('./core/environment');
+_dereq_('./image/image');
+_dereq_('./image/loading_displaying');
+_dereq_('./image/pixels');
+_dereq_('./io/files');
+_dereq_('./events/keyboard');
+_dereq_('./events/acceleration'); //john
+_dereq_('./events/mouse');
+_dereq_('./utilities/time_date');
+_dereq_('./events/touch');
+_dereq_('./math/math');
+_dereq_('./math/calculation');
+_dereq_('./math/random');
+_dereq_('./math/noise');
+_dereq_('./math/trigonometry');
+_dereq_('./core/rendering');
+_dereq_('./core/2d_primitives');
+
+_dereq_('./core/attributes');
+_dereq_('./core/curves');
+_dereq_('./core/vertex');
+_dereq_('./core/structure');
+_dereq_('./core/transform');
+_dereq_('./typography/attributes');
+_dereq_('./typography/loading_displaying');
+
+_dereq_('./data/p5.TypedDict');
+
+_dereq_('./webgl/p5.RendererGL');
+_dereq_('./webgl/p5.Geometry');
+_dereq_('./webgl/p5.RendererGL.Retained');
+_dereq_('./webgl/p5.RendererGL.Immediate');
+_dereq_('./webgl/primitives');
+_dereq_('./webgl/loading');
+_dereq_('./webgl/p5.Matrix');
+_dereq_('./webgl/material');
+_dereq_('./webgl/light');
+_dereq_('./webgl/p5.Shader');
+_dereq_('./webgl/camera');
+_dereq_('./webgl/interaction');
+
+_dereq_('./core/init.js');
+
+module.exports = p5;
+
+},{"./color/creating_reading":15,"./color/p5.Color":16,"./color/setting":17,"./core/2d_primitives":18,"./core/attributes":19,"./core/constants":21,"./core/core":22,"./core/curves":23,"./core/environment":24,"./core/init.js":26,"./core/p5.Element":27,"./core/p5.Graphics":28,"./core/p5.Renderer2D":30,"./core/rendering":31,"./core/structure":33,"./core/transform":34,"./core/vertex":35,"./data/p5.TypedDict":36,"./events/acceleration":37,"./events/keyboard":38,"./events/mouse":39,"./events/touch":40,"./image/image":42,"./image/loading_displaying":43,"./image/p5.Image":44,"./image/pixels":45,"./io/files":46,"./io/p5.Table":47,"./io/p5.TableRow":48,"./io/p5.XML":49,"./math/calculation":50,"./math/math":51,"./math/noise":52,"./math/p5.Vector":53,"./math/random":55,"./math/trigonometry":56,"./typography/attributes":57,"./typography/loading_displaying":58,"./typography/p5.Font":59,"./utilities/array_functions":60,"./utilities/conversion":61,"./utilities/string_functions":62,"./utilities/time_date":63,"./webgl/camera":64,"./webgl/interaction":65,"./webgl/light":66,"./webgl/loading":67,"./webgl/material":68,"./webgl/p5.Geometry":69,"./webgl/p5.Matrix":70,"./webgl/p5.RendererGL":73,"./webgl/p5.RendererGL.Immediate":71,"./webgl/p5.RendererGL.Retained":72,"./webgl/p5.Shader":74,"./webgl/primitives":76}],14:[function(_dereq_,module,exports){
+/**
+ * @module Conversion
+ * @submodule Color Conversion
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+/**
+ * Conversions adapted from <http://www.easyrgb.com/math.html>.
+ *
+ * In these functions, hue is always in the range [0,1); all other components
+ * are in the range [0,1]. 'Brightness' and 'value' are used interchangeably.
+ */
+
+var p5 = _dereq_('../core/core');
+p5.ColorConversion = {};
+
+/**
+ * Convert an HSBA array to HSLA.
+ */
+p5.ColorConversion._hsbaToHSLA = function(hsba) {
+  var hue = hsba[0];
+  var sat = hsba[1];
+  var val = hsba[2];
+
+  // Calculate lightness.
+  var li = (2 - sat) * val / 2;
+
+  // Convert saturation.
+  if (li !== 0) {
+    if (li === 1) {
+      sat = 0;
+    } else if (li < 0.5) {
+      sat = sat / (2 - sat);
+    } else {
+      sat = sat * val / (2 - li * 2);
+    }
+  }
+
+  // Hue and alpha stay the same.
+  return [hue, sat, li, hsba[3]];
+};
+
+/**
+ * Convert an HSBA array to RGBA.
+ */
+p5.ColorConversion._hsbaToRGBA = function(hsba) {
+  var hue = hsba[0] * 6; // We will split hue into 6 sectors.
+  var sat = hsba[1];
+  var val = hsba[2];
+
+  var RGBA = [];
+
+  if (sat === 0) {
+    RGBA = [val, val, val, hsba[3]]; // Return early if grayscale.
+  } else {
+    var sector = Math.floor(hue);
+    var tint1 = val * (1 - sat);
+    var tint2 = val * (1 - sat * (hue - sector));
+    var tint3 = val * (1 - sat * (1 + sector - hue));
+    var red, green, blue;
+    if (sector === 1) {
+      // Yellow to green.
+      red = tint2;
+      green = val;
+      blue = tint1;
+    } else if (sector === 2) {
+      // Green to cyan.
+      red = tint1;
+      green = val;
+      blue = tint3;
+    } else if (sector === 3) {
+      // Cyan to blue.
+      red = tint1;
+      green = tint2;
+      blue = val;
+    } else if (sector === 4) {
+      // Blue to magenta.
+      red = tint3;
+      green = tint1;
+      blue = val;
+    } else if (sector === 5) {
+      // Magenta to red.
+      red = val;
+      green = tint1;
+      blue = tint2;
+    } else {
+      // Red to yellow (sector could be 0 or 6).
+      red = val;
+      green = tint3;
+      blue = tint1;
+    }
+    RGBA = [red, green, blue, hsba[3]];
+  }
+
+  return RGBA;
+};
+
+/**
+ * Convert an HSLA array to HSBA.
+ */
+p5.ColorConversion._hslaToHSBA = function(hsla) {
+  var hue = hsla[0];
+  var sat = hsla[1];
+  var li = hsla[2];
+
+  // Calculate brightness.
+  var val;
+  if (li < 0.5) {
+    val = (1 + sat) * li;
+  } else {
+    val = li + sat - li * sat;
+  }
+
+  // Convert saturation.
+  sat = 2 * (val - li) / val;
+
+  // Hue and alpha stay the same.
+  return [hue, sat, val, hsla[3]];
+};
+
+/**
+ * Convert an HSLA array to RGBA.
+ *
+ * We need to change basis from HSLA to something that can be more easily be
+ * projected onto RGBA. We will choose hue and brightness as our first two
+ * components, and pick a convenient third one ('zest') so that we don't need
+ * to calculate formal HSBA saturation.
+ */
+p5.ColorConversion._hslaToRGBA = function(hsla) {
+  var hue = hsla[0] * 6; // We will split hue into 6 sectors.
+  var sat = hsla[1];
+  var li = hsla[2];
+
+  var RGBA = [];
+
+  if (sat === 0) {
+    RGBA = [li, li, li, hsla[3]]; // Return early if grayscale.
+  } else {
+    // Calculate brightness.
+    var val;
+    if (li < 0.5) {
+      val = (1 + sat) * li;
+    } else {
+      val = li + sat - li * sat;
+    }
+
+    // Define zest.
+    var zest = 2 * li - val;
+
+    // Implement projection (project onto green by default).
+    var hzvToRGB = function(hue, zest, val) {
+      if (hue < 0) {
+        // Hue must wrap to allow projection onto red and blue.
+        hue += 6;
+      } else if (hue >= 6) {
+        hue -= 6;
+      }
+      if (hue < 1) {
+        // Red to yellow (increasing green).
+        return zest + (val - zest) * hue;
+      } else if (hue < 3) {
+        // Yellow to cyan (greatest green).
+        return val;
+      } else if (hue < 4) {
+        // Cyan to blue (decreasing green).
+        return zest + (val - zest) * (4 - hue);
+      } else {
+        // Blue to red (least green).
+        return zest;
+      }
+    };
+
+    // Perform projections, offsetting hue as necessary.
+    RGBA = [
+      hzvToRGB(hue + 2, zest, val),
+      hzvToRGB(hue, zest, val),
+      hzvToRGB(hue - 2, zest, val),
+      hsla[3]
+    ];
+  }
+
+  return RGBA;
+};
+
+/**
+ * Convert an RGBA array to HSBA.
+ */
+p5.ColorConversion._rgbaToHSBA = function(rgba) {
+  var red = rgba[0];
+  var green = rgba[1];
+  var blue = rgba[2];
+
+  var val = Math.max(red, green, blue);
+  var chroma = val - Math.min(red, green, blue);
+
+  var hue, sat;
+  if (chroma === 0) {
+    // Return early if grayscale.
+    hue = 0;
+    sat = 0;
+  } else {
+    sat = chroma / val;
+    if (red === val) {
+      // Magenta to yellow.
+      hue = (green - blue) / chroma;
+    } else if (green === val) {
+      // Yellow to cyan.
+      hue = 2 + (blue - red) / chroma;
+    } else if (blue === val) {
+      // Cyan to magenta.
+      hue = 4 + (red - green) / chroma;
+    }
+    if (hue < 0) {
+      // Confine hue to the interval [0, 1).
+      hue += 6;
+    } else if (hue >= 6) {
+      hue -= 6;
+    }
+  }
+
+  return [hue / 6, sat, val, rgba[3]];
+};
+
+/**
+ * Convert an RGBA array to HSLA.
+ */
+p5.ColorConversion._rgbaToHSLA = function(rgba) {
+  var red = rgba[0];
+  var green = rgba[1];
+  var blue = rgba[2];
+
+  var val = Math.max(red, green, blue);
+  var min = Math.min(red, green, blue);
+  var li = val + min; // We will halve this later.
+  var chroma = val - min;
+
+  var hue, sat;
+  if (chroma === 0) {
+    // Return early if grayscale.
+    hue = 0;
+    sat = 0;
+  } else {
+    if (li < 1) {
+      sat = chroma / li;
+    } else {
+      sat = chroma / (2 - li);
+    }
+    if (red === val) {
+      // Magenta to yellow.
+      hue = (green - blue) / chroma;
+    } else if (green === val) {
+      // Yellow to cyan.
+      hue = 2 + (blue - red) / chroma;
+    } else if (blue === val) {
+      // Cyan to magenta.
+      hue = 4 + (red - green) / chroma;
+    }
