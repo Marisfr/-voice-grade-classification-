@@ -45235,3 +45235,964 @@ p5.prototype.strokeCap = function(cap) {
  * are either mitered, beveled, or rounded and specified with the
  * corresponding parameters MITER, BEVEL, and ROUND. The default joint is
  * MITER.
+ *
+ * @method strokeJoin
+ * @param  {Constant} join either MITER, BEVEL, ROUND
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noFill();
+ * strokeWeight(10.0);
+ * strokeJoin(MITER);
+ * beginShape();
+ * vertex(35, 20);
+ * vertex(65, 50);
+ * vertex(35, 80);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * strokeWeight(10.0);
+ * strokeJoin(BEVEL);
+ * beginShape();
+ * vertex(35, 20);
+ * vertex(65, 50);
+ * vertex(35, 80);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * strokeWeight(10.0);
+ * strokeJoin(ROUND);
+ * beginShape();
+ * vertex(35, 20);
+ * vertex(65, 50);
+ * vertex(35, 80);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Right-facing arrowhead shape with pointed tip in center of canvas.
+ * Right-facing arrowhead shape with flat tip in center of canvas.
+ * Right-facing arrowhead shape with rounded tip in center of canvas.
+ *
+ */
+p5.prototype.strokeJoin = function(join) {
+  p5._validateParameters('strokeJoin', arguments);
+  if (
+    join === constants.ROUND ||
+    join === constants.BEVEL ||
+    join === constants.MITER
+  ) {
+    this._renderer.strokeJoin(join);
+  }
+  return this;
+};
+
+/**
+ * Sets the width of the stroke used for lines, points, and the border
+ * around shapes. All widths are set in units of pixels.
+ *
+ * @method strokeWeight
+ * @param  {Number} weight the weight (in pixels) of the stroke
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * strokeWeight(1); // Default
+ * line(20, 20, 80, 20);
+ * strokeWeight(4); // Thicker
+ * line(20, 40, 80, 40);
+ * strokeWeight(10); // Beastly
+ * line(20, 70, 80, 70);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3 horizontal black lines. Top line: thin, mid: medium, bottom:thick.
+ *
+ */
+p5.prototype.strokeWeight = function(w) {
+  p5._validateParameters('strokeWeight', arguments);
+  this._renderer.strokeWeight(w);
+  return this;
+};
+
+module.exports = p5;
+
+},{"./constants":21,"./core":22}],20:[function(_dereq_,module,exports){
+/**
+ * @requires constants
+ */
+
+'use strict';
+
+var constants = _dereq_('./constants');
+
+module.exports = {
+  modeAdjust: function(a, b, c, d, mode) {
+    if (mode === constants.CORNER) {
+      return { x: a, y: b, w: c, h: d };
+    } else if (mode === constants.CORNERS) {
+      return { x: a, y: b, w: c - a, h: d - b };
+    } else if (mode === constants.RADIUS) {
+      return { x: a - c, y: b - d, w: 2 * c, h: 2 * d };
+    } else if (mode === constants.CENTER) {
+      return { x: a - c * 0.5, y: b - d * 0.5, w: c, h: d };
+    }
+  },
+
+  arcModeAdjust: function(a, b, c, d, mode) {
+    if (mode === constants.CORNER) {
+      return { x: a + c * 0.5, y: b + d * 0.5, w: c, h: d };
+    } else if (mode === constants.CORNERS) {
+      return { x: a, y: b, w: c + a, h: d + b };
+    } else if (mode === constants.RADIUS) {
+      return { x: a, y: b, w: 2 * c, h: 2 * d };
+    } else if (mode === constants.CENTER) {
+      return { x: a, y: b, w: c, h: d };
+    }
+  }
+};
+
+},{"./constants":21}],21:[function(_dereq_,module,exports){
+/**
+ * @module Constants
+ * @submodule Constants
+ * @for p5
+ */
+
+'use strict';
+
+var PI = Math.PI;
+
+module.exports = {
+  // GRAPHICS RENDERER
+  /**
+   * @property {String} P2D
+   * @final
+   */
+  P2D: 'p2d',
+  /**
+   * @property {String} WEBGL
+   * @final
+   */
+  WEBGL: 'webgl',
+
+  // ENVIRONMENT
+  ARROW: 'default',
+  CROSS: 'crosshair',
+  HAND: 'pointer',
+  MOVE: 'move',
+  TEXT: 'text',
+  WAIT: 'wait',
+
+  // TRIGONOMETRY
+
+  /**
+   * HALF_PI is a mathematical constant with the value
+   * 1.57079632679489661923. It is half the ratio of the
+   * circumference of a circle to its diameter. It is useful in
+   * combination with the trigonometric functions sin() and cos().
+   *
+   * @property {Number} HALF_PI
+   * @final
+   *
+   * @example
+   * <div><code>
+   * arc(50, 50, 80, 80, 0, HALF_PI);
+   * </code></div>
+   *
+   * @alt
+   * 80x80 white quarter-circle with curve toward bottom right of canvas.
+   *
+   */
+  HALF_PI: PI / 2,
+  /**
+   * PI is a mathematical constant with the value
+   * 3.14159265358979323846. It is the ratio of the circumference
+   * of a circle to its diameter. It is useful in combination with
+   * the trigonometric functions sin() and cos().
+   *
+   * @property {Number} PI
+   * @final
+   *
+   * @example
+   * <div><code>
+   * arc(50, 50, 80, 80, 0, PI);
+   * </code></div>
+   *
+   * @alt
+   * white half-circle with curve toward bottom of canvas.
+   *
+   */
+  PI: PI,
+  /**
+   * QUARTER_PI is a mathematical constant with the value 0.7853982.
+   * It is one quarter the ratio of the circumference of a circle to
+   * its diameter. It is useful in combination with the trigonometric
+   * functions sin() and cos().
+   *
+   * @property {Number} QUARTER_PI
+   * @final
+   *
+   * @example
+   * <div><code>
+   * arc(50, 50, 80, 80, 0, QUARTER_PI);
+   * </code></div>
+   *
+   * @alt
+   * white eighth-circle rotated about 40 degrees with curve bottom right canvas.
+   *
+   */
+  QUARTER_PI: PI / 4,
+  /**
+   * TAU is an alias for TWO_PI, a mathematical constant with the
+   * value 6.28318530717958647693. It is twice the ratio of the
+   * circumference of a circle to its diameter. It is useful in
+   * combination with the trigonometric functions sin() and cos().
+   *
+   * @property {Number} TAU
+   * @final
+   *
+   * @example
+   * <div><code>
+   * arc(50, 50, 80, 80, 0, TAU);
+   * </code></div>
+   *
+   * @alt
+   * 80x80 white ellipse shape in center of canvas.
+   *
+   */
+  TAU: PI * 2,
+  /**
+   * TWO_PI is a mathematical constant with the value
+   * 6.28318530717958647693. It is twice the ratio of the
+   * circumference of a circle to its diameter. It is useful in
+   * combination with the trigonometric functions sin() and cos().
+   *
+   * @property {Number} TWO_PI
+   * @final
+   *
+   * @example
+   * <div><code>
+   * arc(50, 50, 80, 80, 0, TWO_PI);
+   * </code></div>
+   *
+   * @alt
+   * 80x80 white ellipse shape in center of canvas.
+   *
+   */
+  TWO_PI: PI * 2,
+  /**
+   * Constant to be used with angleMode() function, to set the mode which
+   * p5.js interprates and calculates angles (either DEGREES or RADIANS).
+   * @property {String} DEGREES
+   * @final
+   *
+   * @example
+   * <div class='norender'><code>
+   * function setup() {
+   *   angleMode(DEGREES);
+   * }
+   * </code></div>
+   */
+  DEGREES: 'degrees',
+  /**
+   * Constant to be used with angleMode() function, to set the mode which
+   * p5.js interprates and calculates angles (either RADIANS or DEGREES).
+   * @property {String} RADIANS
+   * @final
+   *
+   * @example
+   * <div class='norender'><code>
+   * function setup() {
+   *   angleMode(RADIANS);
+   * }
+   * </code></div>
+   */
+  RADIANS: 'radians',
+  DEG_TO_RAD: PI / 180.0,
+  RAD_TO_DEG: 180.0 / PI,
+
+  // SHAPE
+  /**
+   * @property {String} CORNER
+   * @final
+   */
+  CORNER: 'corner',
+  /**
+   * @property {String} CORNERS
+   * @final
+   */
+  CORNERS: 'corners',
+  /**
+   * @property {String} RADIUS
+   * @final
+   */
+  RADIUS: 'radius',
+  /**
+   * @property {String} RIGHT
+   * @final
+   */
+  RIGHT: 'right',
+  /**
+   * @property {String} LEFT
+   * @final
+   */
+  LEFT: 'left',
+  /**
+   * @property {String} CENTER
+   * @final
+   */
+  CENTER: 'center',
+  /**
+   * @property {String} TOP
+   * @final
+   */
+  TOP: 'top',
+  /**
+   * @property {String} BOTTOM
+   * @final
+   */
+  BOTTOM: 'bottom',
+  /**
+   * @property {String} BASELINE
+   * @final
+   * @default alphabetic
+   */
+  BASELINE: 'alphabetic',
+  /**
+   * @property {Number} POINTS
+   * @final
+   * @default 0x0000
+   */
+  POINTS: 0x0000,
+  /**
+   * @property {Number} LINES
+   * @final
+   * @default 0x0001
+   */
+  LINES: 0x0001,
+  /**
+   * @property {Number} LINE_STRIP
+   * @final
+   * @default 0x0003
+   */
+  LINE_STRIP: 0x0003,
+  /**
+   * @property {Number} LINE_LOOP
+   * @final
+   * @default 0x0002
+   */
+  LINE_LOOP: 0x0002,
+  /**
+   * @property {Number} TRIANGLES
+   * @final
+   * @default 0x0004
+   */
+  TRIANGLES: 0x0004,
+  /**
+   * @property {Number} TRIANGLE_FAN
+   * @final
+   * @default 0x0006
+   */
+  TRIANGLE_FAN: 0x0006,
+  /**
+   * @property {Number} TRIANGLE_STRIP
+   * @final
+   * @default 0x0005
+   */
+  TRIANGLE_STRIP: 0x0005,
+  /**
+   * @property {String} QUADS
+   * @final
+   */
+  QUADS: 'quads',
+  /**
+   * @property {String} QUAD_STRIP
+   * @final
+   * @default quad_strip
+   */
+  QUAD_STRIP: 'quad_strip',
+  /**
+   * @property {String} CLOSE
+   * @final
+   */
+  CLOSE: 'close',
+  /**
+   * @property {String} OPEN
+   * @final
+   */
+  OPEN: 'open',
+  /**
+   * @property {String} CHORD
+   * @final
+   */
+  CHORD: 'chord',
+  /**
+   * @property {String} PIE
+   * @final
+   */
+  PIE: 'pie',
+  /**
+   * @property {String} PROJECT
+   * @final
+   * @default square
+   */
+  PROJECT: 'square', // PEND: careful this is counterintuitive
+  /**
+   * @property {String} SQUARE
+   * @final
+   * @default butt
+   */
+  SQUARE: 'butt',
+  /**
+   * @property {String} ROUND
+   * @final
+   */
+  ROUND: 'round',
+  /**
+   * @property {String} BEVEL
+   * @final
+   */
+  BEVEL: 'bevel',
+  /**
+   * @property {String} MITER
+   * @final
+   */
+  MITER: 'miter',
+
+  // COLOR
+  /**
+   * @property {String} RGB
+   * @final
+   */
+  RGB: 'rgb',
+  /**
+   * @property {String} HSB
+   * @final
+   */
+  HSB: 'hsb',
+  /**
+   * @property {String} HSL
+   * @final
+   */
+  HSL: 'hsl',
+
+  // DOM EXTENSION
+  AUTO: 'auto',
+
+  // INPUT
+  ALT: 18,
+  BACKSPACE: 8,
+  CONTROL: 17,
+  DELETE: 46,
+  DOWN_ARROW: 40,
+  ENTER: 13,
+  ESCAPE: 27,
+  LEFT_ARROW: 37,
+  OPTION: 18,
+  RETURN: 13,
+  RIGHT_ARROW: 39,
+  SHIFT: 16,
+  TAB: 9,
+  UP_ARROW: 38,
+
+  // RENDERING
+  /**
+   * @property {String} BLEND
+   * @final
+   * @default source-over
+   */
+  BLEND: 'source-over',
+  /**
+   * @property {String} ADD
+   * @final
+   * @default lighter
+   */
+  ADD: 'lighter',
+  //ADD: 'add', //
+  //SUBTRACT: 'subtract', //
+  /**
+   * @property {String} DARKEST
+   * @final
+   */
+  DARKEST: 'darken',
+  /**
+   * @property {String} LIGHTEST
+   * @final
+   * @default lighten
+   */
+  LIGHTEST: 'lighten',
+  /**
+   * @property {String} DIFFERENCE
+   * @final
+   */
+  DIFFERENCE: 'difference',
+  /**
+   * @property {String} EXCLUSION
+   * @final
+   */
+  EXCLUSION: 'exclusion',
+  /**
+   * @property {String} MULTIPLY
+   * @final
+   */
+  MULTIPLY: 'multiply',
+  /**
+   * @property {String} SCREEN
+   * @final
+   */
+  SCREEN: 'screen',
+  /**
+   * @property {String} REPLACE
+   * @final
+   * @default copy
+   */
+  REPLACE: 'copy',
+  /**
+   * @property {String} OVERLAY
+   * @final
+   */
+  OVERLAY: 'overlay',
+  /**
+   * @property {String} HARD_LIGHT
+   * @final
+   */
+  HARD_LIGHT: 'hard-light',
+  /**
+   * @property {String} SOFT_LIGHT
+   * @final
+   */
+  SOFT_LIGHT: 'soft-light',
+  /**
+   * @property {String} DODGE
+   * @final
+   * @default color-dodge
+   */
+  DODGE: 'color-dodge',
+  /**
+   * @property {String} BURN
+   * @final
+   * @default color-burn
+   */
+  BURN: 'color-burn',
+
+  // FILTERS
+  /**
+   * @property {String} THRESHOLD
+   * @final
+   */
+  THRESHOLD: 'threshold',
+  /**
+   * @property {String} GRAY
+   * @final
+   */
+  GRAY: 'gray',
+  /**
+   * @property {String} OPAQUE
+   * @final
+   */
+  OPAQUE: 'opaque',
+  /**
+   * @property {String} INVERT
+   * @final
+   */
+  INVERT: 'invert',
+  /**
+   * @property {String} POSTERIZE
+   * @final
+   */
+  POSTERIZE: 'posterize',
+  /**
+   * @property {String} DILATE
+   * @final
+   */
+  DILATE: 'dilate',
+  /**
+   * @property {String} ERODE
+   * @final
+   */
+  ERODE: 'erode',
+  /**
+   * @property {String} BLUR
+   * @final
+   */
+  BLUR: 'blur',
+
+  // TYPOGRAPHY
+  /**
+   * @property {String} NORMAL
+   * @final
+   */
+  NORMAL: 'normal',
+  /**
+   * @property {String} ITALIC
+   * @final
+   */
+  ITALIC: 'italic',
+  /**
+   * @property {String} BOLD
+   * @final
+   */
+  BOLD: 'bold',
+
+  // TYPOGRAPHY-INTERNAL
+  _DEFAULT_TEXT_FILL: '#000000',
+  _DEFAULT_LEADMULT: 1.25,
+  _CTX_MIDDLE: 'middle',
+
+  // VERTICES
+  LINEAR: 'linear',
+  QUADRATIC: 'quadratic',
+  BEZIER: 'bezier',
+  CURVE: 'curve',
+
+  // WEBGL DRAWMODES
+  STROKE: 'stroke',
+  FILL: 'fill',
+  TEXTURE: 'texture',
+  IMMEDIATE: 'immediate',
+
+  // DEVICE-ORIENTATION
+  /**
+   * @property {String} LANDSCAPE
+   * @final
+   */
+  LANDSCAPE: 'landscape',
+  /**
+   * @property {String} PORTRAIT
+   * @final
+   */
+  PORTRAIT: 'portrait',
+
+  // DEFAULTS
+  _DEFAULT_STROKE: '#000000',
+  _DEFAULT_FILL: '#FFFFFF'
+};
+
+},{}],22:[function(_dereq_,module,exports){
+/**
+ * @module Structure
+ * @submodule Structure
+ * @for p5
+ * @requires constants
+ */
+
+'use strict';
+
+_dereq_('./shim');
+
+// Core needs the PVariables object
+var constants = _dereq_('./constants');
+
+/**
+ * This is the p5 instance constructor.
+ *
+ * A p5 instance holds all the properties and methods related to
+ * a p5 sketch.  It expects an incoming sketch closure and it can also
+ * take an optional node parameter for attaching the generated p5 canvas
+ * to a node.  The sketch closure takes the newly created p5 instance as
+ * its sole argument and may optionally set preload(), setup(), and/or
+ * draw() properties on it for running a sketch.
+ *
+ * A p5 sketch can run in "global" or "instance" mode:
+ * "global"   - all properties and methods are attached to the window
+ * "instance" - all properties and methods are bound to this p5 object
+ *
+ * @class p5
+ * @constructor
+ * @param  {function}    sketch a closure that can set optional preload(),
+ *                              setup(), and/or draw() properties on the
+ *                              given p5 instance
+ * @param  {HTMLElement|Boolean} [node] element to attach canvas to, if a
+ *                                      boolean is passed in use it as sync
+ * @param  {Boolean}     [sync] start synchronously (optional)
+ * @return {p5}                 a p5 instance
+ */
+var p5 = function(sketch, node, sync) {
+  if (typeof node === 'boolean' && typeof sync === 'undefined') {
+    sync = node;
+    node = undefined;
+  }
+
+  //////////////////////////////////////////////
+  // PUBLIC p5 PROPERTIES AND METHODS
+  //////////////////////////////////////////////
+
+  /**
+   * Called directly before setup(), the preload() function is used to handle
+   * asynchronous loading of external files. If a preload function is
+   * defined, setup() will wait until any load calls within have finished.
+   * Nothing besides load calls should be inside preload (loadImage,
+   * loadJSON, loadFont, loadStrings, etc).<br><br>
+   * By default the text "loading..." will be displayed. To make your own
+   * loading page, include an HTML element with id "p5_loading" in your
+   * page. More information <a href="http://bit.ly/2kQ6Nio">here</a>.
+   *
+   * @method preload
+   * @example
+   * <div><code>
+   * var img;
+   * var c;
+   * function preload() {
+  // preload() runs once
+   *   img = loadImage('assets/laDefense.jpg');
+   * }
+   *
+   * function setup() {
+  // setup() waits until preload() is done
+   *   img.loadPixels();
+   *   // get color of middle pixel
+   *   c = img.get(img.width / 2, img.height / 2);
+   * }
+   *
+   * function draw() {
+   *   background(c);
+   *   image(img, 25, 25, 50, 50);
+   * }
+   * </code></div>
+   *
+   * @alt
+   * nothing displayed
+   *
+   */
+
+  /**
+   * The setup() function is called once when the program starts. It's used to
+   * define initial environment properties such as screen size and background
+   * color and to load media such as images and fonts as the program starts.
+   * There can only be one setup() function for each program and it shouldn't
+   * be called again after its initial execution.
+   * <br><br>
+   * Note: Variables declared within setup() are not accessible within other
+   * functions, including draw().
+   *
+   * @method setup
+   * @example
+   * <div><code>
+   * var a = 0;
+   *
+   * function setup() {
+   *   background(0);
+   *   noStroke();
+   *   fill(102);
+   * }
+   *
+   * function draw() {
+   *   rect(a++ % width, 10, 2, 80);
+   * }
+   * </code></div>
+   *
+   * @alt
+   * nothing displayed
+   *
+   */
+
+  /**
+   * Called directly after setup(), the draw() function continuously executes
+   * the lines of code contained inside its block until the program is stopped
+   * or noLoop() is called. Note if noLoop() is called in setup(), draw() will
+   * still be executed once before stopping. draw() is called automatically and
+   * should never be called explicitly.
+   * <br><br>
+   * It should always be controlled with noLoop(), redraw() and loop(). After
+   * noLoop() stops the code in draw() from executing, redraw() causes the
+   * code inside draw() to execute once, and loop() will cause the code
+   * inside draw() to resume executing continuously.
+   * <br><br>
+   * The number of times draw() executes in each second may be controlled with
+   * the frameRate() function.
+   * <br><br>
+   * There can only be one draw() function for each sketch, and draw() must
+   * exist if you want the code to run continuously, or to process events such
+   * as mousePressed(). Sometimes, you might have an empty call to draw() in
+   * your program, as shown in the above example.
+   * <br><br>
+   * It is important to note that the drawing coordinate system will be reset
+   * at the beginning of each draw() call. If any transformations are performed
+   * within draw() (ex: scale, rotate, translate, their effects will be
+   * undone at the beginning of draw(), so transformations will not accumulate
+   * over time. On the other hand, styling applied (ex: fill, stroke, etc) will
+   * remain in effect.
+   *
+   * @method draw
+   * @example
+   * <div><code>
+   * var yPos = 0;
+   * function setup() {
+  // setup() runs once
+   *   frameRate(30);
+   * }
+   * function draw() {
+  // draw() loops forever, until stopped
+   *   background(204);
+   *   yPos = yPos - 1;
+   *   if (yPos < 0) {
+   *     yPos = height;
+   *   }
+   *   line(0, yPos, width, yPos);
+   * }
+   * </code></div>
+   *
+   * @alt
+   * nothing displayed
+   *
+   */
+
+  //////////////////////////////////////////////
+  // PRIVATE p5 PROPERTIES AND METHODS
+  //////////////////////////////////////////////
+
+  this._setupDone = false;
+  // for handling hidpi
+  this._pixelDensity = Math.ceil(window.devicePixelRatio) || 1;
+  this._userNode = node;
+  this._curElement = null;
+  this._elements = [];
+  this._requestAnimId = 0;
+  this._preloadCount = 0;
+  this._isGlobal = false;
+  this._loop = true;
+  this._initializeInstanceVariables();
+  this._defaultCanvasSize = {
+    width: 100,
+    height: 100
+  };
+  this._events = {
+    // keep track of user-events for unregistering later
+    mousemove: null,
+    mousedown: null,
+    mouseup: null,
+    dragend: null,
+    dragover: null,
+    click: null,
+    dblclick: null,
+    mouseover: null,
+    mouseout: null,
+    keydown: null,
+    keyup: null,
+    keypress: null,
+    touchstart: null,
+    touchmove: null,
+    touchend: null,
+    resize: null,
+    blur: null
+  };
+
+  this._events.wheel = null;
+  this._loadingScreenId = 'p5_loading';
+
+  // Allows methods to be registered on an instance that
+  // are instance-specific.
+  this._registeredMethods = {};
+  var methods = Object.getOwnPropertyNames(p5.prototype._registeredMethods);
+  for (var i = 0; i < methods.length; i++) {
+    var prop = methods[i];
+    this._registeredMethods[prop] = p5.prototype._registeredMethods[
+      prop
+    ].slice();
+  }
+
+  if (window.DeviceOrientationEvent) {
+    this._events.deviceorientation = null;
+  }
+  if (window.DeviceMotionEvent && !window._isNodeWebkit) {
+    this._events.devicemotion = null;
+  }
+
+  this._start = function() {
+    // Find node if id given
+    if (this._userNode) {
+      if (typeof this._userNode === 'string') {
+        this._userNode = document.getElementById(this._userNode);
+      }
+    }
+
+    var userPreload = this.preload || window.preload; // look for "preload"
+    if (userPreload) {
+      // Setup loading screen
+      // Set loading scfeen into dom if not present
+      // Otherwise displays and removes user provided loading screen
+      var loadingScreen = document.getElementById(this._loadingScreenId);
+      if (!loadingScreen) {
+        loadingScreen = document.createElement('div');
+        loadingScreen.innerHTML = 'Loading...';
+        loadingScreen.style.position = 'absolute';
+        loadingScreen.id = this._loadingScreenId;
+        var node = this._userNode || document.body;
+        node.appendChild(loadingScreen);
+      }
+      // var methods = this._preloadMethods;
+      for (var method in this._preloadMethods) {
+        // default to p5 if no object defined
+        this._preloadMethods[method] = this._preloadMethods[method] || p5;
+        var obj = this._preloadMethods[method];
+        //it's p5, check if it's global or instance
+        if (obj === p5.prototype || obj === p5) {
+          obj = this._isGlobal ? window : this;
+        }
+        this._registeredPreloadMethods[method] = obj[method];
+        obj[method] = this._wrapPreload(obj, method);
+      }
+
+      userPreload();
+      this._runIfPreloadsAreDone();
+    } else {
+      this._setup();
+      this._runFrames();
+      this._draw();
+    }
+  }.bind(this);
+
+  this._runIfPreloadsAreDone = function() {
+    var context = this._isGlobal ? window : this;
+    if (context._preloadCount === 0) {
+      var loadingScreen = document.getElementById(context._loadingScreenId);
+      if (loadingScreen) {
+        loadingScreen.parentNode.removeChild(loadingScreen);
+      }
+      context._setup();
+      context._runFrames();
+      context._draw();
+    }
+  };
+
+  this._decrementPreload = function() {
+    var context = this._isGlobal ? window : this;
+    if (typeof context.preload === 'function') {
+      context._setProperty('_preloadCount', context._preloadCount - 1);
+      context._runIfPreloadsAreDone();
+    }
+  };
+
+  this._wrapPreload = function(obj, fnName) {
+    return function() {
+      //increment counter
+      this._incrementPreload();
+      //call original function
+      return this._registeredPreloadMethods[fnName].apply(obj, arguments);
+    }.bind(this);
+  };
+
+  this._incrementPreload = function() {
+    var context = this._isGlobal ? window : this;
+    context._setProperty('_preloadCount', context._preloadCount + 1);
+  };
+
+  this._setup = function() {
+    // Always create a default canvas.
+    // Later on if the user calls createCanvas, this default one
+    // will be replaced
+    this.createCanvas(
+      this._defaultCanvasSize.width,
+      this._defaultCanvasSize.height,
