@@ -48149,3 +48149,1034 @@ if (typeof IS_MINIFIED !== 'undefined') {
           ' instead';
         break;
       case 'WRONG_ARGUMENT_COUNT':
+        message =
+          func +
+          '() was expecting ' +
+          errorObj.maxParams +
+          ' arguments, but received ' +
+          errorObj.argCount;
+        break;
+    }
+
+    if (message) {
+      try {
+        var re = /Function\.validateParameters.*[\r\n].*[\r\n].*\(([^)]*)/;
+        var location = re.exec(new Error().stack)[1];
+        if (location) {
+          message += ' at ' + location;
+        }
+      } catch (err) {}
+
+      report(message + '.', func, ERR_PARAMS);
+    }
+  };
+
+  /**
+   * Validates parameters
+   * param  {String}               func    the name of the function
+   * param  {Array}                args    user input arguments
+   *
+   * example:
+   *  var a;
+   *  ellipse(10,10,a,5);
+   * console ouput:
+   *  "It looks like ellipse received an empty variable in spot #2."
+   *
+   * example:
+   *  ellipse(10,"foo",5,5);
+   * console output:
+   *  "ellipse was expecting a number for parameter #1,
+   *           received "foo" instead."
+   */
+  p5._validateParameters = function validateParameters(func, args) {
+    if (p5.disableFriendlyErrors) {
+      return; // skip FES
+    }
+
+    var docs = docCache[func] || (docCache[func] = lookupParamDoc(func));
+    var errorArray = [];
+    var minErrCount = 999999;
+    var overloads = docs.overloads;
+    for (var i = 0; i < overloads.length; i++) {
+      var arrError = testParamFormat(args, overloads[i]);
+      // see if this is the format with min number of err
+      if (minErrCount > arrError.length) {
+        minErrCount = arrError.length;
+        errorArray = arrError;
+      }
+      if (arrError.length === 0) {
+        break; // no error
+      }
+    }
+
+    if (!errorArray.length && args.length > docs.maxParams) {
+      errorArray.push({
+        type: 'WRONG_ARGUMENT_COUNT',
+        argCount: args.length,
+        maxParams: docs.maxParams
+      });
+    }
+
+    // generate err msg
+    for (var n = 0; n < errorArray.length; n++) {
+      p5._friendlyParamError(errorArray[n], func);
+    }
+  };
+
+  /**
+   * Prints out all the colors in the color pallete with white text.
+   * For color blindness testing.
+   */
+  /* function testColors() {
+    var str = 'A box of biscuits, a box of mixed biscuits and a biscuit mixer';
+    report(str, 'print', '#ED225D'); // p5.js magenta
+    report(str, 'print', '#2D7BB6'); // p5.js blue
+    report(str, 'print', '#EE9900'); // p5.js orange
+    report(str, 'print', '#A67F59'); // p5.js light brown
+    report(str, 'print', '#704F21'); // p5.js gold
+    report(str, 'print', '#1CC581'); // auto cyan
+    report(str, 'print', '#FF6625'); // auto orange
+    report(str, 'print', '#79EB22'); // auto green
+    report(str, 'print', '#B40033'); // p5.js darkened magenta
+    report(str, 'print', '#084B7F'); // p5.js darkened blue
+    report(str, 'print', '#945F00'); // p5.js darkened orange
+    report(str, 'print', '#6B441D'); // p5.js darkened brown
+    report(str, 'print', '#2E1B00'); // p5.js darkened gold
+    report(str, 'print', '#008851'); // auto dark cyan
+    report(str, 'print', '#C83C00'); // auto dark orange
+    report(str, 'print', '#4DB200'); // auto dark green
+  } */
+
+  p5.prototype._validateParameters = p5.validateParameters;
+}
+
+// This is a lazily-defined list of p5 symbols that may be
+// misused by beginners at top-level code, outside of setup/draw. We'd like
+// to detect these errors and help the user by suggesting they move them
+// into setup/draw.
+//
+// For more details, see https://github.com/processing/p5.js/issues/1121.
+var misusedAtTopLevelCode = null;
+var FAQ_URL =
+  'https://github.com/processing/p5.js/wiki/' +
+  'Frequently-Asked-Questions' +
+  '#why-cant-i-assign-variables-using-p5-functions-and-' +
+  'variables-before-setup';
+
+var defineMisusedAtTopLevelCode = function() {
+  var uniqueNamesFound = {};
+
+  var getSymbols = function(obj) {
+    return Object.getOwnPropertyNames(obj)
+      .filter(function(name) {
+        if (name[0] === '_') {
+          return false;
+        }
+        if (name in uniqueNamesFound) {
+          return false;
+        }
+
+        uniqueNamesFound[name] = true;
+
+        return true;
+      })
+      .map(function(name) {
+        var type;
+
+        if (typeof obj[name] === 'function') {
+          type = 'function';
+        } else if (name === name.toUpperCase()) {
+          type = 'constant';
+        } else {
+          type = 'variable';
+        }
+
+        return { name: name, type: type };
+      });
+  };
+
+  misusedAtTopLevelCode = [].concat(
+    getSymbols(p5.prototype),
+    // At present, p5 only adds its constants to p5.prototype during
+    // construction, which may not have happened at the time a
+    // ReferenceError is thrown, so we'll manually add them to our list.
+    getSymbols(_dereq_('./constants'))
+  );
+
+  // This will ultimately ensure that we report the most specific error
+  // possible to the user, e.g. advising them about HALF_PI instead of PI
+  // when their code misuses the former.
+  misusedAtTopLevelCode.sort(function(a, b) {
+    return b.name.length - a.name.length;
+  });
+};
+
+var helpForMisusedAtTopLevelCode = function(e, log) {
+  if (!log) {
+    log = console.log.bind(console);
+  }
+
+  if (!misusedAtTopLevelCode) {
+    defineMisusedAtTopLevelCode();
+  }
+
+  // If we find that we're logging lots of false positives, we can
+  // uncomment the following code to avoid displaying anything if the
+  // user's code isn't likely to be using p5's global mode. (Note that
+  // setup/draw are more likely to be defined due to JS function hoisting.)
+  //
+  //if (!('setup' in window || 'draw' in window)) {
+  //  return;
+  //}
+
+  misusedAtTopLevelCode.some(function(symbol) {
+    // Note that while just checking for the occurrence of the
+    // symbol name in the error message could result in false positives,
+    // a more rigorous test is difficult because different browsers
+    // log different messages, and the format of those messages may
+    // change over time.
+    //
+    // For example, if the user uses 'PI' in their code, it may result
+    // in any one of the following messages:
+    //
+    //   * 'PI' is undefined                           (Microsoft Edge)
+    //   * ReferenceError: PI is undefined             (Firefox)
+    //   * Uncaught ReferenceError: PI is not defined  (Chrome)
+
+    if (e.message && e.message.match('\\W?' + symbol.name + '\\W') !== null) {
+      log(
+        "Did you just try to use p5.js's " +
+          symbol.name +
+          (symbol.type === 'function' ? '() ' : ' ') +
+          symbol.type +
+          '? If so, you may want to ' +
+          "move it into your sketch's setup() function.\n\n" +
+          'For more details, see: ' +
+          FAQ_URL
+      );
+      return true;
+    }
+  });
+};
+
+// Exposing this primarily for unit testing.
+p5.prototype._helpForMisusedAtTopLevelCode = helpForMisusedAtTopLevelCode;
+
+if (document.readyState !== 'complete') {
+  window.addEventListener('error', helpForMisusedAtTopLevelCode, false);
+
+  // Our job is only to catch ReferenceErrors that are thrown when
+  // global (non-instance mode) p5 APIs are used at the top-level
+  // scope of a file, so we'll unbind our error listener now to make
+  // sure we don't log false positives later.
+  window.addEventListener('load', function() {
+    window.removeEventListener('error', helpForMisusedAtTopLevelCode, false);
+  });
+}
+
+module.exports = p5;
+
+},{"../../docs/reference/data.json":1,"./constants":21,"./core":22}],26:[function(_dereq_,module,exports){
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * _globalInit
+ *
+ * TODO: ???
+ * if sketch is on window
+ * assume "global" mode
+ * and instantiate p5 automatically
+ * otherwise do nothing
+ *
+ * @private
+ * @return {Undefined}
+ */
+var _globalInit = function() {
+  if (!window.PHANTOMJS && !window.mocha) {
+    // If there is a setup or draw function on the window
+    // then instantiate p5 in "global" mode
+    if (
+      ((window.setup && typeof window.setup === 'function') ||
+        (window.draw && typeof window.draw === 'function')) &&
+      !p5.instance
+    ) {
+      new p5();
+    }
+  }
+};
+
+// TODO: ???
+if (document.readyState === 'complete') {
+  _globalInit();
+} else {
+  window.addEventListener('load', _globalInit, false);
+}
+
+},{"../core/core":22}],27:[function(_dereq_,module,exports){
+/**
+ * @module DOM
+ * @submodule DOM
+ * @for p5.Element
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+
+/**
+ * Base class for all elements added to a sketch, including canvas,
+ * graphics buffers, and other HTML elements. Methods in blue are
+ * included in the core functionality, methods in brown are added
+ * with the <a href="http://p5js.org/reference/#/libraries/p5.dom">p5.dom
+ * library</a>.
+ * It is not called directly, but p5.Element
+ * objects are created by calling createCanvas, createGraphics,
+ * or in the p5.dom library, createDiv, createImg, createInput, etc.
+ *
+ * @class p5.Element
+ * @constructor
+ * @param {String} elt DOM node that is wrapped
+ * @param {p5} [pInst] pointer to p5 instance
+ */
+p5.Element = function(elt, pInst) {
+  /**
+   * Underlying HTML element. All normal HTML methods can be called on this.
+   * @example
+   * <div>
+   * <code>
+   * createCanvas(300, 500);
+   * background(0, 0, 0, 0);
+   * var input = createInput();
+   * input.position(20, 225);
+   * var inputElem = new p5.Element(input.elt);
+   * inputElem.style('width:450px;');
+   * inputElem.value('some string');
+   * </code>
+   * </div>
+   *
+   * @property elt
+   * @readOnly
+   */
+  this.elt = elt;
+  this._pInst = pInst;
+  this._events = {};
+  this.width = this.elt.offsetWidth;
+  this.height = this.elt.offsetHeight;
+  this.name = 'p5.Element'; // for friendly debugger system
+};
+
+/**
+ *
+ * Attaches the element to the parent specified. A way of setting
+ * the container for the element. Accepts either a string ID, DOM
+ * node, or p5.Element. If no arguments given, parent node is returned.
+ * For more ways to position the canvas, see the
+ * <a href='https://github.com/processing/p5.js/wiki/Positioning-your-canvas'>
+ * positioning the canvas</a> wiki page.
+ *
+ * @method parent
+ * @param  {String|p5.Element|Object} parent the ID, DOM node, or p5.Element
+ *                         of desired parent element
+ * @chainable
+ *
+ * @example
+ * <div class="norender"><code>
+ * // in the html file:
+ * // &lt;div id="myContainer">&lt;/div>
+ *
+ * // in the js file:
+ * var cnv = createCanvas(100, 100);
+ * cnv.parent('myContainer');
+ * </code></div>
+ * <div class='norender'><code>
+ * var div0 = createDiv('this is the parent');
+ * var div1 = createDiv('this is the child');
+ * div1.parent(div0); // use p5.Element
+ * </code></div>
+ * <div class='norender'><code>
+ * var div0 = createDiv('this is the parent');
+ * div0.id('apples');
+ * var div1 = createDiv('this is the child');
+ * div1.parent('apples'); // use id
+ * </code></div>
+ * <div class='norender'><code>
+ * var elt = document.getElementById('myParentDiv');
+ * var div1 = createDiv('this is the child');
+ * div1.parent(elt); // use element from page
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ */
+/**
+ * @method parent
+ * @return {p5.Element}
+ *
+ */
+p5.Element.prototype.parent = function(p) {
+  if (typeof p === 'undefined') {
+    return this.elt.parentNode;
+  }
+
+  if (typeof p === 'string') {
+    if (p[0] === '#') {
+      p = p.substring(1);
+    }
+    p = document.getElementById(p);
+  } else if (p instanceof p5.Element) {
+    p = p.elt;
+  }
+  p.appendChild(this.elt);
+  return this;
+};
+
+/**
+ *
+ * Sets the ID of the element. If no ID argument is passed in, it instead
+ * returns the current ID of the element.
+ *
+ * @method id
+ * @param  {String} id ID of the element
+ * @chainable
+ *
+ * @example
+ * <div class='norender'><code>
+ * function setup() {
+ *   var cnv = createCanvas(100, 100);
+ *   // Assigns a CSS selector ID to
+ *   // the canvas element.
+ *   cnv.id('mycanvas');
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ */
+/**
+ * @method id
+ * @return {String} the id of the element
+ */
+p5.Element.prototype.id = function(id) {
+  if (typeof id === 'undefined') {
+    return this.elt.id;
+  }
+
+  this.elt.id = id;
+  this.width = this.elt.offsetWidth;
+  this.height = this.elt.offsetHeight;
+  return this;
+};
+
+/**
+ *
+ * Adds given class to the element. If no class argument is passed in, it
+ * instead returns a string containing the current class(es) of the element.
+ *
+ * @method class
+ * @param  {String} class class to add
+ * @chainable
+ *
+ * @example
+ * <div class='norender'><code>
+ * function setup() {
+ *   var cnv = createCanvas(100, 100);
+ *   // Assigns a CSS selector class 'small'
+ *   // to the canvas element.
+ *   cnv.class('small');
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ */
+/**
+ * @method class
+ * @return {String} the class of the element
+ */
+p5.Element.prototype.class = function(c) {
+  if (typeof c === 'undefined') {
+    return this.elt.className;
+  }
+
+  this.elt.className = c;
+  return this;
+};
+
+/**
+ * The .mousePressed() function is called once after every time a
+ * mouse button is pressed over the element. This can be used to
+ * attach element specific event listeners.
+ *
+ * @method mousePressed
+ * @param  {Function|Boolean} fxn function to be fired when mouse is
+ *                                pressed over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mousePressed(changeGray); // attach listener for
+ *   // canvas click only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires with any click anywhere
+ * function mousePressed() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires only when cnv is clicked
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mousePressed = function(fxn) {
+  adjustListener('mousedown', fxn, this);
+  adjustListener('touchstart', fxn, this);
+  return this;
+};
+
+/**
+ * The .doubleClicked() function is called once after every time a
+ * mouse button is pressed twice over the element. This can be used to
+ * attach element and action specific event listeners.
+ *
+ * @method doubleClicked
+ * @param  {Function|Boolean} fxn function to be fired when mouse is
+ *                                double clicked over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.doubleClicked(changeGray); // attach listener for
+ *   // canvas double click only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires with any double click anywhere
+ * function doubleClicked() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires only when cnv is double clicked
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.doubleClicked = function(fxn) {
+  adjustListener('dblclick', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseWheel() function is called once after every time a
+ * mouse wheel is scrolled over the element. This can be used to
+ * attach element specific event listeners.
+ * <br><br>
+ * The function accepts a callback function as argument which will be executed
+ * when the `wheel` event is triggered on the element, the callback function is
+ * passed one argument `event`. The `event.deltaY` property returns negative
+ * values if the mouse wheel is rotated up or away from the user and positive
+ * in the other direction. The `event.deltaX` does the same as `event.deltaY`
+ * except it reads the horizontal wheel scroll of the mouse wheel.
+ * <br><br>
+ * On OS X with "natural" scrolling enabled, the `event.deltaY` values are
+ * reversed.
+ *
+ * @method mouseWheel
+ * @param  {Function|Boolean} fxn function to be fired when mouse is
+ *                                scrolled over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseWheel(changeSize); // attach listener for
+ *   // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires with mousewheel movement
+ * // anywhere on screen
+ * function mouseWheel() {
+ *   g = g + 10;
+ * }
+ *
+ * // this function fires with mousewheel movement
+ * // over canvas only
+ * function changeSize(event) {
+ *   if (event.deltaY > 0) {
+ *     d = d + 10;
+ *   } else {
+ *     d = d - 10;
+ *   }
+ * }
+ * </code></div>
+ *
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseWheel = function(fxn) {
+  adjustListener('wheel', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseReleased() function is called once after every time a
+ * mouse button is released over the element. This can be used to
+ * attach element specific event listeners.
+ *
+ * @method mouseReleased
+ * @param  {Function|Boolean} fxn function to be fired when mouse is
+ *                                released over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseReleased(changeGray); // attach listener for
+ *   // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // released
+ * function mouseReleased() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // released while on canvas
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseReleased = function(fxn) {
+  adjustListener('mouseup', fxn, this);
+  adjustListener('touchend', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseClicked() function is called once after a mouse button is
+ * pressed and released over the element. This can be used to
+ * attach element specific event listeners.
+ *
+ * @method mouseClicked
+ * @param  {Function|Boolean} fxn function to be fired when mouse is
+ *                                clicked over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class="norender">
+ * <code>
+ * var cnv;
+ * var d;
+ * var g;
+ *
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseClicked(changeGray); // attach listener for
+ *   // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // clicked anywhere
+ * function mouseClicked() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // clicked on canvas
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseClicked = function(fxn) {
+  adjustListener('click', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseMoved() function is called once every time a
+ * mouse moves over the element. This can be used to attach an
+ * element specific event listener.
+ *
+ * @method mouseMoved
+ * @param  {Function|Boolean} fxn function to be fired when a mouse moves
+ *                                over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d = 30;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseMoved(changeSize); // attach listener for
+ *   // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   fill(200);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires when mouse moves anywhere on
+ * // page
+ * function mouseMoved() {
+ *   g = g + 5;
+ *   if (g > 255) {
+ *     g = 0;
+ *   }
+ * }
+ *
+ * // this function fires when mouse moves over canvas
+ * function changeSize() {
+ *   d = d + 2;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseMoved = function(fxn) {
+  adjustListener('mousemove', fxn, this);
+  adjustListener('touchmove', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseOver() function is called once after every time a
+ * mouse moves onto the element. This can be used to attach an
+ * element specific event listener.
+ *
+ * @method mouseOver
+ * @param  {Function|Boolean} fxn function to be fired when a mouse moves
+ *                                onto the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseOver(changeGray);
+ *   d = 10;
+ * }
+ *
+ * function draw() {
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * function changeGray() {
+ *   d = d + 10;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseOver = function(fxn) {
+  adjustListener('mouseover', fxn, this);
+  return this;
+};
+
+/**
+ * The .changed() function is called when the value of an
+ * element changes.
+ * This can be used to attach an element specific event listener.
+ *
+ * @method changed
+ * @param  {Function|Boolean} fxn function to be fired when the value of
+ *                                an element changes.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div><code>
+ * var sel;
+ *
+ * function setup() {
+ *   textAlign(CENTER);
+ *   background(200);
+ *   sel = createSelect();
+ *   sel.position(10, 10);
+ *   sel.option('pear');
+ *   sel.option('kiwi');
+ *   sel.option('grape');
+ *   sel.changed(mySelectEvent);
+ * }
+ *
+ * function mySelectEvent() {
+ *   var item = sel.value();
+ *   background(200);
+ *   text("it's a " + item + '!', 50, 50);
+ * }
+ * </code></div>
+ * <div><code>
+ * var checkbox;
+ * var cnv;
+ *
+ * function setup() {
+ *   checkbox = createCheckbox(' fill');
+ *   checkbox.changed(changeFill);
+ *   cnv = createCanvas(100, 100);
+ *   cnv.position(0, 30);
+ *   noFill();
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   ellipse(50, 50, 50, 50);
+ * }
+ *
+ * function changeFill() {
+ *   if (checkbox.checked()) {
+ *     fill(0);
+ *   } else {
+ *     noFill();
+ *   }
+ * }
+ * </code></div>
+ *
+ * @alt
+ * dropdown: pear, kiwi, grape. When selected text "its a" + selection shown.
+ *
+ */
+p5.Element.prototype.changed = function(fxn) {
+  adjustListener('change', fxn, this);
+  return this;
+};
+
+/**
+ * The .input() function is called when any user input is
+ * detected with an element. The input event is often used
+ * to detect keystrokes in a input element, or changes on a
+ * slider element. This can be used to attach an element specific
+ * event listener.
+ *
+ * @method input
+ * @param  {Function|Boolean} fxn function to be fired when any user input is
+ *                                detected within the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * // Open your console to see the output
+ * function setup() {
+ *   var inp = createInput('');
+ *   inp.input(myInputEvent);
+ * }
+ *
+ * function myInputEvent() {
+ *   console.log('you are typing: ', this.value());
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.input = function(fxn) {
+  adjustListener('input', fxn, this);
+  return this;
+};
+
+/**
+ * The .mouseOut() function is called once after every time a
+ * mouse moves off the element. This can be used to attach an
+ * element specific event listener.
+ *
+ * @method mouseOut
+ * @param  {Function|Boolean} fxn function to be fired when a mouse
+ *                                moves off of an element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseOut(changeGray);
+ *   d = 10;
+ * }
+ *
+ * function draw() {
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * function changeGray() {
+ *   d = d + 10;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.mouseOut = function(fxn) {
+  adjustListener('mouseout', fxn, this);
+  return this;
+};
+
+/**
+ * The .touchStarted() function is called once after every time a touch is
+ * registered. This can be used to attach element specific event listeners.
+ *
+ * @method touchStarted
+ * @param  {Function|Boolean} fxn function to be fired when a touch
+ *                                starts over the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
+ * @chainable
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.touchStarted(changeGray); // attach listener for
+ *   // canvas click only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width / 2, height / 2, d, d);
+ * }
+ *
+ * // this function fires with any touch anywhere
+ * function touchStarted() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires only when cnv is clicked
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no display.
+ *
+ */
+p5.Element.prototype.touchStarted = function(fxn) {
+  adjustListener('touchstart', fxn, this);
+  adjustListener('mousedown', fxn, this);
+  return this;
+};
+
+/**
+ * The .touchMoved() function is called once after every time a touch move is
+ * registered. This can be used to attach element specific event listeners.
+ *
+ * @method touchMoved
+ * @param  {Function|Boolean} fxn function to be fired when a touch moves over
+ *                                the element.
+ *                                if `false` is passed instead, the previously
+ *                                firing function will no longer fire.
