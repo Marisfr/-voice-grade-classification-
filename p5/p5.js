@@ -51104,3 +51104,948 @@ p5.Renderer2D.prototype.textAlign = function(h, v) {
     if (
       v === constants.TOP ||
       v === constants.BOTTOM ||
+      v === constants.CENTER ||
+      v === constants.BASELINE
+    ) {
+      if (v === constants.CENTER) {
+        this.drawingContext.textBaseline = constants._CTX_MIDDLE;
+      } else {
+        this.drawingContext.textBaseline = v;
+      }
+    }
+
+    return this._pInst;
+  } else {
+    var valign = this.drawingContext.textBaseline;
+
+    if (valign === constants._CTX_MIDDLE) {
+      valign = constants.CENTER;
+    }
+
+    return {
+      horizontal: this.drawingContext.textAlign,
+      vertical: valign
+    };
+  }
+};
+
+p5.Renderer2D.prototype._applyTextProperties = function() {
+  var font,
+    p = this._pInst;
+
+  this._setProperty('_textAscent', null);
+  this._setProperty('_textDescent', null);
+
+  font = this._textFont;
+
+  if (this._isOpenType()) {
+    font = this._textFont.font.familyName;
+    this._setProperty('_textStyle', this._textFont.font.styleName);
+  }
+
+  this.drawingContext.font =
+    (this._textStyle || 'normal') +
+    ' ' +
+    (this._textSize || 12) +
+    'px ' +
+    (font || 'sans-serif');
+
+  return p;
+};
+
+//////////////////////////////////////////////
+// STRUCTURE
+//////////////////////////////////////////////
+
+p5.Renderer2D.prototype.push = function() {
+  this.drawingContext.save();
+};
+
+p5.Renderer2D.prototype.pop = function() {
+  this.drawingContext.restore();
+  // Re-cache the fill / stroke state
+  this._cachedFillStyle = this.drawingContext.fillStyle;
+  this._cachedStrokeStyle = this.drawingContext.strokeStyle;
+};
+
+module.exports = p5.Renderer2D;
+
+},{"../image/filters":41,"./canvas":20,"./constants":21,"./core":22,"./p5.Renderer":29}],31:[function(_dereq_,module,exports){
+/**
+ * @module Rendering
+ * @submodule Rendering
+ * @for p5
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+_dereq_('./p5.Graphics');
+_dereq_('./p5.Renderer2D');
+_dereq_('../webgl/p5.RendererGL');
+var defaultId = 'defaultCanvas0'; // this gets set again in createCanvas
+
+/**
+ * Creates a canvas element in the document, and sets the dimensions of it
+ * in pixels. This method should be called only once at the start of setup.
+ * Calling createCanvas more than once in a sketch will result in very
+ * unpredictable behavior. If you want more than one drawing canvas
+ * you could use createGraphics (hidden by default but it can be shown).
+ * <br><br>
+ * The system variables width and height are set by the parameters passed
+ * to this function. If createCanvas() is not used, the window will be
+ * given a default size of 100x100 pixels.
+ * <br><br>
+ * For more ways to position the canvas, see the
+ * <a href='https://github.com/processing/p5.js/wiki/Positioning-your-canvas'>
+ * positioning the canvas</a> wiki page.
+ *
+ * @method createCanvas
+ * @param  {Number} w width of the canvas
+ * @param  {Number} h height of the canvas
+ * @param  {Constant} [renderer] either P2D or WEBGL
+ * @return {HTMLCanvasElement} canvas generated
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 50);
+ *   background(153);
+ *   line(0, 0, width, height);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Black line extending from top-left of canvas to bottom right.
+ *
+ */
+
+p5.prototype.createCanvas = function(w, h, renderer) {
+  p5._validateParameters('createCanvas', arguments);
+  //optional: renderer, otherwise defaults to p2d
+  var r = renderer || constants.P2D;
+  var c;
+
+  if (r === constants.WEBGL) {
+    c = document.getElementById(defaultId);
+    if (c) {
+      //if defaultCanvas already exists
+      c.parentNode.removeChild(c); //replace the existing defaultCanvas
+      var thisRenderer = this._renderer;
+      this._elements = this._elements.filter(function(e) {
+        return e !== thisRenderer;
+      });
+    }
+    c = document.createElement('canvas');
+    c.id = defaultId;
+  } else {
+    if (!this._defaultGraphicsCreated) {
+      c = document.createElement('canvas');
+      var i = 0;
+      while (document.getElementById('defaultCanvas' + i)) {
+        i++;
+      }
+      defaultId = 'defaultCanvas' + i;
+      c.id = defaultId;
+    } else {
+      // resize the default canvas if new one is created
+      c = this.canvas;
+    }
+  }
+
+  // set to invisible if still in setup (to prevent flashing with manipulate)
+  if (!this._setupDone) {
+    c.dataset.hidden = true; // tag to show later
+    c.style.visibility = 'hidden';
+  }
+
+  if (this._userNode) {
+    // user input node case
+    this._userNode.appendChild(c);
+  } else {
+    document.body.appendChild(c);
+  }
+
+  // Init our graphics renderer
+  //webgl mode
+  if (r === constants.WEBGL) {
+    this._setProperty('_renderer', new p5.RendererGL(c, this, true));
+    this._elements.push(this._renderer);
+  } else {
+    //P2D mode
+    if (!this._defaultGraphicsCreated) {
+      this._setProperty('_renderer', new p5.Renderer2D(c, this, true));
+      this._defaultGraphicsCreated = true;
+      this._elements.push(this._renderer);
+    }
+  }
+  this._renderer.resize(w, h);
+  this._renderer._applyDefaults();
+  return this._renderer;
+};
+
+/**
+ * Resizes the canvas to given width and height. The canvas will be cleared
+ * and draw will be called immediately, allowing the sketch to re-render itself
+ * in the resized canvas.
+ * @method resizeCanvas
+ * @param  {Number} w width of the canvas
+ * @param  {Number} h height of the canvas
+ * @param  {Boolean} [noRedraw] don't redraw the canvas immediately
+ * @example
+ * <div class="norender"><code>
+ * function setup() {
+ *   createCanvas(windowWidth, windowHeight);
+ * }
+ *
+ * function draw() {
+ *   background(0, 100, 200);
+ * }
+ *
+ * function windowResized() {
+ *   resizeCanvas(windowWidth, windowHeight);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * No image displayed.
+ *
+ */
+p5.prototype.resizeCanvas = function(w, h, noRedraw) {
+  p5._validateParameters('resizeCanvas', arguments);
+  if (this._renderer) {
+    // save canvas properties
+    var props = {};
+    for (var key in this.drawingContext) {
+      var val = this.drawingContext[key];
+      if (typeof val !== 'object' && typeof val !== 'function') {
+        props[key] = val;
+      }
+    }
+    this._renderer.resize(w, h);
+    // reset canvas properties
+    for (var savedKey in props) {
+      try {
+        this.drawingContext[savedKey] = props[savedKey];
+      } catch (err) {
+        // ignore read-only property errors
+      }
+    }
+    if (!noRedraw) {
+      this.redraw();
+    }
+  }
+};
+
+/**
+ * Removes the default canvas for a p5 sketch that doesn't
+ * require a canvas
+ * @method noCanvas
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   noCanvas();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.prototype.noCanvas = function() {
+  if (this.canvas) {
+    this.canvas.parentNode.removeChild(this.canvas);
+  }
+};
+
+/**
+ * Creates and returns a new p5.Renderer object. Use this class if you need
+ * to draw into an off-screen graphics buffer. The two parameters define the
+ * width and height in pixels.
+ *
+ * @method createGraphics
+ * @param  {Number} w width of the offscreen graphics buffer
+ * @param  {Number} h height of the offscreen graphics buffer
+ * @param  {Constant} [renderer] either P2D or WEBGL
+ * undefined defaults to p2d
+ * @return {p5.Graphics} offscreen graphics buffer
+ * @example
+ * <div>
+ * <code>
+ * var pg;
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   pg = createGraphics(100, 100);
+ * }
+ * function draw() {
+ *   background(200);
+ *   pg.background(100);
+ *   pg.noStroke();
+ *   pg.ellipse(pg.width / 2, pg.height / 2, 50, 50);
+ *   image(pg, 50, 50);
+ *   image(pg, 0, 0, 50, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 4 grey squares alternating light and dark grey. White quarter circle mid-left.
+ *
+ */
+p5.prototype.createGraphics = function(w, h, renderer) {
+  p5._validateParameters('createGraphics', arguments);
+  return new p5.Graphics(w, h, renderer, this);
+};
+
+/**
+ * Blends the pixels in the display window according to the defined mode.
+ * There is a choice of the following modes to blend the source pixels (A)
+ * with the ones of pixels already in the display window (B):
+ * <ul>
+ * <li><code>BLEND</code> - linear interpolation of colours: C =
+ * A*factor + B. This is the default blending mode.</li>
+ * <li><code>ADD</code> - sum of A and B</li>
+ * <li><code>DARKEST</code> - only the darkest colour succeeds: C =
+ * min(A*factor, B).</li>
+ * <li><code>LIGHTEST</code> - only the lightest colour succeeds: C =
+ * max(A*factor, B).</li>
+ * <li><code>DIFFERENCE</code> - subtract colors from underlying image.</li>
+ * <li><code>EXCLUSION</code> - similar to <code>DIFFERENCE</code>, but less
+ * extreme.</li>
+ * <li><code>MULTIPLY</code> - multiply the colors, result will always be
+ * darker.</li>
+ * <li><code>SCREEN</code> - opposite multiply, uses inverse values of the
+ * colors.</li>
+ * <li><code>REPLACE</code> - the pixels entirely replace the others and
+ * don't utilize alpha (transparency) values.</li>
+ * <li><code>OVERLAY</code> - mix of <code>MULTIPLY</code> and <code>SCREEN
+ * </code>. Multiplies dark values, and screens light values.</li>
+ * <li><code>HARD_LIGHT</code> - <code>SCREEN</code> when greater than 50%
+ * gray, <code>MULTIPLY</code> when lower.</li>
+ * <li><code>SOFT_LIGHT</code> - mix of <code>DARKEST</code> and
+ * <code>LIGHTEST</code>. Works like <code>OVERLAY</code>, but not as harsh.
+ * </li>
+ * <li><code>DODGE</code> - lightens light tones and increases contrast,
+ * ignores darks.</li>
+ * <li><code>BURN</code> - darker areas are applied, increasing contrast,
+ * ignores lights.</li>
+ * </ul>
+ *
+ * @method blendMode
+ * @param  {Constant} mode blend mode to set for canvas.
+ *                either BLEND, DARKEST, LIGHTEST, DIFFERENCE, MULTIPLY,
+ *                EXCLUSION, SCREEN, REPLACE, OVERLAY, HARD_LIGHT,
+ *                SOFT_LIGHT, DODGE, BURN, ADD or NORMAL
+ * @example
+ * <div>
+ * <code>
+ * blendMode(LIGHTEST);
+ * strokeWeight(30);
+ * stroke(80, 150, 255);
+ * line(25, 25, 75, 75);
+ * stroke(255, 50, 50);
+ * line(75, 25, 25, 75);
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * blendMode(MULTIPLY);
+ * strokeWeight(30);
+ * stroke(80, 150, 255);
+ * line(25, 25, 75, 75);
+ * stroke(255, 50, 50);
+ * line(75, 25, 25, 75);
+ * </code>
+ * </div>
+ * @alt
+ * translucent image thick red & blue diagonal rounded lines intersecting center
+ * Thick red & blue diagonal rounded lines intersecting center. dark at overlap
+ *
+ */
+p5.prototype.blendMode = function(mode) {
+  p5._validateParameters('blendMode', arguments);
+  if (
+    mode === constants.BLEND ||
+    mode === constants.DARKEST ||
+    mode === constants.LIGHTEST ||
+    mode === constants.DIFFERENCE ||
+    mode === constants.MULTIPLY ||
+    mode === constants.EXCLUSION ||
+    mode === constants.SCREEN ||
+    mode === constants.REPLACE ||
+    mode === constants.OVERLAY ||
+    mode === constants.HARD_LIGHT ||
+    mode === constants.SOFT_LIGHT ||
+    mode === constants.DODGE ||
+    mode === constants.BURN ||
+    mode === constants.ADD ||
+    mode === constants.NORMAL
+  ) {
+    this._renderer.blendMode(mode);
+  } else {
+    throw new Error('Mode ' + mode + ' not recognized.');
+  }
+};
+
+module.exports = p5;
+
+},{"../webgl/p5.RendererGL":73,"./constants":21,"./core":22,"./p5.Graphics":28,"./p5.Renderer2D":30}],32:[function(_dereq_,module,exports){
+'use strict';
+
+// requestAnim shim layer by Paul Irish
+window.requestAnimationFrame = (function() {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback, element) {
+      // should '60' here be framerate?
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
+})();
+
+// use window.performance() to get max fast and accurate time in milliseconds
+window.performance = window.performance || {};
+window.performance.now = (function() {
+  var load_date = Date.now();
+  return (
+    window.performance.now ||
+    window.performance.mozNow ||
+    window.performance.msNow ||
+    window.performance.oNow ||
+    window.performance.webkitNow ||
+    function() {
+      return Date.now() - load_date;
+    }
+  );
+})();
+
+/*
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/
+// requestanimationframe-for-smart-er-animating
+// requestAnimationFrame polyfill by Erik Möller
+// fixes from Paul Irish and Tino Zijdel
+(function() {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame =
+      window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vendors[x]+'CancelAnimationFrame'] ||
+      window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function()
+        { callback(currTime + timeToCall); }, timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+  }
+
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+  }
+}());
+*/
+
+/**
+ * shim for Uint8ClampedArray.slice
+ * (allows arrayCopy to work with pixels[])
+ * with thanks to http://halfpapstudios.com/blog/tag/html5-canvas/
+ * Enumerable set to false to protect for...in from
+ * Uint8ClampedArray.prototype pollution.
+ */
+(function() {
+  'use strict';
+  if (
+    typeof Uint8ClampedArray !== 'undefined' &&
+    !Uint8ClampedArray.prototype.slice
+  ) {
+    Object.defineProperty(Uint8ClampedArray.prototype, 'slice', {
+      value: Array.prototype.slice,
+      writable: true,
+      configurable: true,
+      enumerable: false
+    });
+  }
+})();
+
+},{}],33:[function(_dereq_,module,exports){
+/**
+ * @module Structure
+ * @submodule Structure
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+
+p5.prototype.exit = function() {
+  throw 'exit() not implemented, see remove()';
+};
+/**
+ * Stops p5.js from continuously executing the code within draw().
+ * If loop() is called, the code in draw() begins to run continuously again.
+ * If using noLoop() in setup(), it should be the last line inside the block.
+ * <br><br>
+ * When noLoop() is used, it's not possible to manipulate or access the
+ * screen inside event handling functions such as mousePressed() or
+ * keyPressed(). Instead, use those functions to call redraw() or loop(),
+ * which will run draw(), which can update the screen properly. This means
+ * that when noLoop() has been called, no drawing can happen, and functions
+ * like saveFrame() or loadPixels() may not be used.
+ * <br><br>
+ * Note that if the sketch is resized, redraw() will be called to update
+ * the sketch, even after noLoop() has been specified. Otherwise, the sketch
+ * would enter an odd state until loop() was called.
+ *
+ * @method noLoop
+ * @example
+ * <div><code>
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   background(200);
+ *   noLoop();
+ * }
+
+ * function draw() {
+ *   line(10, 10, 90, 90);
+ * }
+ * </code></div>
+ *
+ * <div><code>
+ * var x = 0;
+ * function setup() {
+ *   createCanvas(100, 100);
+ * }
+ *
+ * function draw() {
+ *   background(204);
+ *   x = x + 0.1;
+ *   if (x > width) {
+ *     x = 0;
+ *   }
+ *   line(x, 0, x, height);
+ * }
+ *
+ * function mousePressed() {
+ *   noLoop();
+ * }
+ *
+ * function mouseReleased() {
+ *   loop();
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 113 pixel long line extending from top-left to bottom right of canvas.
+ * horizontal line moves slowly from left. Loops but stops on mouse press.
+ *
+ */
+p5.prototype.noLoop = function() {
+  this._loop = false;
+};
+/**
+ * By default, p5.js loops through draw() continuously, executing the code
+ * within it. However, the draw() loop may be stopped by calling noLoop().
+ * In that case, the draw() loop can be resumed with loop().
+ *
+ * @method loop
+ * @example
+ * <div><code>
+ * var x = 0;
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   noLoop();
+ * }
+ *
+ * function draw() {
+ *   background(204);
+ *   x = x + 0.1;
+ *   if (x > width) {
+ *     x = 0;
+ *   }
+ *   line(x, 0, x, height);
+ * }
+ *
+ * function mousePressed() {
+ *   loop();
+ * }
+ *
+ * function mouseReleased() {
+ *   noLoop();
+ * }
+ * </code></div>
+ *
+ * @alt
+ * horizontal line moves slowly from left. Loops but stops on mouse press.
+ *
+ */
+
+p5.prototype.loop = function() {
+  this._loop = true;
+  this._draw();
+};
+
+function assign(dest, varArgs) {
+  for (var index = 1; index < arguments.length; index++) {
+    var src = arguments[index];
+    if (src != null) {
+      for (var key in src) {
+        if (src.hasOwnProperty(key)) {
+          dest[key] = src[key];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * The push() function saves the current drawing style settings and
+ * transformations, while pop() restores these settings. Note that these
+ * functions are always used together. They allow you to change the style
+ * and transformation settings and later return to what you had. When a new
+ * state is started with push(), it builds on the current style and transform
+ * information. The push() and pop() functions can be embedded to provide
+ * more control. (See the second example for a demonstration.)
+ * <br><br>
+ * push() stores information related to the current transformation state
+ * and style settings controlled by the following functions: fill(),
+ * stroke(), tint(), strokeWeight(), strokeCap(), strokeJoin(),
+ * imageMode(), rectMode(), ellipseMode(), colorMode(), textAlign(),
+ * textFont(), textMode(), textSize(), textLeading().
+ *
+ * @method push
+ * @example
+ * <div>
+ * <code>
+ * ellipse(0, 50, 33, 33); // Left circle
+ *
+ * push(); // Start a new drawing state
+ * strokeWeight(10);
+ * fill(204, 153, 0);
+ * translate(50, 0);
+ * ellipse(0, 50, 33, 33); // Middle circle
+ * pop(); // Restore original state
+ *
+ * ellipse(100, 50, 33, 33); // Right circle
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * ellipse(0, 50, 33, 33); // Left circle
+ *
+ * push(); // Start a new drawing state
+ * strokeWeight(10);
+ * fill(204, 153, 0);
+ * ellipse(33, 50, 33, 33); // Left-middle circle
+ *
+ * push(); // Start another new drawing state
+ * stroke(0, 102, 153);
+ * ellipse(66, 50, 33, 33); // Right-middle circle
+ * pop(); // Restore previous state
+ *
+ * pop(); // Restore original state
+ *
+ * ellipse(100, 50, 33, 33); // Right circle
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Gold ellipse + thick black outline @center 2 white ellipses on left and right.
+ * 2 Gold ellipses left black right blue stroke. 2 white ellipses on left+right.
+ *
+ */
+p5.prototype.push = function() {
+  this._renderer.push();
+  this._styles.push({
+    props: {
+      _colorMode: this._colorMode
+    },
+    renderer: {
+      _doStroke: this._renderer._doStroke,
+      _strokeSet: this._renderer._strokeSet,
+      _doFill: this._renderer._doFill,
+      _fillSet: this._renderer._fillSet,
+      _tint: this._renderer._tint,
+      _imageMode: this._renderer._imageMode,
+      _rectMode: this._renderer._rectMode,
+      _ellipseMode: this._renderer._ellipseMode,
+      _textFont: this._renderer._textFont,
+      _textLeading: this._renderer._textLeading,
+      _textSize: this._renderer._textSize,
+      _textStyle: this._renderer._textStyle
+    }
+  });
+};
+
+/**
+ * The push() function saves the current drawing style settings and
+ * transformations, while pop() restores these settings. Note that these
+ * functions are always used together. They allow you to change the style
+ * and transformation settings and later return to what you had. When a new
+ * state is started with push(), it builds on the current style and transform
+ * information. The push() and pop() functions can be embedded to provide
+ * more control. (See the second example for a demonstration.)
+ * <br><br>
+ * push() stores information related to the current transformation state
+ * and style settings controlled by the following functions: fill(),
+ * stroke(), tint(), strokeWeight(), strokeCap(), strokeJoin(),
+ * imageMode(), rectMode(), ellipseMode(), colorMode(), textAlign(),
+ * textFont(), textMode(), textSize(), textLeading().
+ *
+ * @method pop
+ * @example
+ * <div>
+ * <code>
+ * ellipse(0, 50, 33, 33); // Left circle
+ *
+ * push(); // Start a new drawing state
+ * translate(50, 0);
+ * strokeWeight(10);
+ * fill(204, 153, 0);
+ * ellipse(0, 50, 33, 33); // Middle circle
+ * pop(); // Restore original state
+ *
+ * ellipse(100, 50, 33, 33); // Right circle
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * ellipse(0, 50, 33, 33); // Left circle
+ *
+ * push(); // Start a new drawing state
+ * strokeWeight(10);
+ * fill(204, 153, 0);
+ * ellipse(33, 50, 33, 33); // Left-middle circle
+ *
+ * push(); // Start another new drawing state
+ * stroke(0, 102, 153);
+ * ellipse(66, 50, 33, 33); // Right-middle circle
+ * pop(); // Restore previous state
+ *
+ * pop(); // Restore original state
+ *
+ * ellipse(100, 50, 33, 33); // Right circle
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Gold ellipse + thick black outline @center 2 white ellipses on left and right.
+ * 2 Gold ellipses left black right blue stroke. 2 white ellipses on left+right.
+ *
+ */
+p5.prototype.pop = function() {
+  this._renderer.pop();
+  var lastS = this._styles.pop();
+  assign(this._renderer, lastS.renderer);
+  assign(this, lastS.props);
+};
+
+p5.prototype.pushStyle = function() {
+  throw new Error('pushStyle() not used, see push()');
+};
+
+p5.prototype.popStyle = function() {
+  throw new Error('popStyle() not used, see pop()');
+};
+
+/**
+ *
+ * Executes the code within draw() one time. This functions allows the
+ * program to update the display window only when necessary, for example
+ * when an event registered by mousePressed() or keyPressed() occurs.
+ * <br><br>
+ * In structuring a program, it only makes sense to call redraw() within
+ * events such as mousePressed(). This is because redraw() does not run
+ * draw() immediately (it only sets a flag that indicates an update is
+ * needed).
+ * <br><br>
+ * The redraw() function does not work properly when called inside draw().
+ * To enable/disable animations, use loop() and noLoop().
+ * <br><br>
+ * In addition you can set the number of redraws per method call. Just
+ * add an integer as single parameter for the number of redraws.
+ *
+ * @method redraw
+ * @param  {Integer} [n] Redraw for n-times. The default value is 1.
+ * @example
+ * <div><code>
+ * var x = 0;
+ *
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   noLoop();
+ * }
+ *
+ * function draw() {
+ *   background(204);
+ *   line(x, 0, x, height);
+ * }
+ *
+ * function mousePressed() {
+ *   x += 1;
+ *   redraw();
+ * }
+ * </code></div>
+ *
+ * <div class='norender'><code>
+ * var x = 0;
+ *
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   noLoop();
+ * }
+ *
+ * function draw() {
+ *   background(204);
+ *   x += 1;
+ *   line(x, 0, x, height);
+ * }
+ *
+ * function mousePressed() {
+ *   redraw(5);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * black line on far left of canvas
+ * black line on far left of canvas
+ *
+ */
+p5.prototype.redraw = function(n) {
+  this.resetMatrix();
+  if (this._renderer.isP3D) {
+    this._renderer._update();
+  }
+
+  var numberOfRedraws = parseInt(n);
+  if (isNaN(numberOfRedraws) || numberOfRedraws < 1) {
+    numberOfRedraws = 1;
+  }
+
+  var userSetup = this.setup || window.setup;
+  var userDraw = this.draw || window.draw;
+  if (typeof userDraw === 'function') {
+    if (typeof userSetup === 'undefined') {
+      this.scale(this._pixelDensity, this._pixelDensity);
+    }
+    var self = this;
+    var callMethod = function(f) {
+      f.call(self);
+    };
+    for (var idxRedraw = 0; idxRedraw < numberOfRedraws; idxRedraw++) {
+      this._setProperty('frameCount', this.frameCount + 1);
+      this._registeredMethods.pre.forEach(callMethod);
+      userDraw();
+      this._registeredMethods.post.forEach(callMethod);
+    }
+  }
+};
+
+p5.prototype.size = function() {
+  var s = 'size() is not a valid p5 function, to set the size of the ';
+  s += 'drawing canvas, please use createCanvas() instead';
+  throw s;
+};
+
+module.exports = p5;
+
+},{"./core":22}],34:[function(_dereq_,module,exports){
+/**
+ * @module Transform
+ * @submodule Transform
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+
+/**
+ * Multiplies the current matrix by the one specified through the parameters.
+ * This is a powerful operation that can perform the equivalent of translate,
+ * scale, shear and rotate all at once. You can learn more about transformation
+ * matrices on <a href="https://en.wikipedia.org/wiki/Transformation_matrix">
+ * Wikipedia</a>.
+ *
+ * The naming of the arguments here follows the naming of the <a href=
+ * "https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-transform">
+ * WHATWG specification</a> and corresponds to a
+ * transformation matrix of the
+ * form:
+ *
+ * > <img style="max-width: 150px" src="assets/transformation-matrix.png"
+ * alt="The transformation matrix used when applyMatrix is called"/>
+ *
+ * @method applyMatrix
+ * @param  {Number} a numbers which define the 2x3 matrix to be multiplied
+ * @param  {Number} b numbers which define the 2x3 matrix to be multiplied
+ * @param  {Number} c numbers which define the 2x3 matrix to be multiplied
+ * @param  {Number} d numbers which define the 2x3 matrix to be multiplied
+ * @param  {Number} e numbers which define the 2x3 matrix to be multiplied
+ * @param  {Number} f numbers which define the 2x3 matrix to be multiplied
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   frameRate(10);
+ *   rectMode(CENTER);
+ * }
+ *
+ * function draw() {
+ *   var step = frameCount % 20;
+ *   background(200);
+ *   // Equivalent to translate(x, y);
+ *   applyMatrix(1, 0, 0, 1, 40 + step, 50);
+ *   rect(0, 0, 50, 50);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * function setup() {
+ *   frameRate(10);
+ *   rectMode(CENTER);
+ * }
+ *
+ * function draw() {
+ *   var step = frameCount % 20;
+ *   background(200);
+ *   translate(50, 50);
+ *   // Equivalent to scale(x, y);
+ *   applyMatrix(1 / step, 0, 0, 1 / step, 0, 0);
+ *   rect(0, 0, 50, 50);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * function setup() {
+ *   frameRate(10);
+ *   rectMode(CENTER);
+ * }
+ *
+ * function draw() {
+ *   var step = frameCount % 20;
