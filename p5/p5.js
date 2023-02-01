@@ -56795,3 +56795,1075 @@ p5.prototype._makeFrame = function(filename, extension, _cnv) {
   var downloadMime = 'image/octet-stream';
   var imageData = cnv.toDataURL(mimeType);
   imageData = imageData.replace(mimeType, downloadMime);
+
+  var thisFrame = {};
+  thisFrame.imageData = imageData;
+  thisFrame.filename = filename;
+  thisFrame.ext = extension;
+  frames.push(thisFrame);
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],43:[function(_dereq_,module,exports){
+/**
+ * @module Image
+ * @submodule Loading & Displaying
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var Filters = _dereq_('./filters');
+var canvas = _dereq_('../core/canvas');
+var constants = _dereq_('../core/constants');
+
+_dereq_('../core/error_helpers');
+
+/**
+ * Loads an image from a path and creates a p5.Image from it.
+ * <br><br>
+ * The image may not be immediately available for rendering
+ * If you want to ensure that the image is ready before doing
+ * anything with it, place the loadImage() call in preload().
+ * You may also supply a callback function to handle the image when it's ready.
+ * <br><br>
+ * The path to the image should be relative to the HTML file
+ * that links in your sketch. Loading an image from a URL or other
+ * remote location may be blocked due to your browser's built-in
+ * security.
+ *
+ * @method loadImage
+ * @param  {String} path Path of the image to be loaded
+ * @param  {function(p5.Image)} [successCallback] Function to be called once
+ *                                the image is loaded. Will be passed the
+ *                                p5.Image.
+ * @param  {function(Event)}    [failureCallback] called with event error if
+ *                                the image fails to load.
+ * @return {p5.Image}             the p5.Image object
+ * @example
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   image(img, 0, 0);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * function setup() {
+ *   // here we use a callback to display the image after loading
+ *   loadImage('assets/laDefense.jpg', function(img) {
+ *     image(img, 0, 0);
+ *   });
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * image of the underside of a white umbrella and grided ceililng above
+ * image of the underside of a white umbrella and grided ceililng above
+ *
+ */
+p5.prototype.loadImage = function(path, successCallback, failureCallback) {
+  p5._validateParameters('loadImage', arguments);
+  var img = new Image();
+  var pImg = new p5.Image(1, 1, this);
+
+  var self = this;
+  img.onload = function() {
+    pImg.width = pImg.canvas.width = img.width;
+    pImg.height = pImg.canvas.height = img.height;
+
+    // Draw the image into the backing canvas of the p5.Image
+    pImg.drawingContext.drawImage(img, 0, 0);
+    pImg.modified = true;
+
+    if (typeof successCallback === 'function') {
+      successCallback(pImg);
+    }
+
+    self._decrementPreload();
+  };
+  img.onerror = function(e) {
+    p5._friendlyFileLoadError(0, img.src);
+    if (typeof failureCallback === 'function') {
+      failureCallback(e);
+    }
+  };
+
+  //set crossOrigin in case image is served which CORS headers
+  //this will let us draw to canvas without tainting it.
+  //see https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image
+  // When using data-uris the file will be loaded locally
+  // so we don't need to worry about crossOrigin with base64 file types
+  if (path.indexOf('data:image/') !== 0) {
+    img.crossOrigin = 'Anonymous';
+  }
+
+  //start loading the image
+  img.src = path;
+
+  return pImg;
+};
+
+/**
+ * Validates clipping params. Per drawImage spec sWidth and sHight cannot be
+ * negative or greater than image intrinsic width and height
+ * @private
+ * @param {Number} sVal
+ * @param {Number} iVal
+ * @returns {Number}
+ * @private
+ */
+function _sAssign(sVal, iVal) {
+  if (sVal > 0 && sVal < iVal) {
+    return sVal;
+  } else {
+    return iVal;
+  }
+}
+
+/**
+ * Draw an image to the p5.js canvas.
+ *
+ * This function can be used with different numbers of parameters. The
+ * simplest use requires only three parameters: img, x, and y—where (x, y) is
+ * the position of the image. Two more parameters can optionally be added to
+ * specify the width and height of the image.
+ *
+ * This function can also be used with all eight Number parameters. To
+ * differentiate between all these parameters, p5.js uses the language of
+ * "destination rectangle" (which corresponds to "dx", "dy", etc.) and "source
+ * image" (which corresponds to "sx", "sy", etc.) below. Specifying the
+ * "source image" dimensions can be useful when you want to display a
+ * subsection of the source image instead of the whole thing. Here's a diagram
+ * to explain further:
+ * <img src="assets/drawImage.png"></img>
+ *
+ * @method image
+ * @param  {p5.Image|p5.Element} img    the image to display
+ * @param  {Number}   x     the x-coordinate of the top-left corner of the image
+ * @param  {Number}   y     the y-coordinate of the top-left corner of the image
+ * @param  {Number}   [width]  the width to draw the image
+ * @param  {Number}   [height] the height to draw the image
+ * @example
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   // Top-left corner of the img is at (0, 0)
+ *   // Width and height are the img's original width and height
+ *   image(img, 0, 0);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   background(50);
+ *   // Top-left corner of the img is at (10, 10)
+ *   // Width and height are 50 x 50
+ *   image(img, 10, 10, 50, 50);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * function setup() {
+ *   // Here, we use a callback to display the image after loading
+ *   loadImage('assets/laDefense.jpg', function(img) {
+ *     image(img, 0, 0);
+ *   });
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/gradient.png');
+ * }
+ * function setup() {
+ *   // 1. Background image
+ *   // Top-left corner of the img is at (0, 0)
+ *   // Width and height are the img's original width and height, 100 x 100
+ *   image(img, 0, 0);
+ *   // 2. Top right image
+ *   // Top-left corner of destination rectangle is at (50, 0)
+ *   // Destination rectangle width and height are 40 x 20
+ *   // The next parameters are relative to the source image:
+ *   // - Starting at position (50, 50) on the source image, capture a 50 x 50
+ *   // subsection
+ *   // - Draw this subsection to fill the dimensions of the destination rectangle
+ *   image(img, 50, 0, 40, 20, 50, 50, 50, 50);
+ * }
+ * </code>
+ * </div>
+ * @alt
+ * image of the underside of a white umbrella and gridded ceiling above
+ * image of the underside of a white umbrella and gridded ceiling above
+ *
+ */
+/**
+ * @method image
+ * @param  {p5.Image|p5.Element} img
+ * @param  {Number}   dx     the x-coordinate of the destination
+ *                           rectangle in which to draw the source image
+ * @param  {Number}   dy     the y-coordinate of the destination
+ *                           rectangle in which to draw the source image
+ * @param  {Number}   dWidth  the width of the destination rectangle
+ * @param  {Number}   dHeight the height of the destination rectangle
+ * @param  {Number}   sx     the x-coordinate of the subsection of the source
+ * image to draw into the destination rectangle
+ * @param  {Number}   sy     the y-coordinate of the subsection of the source
+ * image to draw into the destination rectangle
+ * @param {Number}    [sWidth] the width of the subsection of the
+ *                           source image to draw into the destination
+ *                           rectangle
+ * @param {Number}    [sHeight] the height of the subsection of the
+ *                            source image to draw into the destination rectangle
+ */
+p5.prototype.image = function(
+  img,
+  dx,
+  dy,
+  dWidth,
+  dHeight,
+  sx,
+  sy,
+  sWidth,
+  sHeight
+) {
+  // set defaults per spec: https://goo.gl/3ykfOq
+
+  p5._validateParameters('image', arguments);
+
+  var defW = img.width;
+  var defH = img.height;
+
+  if (img.elt && img.elt.videoWidth && !img.canvas) {
+    // video no canvas
+    defW = img.elt.videoWidth;
+    defH = img.elt.videoHeight;
+  }
+
+  var _dx = dx;
+  var _dy = dy;
+  var _dw = dWidth || defW;
+  var _dh = dHeight || defH;
+  var _sx = sx || 0;
+  var _sy = sy || 0;
+  var _sw = sWidth || defW;
+  var _sh = sHeight || defH;
+
+  _sw = _sAssign(_sw, defW);
+  _sh = _sAssign(_sh, defH);
+
+  // This part needs cleanup and unit tests
+  // see issues https://github.com/processing/p5.js/issues/1741
+  // and https://github.com/processing/p5.js/issues/1673
+  var pd = 1;
+
+  if (img.elt && !img.canvas && img.elt.style.width) {
+    //if img is video and img.elt.size() has been used and
+    //no width passed to image()
+    if (img.elt.videoWidth && !dWidth) {
+      pd = img.elt.videoWidth;
+    } else {
+      //all other cases
+      pd = img.elt.width;
+    }
+    pd /= parseInt(img.elt.style.width, 10);
+  }
+
+  _sx *= pd;
+  _sy *= pd;
+  _sh *= pd;
+  _sw *= pd;
+
+  var vals = canvas.modeAdjust(_dx, _dy, _dw, _dh, this._renderer._imageMode);
+
+  // tint the image if there is a tint
+  this._renderer.image(img, _sx, _sy, _sw, _sh, vals.x, vals.y, vals.w, vals.h);
+};
+
+/**
+ * Sets the fill value for displaying images. Images can be tinted to
+ * specified colors or made transparent by including an alpha value.
+ * <br><br>
+ * To apply transparency to an image without affecting its color, use
+ * white as the tint color and specify an alpha value. For instance,
+ * tint(255, 128) will make an image 50% transparent (assuming the default
+ * alpha range of 0-255, which can be changed with colorMode()).
+ * <br><br>
+ * The value for the gray parameter must be less than or equal to the current
+ * maximum value as specified by colorMode(). The default maximum value is
+ * 255.
+ *
+ *
+ * @method tint
+ * @param  {Number}        v1      red or hue value relative to
+ *                                 the current color range
+ * @param  {Number}        v2      green or saturation value
+ *                                 relative to the current color range
+ * @param  {Number}        v3      blue or brightness value
+ *                                 relative to the current color range
+ * @param  {Number}        [alpha]
+ *
+ * @example
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   image(img, 0, 0);
+ *   tint(0, 153, 204); // Tint blue
+ *   image(img, 50, 0);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   image(img, 0, 0);
+ *   tint(0, 153, 204, 126); // Tint blue and set transparency
+ *   image(img, 50, 0);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ * function setup() {
+ *   image(img, 0, 0);
+ *   tint(255, 126); // Apply transparency without changing color
+ *   image(img, 50, 0);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 2 side by side images of umbrella and ceiling, one image with blue tint
+ * Images of umbrella and ceiling, one half of image with blue tint
+ * 2 side by side images of umbrella and ceiling, one image translucent
+ *
+ */
+
+/**
+ * @method tint
+ * @param  {String}        value   a color string
+ * @param  {Number}        [alpha]
+ */
+
+/**
+ * @method tint
+ * @param  {Number[]}      values  an array containing the red,green,blue &
+ *                                 and alpha components of the color
+ */
+
+/**
+ * @method tint
+ * @param  {p5.Color}      color   the tint color
+ */
+p5.prototype.tint = function() {
+  p5._validateParameters('tint', arguments);
+  var c = this.color.apply(this, arguments);
+  this._renderer._tint = c.levels;
+};
+
+/**
+ * Removes the current fill value for displaying images and reverts to
+ * displaying images with their original hues.
+ *
+ * @method noTint
+ * @example
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/bricks.jpg');
+ * }
+ * function setup() {
+ *   tint(0, 153, 204); // Tint blue
+ *   image(img, 0, 0);
+ *   noTint(); // Disable tint
+ *   image(img, 50, 0);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 2 side by side images of bricks, left image with blue tint
+ *
+ */
+p5.prototype.noTint = function() {
+  this._renderer._tint = null;
+};
+
+/**
+ * Apply the current tint color to the input image, return the resulting
+ * canvas.
+ *
+ * @private
+ * @param {p5.Image} The image to be tinted
+ * @return {canvas} The resulting tinted canvas
+ *
+ */
+p5.prototype._getTintedImageCanvas = function(img) {
+  if (!img.canvas) {
+    return img;
+  }
+  var pixels = Filters._toPixels(img.canvas);
+  var tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = img.canvas.width;
+  tmpCanvas.height = img.canvas.height;
+  var tmpCtx = tmpCanvas.getContext('2d');
+  var id = tmpCtx.createImageData(img.canvas.width, img.canvas.height);
+  var newPixels = id.data;
+
+  for (var i = 0; i < pixels.length; i += 4) {
+    var r = pixels[i];
+    var g = pixels[i + 1];
+    var b = pixels[i + 2];
+    var a = pixels[i + 3];
+
+    newPixels[i] = r * this._renderer._tint[0] / 255;
+    newPixels[i + 1] = g * this._renderer._tint[1] / 255;
+    newPixels[i + 2] = b * this._renderer._tint[2] / 255;
+    newPixels[i + 3] = a * this._renderer._tint[3] / 255;
+  }
+
+  tmpCtx.putImageData(id, 0, 0);
+  return tmpCanvas;
+};
+
+/**
+ * Set image mode. Modifies the location from which images are drawn by
+ * changing the way in which parameters given to image() are interpreted.
+ * The default mode is imageMode(CORNER), which interprets the second and
+ * third parameters of image() as the upper-left corner of the image. If
+ * two additional parameters are specified, they are used to set the image's
+ * width and height.
+ * <br><br>
+ * imageMode(CORNERS) interprets the second and third parameters of image()
+ * as the location of one corner, and the fourth and fifth parameters as the
+ * opposite corner.
+ * <br><br>
+ * imageMode(CENTER) interprets the second and third parameters of image()
+ * as the image's center point. If two additional parameters are specified,
+ * they are used to set the image's width and height.
+ *
+ * @method imageMode
+ * @param {Constant} mode either CORNER, CORNERS, or CENTER
+ * @example
+ *
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/bricks.jpg');
+ * }
+ * function setup() {
+ *   imageMode(CORNER);
+ *   image(img, 10, 10, 50, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/bricks.jpg');
+ * }
+ * function setup() {
+ *   imageMode(CORNERS);
+ *   image(img, 10, 10, 90, 40);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/bricks.jpg');
+ * }
+ * function setup() {
+ *   imageMode(CENTER);
+ *   image(img, 50, 50, 80, 80);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * small square image of bricks
+ * horizontal rectangle image of bricks
+ * large square image of bricks
+ *
+ */
+p5.prototype.imageMode = function(m) {
+  p5._validateParameters('imageMode', arguments);
+  if (
+    m === constants.CORNER ||
+    m === constants.CORNERS ||
+    m === constants.CENTER
+  ) {
+    this._renderer._imageMode = m;
+  }
+};
+
+module.exports = p5;
+
+},{"../core/canvas":20,"../core/constants":21,"../core/core":22,"../core/error_helpers":25,"./filters":41}],44:[function(_dereq_,module,exports){
+/**
+ * @module Image
+ * @submodule Image
+ * @requires core
+ * @requires constants
+ * @requires filters
+ */
+
+/**
+ * This module defines the p5.Image class and P5 methods for
+ * drawing images to the main display canvas.
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var Filters = _dereq_('./filters');
+
+/*
+ * Class methods
+ */
+
+/**
+ * Creates a new p5.Image. A p5.Image is a canvas backed representation of an
+ * image.
+ * <br><br>
+ * p5 can display .gif, .jpg and .png images. Images may be displayed
+ * in 2D and 3D space. Before an image is used, it must be loaded with the
+ * loadImage() function. The p5.Image class contains fields for the width and
+ * height of the image, as well as an array called pixels[] that contains the
+ * values for every pixel in the image.
+ * <br><br>
+ * The methods described below allow easy access to the image's pixels and
+ * alpha channel and simplify the process of compositing.
+ * <br><br>
+ * Before using the pixels[] array, be sure to use the loadPixels() method on
+ * the image to make sure that the pixel data is properly loaded.
+ * @example
+ * <div><code>
+ * function setup() {
+ *   var img = createImage(100, 100); // same as new p5.Image(100, 100);
+ *   img.loadPixels();
+ *   createCanvas(100, 100);
+ *   background(0);
+ *
+ *   // helper for writing color to array
+ *   function writeColor(image, x, y, red, green, blue, alpha) {
+ *     var index = (x + y * width) * 4;
+ *     image.pixels[index] = red;
+ *     image.pixels[index + 1] = green;
+ *     image.pixels[index + 2] = blue;
+ *     image.pixels[index + 3] = alpha;
+ *   }
+ *
+ *   var x, y;
+ *   // fill with random colors
+ *   for (y = 0; y < img.height; y++) {
+ *     for (x = 0; x < img.width; x++) {
+ *       var red = random(255);
+ *       var green = random(255);
+ *       var blue = random(255);
+ *       var alpha = 255;
+ *       writeColor(img, x, y, red, green, blue, alpha);
+ *     }
+ *   }
+ *
+ *   // draw a red line
+ *   y = 0;
+ *   for (x = 0; x < img.width; x++) {
+ *     writeColor(img, x, y, 255, 0, 0, 255);
+ *   }
+ *
+ *   // draw a green line
+ *   y = img.height - 1;
+ *   for (x = 0; x < img.width; x++) {
+ *     writeColor(img, x, y, 0, 255, 0, 255);
+ *   }
+ *
+ *   img.updatePixels();
+ *   image(img, 0, 0);
+ * }
+ * </code></div>
+ *
+ *
+ * @class p5.Image
+ * @constructor
+ * @param {Number} width
+ * @param {Number} height
+ */
+p5.Image = function(width, height) {
+  /**
+   * Image width.
+   * @property {Number} width
+   * @readOnly
+   * @example
+   * <div><code>
+   * var img;
+   * function preload() {
+   *   img = loadImage('assets/rockies.jpg');
+   * }
+   *
+   * function setup() {
+   *   createCanvas(100, 100);
+   *   image(img, 0, 0);
+   *   for (var i = 0; i < img.width; i++) {
+   *     var c = img.get(i, img.height / 2);
+   *     stroke(c);
+   *     line(i, height / 2, i, height);
+   *   }
+   * }
+   * </code></div>
+   *
+   * @alt
+   * rocky mountains in top and horizontal lines in corresponding colors in bottom.
+   *
+   */
+  this.width = width;
+  /**
+   * Image height.
+   * @property {Number} height
+   * @readOnly
+   * @example
+   * <div><code>
+   * var img;
+   * function preload() {
+   *   img = loadImage('assets/rockies.jpg');
+   * }
+   *
+   * function setup() {
+   *   createCanvas(100, 100);
+   *   image(img, 0, 0);
+   *   for (var i = 0; i < img.height; i++) {
+   *     var c = img.get(img.width / 2, i);
+   *     stroke(c);
+   *     line(0, i, width / 2, i);
+   *   }
+   * }
+   * </code></div>
+   *
+   * @alt
+   * rocky mountains on right and vertical lines in corresponding colors on left.
+   *
+   */
+  this.height = height;
+  this.canvas = document.createElement('canvas');
+  this.canvas.width = this.width;
+  this.canvas.height = this.height;
+  this.drawingContext = this.canvas.getContext('2d');
+  this._pixelDensity = 1;
+  //used for webgl texturing only
+  this._modified = false;
+  /**
+   * Array containing the values for all the pixels in the display window.
+   * These values are numbers. This array is the size (include an appropriate
+   * factor for pixelDensity) of the display window x4,
+   * representing the R, G, B, A values in order for each pixel, moving from
+   * left to right across each row, then down each column. Retina and other
+   * high denisty displays may have more pixels[] (by a factor of
+   * pixelDensity^2).
+   * For example, if the image is 100x100 pixels, there will be 40,000. With
+   * pixelDensity = 2, there will be 160,000. The first four values
+   * (indices 0-3) in the array will be the R, G, B, A values of the pixel at
+   * (0, 0). The second four values (indices 4-7) will contain the R, G, B, A
+   * values of the pixel at (1, 0). More generally, to set values for a pixel
+   * at (x, y):
+   * ```javascript
+   * var d = pixelDensity();
+   * for (var i = 0; i < d; i++) {
+   *   for (var j = 0; j < d; j++) {
+   *     // loop over
+   *     idx = 4 * ((y * d + j) * width * d + (x * d + i));
+   *     pixels[idx] = r;
+   *     pixels[idx+1] = g;
+   *     pixels[idx+2] = b;
+   *     pixels[idx+3] = a;
+   *   }
+   * }
+   * ```
+   * <br><br>
+   * Before accessing this array, the data must loaded with the loadPixels()
+   * function. After the array data has been modified, the updatePixels()
+   * function must be run to update the changes.
+   * @property {Number[]} pixels
+   * @example
+   * <div>
+   * <code>
+   * var img = createImage(66, 66);
+   * img.loadPixels();
+   * for (var i = 0; i < img.width; i++) {
+   *   for (var j = 0; j < img.height; j++) {
+   *     img.set(i, j, color(0, 90, 102));
+   *   }
+   * }
+   * img.updatePixels();
+   * image(img, 17, 17);
+   * </code>
+   * </div>
+   * <div>
+   * <code>
+   * var pink = color(255, 102, 204);
+   * var img = createImage(66, 66);
+   * img.loadPixels();
+   * for (var i = 0; i < 4 * (width * height / 2); i += 4) {
+   *   img.pixels[i] = red(pink);
+   *   img.pixels[i + 1] = green(pink);
+   *   img.pixels[i + 2] = blue(pink);
+   *   img.pixels[i + 3] = alpha(pink);
+   * }
+   * img.updatePixels();
+   * image(img, 17, 17);
+   * </code>
+   * </div>
+   *
+   * @alt
+   * 66x66 turquoise rect in center of canvas
+   * 66x66 pink rect in center of canvas
+   *
+   */
+  this.pixels = [];
+  this.name = 'p5.Image'; // for friendly debugger system
+};
+
+/**
+ * Helper fxn for sharing pixel methods
+ *
+ */
+p5.Image.prototype._setProperty = function(prop, value) {
+  this[prop] = value;
+  this.setModified(true);
+};
+
+/**
+ * Loads the pixels data for this image into the [pixels] attribute.
+ *
+ * @method loadPixels
+ * @example
+ * <div><code>
+ * var myImage;
+ * var halfImage;
+ *
+ * function preload() {
+ *   myImage = loadImage('assets/rockies.jpg');
+ * }
+ *
+ * function setup() {
+ *   myImage.loadPixels();
+ *   halfImage = 4 * width * height / 2;
+ *   for (var i = 0; i < halfImage; i++) {
+ *     myImage.pixels[i + halfImage] = myImage.pixels[i];
+ *   }
+ *   myImage.updatePixels();
+ * }
+ *
+ * function draw() {
+ *   image(myImage, 0, 0);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 2 images of rocky mountains vertically stacked
+ *
+ */
+p5.Image.prototype.loadPixels = function() {
+  p5.Renderer2D.prototype.loadPixels.call(this);
+  this.setModified(true);
+};
+
+/**
+ * Updates the backing canvas for this image with the contents of
+ * the [pixels] array.
+ *
+ * @method updatePixels
+ * @param {Integer} x x-offset of the target update area for the
+ *                              underlying canvas
+ * @param {Integer} y y-offset of the target update area for the
+ *                              underlying canvas
+ * @param {Integer} w height of the target update area for the
+ *                              underlying canvas
+ * @param {Integer} h height of the target update area for the
+ *                              underlying canvas
+ * @example
+ * <div><code>
+ * var myImage;
+ * var halfImage;
+ *
+ * function preload() {
+ *   myImage = loadImage('assets/rockies.jpg');
+ * }
+ *
+ * function setup() {
+ *   myImage.loadPixels();
+ *   halfImage = 4 * width * height / 2;
+ *   for (var i = 0; i < halfImage; i++) {
+ *     myImage.pixels[i + halfImage] = myImage.pixels[i];
+ *   }
+ *   myImage.updatePixels();
+ * }
+ *
+ * function draw() {
+ *   image(myImage, 0, 0);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 2 images of rocky mountains vertically stacked
+ *
+ */
+/**
+ * @method updatePixels
+ */
+p5.Image.prototype.updatePixels = function(x, y, w, h) {
+  p5.Renderer2D.prototype.updatePixels.call(this, x, y, w, h);
+  this.setModified(true);
+};
+
+/**
+ * Get a region of pixels from an image.
+ *
+ * If no params are passed, those whole image is returned,
+ * if x and y are the only params passed a single pixel is extracted
+ * if all params are passed a rectangle region is extracted and a p5.Image
+ * is returned.
+ *
+ * Returns undefined if the region is outside the bounds of the image
+ *
+ * @method get
+ * @param  {Number}               [x] x-coordinate of the pixel
+ * @param  {Number}               [y] y-coordinate of the pixel
+ * @param  {Number}               [w] width
+ * @param  {Number}               [h] height
+ * @return {Number[]|Color|p5.Image}  color of pixel at x,y in array format
+ *                                    [R, G, B, A] or p5.Image
+ * @example
+ * <div><code>
+ * var myImage;
+ * var c;
+ *
+ * function preload() {
+ *   myImage = loadImage('assets/rockies.jpg');
+ * }
+ *
+ * function setup() {
+ *   background(myImage);
+ *   noStroke();
+ *   c = myImage.get(60, 90);
+ *   fill(c);
+ *   rect(25, 25, 50, 50);
+ * }
+ *
+ * //get() returns color here
+ * </code></div>
+ *
+ * @alt
+ * image of rocky mountains with 50x50 green rect in front
+ *
+ */
+p5.Image.prototype.get = function(x, y, w, h) {
+  return p5.Renderer2D.prototype.get.call(this, x, y, w, h);
+};
+
+/**
+ * Set the color of a single pixel or write an image into
+ * this p5.Image.
+ *
+ * Note that for a large number of pixels this will
+ * be slower than directly manipulating the pixels array
+ * and then calling updatePixels().
+ *
+ * @method set
+ * @param {Number}              x x-coordinate of the pixel
+ * @param {Number}              y y-coordinate of the pixel
+ * @param {Number|Number[]|Object}   a grayscale value | pixel array |
+ *                                a p5.Color | image to copy
+ * @example
+ * <div>
+ * <code>
+ * var img = createImage(66, 66);
+ * img.loadPixels();
+ * for (var i = 0; i < img.width; i++) {
+ *   for (var j = 0; j < img.height; j++) {
+ *     img.set(i, j, color(0, 90, 102, (i % img.width) * 2));
+ *   }
+ * }
+ * img.updatePixels();
+ * image(img, 17, 17);
+ * image(img, 34, 34);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 2 gradated dark turquoise rects fade left. 1 center 1 bottom right of canvas
+ *
+ */
+p5.Image.prototype.set = function(x, y, imgOrCol) {
+  p5.Renderer2D.prototype.set.call(this, x, y, imgOrCol);
+  this.setModified(true);
+};
+
+/**
+ * Resize the image to a new width and height. To make the image scale
+ * proportionally, use 0 as the value for the wide or high parameter.
+ * For instance, to make the width of an image 150 pixels, and change
+ * the height using the same proportion, use resize(150, 0).
+ *
+ * @method resize
+ * @param {Number} width the resized image width
+ * @param {Number} height the resized image height
+ * @example
+ * <div><code>
+ * var img;
+ *
+ * function preload() {
+ *   img = loadImage('assets/rockies.jpg');
+ * }
+
+ * function draw() {
+ *   image(img, 0, 0);
+ * }
+ *
+ * function mousePressed() {
+ *   img.resize(50, 100);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * image of rocky mountains. zoomed in
+ *
+ */
+p5.Image.prototype.resize = function(width, height) {
+  // Copy contents to a temporary canvas, resize the original
+  // and then copy back.
+  //
+  // There is a faster approach that involves just one copy and swapping the
+  // this.canvas reference. We could switch to that approach if (as i think
+  // is the case) there an expectation that the user would not hold a
+  // reference to the backing canvas of a p5.Image. But since we do not
+  // enforce that at the moment, I am leaving in the slower, but safer
+  // implementation.
+
+  // auto-resize
+  if (width === 0 && height === 0) {
+    width = this.canvas.width;
+    height = this.canvas.height;
+  } else if (width === 0) {
+    width = this.canvas.width * height / this.canvas.height;
+  } else if (height === 0) {
+    height = this.canvas.height * width / this.canvas.width;
+  }
+
+  width = Math.floor(width);
+  height = Math.floor(height);
+
+  var tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  // prettier-ignore
+  tempCanvas.getContext('2d').drawImage(
+    this.canvas,
+    0, 0, this.canvas.width, this.canvas.height,
+    0, 0, tempCanvas.width, tempCanvas.height
+  );
+
+  // Resize the original canvas, which will clear its contents
+  this.canvas.width = this.width = width;
+  this.canvas.height = this.height = height;
+
+  //Copy the image back
+
+  // prettier-ignore
+  this.drawingContext.drawImage(
+    tempCanvas,
+    0, 0, width, height,
+    0, 0, width, height
+  );
+
+  if (this.pixels.length > 0) {
+    this.loadPixels();
+  }
+
+  this.setModified(true);
+};
+
+/**
+ * Copies a region of pixels from one image to another. If no
+ * srcImage is specified this is used as the source. If the source
+ * and destination regions aren't the same size, it will
+ * automatically resize source pixels to fit the specified
+ * target region.
+ *
+ * @method copy
+ * @param  {p5.Image|p5.Element} srcImage source image
+ * @param  {Integer} sx X coordinate of the source's upper left corner
+ * @param  {Integer} sy Y coordinate of the source's upper left corner
+ * @param  {Integer} sw source image width
+ * @param  {Integer} sh source image height
+ * @param  {Integer} dx X coordinate of the destination's upper left corner
+ * @param  {Integer} dy Y coordinate of the destination's upper left corner
+ * @param  {Integer} dw destination image width
+ * @param  {Integer} dh destination image height
+ * @example
+ * <div><code>
+ * var photo;
+ * var bricks;
+ * var x;
+ * var y;
+ *
+ * function preload() {
+ *   photo = loadImage('assets/rockies.jpg');
+ *   bricks = loadImage('assets/bricks.jpg');
+ * }
+ *
+ * function setup() {
+ *   x = bricks.width / 2;
+ *   y = bricks.height / 2;
+ *   photo.copy(bricks, 0, 0, x, y, 0, 0, x, y);
+ *   image(photo, 0, 0);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * image of rocky mountains and smaller image on top of bricks at top left
+ *
+ */
+/**
+ * @method copy
+ * @param  {Integer} sx
