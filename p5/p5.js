@@ -53910,3 +53910,939 @@ p5.prototype._updatePAccelerations = function() {
  * Note: The order the rotations are called is important, ie. if used
  * together, it must be called in the order Z-X-Y or there might be
  * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   //rotateZ(radians(rotationZ));
+ *   rotateX(radians(rotationX));
+ *   //rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
+ *
+ * @property {Number} rotationX
+ * @readOnly
+ *
+ * @alt
+ * red horizontal line right, green vertical line bottom. black background.
+ *
+ */
+p5.prototype.rotationX = 0;
+
+/**
+ * The system variable rotationY always contains the rotation of the
+ * device along the y axis. Value is represented as 0 to +/-90 degrees.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   //rotateZ(radians(rotationZ));
+ *   //rotateX(radians(rotationX));
+ *   rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
+ *
+ * @property {Number} rotationY
+ * @readOnly
+ *
+ * @alt
+ * red horizontal line right, green vertical line bottom. black background.
+ */
+p5.prototype.rotationY = 0;
+
+/**
+ * The system variable rotationZ always contains the rotation of the
+ * device along the z axis. Value is represented as 0 to 359 degrees.
+ * <br><br>
+ * Unlike rotationX and rotationY, this variable is available for devices
+ * with a built-in compass only.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   rotateZ(radians(rotationZ));
+ *   //rotateX(radians(rotationX));
+ *   //rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
+ *
+ * @property {Number} rotationZ
+ * @readOnly
+ *
+ * @alt
+ * red horizontal line right, green vertical line bottom. black background.
+ */
+p5.prototype.rotationZ = 0;
+
+/**
+ * The system variable pRotationX always contains the rotation of the
+ * device along the x axis in the frame previous to the current frame. Value
+ * is represented as 0 to +/-180 degrees.
+ * <br><br>
+ * pRotationX can also be used with rotationX to determine the rotate
+ * direction of the device along the X-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationX - pRotationX < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * // Simple range conversion to make things simpler.
+ * // This is not absolutely necessary but the logic
+ * // will be different in that case.
+ *
+ * var rX = rotationX + 180;
+ * var pRX = pRotationX + 180;
+ *
+ * if ((rX - pRX > 0 && rX - pRX < 270) || rX - pRX < -270) {
+ *   rotateDirection = 'clockwise';
+ * } else if (rX - pRX < 0 || rX - pRX > 270) {
+ *   rotateDirection = 'counter-clockwise';
+ * }
+ *
+ * print(rotateDirection);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image to display.
+ *
+ *
+ * @property {Number} pRotationX
+ * @readOnly
+ */
+p5.prototype.pRotationX = 0;
+
+/**
+ * The system variable pRotationY always contains the rotation of the
+ * device along the y axis in the frame previous to the current frame. Value
+ * is represented as 0 to +/-90 degrees.
+ * <br><br>
+ * pRotationY can also be used with rotationY to determine the rotate
+ * direction of the device along the Y-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationY - pRotationY < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * // Simple range conversion to make things simpler.
+ * // This is not absolutely necessary but the logic
+ * // will be different in that case.
+ *
+ * var rY = rotationY + 180;
+ * var pRY = pRotationY + 180;
+ *
+ * if ((rY - pRY > 0 && rY - pRY < 270) || rY - pRY < -270) {
+ *   rotateDirection = 'clockwise';
+ * } else if (rY - pRY < 0 || rY - pRY > 270) {
+ *   rotateDirection = 'counter-clockwise';
+ * }
+ * print(rotateDirection);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image to display.
+ *
+ *
+ * @property {Number} pRotationY
+ * @readOnly
+ */
+p5.prototype.pRotationY = 0;
+
+/**
+ * The system variable pRotationZ always contains the rotation of the
+ * device along the z axis in the frame previous to the current frame. Value
+ * is represented as 0 to 359 degrees.
+ * <br><br>
+ * pRotationZ can also be used with rotationZ to determine the rotate
+ * direction of the device along the Z-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationZ - pRotationZ < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * if (
+ *   (rotationZ - pRotationZ > 0 && rotationZ - pRotationZ < 270) ||
+ *   rotationZ - pRotationZ < -270
+ * ) {
+ *   rotateDirection = 'clockwise';
+ * } else if (rotationZ - pRotationZ < 0 || rotationZ - pRotationZ > 270) {
+ *   rotateDirection = 'counter-clockwise';
+ * }
+ * print(rotateDirection);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image to display.
+ *
+ *
+ * @property {Number} pRotationZ
+ * @readOnly
+ */
+p5.prototype.pRotationZ = 0;
+
+var startAngleX = 0;
+var startAngleY = 0;
+var startAngleZ = 0;
+
+var rotateDirectionX = 'clockwise';
+var rotateDirectionY = 'clockwise';
+var rotateDirectionZ = 'clockwise';
+
+var pRotateDirectionX;
+var pRotateDirectionY;
+var pRotateDirectionZ;
+
+p5.prototype._updatePRotations = function() {
+  this._setProperty('pRotationX', this.rotationX);
+  this._setProperty('pRotationY', this.rotationY);
+  this._setProperty('pRotationZ', this.rotationZ);
+};
+
+/**
+ * @property {String} turnAxis
+ * @readOnly
+ */
+p5.prototype.turnAxis = undefined;
+
+var move_threshold = 0.5;
+var shake_threshold = 30;
+
+/**
+ * The setMoveThreshold() function is used to set the movement threshold for
+ * the deviceMoved() function. The default threshold is set to 0.5.
+ *
+ * @method setMoveThreshold
+ * @param {number} value The threshold value
+ */
+p5.prototype.setMoveThreshold = function(val) {
+  if (typeof val === 'number') {
+    move_threshold = val;
+  }
+};
+
+/**
+ * The setShakeThreshold() function is used to set the movement threshold for
+ * the deviceShaken() function. The default threshold is set to 30.
+ *
+ * @method setShakeThreshold
+ * @param {number} value The threshold value
+ */
+p5.prototype.setShakeThreshold = function(val) {
+  if (typeof val === 'number') {
+    shake_threshold = val;
+  }
+};
+
+/**
+ * The deviceMoved() function is called when the device is moved by more than
+ * the threshold value along X, Y or Z axis. The default threshold is set to
+ * 0.5.
+ * @method deviceMoved
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Run this example on a mobile device
+ * // Move the device around
+ * // to change the value.
+ *
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function deviceMoved() {
+ *   value = value + 5;
+ *   if (value > 255) {
+ *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 50x50 black rect in center of canvas. turns white on mobile when device moves
+ *
+ */
+
+/**
+ * The deviceTurned() function is called when the device rotates by
+ * more than 90 degrees continuously.
+ * <br><br>
+ * The axis that triggers the deviceTurned() method is stored in the turnAxis
+ * variable. The deviceTurned() method can be locked to trigger on any axis:
+ * X, Y or Z by comparing the turnAxis variable to 'X', 'Y' or 'Z'.
+ *
+ * @method deviceTurned
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Run this example on a mobile device
+ * // Rotate the device by 90 degrees
+ * // to change the value.
+ *
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function deviceTurned() {
+ *   if (value === 0) {
+ *     value = 255;
+ *   } else if (value === 255) {
+ *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * // Run this example on a mobile device
+ * // Rotate the device by 90 degrees in the
+ * // X-axis to change the value.
+ *
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function deviceTurned() {
+ *   if (turnAxis === 'X') {
+ *     if (value === 0) {
+ *       value = 255;
+ *     } else if (value === 255) {
+ *       value = 0;
+ *     }
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 50x50 black rect in center of canvas. turns white on mobile when device turns
+ * 50x50 black rect in center of canvas. turns white on mobile when x-axis turns
+ *
+ */
+
+/**
+ * The deviceShaken() function is called when the device total acceleration
+ * changes of accelerationX and accelerationY values is more than
+ * the threshold value. The default threshold is set to 30.
+ * @method deviceShaken
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Run this example on a mobile device
+ * // Shake the device to change the value.
+ *
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function deviceShaken() {
+ *   value = value + 5;
+ *   if (value > 255) {
+ *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 50x50 black rect in center of canvas. turns white on mobile when device shakes
+ *
+ */
+
+p5.prototype._ondeviceorientation = function(e) {
+  this._updatePRotations();
+  this._setProperty('rotationX', e.beta);
+  this._setProperty('rotationY', e.gamma);
+  this._setProperty('rotationZ', e.alpha);
+  this._handleMotion();
+};
+p5.prototype._ondevicemotion = function(e) {
+  this._updatePAccelerations();
+  this._setProperty('accelerationX', e.acceleration.x * 2);
+  this._setProperty('accelerationY', e.acceleration.y * 2);
+  this._setProperty('accelerationZ', e.acceleration.z * 2);
+  this._handleMotion();
+};
+p5.prototype._handleMotion = function() {
+  if (window.orientation === 90 || window.orientation === -90) {
+    this._setProperty('deviceOrientation', 'landscape');
+  } else if (window.orientation === 0) {
+    this._setProperty('deviceOrientation', 'portrait');
+  } else if (window.orientation === undefined) {
+    this._setProperty('deviceOrientation', 'undefined');
+  }
+  var deviceMoved = this.deviceMoved || window.deviceMoved;
+  if (typeof deviceMoved === 'function') {
+    if (
+      Math.abs(this.accelerationX - this.pAccelerationX) > move_threshold ||
+      Math.abs(this.accelerationY - this.pAccelerationY) > move_threshold ||
+      Math.abs(this.accelerationZ - this.pAccelerationZ) > move_threshold
+    ) {
+      deviceMoved();
+    }
+  }
+  var deviceTurned = this.deviceTurned || window.deviceTurned;
+  if (typeof deviceTurned === 'function') {
+    // The angles given by rotationX etc is from range -180 to 180.
+    // The following will convert them to 0 to 360 for ease of calculation
+    // of cases when the angles wrapped around.
+    // _startAngleX will be converted back at the end and updated.
+    var wRX = this.rotationX + 180;
+    var wPRX = this.pRotationX + 180;
+    var wSAX = startAngleX + 180;
+    if ((wRX - wPRX > 0 && wRX - wPRX < 270) || wRX - wPRX < -270) {
+      rotateDirectionX = 'clockwise';
+    } else if (wRX - wPRX < 0 || wRX - wPRX > 270) {
+      rotateDirectionX = 'counter-clockwise';
+    }
+    if (rotateDirectionX !== pRotateDirectionX) {
+      wSAX = wRX;
+    }
+    if (Math.abs(wRX - wSAX) > 90 && Math.abs(wRX - wSAX) < 270) {
+      wSAX = wRX;
+      this._setProperty('turnAxis', 'X');
+      deviceTurned();
+    }
+    pRotateDirectionX = rotateDirectionX;
+    startAngleX = wSAX - 180;
+
+    // Y-axis is identical to X-axis except for changing some names.
+    var wRY = this.rotationY + 180;
+    var wPRY = this.pRotationY + 180;
+    var wSAY = startAngleY + 180;
+    if ((wRY - wPRY > 0 && wRY - wPRY < 270) || wRY - wPRY < -270) {
+      rotateDirectionY = 'clockwise';
+    } else if (wRY - wPRY < 0 || wRY - this.pRotationY > 270) {
+      rotateDirectionY = 'counter-clockwise';
+    }
+    if (rotateDirectionY !== pRotateDirectionY) {
+      wSAY = wRY;
+    }
+    if (Math.abs(wRY - wSAY) > 90 && Math.abs(wRY - wSAY) < 270) {
+      wSAY = wRY;
+      this._setProperty('turnAxis', 'Y');
+      deviceTurned();
+    }
+    pRotateDirectionY = rotateDirectionY;
+    startAngleY = wSAY - 180;
+
+    // Z-axis is already in the range 0 to 360
+    // so no conversion is needed.
+    if (
+      (this.rotationZ - this.pRotationZ > 0 &&
+        this.rotationZ - this.pRotationZ < 270) ||
+      this.rotationZ - this.pRotationZ < -270
+    ) {
+      rotateDirectionZ = 'clockwise';
+    } else if (
+      this.rotationZ - this.pRotationZ < 0 ||
+      this.rotationZ - this.pRotationZ > 270
+    ) {
+      rotateDirectionZ = 'counter-clockwise';
+    }
+    if (rotateDirectionZ !== pRotateDirectionZ) {
+      startAngleZ = this.rotationZ;
+    }
+    if (
+      Math.abs(this.rotationZ - startAngleZ) > 90 &&
+      Math.abs(this.rotationZ - startAngleZ) < 270
+    ) {
+      startAngleZ = this.rotationZ;
+      this._setProperty('turnAxis', 'Z');
+      deviceTurned();
+    }
+    pRotateDirectionZ = rotateDirectionZ;
+    this._setProperty('turnAxis', undefined);
+  }
+  var deviceShaken = this.deviceShaken || window.deviceShaken;
+  if (typeof deviceShaken === 'function') {
+    var accelerationChangeX;
+    var accelerationChangeY;
+    // Add accelerationChangeZ if acceleration change on Z is needed
+    if (this.pAccelerationX !== null) {
+      accelerationChangeX = Math.abs(this.accelerationX - this.pAccelerationX);
+      accelerationChangeY = Math.abs(this.accelerationY - this.pAccelerationY);
+    }
+    if (accelerationChangeX + accelerationChangeY > shake_threshold) {
+      deviceShaken();
+    }
+  }
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],38:[function(_dereq_,module,exports){
+/**
+ * @module Events
+ * @submodule Keyboard
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Holds the key codes of currently pressed keys.
+ * @private
+ */
+var downKeys = {};
+
+/**
+ * The boolean system variable keyIsPressed is true if any key is pressed
+ * and false if no keys are pressed.
+ *
+ * @property {Boolean} keyIsPressed
+ * @readOnly
+ * @example
+ * <div>
+ * <code>
+ * function draw() {
+ *   if (keyIsPressed === true) {
+ *     fill(0);
+ *   } else {
+ *     fill(255);
+ *   }
+ *   rect(25, 25, 50, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 50x50 white rect that turns black on keypress.
+ *
+ */
+p5.prototype.isKeyPressed = false;
+p5.prototype.keyIsPressed = false; // khan
+
+/**
+ * The system variable key always contains the value of the most recent
+ * key on the keyboard that was typed. To get the proper capitalization, it
+ * is best to use it within keyTyped(). For non-ASCII keys, use the keyCode
+ * variable.
+ *
+ * @property {String} key
+ * @readOnly
+ * @example
+ * <div><code>
+ * // Click any key to display it!
+ * // (Not Guaranteed to be Case Sensitive)
+ * function setup() {
+ *   fill(245, 123, 158);
+ *   textSize(50);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   text(key, 33, 65); // Display last key pressed.
+ * }
+ * </code></div>
+ *
+ * @alt
+ * canvas displays any key value that is pressed in pink font.
+ *
+ */
+p5.prototype.key = '';
+
+/**
+ * The variable keyCode is used to detect special keys such as BACKSPACE,
+ * DELETE, ENTER, RETURN, TAB, ESCAPE, SHIFT, CONTROL, OPTION, ALT, UP_ARROW,
+ * DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW.
+ * You can also check for custom keys by looking up the keyCode of any key
+ * on a site like this: <a href="http://keycode.info/">keycode.info</a>.
+ *
+ * @property {Integer} keyCode
+ * @readOnly
+ * @example
+ * <div><code>
+ * var fillVal = 126;
+ * function draw() {
+ *   fill(fillVal);
+ *   rect(25, 25, 50, 50);
+ * }
+ *
+ * function keyPressed() {
+ *   if (keyCode === UP_ARROW) {
+ *     fillVal = 255;
+ *   } else if (keyCode === DOWN_ARROW) {
+ *     fillVal = 0;
+ *   }
+ *   return false; // prevent default
+ * }
+ * </code></div>
+ *
+ * @alt
+ * Grey rect center. turns white when up arrow pressed and black when down
+ *
+ */
+p5.prototype.keyCode = 0;
+
+/**
+ * The keyPressed() function is called once every time a key is pressed. The
+ * keyCode for the key that was pressed is stored in the keyCode variable.
+ * <br><br>
+ * For non-ASCII keys, use the keyCode variable. You can check if the keyCode
+ * equals BACKSPACE, DELETE, ENTER, RETURN, TAB, ESCAPE, SHIFT, CONTROL,
+ * OPTION, ALT, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW.
+ * <br><br>
+ * For ASCII keys that was pressed is stored in the key variable. However, it
+ * does not distinguish between uppercase and lowercase. For this reason, it
+ * is recommended to use keyTyped() to read the key variable, in which the
+ * case of the variable will be distinguished.
+ * <br><br>
+ * Because of how operating systems handle key repeats, holding down a key
+ * may cause multiple calls to keyTyped() (and keyReleased() as well). The
+ * rate of repeat is set by the operating system and how each computer is
+ * configured.<br><br>
+ * Browsers may have different default
+ * behaviors attached to various key events. To prevent any default
+ * behavior for this event, add "return false" to the end of the method.
+ *
+ * @method keyPressed
+ * @example
+ * <div>
+ * <code>
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function keyPressed() {
+ *   if (value === 0) {
+ *     value = 255;
+ *   } else {
+ *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function keyPressed() {
+ *   if (keyCode === LEFT_ARROW) {
+ *     value = 255;
+ *   } else if (keyCode === RIGHT_ARROW) {
+ *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ * <div class="norender">
+ * <code>
+ * function keyPressed() {
+ *   // Do something
+ *   return false; // prevent any default behaviour
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black rect center. turns white when key pressed and black when released
+ * black rect center. turns white when left arrow pressed and black when right.
+ *
+ */
+p5.prototype._onkeydown = function(e) {
+  if (downKeys[e.which]) {
+    // prevent multiple firings
+    return;
+  }
+  this._setProperty('isKeyPressed', true);
+  this._setProperty('keyIsPressed', true);
+  this._setProperty('keyCode', e.which);
+  downKeys[e.which] = true;
+  var key = String.fromCharCode(e.which);
+  if (!key) {
+    key = e.which;
+  }
+  this._setProperty('key', key);
+  var keyPressed = this.keyPressed || window.keyPressed;
+  if (typeof keyPressed === 'function' && !e.charCode) {
+    var executeDefault = keyPressed(e);
+    if (executeDefault === false) {
+      e.preventDefault();
+    }
+  }
+};
+/**
+ * The keyReleased() function is called once every time a key is released.
+ * See key and keyCode for more information.<br><br>
+ * Browsers may have different default
+ * behaviors attached to various key events. To prevent any default
+ * behavior for this event, add "return false" to the end of the method.
+ *
+ * @method keyReleased
+ * @example
+ * <div>
+ * <code>
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function keyReleased() {
+ *   if (value === 0) {
+ *     value = 255;
+ *   } else {
+ *     value = 0;
+ *   }
+ *   return false; // prevent any default behavior
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black rect center. turns white when key pressed and black when pressed again
+ *
+ */
+p5.prototype._onkeyup = function(e) {
+  var keyReleased = this.keyReleased || window.keyReleased;
+  downKeys[e.which] = false;
+
+  if (!areDownKeys()) {
+    this._setProperty('isKeyPressed', false);
+    this._setProperty('keyIsPressed', false);
+  }
+
+  this._setProperty('_lastKeyCodeTyped', null);
+
+  var key = String.fromCharCode(e.which);
+  if (!key) {
+    key = e.which;
+  }
+  this._setProperty('key', key);
+  this._setProperty('keyCode', e.which);
+  if (typeof keyReleased === 'function') {
+    var executeDefault = keyReleased(e);
+    if (executeDefault === false) {
+      e.preventDefault();
+    }
+  }
+};
+
+/**
+ * The keyTyped() function is called once every time a key is pressed, but
+ * action keys such as Ctrl, Shift, and Alt are ignored. The most recent
+ * key pressed will be stored in the key variable.
+ * <br><br>
+ * Because of how operating systems handle key repeats, holding down a key
+ * will cause multiple calls to keyTyped() (and keyReleased() as well). The
+ * rate of repeat is set by the operating system and how each computer is
+ * configured.<br><br>
+ * Browsers may have different default behaviors attached to various key
+ * events. To prevent any default behavior for this event, add "return false"
+ * to the end of the method.
+ *
+ * @method keyTyped
+ * @example
+ * <div>
+ * <code>
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function keyTyped() {
+ *   if (key === 'a') {
+ *     value = 255;
+ *   } else if (key === 'b') {
+ *     value = 0;
+ *   }
+ *   // uncomment to prevent any default behavior
+ *   // return false;
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black rect center. turns white when 'a' key typed and black when 'b' pressed
+ *
+ */
+p5.prototype._onkeypress = function(e) {
+  if (e.which === this._lastKeyCodeTyped) {
+    // prevent multiple firings
+    return;
+  }
+  this._setProperty('keyCode', e.which);
+  this._setProperty('_lastKeyCodeTyped', e.which); // track last keyCode
+  this._setProperty('key', String.fromCharCode(e.which));
+  var keyTyped = this.keyTyped || window.keyTyped;
+  if (typeof keyTyped === 'function') {
+    var executeDefault = keyTyped(e);
+    if (executeDefault === false) {
+      e.preventDefault();
+    }
+  }
+};
+/**
+ * The onblur function is called when the user is no longer focused
+ * on the p5 element. Because the keyup events will not fire if the user is
+ * not focused on the element we must assume all keys currently down have
+ * been released.
+ */
+p5.prototype._onblur = function(e) {
+  downKeys = {};
+};
+
+/**
+ * The keyIsDown() function checks if the key is currently down, i.e. pressed.
+ * It can be used if you have an object that moves, and you want several keys
+ * to be able to affect its behaviour simultaneously, such as moving a
+ * sprite diagonally. You can put in any number representing the keyCode of
+ * the key, or use any of the variable keyCode names listed
+ * <a href="http://p5js.org/reference/#p5/keyCode">here</a>.
+ *
+ * @method keyIsDown
+ * @param {Number}          code The key to check for.
+ * @return {Boolean}        whether key is down or not
+ * @example
+ * <div><code>
+ * var x = 100;
+ * var y = 100;
+ *
+ * function setup() {
+ *   createCanvas(512, 512);
+ * }
+ *
+ * function draw() {
+ *   if (keyIsDown(LEFT_ARROW)) {
+ *     x -= 5;
+ *   }
+ *
+ *   if (keyIsDown(RIGHT_ARROW)) {
+ *     x += 5;
+ *   }
+ *
+ *   if (keyIsDown(UP_ARROW)) {
+ *     y -= 5;
+ *   }
+ *
+ *   if (keyIsDown(DOWN_ARROW)) {
+ *     y += 5;
+ *   }
+ *
+ *   clear();
+ *   fill(255, 0, 0);
+ *   ellipse(x, y, 50, 50);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 50x50 red ellipse moves left, right, up and down with arrow presses.
+ *
+ */
+p5.prototype.keyIsDown = function(code) {
+  p5._validateParameters('keyIsDown', arguments);
+  return downKeys[code];
+};
+
+/**
+ * The checkDownKeys function returns a boolean true if any keys pressed
+ * and a false if no keys are currently pressed.
+
+ * Helps avoid instances where a multiple keys are pressed simultaneously and
+ * releasing a single key will then switch the
+ * keyIsPressed property to true.
+ * @private
+**/
+function areDownKeys() {
+  for (var key in downKeys) {
+    if (downKeys.hasOwnProperty(key) && downKeys[key] === true) {
+      return true;
+    }
+  }
+  return false;
+}
+
+module.exports = p5;
+
+},{"../core/core":22}],39:[function(_dereq_,module,exports){
+/**
+ * @module Events
+ * @submodule Mouse
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+
+/*
+ * This is a flag which is false until the first time
+ * we receive a mouse event. The pmouseX and pmouseY
+ * values will match the mouseX and mouseY values until
+ * this interaction takes place.
+ */
+p5.prototype._hasMouseInteracted = false;
+
+/**
+ * The system variable mouseX always contains the current horizontal
+ * position of the mouse, relative to (0, 0) of the canvas. If touch is
+ * used instead of mouse input, mouseX will hold the x value of the most
