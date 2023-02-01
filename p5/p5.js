@@ -52980,3 +52980,933 @@ p5.prototype.endShape = function(mode) {
     }
 
     this._renderer.endShape(
+      mode,
+      vertices,
+      isCurve,
+      isBezier,
+      isQuadratic,
+      isContour,
+      shapeKind
+    );
+
+    // Reset some settings
+    isCurve = false;
+    isBezier = false;
+    isQuadratic = false;
+    isContour = false;
+    isFirstContour = true;
+
+    // If the shape is closed, the first element was added as last element.
+    // We must remove it again to prevent the list of vertices from growing
+    // over successive calls to endShape(CLOSE)
+    if (closeShape) {
+      vertices.pop();
+    }
+  }
+  return this;
+};
+
+/**
+ * Specifies vertex coordinates for quadratic Bezier curves. Each call to
+ * quadraticVertex() defines the position of one control points and one
+ * anchor point of a Bezier curve, adding a new segment to a line or shape.
+ * The first time quadraticVertex() is used within a beginShape() call, it
+ * must be prefaced with a call to vertex() to set the first anchor point.
+ * This function must be used between beginShape() and endShape() and only
+ * when there is no MODE parameter specified to beginShape().
+ *
+ * @method quadraticVertex
+ * @param  {Number} cx x-coordinate for the control point
+ * @param  {Number} cy y-coordinate for the control point
+ * @param  {Number} x3 x-coordinate for the anchor point
+ * @param  {Number} y3 y-coordinate for the anchor point
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noFill();
+ * strokeWeight(4);
+ * beginShape();
+ * vertex(20, 20);
+ * quadraticVertex(80, 20, 50, 50);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * strokeWeight(4);
+ * beginShape();
+ * vertex(20, 20);
+ * quadraticVertex(80, 20, 50, 50);
+ * quadraticVertex(20, 80, 80, 80);
+ * vertex(80, 60);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * arched-shaped black line with 4 pixel thick stroke weight.
+ * backwards s-shaped black line with 4 pixel thick stroke weight.
+ *
+ */
+p5.prototype.quadraticVertex = function(cx, cy, x3, y3) {
+  p5._validateParameters('quadraticVertex', arguments);
+  //if we're drawing a contour, put the points into an
+  // array for inside drawing
+  if (this._contourInited) {
+    var pt = {};
+    pt.x = cx;
+    pt.y = cy;
+    pt.x3 = x3;
+    pt.y3 = y3;
+    pt.type = constants.QUADRATIC;
+    this._contourVertices.push(pt);
+
+    return this;
+  }
+  if (vertices.length > 0) {
+    isQuadratic = true;
+    var vert = [];
+    for (var i = 0; i < arguments.length; i++) {
+      vert[i] = arguments[i];
+    }
+    vert.isVert = false;
+    if (isContour) {
+      contourVertices.push(vert);
+    } else {
+      vertices.push(vert);
+    }
+  } else {
+    throw 'vertex() must be used once before calling quadraticVertex()';
+  }
+  return this;
+};
+
+/**
+ * All shapes are constructed by connecting a series of vertices. vertex()
+ * is used to specify the vertex coordinates for points, lines, triangles,
+ * quads, and polygons. It is used exclusively within the beginShape() and
+ * endShape() functions.
+ *
+ * @method vertex
+ * @param  {Number} x x-coordinate of the vertex
+ * @param  {Number} y y-coordinate of the vertex
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * beginShape(POINTS);
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 4 black points in a square shape in middle-right of canvas.
+ *
+ */
+/**
+ * @method vertex
+ * @param  {Number} x
+ * @param  {Number} y
+ * @param  {Number} [z] z-coordinate of the vertex
+ * @param  {Number} [u] the vertex's texture u-coordinate
+ * @param  {Number} [v] the vertex's texture v-coordinate
+ */
+p5.prototype.vertex = function(x, y, moveTo, u, v) {
+  if (this._renderer.isP3D) {
+    this._renderer.vertex.apply(this._renderer, arguments);
+  } else {
+    var vert = [];
+    vert.isVert = true;
+    vert[0] = x;
+    vert[1] = y;
+    vert[2] = 0;
+    vert[3] = 0;
+    vert[4] = 0;
+    vert[5] = this._renderer._getFill();
+    vert[6] = this._renderer._getStroke();
+
+    if (moveTo) {
+      vert.moveTo = moveTo;
+    }
+    if (isContour) {
+      if (contourVertices.length === 0) {
+        vert.moveTo = true;
+      }
+      contourVertices.push(vert);
+    } else {
+      vertices.push(vert);
+    }
+  }
+  return this;
+};
+
+module.exports = p5;
+
+},{"./constants":21,"./core":22}],36:[function(_dereq_,module,exports){
+/**
+ * @module Data
+ * @submodule Dictionary
+ * @for p5.TypedDict
+ * @requires core
+ *
+ * This module defines the p5 methods for the p5 Dictionary classes
+ * these classes StringDict and NumberDict are for storing and working
+ * with key, value pairs
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ *
+ * Creates a new instance of p5.StringDict using the key, value pair
+ * or object you provide.
+ *
+ * @method createStringDict
+ * @for p5
+ * @param {String|Object} key or object
+ * @param {String} value
+ * @return {p5.StringDict}
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   print(myDictionary.hasKey('p5')); // logs true to console
+ * }
+ * </code></div>
+ */
+
+p5.prototype.createStringDict = function(key, value) {
+  return new p5.StringDict(key, value);
+};
+
+/**
+ *
+ * Creates a new instance of p5.NumberDict using the key, value pair
+ * or object you provide.
+ *
+ * @method createNumberDict
+ * @for p5
+ * @param {Number|Object} key or object
+ * @param {Number} value
+ * @return {p5.NumberDict}
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict('p5', 42);
+ *   print(myDictionary.hasKey('p5')); // logs true to console
+ * }
+ * </code></div>
+ */
+
+p5.prototype.createNumberDict = function(key, value) {
+  return new p5.NumberDict(key, value);
+};
+
+/**
+ *
+ * Base class for all p5.Dictionary types. More specifically
+ * typed Dictionary objects inherit from this
+ *
+ * @class p5.TypedDict
+ * @constructor
+ *
+ */
+
+p5.TypedDict = function(key, value) {
+  if (key instanceof Object) {
+    this.data = key;
+  } else {
+    this.data = {};
+    this.data[key] = value;
+  }
+  return this;
+};
+
+/**
+ * Returns the number of key-value pairs currently in Dictionary object
+ *
+ * @method size
+ * @return {Integer} the number of key-value pairs in Dictionary object
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict(1, 10);
+ *   myDictionary.create(2, 20);
+ *   myDictionary.create(3, 30);
+ *   print(myDictionary.size()); // value of amt is 3
+ * }
+ * </code></div>
+ *
+ */
+p5.TypedDict.prototype.size = function() {
+  return Object.keys(this.data).length;
+};
+
+/**
+ * Returns true if key exists in Dictionary
+ * otherwise returns false
+ *
+ * @method hasKey
+ * @param {Number|String} key that you want to access
+ * @return {Boolean} whether that key exists in Dictionary
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   print(myDictionary.hasKey('p5')); // logs true to console
+ * }
+ * </code></div>
+ *
+ */
+
+p5.TypedDict.prototype.hasKey = function(key) {
+  return this.data.hasOwnProperty(key);
+};
+
+/**
+ * Returns value stored at supplied key.
+ *
+ * @method get
+ * @param {Number|String} key that you want to access
+ * @return {Number|String} the value stored at that key
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   var myValue = myDictionary.get('p5');
+ *   print(myValue === 'js'); // logs true to console
+ * }
+ * </code></div>
+ *
+ */
+
+p5.TypedDict.prototype.get = function(key) {
+  if (this.data.hasOwnProperty(key)) {
+    return this.data[key];
+  } else {
+    console.log(key + ' does not exist in this Dictionary');
+  }
+};
+
+/**
+ * Changes the value of key if in it already exists in
+ * in the Dictionary otherwise makes a new key-value pair
+ *
+ * @method set
+ * @param {Number|String} key
+ * @param {Number|String} value
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   myDictionary.set('p5', 'JS');
+ *   myDictionary.print();
+ *   // above logs "key: p5 - value: JS" to console
+ * }
+ * </code></div>
+ *
+ */
+
+p5.TypedDict.prototype.set = function(key, value) {
+  if (this._validate(value)) {
+    this.data[key] = value;
+  } else {
+    console.log('Those values dont work for this dictionary type.');
+  }
+};
+
+/**
+ * private helper function to handle the user passing objects in
+ * during construction or calls to create()
+ */
+
+p5.TypedDict.prototype._addObj = function(obj) {
+  for (var key in obj) {
+    this.set(key, obj[key]);
+  }
+};
+
+/**
+ * Creates a key-value pair in the Dictionary
+ *
+ * @method create
+ * @param {Number|String} key
+ * @param {Number|String} value
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   myDictionary.create('happy', 'coding');
+ *   myDictionary.print();
+ *   // above logs "key: p5 - value: js, key: happy - value: coding" to console
+ * }
+ * </code></div>
+ */
+/**
+ * @method create
+ * @param {Object} obj key/value pair
+ */
+
+p5.TypedDict.prototype.create = function(key, value) {
+  if (key instanceof Object && typeof value === 'undefined') {
+    this._addObj(key);
+  } else if (typeof key !== 'undefined') {
+    this.set(key, value);
+  } else {
+    console.log(
+      'In order to create a new Dictionary entry you must pass ' +
+        'an object or a key, value pair'
+    );
+  }
+};
+
+/**
+ * Empties Dictionary of all key-value pairs
+ * @method clear
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   print(myDictionary.hasKey('p5')); // prints 'true'
+ *   myDictionary.clear();
+ *   print(myDictionary.hasKey('p5')); // prints 'false'
+ * }
+ * </code>
+ * </div>
+ */
+
+p5.TypedDict.prototype.clear = function() {
+  this.data = {};
+};
+
+/**
+ * Removes a key-value pair in the Dictionary
+ *
+ * @method remove
+ * @param {Number|String} key for the pair to remove
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   myDictionary.create('happy', 'coding');
+ *   myDictionary.print();
+ *   // above logs "key: p5 - value: js, key: happy - value: coding" to console
+ *   myDictionary.remove('p5');
+ *   myDictionary.print();
+ *   // above logs "key: happy value: coding" to console
+ * }
+ * </code></div>
+ *
+ */
+
+p5.TypedDict.prototype.remove = function(key) {
+  if (this.data.hasOwnProperty(key)) {
+    delete this.data[key];
+  } else {
+    throw key + ' does not exist in this Dictionary';
+  }
+};
+
+/**
+ * Logs the list of items currently in the Dictionary to the console
+ *
+ * @method print
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * function setup() {
+ *   var myDictionary = createStringDict('p5', 'js');
+ *   myDictionary.create('happy', 'coding');
+ *   myDictionary.print();
+ *   // above logs "key: p5 - value: js, key: happy - value: coding" to console
+ * }
+ * </code>
+ * </div>
+ */
+
+p5.TypedDict.prototype.print = function() {
+  for (var item in this.data) {
+    console.log('key:' + item + ' value:' + this.data[item]);
+  }
+};
+
+/**
+ * Converts the Dictionary into a CSV file for local
+ * storage.
+ *
+ * @method saveTable
+ * @example
+ * <div>
+ * <code>
+ * createButton('save')
+ *   .position(10, 10)
+ *   .mousePressed(function() {
+ *     createNumberDict({
+ *       john: 1940,
+      paul: 1942,
+      george: 1943,
+      ringo: 1940
+ *     }).saveTable('beatles');
+ *   });
+ * </code>
+ * </div>
+ */
+
+p5.TypedDict.prototype.saveTable = function(filename) {
+  var output = '';
+
+  for (var key in this.data) {
+    output += key + ',' + this.data[key] + '\n';
+  }
+
+  var blob = new Blob([output], { type: 'text/csv' });
+  p5.prototype.downloadFile(blob, filename || 'mycsv', 'csv');
+};
+
+/**
+ * Converts the Dictionary into a JSON file for local
+ * storage.
+ *
+ * @method saveJSON
+ * @example
+ * <div>
+ * <code>
+ * createButton('save')
+ *   .position(10, 10)
+ *   .mousePressed(function() {
+ *     createNumberDict({
+ *       john: 1940,
+      paul: 1942,
+      george: 1943,
+      ringo: 1940
+ *     }).saveJSON('beatles');
+ *   });
+ * </code>
+ * </div>
+ */
+
+p5.TypedDict.prototype.saveJSON = function(filename, opt) {
+  p5.prototype.saveJSON(this.data, filename, opt);
+};
+
+/**
+ * private helper function to ensure that the user passed in valid
+ * values for the Dictionary type
+ */
+
+p5.TypedDict.prototype._validate = function(value) {
+  return true;
+};
+
+/**
+ *
+ * A  Dictionary class for Strings.
+ *
+ *
+ * @class p5.StringDict
+ * @constructor
+ * @extends p5.TypedDict
+ *
+ */
+
+p5.StringDict = function() {
+  p5.TypedDict.apply(this, arguments);
+};
+
+p5.StringDict.prototype = Object.create(p5.TypedDict.prototype);
+
+p5.StringDict.prototype._validate = function(value) {
+  return typeof value === 'string';
+};
+
+/**
+ *
+ * A simple Dictionary class for Numbers.
+ *
+ *
+ * @class p5.NumberDict
+ * @constructor
+ * @extends p5.TypedDict
+ *
+ */
+
+p5.NumberDict = function() {
+  p5.TypedDict.apply(this, arguments);
+};
+
+p5.NumberDict.prototype = Object.create(p5.TypedDict.prototype);
+
+/**
+ * private helper function to ensure that the user passed in valid
+ * values for the Dictionary type
+ */
+
+p5.NumberDict.prototype._validate = function(value) {
+  return typeof value === 'number';
+};
+
+/**
+ * Add to a value stored at a certain key
+ * The sum is stored in that location in the Dictionary.
+ *
+ * @method add
+ * @param {Number} Key for value you wish to add to
+ * @param {Number} Amount to add to the value
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict(2, 5);
+ *   myDictionary.add(2, 2);
+ *   console.log(myDictionary.get(2)); // logs 7 to console.
+ * }
+ * </code></div>
+ *
+ *
+ */
+
+p5.NumberDict.prototype.add = function(key, amount) {
+  if (this.data.hasOwnProperty(key)) {
+    this.data[key] += amount;
+  } else {
+    console.log('The key - ' + key + ' does not exist in this dictionary.');
+  }
+};
+
+/**
+ * Subtract from a value stored at a certain key
+ * The difference is stored in that location in the Dictionary.
+ *
+ * @method sub
+ * @param {Number} Key for value you wish to subtract from
+ * @param {Number} Amount to subtract from the value
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict(2, 5);
+ *   myDictionary.sub(2, 2);
+ *   console.log(myDictionary.get(2)); // logs 3 to console.
+ * }
+ * </code></div>
+ *
+ *
+ */
+
+p5.NumberDict.prototype.sub = function(key, amount) {
+  this.add(key, -amount);
+};
+
+/**
+ * Multiply a value stored at a certain key
+ * The product is stored in that location in the Dictionary.
+ *
+ * @method mult
+ * @param {Number} Key for value you wish to multiply
+ * @param {Number} Amount to multiply the value by
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict(2, 4);
+ *   myDictionary.mult(2, 2);
+ *   console.log(myDictionary.get(2)); // logs 8 to console.
+ * }
+ * </code></div>
+ *
+ *
+ */
+
+p5.NumberDict.prototype.mult = function(key, amount) {
+  if (this.data.hasOwnProperty(key)) {
+    this.data[key] *= amount;
+  } else {
+    console.log('The key - ' + key + ' does not exist in this dictionary.');
+  }
+};
+
+/**
+ * Divide a value stored at a certain key
+ * The quotient is stored in that location in the Dictionary.
+ *
+ * @method div
+ * @param {Number} Key for value you wish to divide
+ * @param {Number} Amount to divide the value by
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict(2, 8);
+ *   myDictionary.div(2, 2);
+ *   console.log(myDictionary.get(2)); // logs 4 to console.
+ * }
+ * </code></div>
+ *
+ *
+ */
+
+p5.NumberDict.prototype.div = function(key, amount) {
+  if (this.data.hasOwnProperty(key)) {
+    this.data[key] /= amount;
+  } else {
+    console.log('The key - ' + key + ' does not exist in this dictionary.');
+  }
+};
+
+/**
+ * private helper function for finding lowest or highest value
+ * the argument 'flip' is used to flip the comparison arrow
+ * from 'less than' to 'greater than'
+ *
+ */
+
+p5.NumberDict.prototype._valueTest = function(flip) {
+  if (Object.keys(this.data).length === 0) {
+    throw 'Unable to search for a minimum or maximum value on an empty NumberDict';
+  } else if (Object.keys(this.data).length === 1) {
+    return this.data[Object.keys(this.data)[0]];
+  } else {
+    var result = this.data[Object.keys(this.data)[0]];
+    for (var key in this.data) {
+      if (this.data[key] * flip < result * flip) {
+        result = this.data[key];
+      }
+    }
+    return result;
+  }
+};
+
+/**
+ * Return the lowest value.
+ *
+ * @method minValue
+ * @return {Number}
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict({ 2: -10, 4: 0.65, 1.2: 3 });
+ *   var lowestValue = myDictionary.minValue(); // value is -10
+ *   print(lowestValue);
+ * }
+ * </code></div>
+ *
+ */
+
+p5.NumberDict.prototype.minValue = function() {
+  return this._valueTest(1);
+};
+
+/**
+ * Return the highest value.
+ *
+ * @method maxValue
+ * @return {Number}
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict({ 2: -10, 4: 0.65, 1.2: 3 });
+ *   var highestValue = myDictionary.maxValue(); // value is 3
+ *   print(highestValue);
+ * }
+ * </code></div>
+ *
+ */
+
+p5.NumberDict.prototype.maxValue = function() {
+  return this._valueTest(-1);
+};
+
+/**
+ * private helper function for finding lowest or highest key
+ * the argument 'flip' is used to flip the comparison arrow
+ * from 'less than' to 'greater than'
+ *
+ */
+
+p5.NumberDict.prototype._keyTest = function(flip) {
+  if (Object.keys(this.data).length === 0) {
+    throw 'Unable to use minValue on an empty NumberDict';
+  } else if (Object.keys(this.data).length === 1) {
+    return Object.keys(this.data)[0];
+  } else {
+    var result = Object.keys(this.data)[0];
+    for (var i = 1; i < Object.keys(this.data).length; i++) {
+      if (Object.keys(this.data)[i] * flip < result * flip) {
+        result = Object.keys(this.data)[i];
+      }
+    }
+    return result;
+  }
+};
+
+/**
+ * Return the lowest key.
+ *
+ * @method minKey
+ * @return {Number}
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict({ 2: 4, 4: 6, 1.2: 3 });
+ *   var lowestKey = myDictionary.minKey(); // value is 1.2
+ *   print(lowestKey);
+ * }
+ * </code></div>
+ *
+ */
+
+p5.NumberDict.prototype.minKey = function() {
+  return this._keyTest(1);
+};
+
+/**
+ * Return the highest key.
+ *
+ * @method maxKey
+ * @return {Number}
+ * @example
+ * <div class='norender'>
+ * <code>
+ * function setup() {
+ *   var myDictionary = createNumberDict({ 2: 4, 4: 6, 1.2: 3 });
+ *   var highestKey = myDictionary.maxKey(); // value is 4
+ *   print(highestKey);
+ * }
+ * </code></div>
+ *
+ */
+
+p5.NumberDict.prototype.maxKey = function() {
+  return this._keyTest(-1);
+};
+
+module.exports = p5.TypedDict;
+
+},{"../core/core":22}],37:[function(_dereq_,module,exports){
+/**
+ * @module Events
+ * @submodule Acceleration
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * The system variable deviceOrientation always contains the orientation of
+ * the device. The value of this variable will either be set 'landscape'
+ * or 'portrait'. If no data is available it will be set to 'undefined'.
+ * either LANDSCAPE or PORTRAIT.
+ *
+ * @property {Constant} deviceOrientation
+ * @readOnly
+ */
+p5.prototype.deviceOrientation = undefined;
+
+/**
+ * The system variable accelerationX always contains the acceleration of the
+ * device along the x axis. Value is represented as meters per second squared.
+ *
+ * @property {Number} accelerationX
+ * @readOnly
+ */
+p5.prototype.accelerationX = 0;
+
+/**
+ * The system variable accelerationY always contains the acceleration of the
+ * device along the y axis. Value is represented as meters per second squared.
+ *
+ * @property {Number} accelerationY
+ * @readOnly
+ */
+p5.prototype.accelerationY = 0;
+
+/**
+ * The system variable accelerationZ always contains the acceleration of the
+ * device along the z axis. Value is represented as meters per second squared.
+ *
+ * @property {Number} accelerationZ
+ * @readOnly
+ */
+p5.prototype.accelerationZ = 0;
+
+/**
+ * The system variable pAccelerationX always contains the acceleration of the
+ * device along the x axis in the frame previous to the current frame. Value
+ * is represented as meters per second squared.
+ *
+ * @property {Number} pAccelerationX
+ * @readOnly
+ */
+p5.prototype.pAccelerationX = 0;
+
+/**
+ * The system variable pAccelerationY always contains the acceleration of the
+ * device along the y axis in the frame previous to the current frame. Value
+ * is represented as meters per second squared.
+ *
+ * @property {Number} pAccelerationY
+ * @readOnly
+ */
+p5.prototype.pAccelerationY = 0;
+
+/**
+ * The system variable pAccelerationZ always contains the acceleration of the
+ * device along the z axis in the frame previous to the current frame. Value
+ * is represented as meters per second squared.
+ *
+ * @property {Number} pAccelerationZ
+ * @readOnly
+ */
+p5.prototype.pAccelerationZ = 0;
+
+/**
+ * _updatePAccelerations updates the pAcceleration values
+ *
+ * @private
+ */
+p5.prototype._updatePAccelerations = function() {
+  this._setProperty('pAccelerationX', this.accelerationX);
+  this._setProperty('pAccelerationY', this.accelerationY);
+  this._setProperty('pAccelerationZ', this.accelerationZ);
+};
+
+/**
+ * The system variable rotationX always contains the rotation of the
+ * device along the x axis. Value is represented as 0 to +/-180 degrees.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
