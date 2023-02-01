@@ -52049,3 +52049,934 @@ var constants = _dereq_('./constants');
  *
  * function draw() {
  *   var step = frameCount % 20;
+ *   var angle = map(step, 0, 20, 0, TWO_PI);
+ *   var cos_a = cos(angle);
+ *   var sin_a = sin(angle);
+ *   background(200);
+ *   translate(50, 50);
+ *   // Equivalent to rotate(angle);
+ *   applyMatrix(cos_a, sin_a, -sin_a, cos_a, 0, 0);
+ *   rect(0, 0, 50, 50);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * function setup() {
+ *   frameRate(10);
+ *   rectMode(CENTER);
+ * }
+ *
+ * function draw() {
+ *   var step = frameCount % 20;
+ *   var angle = map(step, 0, 20, -PI / 4, PI / 4);
+ *   background(200);
+ *   translate(50, 50);
+ *   // equivalent to shearX(angle);
+ *   var shear_factor = 1 / tan(PI / 2 - angle);
+ *   applyMatrix(1, 0, shear_factor, 1, 0, 0);
+ *   rect(0, 0, 50, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * A rectangle translating to the right
+ * A rectangle shrinking to the center
+ * A rectangle rotating clockwise about the center
+ * A rectangle shearing
+ *
+ */
+p5.prototype.applyMatrix = function(a, b, c, d, e, f) {
+  this._renderer.applyMatrix(a, b, c, d, e, f);
+  return this;
+};
+
+p5.prototype.popMatrix = function() {
+  throw new Error('popMatrix() not used, see pop()');
+};
+
+p5.prototype.printMatrix = function() {
+  throw new Error('printMatrix() not implemented');
+};
+
+p5.prototype.pushMatrix = function() {
+  throw new Error('pushMatrix() not used, see push()');
+};
+
+/**
+ * Replaces the current matrix with the identity matrix.
+ *
+ * @method resetMatrix
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(50, 50);
+ * applyMatrix(0.5, 0.5, -0.5, 0.5, 0, 0);
+ * rect(0, 0, 20, 20);
+ * // Note that the translate is also reset.
+ * resetMatrix();
+ * rect(0, 0, 20, 20);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * A rotated retangle in the center with another at the top left corner
+ *
+ */
+p5.prototype.resetMatrix = function() {
+  this._renderer.resetMatrix();
+  return this;
+};
+
+/**
+ * Rotates a shape the amount specified by the angle parameter. This
+ * function accounts for angleMode, so angles can be entered in either
+ * RADIANS or DEGREES.
+ * <br><br>
+ * Objects are always rotated around their relative position to the
+ * origin and positive numbers rotate objects in a clockwise direction.
+ * Transformations apply to everything that happens after and subsequent
+ * calls to the function accumulates the effect. For example, calling
+ * rotate(HALF_PI) and then rotate(HALF_PI) is the same as rotate(PI).
+ * All tranformations are reset when draw() begins again.
+ * <br><br>
+ * Technically, rotate() multiplies the current transformation matrix
+ * by a rotation matrix. This function can be further controlled by
+ * the push() and pop().
+ *
+ * @method rotate
+ * @param  {Number} angle the angle of rotation, specified in radians
+ *                        or degrees, depending on current angleMode
+ * @param  {p5.Vector|Number[]} [axis] (in 3d) the axis to rotate around
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(width / 2, height / 2);
+ * rotate(PI / 3.0);
+ * rect(-26, -26, 52, 52);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white 52x52 rect with black outline at center rotated counter 45 degrees
+ *
+ */
+p5.prototype.rotate = function(angle, axis) {
+  p5._validateParameters('rotate', arguments);
+  var r;
+  if (this._angleMode === constants.DEGREES) {
+    r = this.radians(angle);
+  } else if (this._angleMode === constants.RADIANS) {
+    r = angle;
+  }
+  this._renderer.rotate(r, axis);
+  return this;
+};
+
+/**
+ * Rotates around X axis.
+ * @method  rotateX
+ * @param  {Number} rad angles in radians
+ * @chainable
+ * @example
+ * <div modernizr='webgl'>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(255);
+ *   rotateX(millis() / 1000);
+ *   box();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3d box rotating around the x axis.
+ */
+p5.prototype.rotateX = function(rad) {
+  p5._validateParameters('rotateX', arguments);
+  if (this._renderer.isP3D) {
+    this._renderer.rotateX(rad);
+  } else {
+    throw 'not supported in p2d. Please use webgl mode';
+  }
+  return this;
+};
+
+/**
+ * Rotates around Y axis.
+ * @method rotateY
+ * @param  {Number} rad angles in radians
+ * @chainable
+ * @example
+ * <div modernizr='webgl'>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(255);
+ *   rotateY(millis() / 1000);
+ *   box();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3d box rotating around the y axis.
+ */
+p5.prototype.rotateY = function(rad) {
+  p5._validateParameters('rotateY', arguments);
+  if (this._renderer.isP3D) {
+    this._renderer.rotateY(rad);
+  } else {
+    throw 'not supported in p2d. Please use webgl mode';
+  }
+  return this;
+};
+
+/**
+ * Rotates around Z axis. Webgl mode only.
+ * @method rotateZ
+ * @param  {Number} rad angles in radians
+ * @chainable
+ * @example
+ * <div modernizr='webgl'>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(255);
+ *   rotateZ(millis() / 1000);
+ *   box();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3d box rotating around the z axis.
+ */
+p5.prototype.rotateZ = function(rad) {
+  p5._validateParameters('rotateZ', arguments);
+  if (this._renderer.isP3D) {
+    this._renderer.rotateZ(rad);
+  } else {
+    throw 'not supported in p2d. Please use webgl mode';
+  }
+  return this;
+};
+
+/**
+ * Increases or decreases the size of a shape by expanding and contracting
+ * vertices. Objects always scale from their relative origin to the
+ * coordinate system. Scale values are specified as decimal percentages.
+ * For example, the function call scale(2.0) increases the dimension of a
+ * shape by 200%.
+ * <br><br>
+ * Transformations apply to everything that happens after and subsequent
+ * calls to the function multiply the effect. For example, calling scale(2.0)
+ * and then scale(1.5) is the same as scale(3.0). If scale() is called
+ * within draw(), the transformation is reset when the loop begins again.
+ * <br><br>
+ * Using this function with the z parameter is only available in WEBGL mode.
+ * This function can be further controlled with push() and pop().
+ *
+ * @method scale
+ * @param  {Number|p5.Vector|Number[]} s
+ *                      percent to scale the object, or percentage to
+ *                      scale the object in the x-axis if multiple arguments
+ *                      are given
+ * @param  {Number} [y] percent to scale the object in the y-axis
+ * @param  {Number} [z] percent to scale the object in the z-axis (webgl only)
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(width / 2, height / 2);
+ * rotate(PI / 3.0);
+ * rect(-26, -26, 52, 52);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * rect(30, 20, 50, 50);
+ * scale(0.5, 1.3);
+ * rect(30, 20, 50, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white 52x52 rect with black outline at center rotated counter 45 degrees
+ * 2 white rects with black outline- 1 50x50 at center. other 25x65 bottom left
+ *
+ */
+/**
+ * @method scale
+ * @param  {p5.Vector|Number[]} scales per-axis percents to scale the object
+ * @chainable
+ */
+p5.prototype.scale = function(x, y, z) {
+  p5._validateParameters('scale', arguments);
+  // Only check for Vector argument type if Vector is available
+  if (x instanceof p5.Vector) {
+    var v = x;
+    x = v.x;
+    y = v.y;
+    z = v.z;
+  } else if (x instanceof Array) {
+    var rg = x;
+    x = rg[0];
+    y = rg[1];
+    z = rg[2] || 1;
+  }
+  if (isNaN(y)) {
+    y = z = x;
+  } else if (isNaN(z)) {
+    z = 1;
+  }
+
+  this._renderer.scale.call(this._renderer, x, y, z);
+
+  return this;
+};
+
+/**
+ * Shears a shape around the x-axis the amount specified by the angle
+ * parameter. Angles should be specified in the current angleMode.
+ * Objects are always sheared around their relative position to the origin
+ * and positive numbers shear objects in a clockwise direction.
+ * <br><br>
+ * Transformations apply to everything that happens after and subsequent
+ * calls to the function accumulates the effect. For example, calling
+ * shearX(PI/2) and then shearX(PI/2) is the same as shearX(PI).
+ * If shearX() is called within the draw(), the transformation is reset when
+ * the loop begins again.
+ * <br><br>
+ * Technically, shearX() multiplies the current transformation matrix by a
+ * rotation matrix. This function can be further controlled by the
+ * push() and pop() functions.
+ *
+ * @method shearX
+ * @param  {Number} angle angle of shear specified in radians or degrees,
+ *                        depending on current angleMode
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(width / 4, height / 4);
+ * shearX(PI / 4.0);
+ * rect(0, 0, 30, 30);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white irregular quadrilateral with black outline at top middle.
+ *
+ */
+p5.prototype.shearX = function(angle) {
+  p5._validateParameters('shearX', arguments);
+  if (this._angleMode === constants.DEGREES) {
+    angle = this.radians(angle);
+  }
+  this._renderer.shearX(angle);
+  return this;
+};
+
+/**
+ * Shears a shape around the y-axis the amount specified by the angle
+ * parameter. Angles should be specified in the current angleMode. Objects
+ * are always sheared around their relative position to the origin and
+ * positive numbers shear objects in a clockwise direction.
+ * <br><br>
+ * Transformations apply to everything that happens after and subsequent
+ * calls to the function accumulates the effect. For example, calling
+ * shearY(PI/2) and then shearY(PI/2) is the same as shearY(PI). If
+ * shearY() is called within the draw(), the transformation is reset when
+ * the loop begins again.
+ * <br><br>
+ * Technically, shearY() multiplies the current transformation matrix by a
+ * rotation matrix. This function can be further controlled by the
+ * push() and pop() functions.
+ *
+ * @method shearY
+ * @param  {Number} angle angle of shear specified in radians or degrees,
+ *                        depending on current angleMode
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(width / 4, height / 4);
+ * shearY(PI / 4.0);
+ * rect(0, 0, 30, 30);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white irregular quadrilateral with black outline at middle bottom.
+ *
+ */
+p5.prototype.shearY = function(angle) {
+  p5._validateParameters('shearY', arguments);
+  if (this._angleMode === constants.DEGREES) {
+    angle = this.radians(angle);
+  }
+  this._renderer.shearY(angle);
+  return this;
+};
+
+/**
+ * Specifies an amount to displace objects within the display window.
+ * The x parameter specifies left/right translation, the y parameter
+ * specifies up/down translation.
+ * <br><br>
+ * Transformations are cumulative and apply to everything that happens after
+ * and subsequent calls to the function accumulates the effect. For example,
+ * calling translate(50, 0) and then translate(20, 0) is the same as
+ * translate(70, 0). If translate() is called within draw(), the
+ * transformation is reset when the loop begins again. This function can be
+ * further controlled by using push() and pop().
+ *
+ * @method translate
+ * @param  {Number} x left/right translation
+ * @param  {Number} y up/down translation
+ * @param  {Number} [z] forward/backward translation (webgl only)
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(30, 20);
+ * rect(0, 0, 55, 55);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * rect(0, 0, 55, 55); // Draw rect at original 0,0
+ * translate(30, 20);
+ * rect(0, 0, 55, 55); // Draw rect at new 0,0
+ * translate(14, 14);
+ * rect(0, 0, 55, 55); // Draw rect at new 0,0
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white 55x55 rect with black outline at center right.
+ * 3 white 55x55 rects with black outlines at top-l, center-r and bottom-r.
+ *
+ */
+p5.prototype.translate = function(x, y, z) {
+  p5._validateParameters('translate', arguments);
+  if (this._renderer.isP3D) {
+    this._renderer.translate(x, y, z);
+  } else {
+    this._renderer.translate(x, y);
+  }
+  return this;
+};
+
+module.exports = p5;
+
+},{"./constants":21,"./core":22}],35:[function(_dereq_,module,exports){
+/**
+ * @module Shape
+ * @submodule Vertex
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('./core');
+var constants = _dereq_('./constants');
+var shapeKind = null;
+var vertices = [];
+var contourVertices = [];
+var isBezier = false;
+var isCurve = false;
+var isQuadratic = false;
+var isContour = false;
+var isFirstContour = true;
+
+/**
+ * Use the beginContour() and endContour() functions to create negative
+ * shapes within shapes such as the center of the letter 'O'. beginContour()
+ * begins recording vertices for the shape and endContour() stops recording.
+ * The vertices that define a negative shape must "wind" in the opposite
+ * direction from the exterior shape. First draw vertices for the exterior
+ * clockwise order, then for internal shapes, draw vertices
+ * shape in counter-clockwise.
+ * <br><br>
+ * These functions can only be used within a beginShape()/endShape() pair and
+ * transformations such as translate(), rotate(), and scale() do not work
+ * within a beginContour()/endContour() pair. It is also not possible to use
+ * other shapes, such as ellipse() or rect() within.
+ *
+ * @method beginContour
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(50, 50);
+ * stroke(255, 0, 0);
+ * beginShape();
+ * // Exterior part of shape, clockwise winding
+ * vertex(-40, -40);
+ * vertex(40, -40);
+ * vertex(40, 40);
+ * vertex(-40, 40);
+ * // Interior part of shape, counter-clockwise winding
+ * beginContour();
+ * vertex(-20, -20);
+ * vertex(-20, 20);
+ * vertex(20, 20);
+ * vertex(20, -20);
+ * endContour();
+ * endShape(CLOSE);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white rect and smaller grey rect with red outlines in center of canvas.
+ *
+ */
+p5.prototype.beginContour = function() {
+  contourVertices = [];
+  isContour = true;
+  return this;
+};
+
+/**
+ * Using the beginShape() and endShape() functions allow creating more
+ * complex forms. beginShape() begins recording vertices for a shape and
+ * endShape() stops recording. The value of the kind parameter tells it which
+ * types of shapes to create from the provided vertices. With no mode
+ * specified, the shape can be any irregular polygon.
+ * <br><br>
+ * The parameters available for beginShape() are POINTS, LINES, TRIANGLES,
+ * TRIANGLE_FAN, TRIANGLE_STRIP, QUADS, and QUAD_STRIP. After calling the
+ * beginShape() function, a series of vertex() commands must follow. To stop
+ * drawing the shape, call endShape(). Each shape will be outlined with the
+ * current stroke color and filled with the fill color.
+ * <br><br>
+ * Transformations such as translate(), rotate(), and scale() do not work
+ * within beginShape(). It is also not possible to use other shapes, such as
+ * ellipse() or rect() within beginShape().
+ *
+ * @method beginShape
+ * @param  {Constant} [kind] either POINTS, LINES, TRIANGLES, TRIANGLE_FAN
+ *                                TRIANGLE_STRIP, QUADS, or QUAD_STRIP
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * beginShape();
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape(CLOSE);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(POINTS);
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(LINES);
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * beginShape();
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * noFill();
+ * beginShape();
+ * vertex(30, 20);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * vertex(30, 75);
+ * endShape(CLOSE);
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(TRIANGLES);
+ * vertex(30, 75);
+ * vertex(40, 20);
+ * vertex(50, 75);
+ * vertex(60, 20);
+ * vertex(70, 75);
+ * vertex(80, 20);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(TRIANGLE_STRIP);
+ * vertex(30, 75);
+ * vertex(40, 20);
+ * vertex(50, 75);
+ * vertex(60, 20);
+ * vertex(70, 75);
+ * vertex(80, 20);
+ * vertex(90, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(TRIANGLE_FAN);
+ * vertex(57.5, 50);
+ * vertex(57.5, 15);
+ * vertex(92, 50);
+ * vertex(57.5, 85);
+ * vertex(22, 50);
+ * vertex(57.5, 15);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(QUADS);
+ * vertex(30, 20);
+ * vertex(30, 75);
+ * vertex(50, 75);
+ * vertex(50, 20);
+ * vertex(65, 20);
+ * vertex(65, 75);
+ * vertex(85, 75);
+ * vertex(85, 20);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape(QUAD_STRIP);
+ * vertex(30, 20);
+ * vertex(30, 75);
+ * vertex(50, 20);
+ * vertex(50, 75);
+ * vertex(65, 20);
+ * vertex(65, 75);
+ * vertex(85, 20);
+ * vertex(85, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape();
+ * vertex(20, 20);
+ * vertex(40, 20);
+ * vertex(40, 40);
+ * vertex(60, 40);
+ * vertex(60, 60);
+ * vertex(20, 60);
+ * endShape(CLOSE);
+ * </code>
+ * </div>
+ * @alt
+ * white square-shape with black outline in middle-right of canvas.
+ * 4 black points in a square shape in middle-right of canvas.
+ * 2 horizontal black lines. In the top-right and bottom-right of canvas.
+ * 3 line shape with horizontal on top, vertical in middle and horizontal bottom.
+ * square line shape in middle-right of canvas.
+ * 2 white triangle shapes mid-right canvas. left one pointing up and right down.
+ * 5 horizontal interlocking and alternating white triangles in mid-right canvas.
+ * 4 interlocking white triangles in 45 degree rotated square-shape.
+ * 2 white rectangle shapes in mid-right canvas. Both 20x55.
+ * 3 side-by-side white rectangles center rect is smaller in mid-right canvas.
+ * Thick white l-shape with black outline mid-top-left of canvas.
+ *
+ */
+p5.prototype.beginShape = function(kind) {
+  if (this._renderer.isP3D) {
+    this._renderer.beginShape.apply(this._renderer, arguments);
+  } else {
+    if (
+      kind === constants.POINTS ||
+      kind === constants.LINES ||
+      kind === constants.TRIANGLES ||
+      kind === constants.TRIANGLE_FAN ||
+      kind === constants.TRIANGLE_STRIP ||
+      kind === constants.QUADS ||
+      kind === constants.QUAD_STRIP
+    ) {
+      shapeKind = kind;
+    } else {
+      shapeKind = null;
+    }
+
+    vertices = [];
+    contourVertices = [];
+  }
+  return this;
+};
+
+/**
+ * Specifies vertex coordinates for Bezier curves. Each call to
+ * bezierVertex() defines the position of two control points and
+ * one anchor point of a Bezier curve, adding a new segment to a
+ * line or shape.
+ * <br><br>
+ * The first time bezierVertex() is used within a
+ * beginShape() call, it must be prefaced with a call to vertex()
+ * to set the first anchor point. This function must be used between
+ * beginShape() and endShape() and only when there is no MODE
+ * parameter specified to beginShape().
+ *
+ * @method bezierVertex
+ * @param  {Number} x2 x-coordinate for the first control point
+ * @param  {Number} y2 y-coordinate for the first control point
+ * @param  {Number} x3 x-coordinate for the second control point
+ * @param  {Number} y3 y-coordinate for the second control point
+ * @param  {Number} x4 x-coordinate for the anchor point
+ * @param  {Number} y4 y-coordinate for the anchor point
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noFill();
+ * beginShape();
+ * vertex(30, 20);
+ * bezierVertex(80, 0, 80, 75, 30, 75);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * beginShape();
+ * vertex(30, 20);
+ * bezierVertex(80, 0, 80, 75, 30, 75);
+ * bezierVertex(50, 80, 60, 25, 30, 20);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * crescent-shaped line in middle of canvas. Points facing left.
+ * white crescent shape in middle of canvas. Points facing left.
+ *
+ */
+p5.prototype.bezierVertex = function(x2, y2, x3, y3, x4, y4) {
+  p5._validateParameters('bezierVertex', arguments);
+  if (vertices.length === 0) {
+    throw 'vertex() must be used once before calling bezierVertex()';
+  } else {
+    isBezier = true;
+    var vert = [];
+    for (var i = 0; i < arguments.length; i++) {
+      vert[i] = arguments[i];
+    }
+    vert.isVert = false;
+    if (isContour) {
+      contourVertices.push(vert);
+    } else {
+      vertices.push(vert);
+    }
+  }
+  return this;
+};
+
+/**
+ * Specifies vertex coordinates for curves. This function may only
+ * be used between beginShape() and endShape() and only when there
+ * is no MODE parameter specified to beginShape().
+ * <br><br>
+ * The first and last points in a series of curveVertex() lines will be used to
+ * guide the beginning and end of a the curve. A minimum of four
+ * points is required to draw a tiny curve between the second and
+ * third points. Adding a fifth point with curveVertex() will draw
+ * the curve between the second, third, and fourth points. The
+ * curveVertex() function is an implementation of Catmull-Rom
+ * splines.
+ *
+ * @method curveVertex
+ * @param {Number} x x-coordinate of the vertex
+ * @param {Number} y y-coordinate of the vertex
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noFill();
+ * beginShape();
+ * curveVertex(84, 91);
+ * curveVertex(84, 91);
+ * curveVertex(68, 19);
+ * curveVertex(21, 17);
+ * curveVertex(32, 100);
+ * curveVertex(32, 100);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Upside-down u-shape line, mid canvas. left point extends beyond canvas view.
+ *
+ */
+p5.prototype.curveVertex = function(x, y) {
+  p5._validateParameters('curveVertex', arguments);
+  isCurve = true;
+  this.vertex(x, y);
+  return this;
+};
+
+/**
+ * Use the beginContour() and endContour() functions to create negative
+ * shapes within shapes such as the center of the letter 'O'. beginContour()
+ * begins recording vertices for the shape and endContour() stops recording.
+ * The vertices that define a negative shape must "wind" in the opposite
+ * direction from the exterior shape. First draw vertices for the exterior
+ * clockwise order, then for internal shapes, draw vertices
+ * shape in counter-clockwise.
+ * <br><br>
+ * These functions can only be used within a beginShape()/endShape() pair and
+ * transformations such as translate(), rotate(), and scale() do not work
+ * within a beginContour()/endContour() pair. It is also not possible to use
+ * other shapes, such as ellipse() or rect() within.
+ *
+ * @method endContour
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * translate(50, 50);
+ * stroke(255, 0, 0);
+ * beginShape();
+ * // Exterior part of shape, clockwise winding
+ * vertex(-40, -40);
+ * vertex(40, -40);
+ * vertex(40, 40);
+ * vertex(-40, 40);
+ * // Interior part of shape, counter-clockwise winding
+ * beginContour();
+ * vertex(-20, -20);
+ * vertex(-20, 20);
+ * vertex(20, 20);
+ * vertex(20, -20);
+ * endContour();
+ * endShape(CLOSE);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * white rect and smaller grey rect with red outlines in center of canvas.
+ *
+ */
+p5.prototype.endContour = function() {
+  var vert = contourVertices[0].slice(); // copy all data
+  vert.isVert = contourVertices[0].isVert;
+  vert.moveTo = false;
+  contourVertices.push(vert);
+
+  // prevent stray lines with multiple contours
+  if (isFirstContour) {
+    vertices.push(vertices[0]);
+    isFirstContour = false;
+  }
+
+  for (var i = 0; i < contourVertices.length; i++) {
+    vertices.push(contourVertices[i]);
+  }
+  return this;
+};
+
+/**
+ * The endShape() function is the companion to beginShape() and may only be
+ * called after beginShape(). When endshape() is called, all of image data
+ * defined since the previous call to beginShape() is written into the image
+ * buffer. The constant CLOSE as the value for the MODE parameter to close
+ * the shape (to connect the beginning and the end).
+ *
+ * @method endShape
+ * @param  {Constant} [mode] use CLOSE to close the shape
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * noFill();
+ *
+ * beginShape();
+ * vertex(20, 20);
+ * vertex(45, 20);
+ * vertex(45, 80);
+ * endShape(CLOSE);
+ *
+ * beginShape();
+ * vertex(50, 20);
+ * vertex(75, 20);
+ * vertex(75, 80);
+ * endShape();
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Triangle line shape with smallest interior angle on bottom and upside-down L.
+ *
+ */
+p5.prototype.endShape = function(mode) {
+  if (this._renderer.isP3D) {
+    this._renderer.endShape(
+      mode,
+      isCurve,
+      isBezier,
+      isQuadratic,
+      isContour,
+      shapeKind
+    );
+  } else {
+    if (vertices.length === 0) {
+      return this;
+    }
+    if (!this._renderer._doStroke && !this._renderer._doFill) {
+      return this;
+    }
+
+    var closeShape = mode === constants.CLOSE;
+
+    // if the shape is closed, the first element is also the last element
+    if (closeShape && !isContour) {
+      vertices.push(vertices[0]);
+    }
+
+    this._renderer.endShape(
