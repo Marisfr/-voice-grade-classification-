@@ -59864,3 +59864,951 @@ p5.prototype.httpDo = function() {
 /**
  * @module IO
  * @submodule Output
+ * @for p5
+ */
+
+window.URL = window.URL || window.webkitURL;
+
+// private array of p5.PrintWriter objects
+p5.prototype._pWriters = [];
+
+/**
+ * @method createWriter
+ * @param {String} name name of the file to be created
+ * @param {String} [extension]
+ * @return {p5.PrintWriter}
+ * @example
+ * <div>
+ * <code>
+ * createButton('save')
+ *   .position(10, 10)
+ *   .mousePressed(function() {
+ *     var writer = createWriter('squares.txt');
+ *     for (var i = 0; i < 10; i++) {
+ *       writer.print(i * i);
+ *     }
+ *     writer.close();
+ *     writer.flush();
+ *   });
+ * </code>
+ * </div>
+ */
+p5.prototype.createWriter = function(name, extension) {
+  var newPW;
+  // check that it doesn't already exist
+  for (var i in p5.prototype._pWriters) {
+    if (p5.prototype._pWriters[i].name === name) {
+      // if a p5.PrintWriter w/ this name already exists...
+      // return p5.prototype._pWriters[i]; // return it w/ contents intact.
+      // or, could return a new, empty one with a unique name:
+      newPW = new p5.PrintWriter(name + window.millis(), extension);
+      p5.prototype._pWriters.push(newPW);
+      return newPW;
+    }
+  }
+  newPW = new p5.PrintWriter(name, extension);
+  p5.prototype._pWriters.push(newPW);
+  return newPW;
+};
+
+/**
+ *  @class p5.PrintWriter
+ *  @constructor
+ *  @param  {String}     filename
+ *  @param  {String}     [extension]
+ */
+p5.PrintWriter = function(filename, extension) {
+  var self = this;
+  this.name = filename;
+  this.content = '';
+  //Changed to write because it was being overloaded by function below.
+  /**
+   * @method write
+   * @param {Array} data
+   */
+  this.write = function(data) {
+    this.content += data;
+  };
+  /**
+   * @method print
+   * @param {Array} data
+   */
+  this.print = function(data) {
+    this.content += data + '\n';
+  };
+  /**
+   * @method flush
+   */
+  this.flush = function() {
+    this.content = '';
+  };
+  /**
+   * @method close
+   */
+  this.close = function() {
+    // convert String to Array for the writeFile Blob
+    var arr = [];
+    arr.push(this.content);
+    p5.prototype.writeFile(arr, filename, extension);
+    // remove from _pWriters array and delete self
+    for (var i in p5.prototype._pWriters) {
+      if (p5.prototype._pWriters[i].name === this.name) {
+        // remove from _pWriters array
+        p5.prototype._pWriters.splice(i, 1);
+      }
+    }
+    self.flush();
+    self = {};
+  };
+};
+
+/**
+ * @module IO
+ * @submodule Output
+ * @for p5
+ */
+
+// object, filename, options --> saveJSON, saveStrings,
+// filename, [extension] [canvas] --> saveImage
+
+/**
+ *  <p>Save an image, text, json, csv, wav, or html. Prompts download to
+ *  the client's computer. <b>Note that it is not recommended to call save()
+ *  within draw if it's looping, as the save() function will open a new save
+ *  dialog every frame.</b></p>
+ *  <p>The default behavior is to save the canvas as an image. You can
+ *  optionally specify a filename.
+ *  For example:</p>
+ * <pre class='language-javascript'><code>
+ * save();
+ * save('myCanvas.jpg'); // save a specific canvas with a filename
+ * </code></pre>
+ *
+ *  <p>Alternately, the first parameter can be a pointer to a canvas
+ *  p5.Element, an Array of Strings,
+ *  an Array of JSON, a JSON object, a p5.Table, a p5.Image, or a
+ *  p5.SoundFile (requires p5.sound). The second parameter is a filename
+ *  (including extension). The third parameter is for options specific
+ *  to this type of object. This method will save a file that fits the
+ *  given paramaters. For example:</p>
+ *
+ * <pre class='language-javascript'><code>
+ * // Saves canvas as an image
+ * save('myCanvas.jpg');
+ *
+ * // Saves pImage as a png image
+ * var img = createImage(10, 10);
+ * save(img, 'my.png');
+ *
+ * // Saves canvas as an image
+ * var cnv = createCanvas(100, 100);
+ * save(cnv, 'myCanvas.jpg');
+ *
+ * // Saves p5.Renderer object as an image
+ * var gb = createGraphics(100, 100);
+ * save(gb, 'myGraphics.jpg');
+ *
+ * var myTable = new p5.Table();
+ *
+ * // Saves table as html file
+ * save(myTable, 'myTable.html');
+ *
+ * // Comma Separated Values
+ * save(myTable, 'myTable.csv');
+ *
+ * // Tab Separated Values
+ * save(myTable, 'myTable.tsv');
+ *
+ * var myJSON = { a: 1, b: true };
+ *
+ * // Saves pretty JSON
+ * save(myJSON, 'my.json');
+ *
+ * // Optimizes JSON filesize
+ * save(myJSON, 'my.json', true);
+ *
+ * // Saves array of strings to a text file with line breaks after each item
+ * var arrayOfStrings = ['a', 'b'];
+ * save(arrayOfStrings, 'my.txt');
+ * </code></pre>
+ *
+ *  @method save
+ *  @param  {Object|String} [objectOrFilename]  If filename is provided, will
+ *                                             save canvas as an image with
+ *                                             either png or jpg extension
+ *                                             depending on the filename.
+ *                                             If object is provided, will
+ *                                             save depending on the object
+ *                                             and filename (see examples
+ *                                             above).
+ *  @param  {String} [filename] If an object is provided as the first
+ *                               parameter, then the second parameter
+ *                               indicates the filename,
+ *                               and should include an appropriate
+ *                               file extension (see examples above).
+ *  @param  {Boolean|String} [options]  Additional options depend on
+ *                            filetype. For example, when saving JSON,
+ *                            <code>true</code> indicates that the
+ *                            output will be optimized for filesize,
+ *                            rather than readability.
+ */
+p5.prototype.save = function(object, _filename, _options) {
+  // parse the arguments and figure out which things we are saving
+  var args = arguments;
+  // =================================================
+  // OPTION 1: saveCanvas...
+
+  // if no arguments are provided, save canvas
+  var cnv = this._curElement.elt;
+  if (args.length === 0) {
+    p5.prototype.saveCanvas(cnv);
+    return;
+  } else if (args[0] instanceof p5.Renderer || args[0] instanceof p5.Graphics) {
+    // otherwise, parse the arguments
+
+    // if first param is a p5Graphics, then saveCanvas
+    p5.prototype.saveCanvas(args[0].elt, args[1], args[2]);
+    return;
+  } else if (args.length === 1 && typeof args[0] === 'string') {
+    // if 1st param is String and only one arg, assume it is canvas filename
+    p5.prototype.saveCanvas(cnv, args[0]);
+  } else {
+    // =================================================
+    // OPTION 2: extension clarifies saveStrings vs. saveJSON
+    var extension = _checkFileExtension(args[1], args[2])[1];
+    switch (extension) {
+      case 'json':
+        p5.prototype.saveJSON(args[0], args[1], args[2]);
+        return;
+      case 'txt':
+        p5.prototype.saveStrings(args[0], args[1], args[2]);
+        return;
+      // =================================================
+      // OPTION 3: decide based on object...
+      default:
+        if (args[0] instanceof Array) {
+          p5.prototype.saveStrings(args[0], args[1], args[2]);
+        } else if (args[0] instanceof p5.Table) {
+          p5.prototype.saveTable(args[0], args[1], args[2]);
+        } else if (args[0] instanceof p5.Image) {
+          p5.prototype.saveCanvas(args[0].canvas, args[1]);
+        } else if (args[0] instanceof p5.SoundFile) {
+          p5.prototype.saveSound(args[0], args[1], args[2], args[3]);
+        }
+    }
+  }
+};
+
+/**
+ *  Writes the contents of an Array or a JSON object to a .json file.
+ *  The file saving process and location of the saved file will
+ *  vary between web browsers.
+ *
+ *  @method saveJSON
+ *  @param  {Array|Object} json
+ *  @param  {String} filename
+ *  @param  {Boolean} [optimize]   If true, removes line breaks
+ *                                 and spaces from the output
+ *                                 file to optimize filesize
+ *                                 (but not readability).
+ *  @example
+ * <div><code>
+ * var json = {}; // new  JSON Object
+ *
+ * json.id = 0;
+ * json.species = 'Panthera leo';
+ * json.name = 'Lion';
+ *
+ * createButton('save')
+ *   .position(10, 10)
+ *   .mousePressed(function() {
+ *     saveJSON(json, 'lion.json');
+ *   });
+ *
+ * // saves the following to a file called "lion.json":
+ * // {
+ * //   "id": 0,
+ * //   "species": "Panthera leo",
+ * //   "name": "Lion"
+ * // }
+ * </code></div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.prototype.saveJSON = function(json, filename, opt) {
+  var stringify;
+  if (opt) {
+    stringify = JSON.stringify(json);
+  } else {
+    stringify = JSON.stringify(json, undefined, 2);
+  }
+  this.saveStrings(stringify.split('\n'), filename, 'json');
+};
+
+p5.prototype.saveJSONObject = p5.prototype.saveJSON;
+p5.prototype.saveJSONArray = p5.prototype.saveJSON;
+
+/**
+ *  Writes an array of Strings to a text file, one line per String.
+ *  The file saving process and location of the saved file will
+ *  vary between web browsers.
+ *
+ *  @method saveStrings
+ *  @param  {String[]} list   string array to be written
+ *  @param  {String} filename filename for output
+ *  @param  {String} [extension] the filename's extension
+ *  @example
+ * <div><code>
+ * var words = 'apple bear cat dog';
+ *
+ * // .split() outputs an Array
+ * var list = split(words, ' ');
+ *
+ * createButton('save')
+ *   .position(10, 10)
+ *   .mousePressed(function() {
+ *     saveStrings(list, 'nouns.txt');
+ *   });
+ *
+ * // Saves the following to a file called 'nouns.txt':
+ * //
+ * // apple
+ * // bear
+ * // cat
+ * // dog
+ * </code></div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.prototype.saveStrings = function(list, filename, extension) {
+  var ext = extension || 'txt';
+  var pWriter = this.createWriter(filename, ext);
+  for (var i = 0; i < list.length; i++) {
+    if (i < list.length - 1) {
+      pWriter.print(list[i]);
+    } else {
+      pWriter.print(list[i]);
+    }
+  }
+  pWriter.close();
+  pWriter.flush();
+};
+
+// =======
+// HELPERS
+// =======
+
+function escapeHelper(content) {
+  return content
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ *  Writes the contents of a Table object to a file. Defaults to a
+ *  text file with comma-separated-values ('csv') but can also
+ *  use tab separation ('tsv'), or generate an HTML table ('html').
+ *  The file saving process and location of the saved file will
+ *  vary between web browsers.
+ *
+ *  @method saveTable
+ *  @param  {p5.Table} Table  the Table object to save to a file
+ *  @param  {String} filename the filename to which the Table should be saved
+ *  @param  {String} [options]  can be one of "tsv", "csv", or "html"
+ *  @example
+ *  <div><code>
+ * var table;
+ *
+ * function setup() {
+ *   table = new p5.Table();
+ *
+ *   table.addColumn('id');
+ *   table.addColumn('species');
+ *   table.addColumn('name');
+ *
+ *   var newRow = table.addRow();
+ *   newRow.setNum('id', table.getRowCount() - 1);
+ *   newRow.setString('species', 'Panthera leo');
+ *   newRow.setString('name', 'Lion');
+ *
+ *   // To save, un-comment next line then click 'run'
+ *   // saveTable(table, 'new.csv');
+ * }
+ *
+ * // Saves the following to a file called 'new.csv':
+ * // id,species,name
+ * // 0,Panthera leo,Lion
+ * </code></div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.prototype.saveTable = function(table, filename, options) {
+  var ext;
+  if (options === undefined) {
+    ext = filename.substring(filename.lastIndexOf('.') + 1, filename.length);
+  } else {
+    ext = options;
+  }
+  var pWriter = this.createWriter(filename, ext);
+
+  var header = table.columns;
+
+  var sep = ','; // default to CSV
+  if (ext === 'tsv') {
+    sep = '\t';
+  }
+  if (ext !== 'html') {
+    // make header if it has values
+    if (header[0] !== '0') {
+      for (var h = 0; h < header.length; h++) {
+        if (h < header.length - 1) {
+          pWriter.write(header[h] + sep);
+        } else {
+          pWriter.write(header[h]);
+        }
+      }
+      pWriter.write('\n');
+    }
+
+    // make rows
+    for (var i = 0; i < table.rows.length; i++) {
+      var j;
+      for (j = 0; j < table.rows[i].arr.length; j++) {
+        if (j < table.rows[i].arr.length - 1) {
+          pWriter.write(table.rows[i].arr[j] + sep);
+        } else if (i < table.rows.length - 1) {
+          pWriter.write(table.rows[i].arr[j]);
+        } else {
+          pWriter.write(table.rows[i].arr[j]);
+        }
+      }
+      pWriter.write('\n');
+    }
+  } else {
+    // otherwise, make HTML
+    pWriter.print('<html>');
+    pWriter.print('<head>');
+    var str = '  <meta http-equiv="content-type" content';
+    str += '="text/html;charset=utf-8" />';
+    pWriter.print(str);
+    pWriter.print('</head>');
+
+    pWriter.print('<body>');
+    pWriter.print('  <table>');
+
+    // make header if it has values
+    if (header[0] !== '0') {
+      pWriter.print('    <tr>');
+      for (var k = 0; k < header.length; k++) {
+        var e = escapeHelper(header[k]);
+        pWriter.print('      <td>' + e);
+        pWriter.print('      </td>');
+      }
+      pWriter.print('    </tr>');
+    }
+
+    // make rows
+    for (var row = 0; row < table.rows.length; row++) {
+      pWriter.print('    <tr>');
+      for (var col = 0; col < table.columns.length; col++) {
+        var entry = table.rows[row].getString(col);
+        var htmlEntry = escapeHelper(entry);
+        pWriter.print('      <td>' + htmlEntry);
+        pWriter.print('      </td>');
+      }
+      pWriter.print('    </tr>');
+    }
+    pWriter.print('  </table>');
+    pWriter.print('</body>');
+    pWriter.print('</html>');
+  }
+  // close and flush the pWriter
+  pWriter.close();
+  pWriter.flush();
+}; // end saveTable()
+
+/**
+ *  Generate a blob of file data as a url to prepare for download.
+ *  Accepts an array of data, a filename, and an extension (optional).
+ *  This is a private function because it does not do any formatting,
+ *  but it is used by saveStrings, saveJSON, saveTable etc.
+ *
+ *  @param  {Array} dataToDownload
+ *  @param  {String} filename
+ *  @param  {String} [extension]
+ *  @private
+ */
+p5.prototype.writeFile = function(dataToDownload, filename, extension) {
+  var type = 'application/octet-stream';
+  if (p5.prototype._isSafari()) {
+    type = 'text/plain';
+  }
+  var blob = new Blob(dataToDownload, {
+    type: type
+  });
+  p5.prototype.downloadFile(blob, filename, extension);
+};
+
+/**
+ *  Forces download. Accepts a url to filedata/blob, a filename,
+ *  and an extension (optional).
+ *  This is a private function because it does not do any formatting,
+ *  but it is used by saveStrings, saveJSON, saveTable etc.
+ *
+ *  @method downloadFile
+ *  @param  {String|Blob} data    either an href generated by createObjectURL,
+ *                                or a Blob object containing the data
+ *  @param  {String} [filename]
+ *  @param  {String} [extension]
+ */
+p5.prototype.downloadFile = function(data, fName, extension) {
+  var fx = _checkFileExtension(fName, extension);
+  var filename = fx[0];
+
+  if (data instanceof Blob) {
+    var fileSaver = _dereq_('file-saver');
+    fileSaver.saveAs(data, filename);
+    return;
+  }
+
+  var a = document.createElement('a');
+  a.href = data;
+  a.download = filename;
+
+  // Firefox requires the link to be added to the DOM before click()
+  a.onclick = function(e) {
+    destroyClickedElement(e);
+    e.stopPropagation();
+  };
+
+  a.style.display = 'none';
+  document.body.appendChild(a);
+
+  // Safari will open this file in the same page as a confusing Blob.
+  if (p5.prototype._isSafari()) {
+    var aText = 'Hello, Safari user! To download this file...\n';
+    aText += '1. Go to File --> Save As.\n';
+    aText += '2. Choose "Page Source" as the Format.\n';
+    aText += '3. Name it with this extension: ."' + fx[1] + '"';
+    alert(aText);
+  }
+  a.click();
+};
+
+/**
+ *  Returns a file extension, or another string
+ *  if the provided parameter has no extension.
+ *
+ *  @param   {String} filename
+ *  @param   {String} [extension]
+ *  @return  {String[]} [fileName, fileExtension]
+ *
+ *  @private
+ */
+function _checkFileExtension(filename, extension) {
+  if (!extension || extension === true || extension === 'true') {
+    extension = '';
+  }
+  if (!filename) {
+    filename = 'untitled';
+  }
+  var ext = '';
+  // make sure the file will have a name, see if filename needs extension
+  if (filename && filename.indexOf('.') > -1) {
+    ext = filename.split('.').pop();
+  }
+  // append extension if it doesn't exist
+  if (extension) {
+    if (ext !== extension) {
+      ext = extension;
+      filename = filename + '.' + ext;
+    }
+  }
+  return [filename, ext];
+}
+p5.prototype._checkFileExtension = _checkFileExtension;
+
+/**
+ *  Returns true if the browser is Safari, false if not.
+ *  Safari makes trouble for downloading files.
+ *
+ *  @return  {Boolean} [description]
+ *  @private
+ */
+p5.prototype._isSafari = function() {
+  var x = Object.prototype.toString.call(window.HTMLElement);
+  return x.indexOf('Constructor') > 0;
+};
+
+/**
+ *  Helper function, a callback for download that deletes
+ *  an invisible anchor element from the DOM once the file
+ *  has been automatically downloaded.
+ *
+ *  @private
+ */
+function destroyClickedElement(event) {
+  document.body.removeChild(event.target);
+}
+
+module.exports = p5;
+
+},{"../core/core":22,"../core/error_helpers":25,"es6-promise":5,"fetch-jsonp":6,"file-saver":7,"whatwg-fetch":12}],47:[function(_dereq_,module,exports){
+/**
+ * @module IO
+ * @submodule Table
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ *  Table Options
+ *  <p>Generic class for handling tabular data, typically from a
+ *  CSV, TSV, or other sort of spreadsheet file.</p>
+ *  <p>CSV files are
+ *  <a href="http://en.wikipedia.org/wiki/Comma-separated_values">
+ *  comma separated values</a>, often with the data in quotes. TSV
+ *  files use tabs as separators, and usually don't bother with the
+ *  quotes.</p>
+ *  <p>File names should end with .csv if they're comma separated.</p>
+ *  <p>A rough "spec" for CSV can be found
+ *  <a href="http://tools.ietf.org/html/rfc4180">here</a>.</p>
+ *  <p>To load files, use the loadTable method.</p>
+ *  <p>To save tables to your computer, use the save method
+ *   or the saveTable method.</p>
+ *
+ *  Possible options include:
+ *  <ul>
+ *  <li>csv - parse the table as comma-separated values
+ *  <li>tsv - parse the table as tab-separated values
+ *  <li>header - this table has a header (title) row
+ *  </ul>
+ */
+
+/**
+ *  Table objects store data with multiple rows and columns, much
+ *  like in a traditional spreadsheet. Tables can be generated from
+ *  scratch, dynamically, or using data from an existing file.
+ *
+ *  @class p5.Table
+ *  @constructor
+ *  @param  {p5.TableRow[]}     [rows] An array of p5.TableRow objects
+ */
+p5.Table = function(rows) {
+  /**
+   *  @property columns {String[]}
+   */
+  this.columns = [];
+
+  /**
+   *  @property rows {p5.TableRow[]}
+   */
+  this.rows = [];
+  this.name = 'p5.Table'; // for friendly debugger system
+};
+
+/**
+ *  Use addRow() to add a new row of data to a p5.Table object. By default,
+ *  an empty row is created. Typically, you would store a reference to
+ *  the new row in a TableRow object (see newRow in the example above),
+ *  and then set individual values using set().
+ *
+ *  If a p5.TableRow object is included as a parameter, then that row is
+ *  duplicated and added to the table.
+ *
+ *  @method  addRow
+ *  @param   {p5.TableRow} [row] row to be added to the table
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
+ * // 2,Equus zebra,Zebra
+ *
+ * var table;
+ *
+ * function preload() {
+ *   //my table is comma separated value "csv"
+ *   //and has a header specifying the columns labels
+ *   table = loadTable('assets/mammals.csv', 'csv', 'header');
+ * }
+ *
+ * function setup() {
+ *   //add a row
+ *   var newRow = table.addRow();
+ *   newRow.setString('id', table.getRowCount() - 1);
+ *   newRow.setString('species', 'Canis Lupus');
+ *   newRow.setString('name', 'Wolf');
+ *
+ *   //print the results
+ *   for (var r = 0; r < table.getRowCount(); r++)
+ *     for (var c = 0; c < table.getColumnCount(); c++)
+ *       print(table.getString(r, c));
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.Table.prototype.addRow = function(row) {
+  // make sure it is a valid TableRow
+  var r = row || new p5.TableRow();
+
+  if (typeof r.arr === 'undefined' || typeof r.obj === 'undefined') {
+    //r = new p5.prototype.TableRow(r);
+    throw 'invalid TableRow: ' + r;
+  }
+  r.table = this;
+  this.rows.push(r);
+  return r;
+};
+
+/**
+ * Removes a row from the table object.
+ *
+ * @method  removeRow
+ * @param   {Integer} id ID number of the row to remove
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
+ * // 2,Equus zebra,Zebra
+ *
+ * var table;
+ *
+ * function preload() {
+ *   //my table is comma separated value "csv"
+ *   //and has a header specifying the columns labels
+ *   table = loadTable('assets/mammals.csv', 'csv', 'header');
+ * }
+ *
+ * function setup() {
+ *   //remove the first row
+ *   table.removeRow(0);
+ *
+ *   //print the results
+ *   for (var r = 0; r < table.getRowCount(); r++)
+ *     for (var c = 0; c < table.getColumnCount(); c++)
+ *       print(table.getString(r, c));
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.Table.prototype.removeRow = function(id) {
+  this.rows[id].table = null; // remove reference to table
+  var chunk = this.rows.splice(id + 1, this.rows.length);
+  this.rows.pop();
+  this.rows = this.rows.concat(chunk);
+};
+
+/**
+ * Returns a reference to the specified p5.TableRow. The reference
+ * can then be used to get and set values of the selected row.
+ *
+ * @method  getRow
+ * @param  {Integer}   rowID ID number of the row to get
+ * @return {p5.TableRow} p5.TableRow object
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
+ * // 2,Equus zebra,Zebra
+ *
+ * var table;
+ *
+ * function preload() {
+ *   //my table is comma separated value "csv"
+ *   //and has a header specifying the columns labels
+ *   table = loadTable('assets/mammals.csv', 'csv', 'header');
+ * }
+ *
+ * function setup() {
+ *   var row = table.getRow(1);
+ *   //print it column by column
+ *   //note: a row is an object, not an array
+ *   for (var c = 0; c < table.getColumnCount(); c++) {
+ *     print(row.getString(c));
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ *@alt
+ * no image displayed
+ *
+ */
+p5.Table.prototype.getRow = function(r) {
+  return this.rows[r];
+};
+
+/**
+ *  Gets all rows from the table. Returns an array of p5.TableRows.
+ *
+ *  @method  getRows
+ *  @return {p5.TableRow[]}   Array of p5.TableRows
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
+ * // 2,Equus zebra,Zebra
+ *
+ * var table;
+ *
+ * function preload() {
+ *   //my table is comma separated value "csv"
+ *   //and has a header specifying the columns labels
+ *   table = loadTable('assets/mammals.csv', 'csv', 'header');
+ * }
+ *
+ * function setup() {
+ *   var rows = table.getRows();
+ *
+ *   //warning: rows is an array of objects
+ *   for (var r = 0; r < rows.length; r++) {
+ *     rows[r].set('name', 'Unicorn');
+ *   }
+ *
+ *   //print the results
+ *   for (r = 0; r < table.getRowCount(); r++)
+ *     for (var c = 0; c < table.getColumnCount(); c++)
+ *       print(table.getString(r, c));
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.Table.prototype.getRows = function() {
+  return this.rows;
+};
+
+/**
+ *  Finds the first row in the Table that contains the value
+ *  provided, and returns a reference to that row. Even if
+ *  multiple rows are possible matches, only the first matching
+ *  row is returned. The column to search may be specified by
+ *  either its ID or title.
+ *
+ *  @method  findRow
+ *  @param  {String} value  The value to match
+ *  @param  {Integer|String} column ID number or title of the
+ *                                 column to search
+ *  @return {p5.TableRow}
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
+ * // 2,Equus zebra,Zebra
+ *
+ * var table;
+ *
+ * function preload() {
+ *   //my table is comma separated value "csv"
+ *   //and has a header specifying the columns labels
+ *   table = loadTable('assets/mammals.csv', 'csv', 'header');
+ * }
+ *
+ * function setup() {
+ *   //find the animal named zebra
+ *   var row = table.findRow('Zebra', 'name');
+ *   //find the corresponding species
+ *   print(row.getString('species'));
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.Table.prototype.findRow = function(value, column) {
+  // try the Object
+  if (typeof column === 'string') {
+    for (var i = 0; i < this.rows.length; i++) {
+      if (this.rows[i].obj[column] === value) {
+        return this.rows[i];
+      }
+    }
+  } else {
+    // try the Array
+    for (var j = 0; j < this.rows.length; j++) {
+      if (this.rows[j].arr[column] === value) {
+        return this.rows[j];
+      }
+    }
+  }
+  // otherwise...
+  return null;
+};
+
+/**
+ *  Finds the rows in the Table that contain the value
+ *  provided, and returns references to those rows. Returns an
+ *  Array, so for must be used to iterate through all the rows,
+ *  as shown in the example above. The column to search may be
+ *  specified by either its ID or title.
+ *
+ *  @method  findRows
+ *  @param  {String} value  The value to match
+ *  @param  {Integer|String} column ID number or title of the
+ *                                 column to search
+ *  @return {p5.TableRow[]}        An Array of TableRow objects
+ *
+ * @example
+ * <div class="norender">
+ * <code>
+ * // Given the CSV file "mammals.csv"
+ * // in the project's "assets" folder:
+ * //
+ * // id,species,name
+ * // 0,Capra hircus,Goat
+ * // 1,Panthera pardus,Leopard
