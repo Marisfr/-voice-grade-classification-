@@ -61766,3 +61766,1020 @@ p5.TableRow.prototype.getString = function(column) {
   } else {
     return this.arr[column].toString();
   }
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],49:[function(_dereq_,module,exports){
+/**
+ * @module IO
+ * @submodule XML
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * XML is a representation of an XML object, able to parse XML code. Use
+ * loadXML() to load external XML files and create XML objects.
+ *
+ * @class p5.XML
+ * @constructor
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var children = xml.getChildren('animal');
+ *
+ *   for (var i = 0; i < children.length; i++) {
+ *     var id = children[i].getNum('id');
+ *     var coloring = children[i].getString('species');
+ *     var name = children[i].getContent();
+ *     print(id + ', ' + coloring + ', ' + name);
+ *   }
+ * }
+ *
+ * // Sketch prints:
+ * // 0, Capra hircus, Goat
+ * // 1, Panthera pardus, Leopard
+ * // 2, Equus zebra, Zebra
+ * </code></div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.XML = function() {
+  this.name = null; //done
+  this.attributes = {}; //done
+  this.children = [];
+  this.parent = null;
+  this.content = null; //done
+  this.name = 'p5.XML'; // for friendly debugger system
+};
+
+/**
+ * Gets a copy of the element's parent. Returns the parent as another
+ * p5.XML object.
+ *
+ * @method getParent
+ * @return {p5.XML}   element parent
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var children = xml.getChildren('animal');
+ *   var parent = children[1].getParent();
+ *   print(parent.getName());
+ * }
+ *
+ * // Sketch prints:
+ * // mammals
+ * </code></div>
+ */
+p5.XML.prototype.getParent = function() {
+  return this.parent;
+};
+
+/**
+ *  Gets the element's full name, which is returned as a String.
+ *
+ * @method getName
+ * @return {String} the name of the node
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   print(xml.getName());
+ * }
+ *
+ * // Sketch prints:
+ * // mammals
+ * </code></div>
+ */
+p5.XML.prototype.getName = function() {
+  return this.name;
+};
+
+/**
+ * Sets the element's name, which is specified as a String.
+ *
+ * @method setName
+ * @param {String} the new name of the node
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   print(xml.getName());
+ *   xml.setName('fish');
+ *   print(xml.getName());
+ * }
+ *
+ * // Sketch prints:
+ * // mammals
+ * // fish
+ * </code></div>
+ */
+p5.XML.prototype.setName = function(name) {
+  this.name = name;
+};
+
+/**
+ * Checks whether or not the element has any children, and returns the result
+ * as a boolean.
+ *
+ * @method hasChildren
+ * @return {boolean}
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   print(xml.hasChildren());
+ * }
+ *
+ * // Sketch prints:
+ * // true
+ * </code></div>
+ */
+p5.XML.prototype.hasChildren = function() {
+  return this.children.length > 0;
+};
+
+/**
+ * Get the names of all of the element's children, and returns the names as an
+ * array of Strings. This is the same as looping through and calling getName()
+ * on each child element individually.
+ *
+ * @method listChildren
+ * @return {String[]} names of the children of the element
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   print(xml.listChildren());
+ * }
+ *
+ * // Sketch prints:
+ * // ["animal", "animal", "animal"]
+ * </code></div>
+ */
+p5.XML.prototype.listChildren = function() {
+  return this.children.map(function(c) {
+    return c.name;
+  });
+};
+
+/**
+ * Returns all of the element's children as an array of p5.XML objects. When
+ * the name parameter is specified, then it will return all children that match
+ * that name.
+ *
+ * @method getChildren
+ * @param {String} [name] element name
+ * @return {p5.XML[]} children of the element
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var animals = xml.getChildren('animal');
+ *
+ *   for (var i = 0; i < animals.length; i++) {
+ *     print(animals[i].getContent());
+ *   }
+ * }
+ *
+ * // Sketch prints:
+ * // "Goat"
+ * // "Leopard"
+ * // "Zebra"
+ * </code></div>
+ */
+p5.XML.prototype.getChildren = function(param) {
+  if (param) {
+    return this.children.filter(function(c) {
+      return c.name === param;
+    });
+  } else {
+    return this.children;
+  }
+};
+
+/**
+ * Returns the first of the element's children that matches the name parameter
+ * or the child of the given index.It returns undefined if no matching
+ * child is found.
+ *
+ * @method getChild
+ * @param {String|Integer} name element name or index
+ * @return {p5.XML}
+ * @example&lt;animal
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getContent());
+ * }
+ *
+ * // Sketch prints:
+ * // "Goat"
+ * </code></div>
+ * <div class='norender'><code>
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var secondChild = xml.getChild(1);
+ *   print(secondChild.getContent());
+ * }
+ *
+ * // Sketch prints:
+ * // "Leopard"
+ * </code></div>
+ */
+p5.XML.prototype.getChild = function(param) {
+  if (typeof param === 'string') {
+    return this.children.find(function(c) {
+      return c.name === param;
+    });
+  } else {
+    return this.children[param];
+  }
+};
+
+/**
+ * Appends a new child to the element. The child can be specified with
+ * either a String, which will be used as the new tag's name, or as a
+ * reference to an existing p5.XML object.
+ * A reference to the newly created child is returned as an p5.XML object.
+ *
+ * @method addChild
+ * @param {p5.XML} a p5.XML Object which will be the child to be added
+ */
+p5.XML.prototype.addChild = function(node) {
+  if (node instanceof p5.XML) {
+    this.children.push(node);
+  } else {
+    // PEND
+  }
+};
+
+/**
+ * Removes the element specified by name or index.
+ *
+ * @method removeChild
+ * @param {String|Integer} name element name or index
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   xml.removeChild('animal');
+ *   var children = xml.getChildren();
+ *   for (var i = 0; i < children.length; i++) {
+ *     print(children[i].getContent());
+ *   }
+ * }
+ *
+ * // Sketch prints:
+ * // "Leopard"
+ * // "Zebra"
+ * </code></div>
+ * <div class='norender'><code>
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   xml.removeChild(1);
+ *   var children = xml.getChildren();
+ *   for (var i = 0; i < children.length; i++) {
+ *     print(children[i].getContent());
+ *   }
+ * }
+ *
+ * // Sketch prints:
+ * // "Goat"
+ * // "Zebra"
+ * </code></div>
+ */
+p5.XML.prototype.removeChild = function(param) {
+  var ind = -1;
+  if (typeof param === 'string') {
+    for (var i = 0; i < this.children.length; i++) {
+      if (this.children[i].name === param) {
+        ind = i;
+        break;
+      }
+    }
+  } else {
+    ind = param;
+  }
+  if (ind !== -1) {
+    this.children.splice(ind, 1);
+  }
+};
+
+/**
+ * Counts the specified element's number of attributes, returned as an Number.
+ *
+ * @method getAttributeCount
+ * @return {Integer}
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getAttributeCount());
+ * }
+ *
+ * // Sketch prints:
+ * // 2
+ * </code></div>
+ */
+p5.XML.prototype.getAttributeCount = function() {
+  return Object.keys(this.attributes).length;
+};
+
+/**
+ * Gets all of the specified element's attributes, and returns them as an
+ * array of Strings.
+ *
+ * @method listAttributes
+ * @return {String[]} an array of strings containing the names of attributes
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.listAttributes());
+ * }
+ *
+ * // Sketch prints:
+ * // ["id", "species"]
+ * </code></div>
+ */
+p5.XML.prototype.listAttributes = function() {
+  return Object.keys(this.attributes);
+};
+
+/**
+ *  Checks whether or not an element has the specified attribute.
+ *
+ * @method hasAttribute
+ * @param {String} the attribute to be checked
+ * @return {boolean} true if attribute found else false
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.hasAttribute('species'));
+ *   print(firstChild.hasAttribute('color'));
+ * }
+ *
+ * // Sketch prints:
+ * // true
+ * // false
+ * </code></div>
+ */
+p5.XML.prototype.hasAttribute = function(name) {
+  return this.attributes[name] ? true : false;
+};
+
+/**
+ * Returns an attribute value of the element as an Number. If the defaultValue
+ * parameter is specified and the attribute doesn't exist, then defaultValue
+ * is returned. If no defaultValue is specified and the attribute doesn't
+ * exist, the value 0 is returned.
+ *
+ * @method getNum
+ * @param {String} name            the non-null full name of the attribute
+ * @param {Number} [defaultValue]  the default value of the attribute
+ * @return {Number}
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getNum('id'));
+ * }
+ *
+ * // Sketch prints:
+ * // 0
+ * </code></div>
+ */
+p5.XML.prototype.getNum = function(name, defaultValue) {
+  return Number(this.attributes[name]) || defaultValue || 0;
+};
+
+/**
+ * Returns an attribute value of the element as an String. If the defaultValue
+ * parameter is specified and the attribute doesn't exist, then defaultValue
+ * is returned. If no defaultValue is specified and the attribute doesn't
+ * exist, null is returned.
+ *
+ * @method getString
+ * @param {String} name            the non-null full name of the attribute
+ * @param {Number} [defaultValue]  the default value of the attribute
+ * @return {Number}
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getString('species'));
+ * }
+ *
+ * // Sketch prints:
+ * // "Capra hircus"
+ * </code></div>
+ */
+p5.XML.prototype.getString = function(name, defaultValue) {
+  return String(this.attributes[name]) || defaultValue || null;
+};
+
+/**
+ * Sets the content of an element's attribute. The first parameter specifies
+ * the attribute name, while the second specifies the new content.
+ *
+ * @method setAttribute
+ * @param {String} name            the full name of the attribute
+ * @param {Number} value           the value of the attribute
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getString('species'));
+ *   firstChild.setAttribute('species', 'Jamides zebra');
+ *   print(firstChild.getString('species'));
+ * }
+ *
+ * // Sketch prints:
+ * // "Capra hircus"
+ * // "Jamides zebra"
+ * </code></div>
+ */
+p5.XML.prototype.setAttribute = function(name, value) {
+  if (this.attributes[name]) {
+    this.attributes[name] = value;
+  }
+};
+
+/**
+ * Returns the content of an element. If there is no such content,
+ * defaultValue is returned if specified, otherwise null is returned.
+ *
+ * @method getContent
+ * @param {String} [defaultValue] value returned if no content is found
+ * @return {String}
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getContent());
+ * }
+ *
+ * // Sketch prints:
+ * // "Goat"
+ * </code></div>
+ */
+p5.XML.prototype.getContent = function(defaultValue) {
+  return this.content || defaultValue || null;
+};
+
+/**
+ * Sets the element's content.
+ *
+ * @method setContent
+ * @param {String} text the new content
+ * @example
+ * <div class='norender'><code>
+ * // The following short XML file called "mammals.xml" is parsed
+ * // in the code below.
+ * //
+ * // <?xml version="1.0"?>
+ * // &lt;mammals&gt;
+ * //   &lt;animal id="0" species="Capra hircus">Goat&lt;/animal&gt;
+ * //   &lt;animal id="1" species="Panthera pardus">Leopard&lt;/animal&gt;
+ * //   &lt;animal id="2" species="Equus zebra">Zebra&lt;/animal&gt;
+ * // &lt;/mammals&gt;
+ *
+ * var xml;
+ *
+ * function preload() {
+ *   xml = loadXML('assets/mammals.xml');
+ * }
+ *
+ * function setup() {
+ *   var firstChild = xml.getChild('animal');
+ *   print(firstChild.getContent());
+ *   firstChild.setContent('Mountain Goat');
+ *   print(firstChild.getContent());
+ * }
+ *
+ * // Sketch prints:
+ * // "Goat"
+ * // "Mountain Goat"
+ * </code></div>
+ */
+p5.XML.prototype.setContent = function(content) {
+  if (!this.children.length) {
+    this.content = content;
+  }
+};
+
+/* HELPERS */
+/**
+ * This method is called while the parsing of XML (when loadXML() is
+ * called). The difference between this method and the setContent()
+ * method defined later is that this one is used to set the content
+ * when the node in question has more nodes under it and so on and
+ * not directly text content. While in the other one is used when
+ * the node in question directly has text inside it.
+ *
+ */
+p5.XML.prototype._setCont = function(content) {
+  var str;
+  str = content;
+  str = str.replace(/\s\s+/g, ',');
+  //str = str.split(',');
+  this.content = str;
+};
+
+/**
+ * This method is called while the parsing of XML (when loadXML() is
+ * called). The XML node is passed and its attributes are stored in the
+ * p5.XML's attribute Object.
+ *
+ */
+p5.XML.prototype._setAttributes = function(node) {
+  var i,
+    att = {};
+  for (i = 0; i < node.attributes.length; i++) {
+    att[node.attributes[i].nodeName] = node.attributes[i].nodeValue;
+  }
+  this.attributes = att;
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],50:[function(_dereq_,module,exports){
+/**
+ * @module Math
+ * @submodule Calculation
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Calculates the absolute value (magnitude) of a number. Maps to Math.abs().
+ * The absolute value of a number is always positive.
+ *
+ * @method abs
+ * @param  {Number} n number to compute
+ * @return {Number}   absolute value of given number
+ * @example
+ * <div class = "norender"><code>
+ * function setup() {
+ *   var x = -3;
+ *   var y = abs(x);
+ *
+ *   print(x); // -3
+ *   print(y); // 3
+ * }
+ * </code></div>
+ *
+ * @alt
+ * no image displayed
+ *
+ */
+p5.prototype.abs = Math.abs;
+
+/**
+ * Calculates the closest int value that is greater than or equal to the
+ * value of the parameter. Maps to Math.ceil(). For example, ceil(9.03)
+ * returns the value 10.
+ *
+ * @method ceil
+ * @param  {Number} n number to round up
+ * @return {Integer}   rounded up number
+ * @example
+ * <div><code>
+ * function draw() {
+ *   background(200);
+ *   // map, mouseX between 0 and 5.
+ *   var ax = map(mouseX, 0, 100, 0, 5);
+ *   var ay = 66;
+ *
+ *   //Get the ceiling of the mapped number.
+ *   var bx = ceil(map(mouseX, 0, 100, 0, 5));
+ *   var by = 33;
+ *
+ *   // Multiply the mapped numbers by 20 to more easily
+ *   // see the changes.
+ *   stroke(0);
+ *   fill(0);
+ *   line(0, ay, ax * 20, ay);
+ *   line(0, by, bx * 20, by);
+ *
+ *   // Reformat the float returned by map and draw it.
+ *   noStroke();
+ *   text(nfc(ax, 2), ax, ay - 5);
+ *   text(nfc(bx, 1), bx, by - 5);
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 2 horizontal lines & number sets. increase with mouse x. bottom to 2 decimals
+ *
+ */
+p5.prototype.ceil = Math.ceil;
+
+/**
+ * Constrains a value between a minimum and maximum value.
+ *
+ * @method constrain
+ * @param  {Number} n    number to constrain
+ * @param  {Number} low  minimum limit
+ * @param  {Number} high maximum limit
+ * @return {Number}      constrained number
+ * @example
+ * <div><code>
+ * function draw() {
+ *   background(200);
+ *
+ *   var leftWall = 25;
+ *   var rightWall = 75;
+ *
+ *   // xm is just the mouseX, while
+ *   // xc is the mouseX, but constrained
+ *   // between the leftWall and rightWall!
+ *   var xm = mouseX;
+ *   var xc = constrain(mouseX, leftWall, rightWall);
+ *
+ *   // Draw the walls.
+ *   stroke(150);
+ *   line(leftWall, 0, leftWall, height);
+ *   line(rightWall, 0, rightWall, height);
+ *
+ *   // Draw xm and xc as circles.
+ *   noStroke();
+ *   fill(150);
+ *   ellipse(xm, 33, 9, 9); // Not Constrained
+ *   fill(0);
+ *   ellipse(xc, 66, 9, 9); // Constrained
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 2 vertical lines. 2 ellipses move with mouse X 1 does not move passed lines
+ *
+ */
+p5.prototype.constrain = function(n, low, high) {
+  p5._validateParameters('constrain', arguments);
+  return Math.max(Math.min(n, high), low);
+};
+
+/**
+ * Calculates the distance between two points.
+ *
+ * @method dist
+ * @param  {Number} x1 x-coordinate of the first point
+ * @param  {Number} y1 y-coordinate of the first point
+ * @param  {Number} x2 x-coordinate of the second point
+ * @param  {Number} y2 y-coordinate of the second point
+ * @return {Number}    distance between the two points
+ *
+ * @example
+ * <div><code>
+ * // Move your mouse inside the canvas to see the
+ * // change in distance between two points!
+ * function draw() {
+ *   background(200);
+ *   fill(0);
+ *
+ *   var x1 = 10;
+ *   var y1 = 90;
+ *   var x2 = mouseX;
+ *   var y2 = mouseY;
+ *
+ *   line(x1, y1, x2, y2);
+ *   ellipse(x1, y1, 7, 7);
+ *   ellipse(x2, y2, 7, 7);
+ *
+ *   // d is the length of the line
+ *   // the distance from point 1 to point 2.
+ *   var d = int(dist(x1, y1, x2, y2));
+ *
+ *   // Let's write d along the line we are drawing!
+ *   push();
+ *   translate((x1 + x2) / 2, (y1 + y2) / 2);
+ *   rotate(atan2(y2 - y1, x2 - x1));
+ *   text(nfc(d, 1), 0, -5);
+ *   pop();
+ *   // Fancy!
+ * }
+ * </code></div>
+ *
+ * @alt
+ * 2 ellipses joined by line. 1 ellipse moves with mouse X&Y. Distance displayed.
+ */
+/**
+ * @method dist
+ * @param  {Number} x1
+ * @param  {Number} y1
+ * @param  {Number} z1 z-coordinate of the first point
+ * @param  {Number} x2
+ * @param  {Number} y2
+ * @param  {Number} z2 z-coordinate of the second point
+ * @return {Number}    distance between the two points
+ */
+p5.prototype.dist = function() {
+  p5._validateParameters('dist', arguments);
+  if (arguments.length === 4) {
+    //2D
+    return hypot(arguments[2] - arguments[0], arguments[3] - arguments[1]);
+  } else if (arguments.length === 6) {
+    //3D
+    return hypot(
+      arguments[3] - arguments[0],
+      arguments[4] - arguments[1],
+      arguments[5] - arguments[2]
+    );
+  }
+};
+
+/**
+ * Returns Euler's number e (2.71828...) raised to the power of the n
+ * parameter. Maps to Math.exp().
+ *
+ * @method exp
+ * @param  {Number} n exponent to raise
+ * @return {Number}   e^n
+ * @example
+ * <div><code>
+ * function draw() {
+ *   background(200);
+ *
+ *   // Compute the exp() function with a value between 0 and 2
+ *   var xValue = map(mouseX, 0, width, 0, 2);
+ *   var yValue = exp(xValue);
+ *
+ *   var y = map(yValue, 0, 8, height, 0);
+ *
+ *   var legend = 'exp (' + nfc(xValue, 3) + ')\n= ' + nf(yValue, 1, 4);
+ *   stroke(150);
+ *   line(mouseX, y, mouseX, height);
+ *   fill(0);
