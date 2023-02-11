@@ -64762,3 +64762,935 @@ p5.Vector.fromAngles = function(theta, phi, length) {
  * // [0.6091097, -0.22805278, 0.0]
  * print(v);
  * </code>
+ * </div>
+ */
+p5.Vector.random2D = function random2D() {
+  var angle;
+  // A lot of nonsense to determine if we know about a
+  // p5 sketch and whether we should make a random angle in degrees or radians
+  if (this.p5) {
+    if (this.p5._angleMode === constants.DEGREES) {
+      angle = this.p5.random(360);
+    } else {
+      angle = this.p5.random(constants.TWO_PI);
+    }
+  } else {
+    angle = Math.random() * constants.TWO_PI;
+  }
+  return this.fromAngle(angle);
+};
+
+/**
+ * Make a new random 3D unit vector.
+ *
+ * @method random3D
+ * @static
+ * @return {p5.Vector} the new p5.Vector object
+ * @example
+ * <div class="norender">
+ * <code>
+ * var v = p5.Vector.random3D();
+ * // May make v's attributes something like:
+ * // [0.61554617, -0.51195765, 0.599168] or
+ * // [-0.4695841, -0.14366731, -0.8711202] or
+ * // [0.6091097, -0.22805278, -0.7595902]
+ * print(v);
+ * </code>
+ * </div>
+ */
+p5.Vector.random3D = function random3D() {
+  var angle, vz;
+  // If we know about p5
+  if (this.p5) {
+    angle = this.p5.random(0, constants.TWO_PI);
+    vz = this.p5.random(-1, 1);
+  } else {
+    angle = Math.random() * constants.TWO_PI;
+    vz = Math.random() * 2 - 1;
+  }
+  var vzBase = Math.sqrt(1 - vz * vz);
+  var vx = vzBase * Math.cos(angle);
+  var vy = vzBase * Math.sin(angle);
+  if (this.p5) {
+    return new p5.Vector(this.p5, [vx, vy, vz]);
+  }
+  return new p5.Vector(vx, vy, vz);
+};
+
+// Adds two vectors together and returns a new one.
+/**
+ * @method add
+ * @static
+ * @param  {p5.Vector} v1 a p5.Vector to add
+ * @param  {p5.Vector} v2 a p5.Vector to add
+ * @param  {p5.Vector} target the vector to receive the result
+ */
+/**
+ * @method add
+ * @static
+ * @param  {p5.Vector} v1
+ * @param  {p5.Vector} v2
+ * @return {p5.Vector} the resulting p5.Vector
+ *
+ */
+
+p5.Vector.add = function add(v1, v2, target) {
+  if (!target) {
+    target = v1.copy();
+  } else {
+    target.set(v1);
+  }
+  target.add(v2);
+  return target;
+};
+
+/*
+ * Subtracts one p5.Vector from another and returns a new one.  The second
+ * vector (v2) is subtracted from the first (v1), resulting in v1-v2.
+ */
+/**
+ * @method sub
+ * @static
+ * @param  {p5.Vector} v1 a p5.Vector to subtract from
+ * @param  {p5.Vector} v2 a p5.Vector to subtract
+ * @param  {p5.Vector} target if undefined a new vector will be created
+ */
+/**
+ * @method sub
+ * @static
+ * @param  {p5.Vector} v1
+ * @param  {p5.Vector} v2
+ * @return {p5.Vector} the resulting p5.Vector
+ */
+
+p5.Vector.sub = function sub(v1, v2, target) {
+  if (!target) {
+    target = v1.copy();
+  } else {
+    target.set(v1);
+  }
+  target.sub(v2);
+  return target;
+};
+
+/**
+ * Multiplies a vector by a scalar and returns a new vector.
+ */
+/**
+ * @method mult
+ * @static
+ * @param  {p5.Vector} v the vector to multiply
+ * @param  {Number}  n
+ * @param  {p5.Vector} target if undefined a new vector will be created
+ */
+/**
+ * @method mult
+ * @static
+ * @param  {p5.Vector} v
+ * @param  {Number}  n
+ * @return {p5.Vector}  the resulting new p5.Vector
+ */
+p5.Vector.mult = function mult(v, n, target) {
+  if (!target) {
+    target = v.copy();
+  } else {
+    target.set(v);
+  }
+  target.mult(n);
+  return target;
+};
+
+/**
+ * Divides a vector by a scalar and returns a new vector.
+ */
+/**
+ * @method div
+ * @static
+ * @param  {p5.Vector} v the vector to divide
+ * @param  {Number}  n
+ * @param  {p5.Vector} target if undefined a new vector will be created
+ */
+/**
+ * @method div
+ * @static
+ * @param  {p5.Vector} v
+ * @param  {Number}  n
+ * @return {p5.Vector} the resulting new p5.Vector
+ */
+p5.Vector.div = function div(v, n, target) {
+  if (!target) {
+    target = v.copy();
+  } else {
+    target.set(v);
+  }
+  target.div(n);
+  return target;
+};
+
+/**
+ * Calculates the dot product of two vectors.
+ */
+/**
+ * @method dot
+ * @static
+ * @param  {p5.Vector} v1 the first p5.Vector
+ * @param  {p5.Vector} v2 the second p5.Vector
+ * @return {Number}     the dot product
+ */
+p5.Vector.dot = function dot(v1, v2) {
+  return v1.dot(v2);
+};
+
+/**
+ * Calculates the cross product of two vectors.
+ */
+/**
+ * @method cross
+ * @static
+ * @param  {p5.Vector} v1 the first p5.Vector
+ * @param  {p5.Vector} v2 the second p5.Vector
+ * @return {Number}     the cross product
+ */
+p5.Vector.cross = function cross(v1, v2) {
+  return v1.cross(v2);
+};
+
+/**
+ * Calculates the Euclidean distance between two points (considering a
+ * point as a vector object).
+ */
+/**
+ * @method dist
+ * @static
+ * @param  {p5.Vector} v1 the first p5.Vector
+ * @param  {p5.Vector} v2 the second p5.Vector
+ * @return {Number}     the distance
+ */
+p5.Vector.dist = function dist(v1, v2) {
+  return v1.dist(v2);
+};
+
+/**
+ * Linear interpolate a vector to another vector and return the result as a
+ * new vector.
+ */
+/**
+ * @method lerp
+ * @static
+ * @param {p5.Vector} v1
+ * @param {p5.Vector} v2
+ * @param {Number} amt
+ * @param {p5.Vector} target if undefined a new vector will be created
+ */
+/**
+ * @method lerp
+ * @static
+ * @param {p5.Vector} v1
+ * @param {p5.Vector} v2
+ * @param {Number} amt
+ * @return {Number}      the lerped value
+ */
+p5.Vector.lerp = function lerp(v1, v2, amt, target) {
+  if (!target) {
+    target = v1.copy();
+  } else {
+    target.set(v1);
+  }
+  target.lerp(v2, amt);
+  return target;
+};
+
+/**
+ * @method mag
+ * @param {p5.Vector} vecT the vector to return the magnitude of
+ * @return {Number}        the magnitude of vecT
+ * @static
+ */
+p5.Vector.mag = function mag(vecT) {
+  var x = vecT.x,
+    y = vecT.y,
+    z = vecT.z;
+  var magSq = x * x + y * y + z * z;
+  return Math.sqrt(magSq);
+};
+
+module.exports = p5.Vector;
+
+},{"../core/constants":21,"../core/core":22,"./polargeometry":54}],54:[function(_dereq_,module,exports){
+'use strict';
+
+module.exports = {
+  degreesToRadians: function(x) {
+    return 2 * Math.PI * x / 360;
+  },
+
+  radiansToDegrees: function(x) {
+    return 360 * x / (2 * Math.PI);
+  }
+};
+
+},{}],55:[function(_dereq_,module,exports){
+/**
+ * @module Math
+ * @submodule Random
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+var seeded = false;
+var previous = false;
+var y2 = 0;
+
+// Linear Congruential Generator
+// Variant of a Lehman Generator
+var lcg = (function() {
+  // Set to values from http://en.wikipedia.org/wiki/Numerical_Recipes
+  // m is basically chosen to be large (as it is the max period)
+  // and for its relationships to a and c
+  var m = 4294967296,
+    // a - 1 should be divisible by m's prime factors
+    a = 1664525,
+    // c and m should be co-prime
+    c = 1013904223,
+    seed,
+    z;
+  return {
+    setSeed: function(val) {
+      // pick a random seed if val is undefined or null
+      // the >>> 0 casts the seed to an unsigned 32-bit integer
+      z = seed = (val == null ? Math.random() * m : val) >>> 0;
+    },
+    getSeed: function() {
+      return seed;
+    },
+    rand: function() {
+      // define the recurrence relationship
+      z = (a * z + c) % m;
+      // return a float in [0, 1)
+      // if z = m then z / m = 0 therefore (z % m) / m < 1 always
+      return z / m;
+    }
+  };
+})();
+
+/**
+ * Sets the seed value for random().
+ *
+ * By default, random() produces different results each time the program
+ * is run. Set the seed parameter to a constant to return the same
+ * pseudo-random numbers each time the software is run.
+ *
+ * @method randomSeed
+ * @param {Number} seed   the seed value
+ * @example
+ * <div>
+ * <code>
+ * randomSeed(99);
+ * for (var i = 0; i < 100; i++) {
+ *   var r = random(0, 255);
+ *   stroke(r);
+ *   line(i, 0, i, 100);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * many vertical lines drawn in white, black or grey.
+ *
+ */
+p5.prototype.randomSeed = function(seed) {
+  lcg.setSeed(seed);
+  seeded = true;
+  previous = false;
+};
+
+/**
+ * Return a random floating-point number.
+ *
+ * Takes either 0, 1 or 2 arguments.
+ *
+ * If no argument is given, returns a random number from 0
+ * up to (but not including) 1.
+ *
+ * If one argument is given and it is a number, returns a random number from 0
+ * up to (but not including) the number.
+ *
+ * If one argument is given and it is an array, returns a random element from
+ * that array.
+ *
+ * If two arguments are given, returns a random number from the
+ * first argument up to (but not including) the second argument.
+ *
+ * @method random
+ * @param  {Number} [min]   the lower bound (inclusive)
+ * @param  {Number} [max]   the upper bound (exclusive)
+ * @return {Number} the random number
+ * @example
+ * <div>
+ * <code>
+ * for (var i = 0; i < 100; i++) {
+ *   var r = random(50);
+ *   stroke(r * 5);
+ *   line(50, i, 50 + r, i);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * for (var i = 0; i < 100; i++) {
+ *   var r = random(-50, 50);
+ *   line(50, i, 50 + r, i);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * // Get a random element from an array using the random(Array) syntax
+ * var words = ['apple', 'bear', 'cat', 'dog'];
+ * var word = random(words); // select random word
+ * text(word, 10, 50); // draw the word
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 100 horizontal lines from center canvas to right. size+fill change each time
+ * 100 horizontal lines from center of canvas. height & side change each render
+ * word displayed at random. Either apple, bear, cat, or dog
+ *
+ */
+/**
+ * @method random
+ * @param  {Array} choices   the array to choose from
+ * @return {*} the random element from the array
+ * @example
+ */
+p5.prototype.random = function(min, max) {
+  var rand;
+
+  if (seeded) {
+    rand = lcg.rand();
+  } else {
+    rand = Math.random();
+  }
+  if (typeof min === 'undefined') {
+    return rand;
+  } else if (typeof max === 'undefined') {
+    if (min instanceof Array) {
+      return min[Math.floor(rand * min.length)];
+    } else {
+      return rand * min;
+    }
+  } else {
+    if (min > max) {
+      var tmp = min;
+      min = max;
+      max = tmp;
+    }
+
+    return rand * (max - min) + min;
+  }
+};
+
+/**
+ *
+ * Returns a random number fitting a Gaussian, or
+ * normal, distribution. There is theoretically no minimum or maximum
+ * value that randomGaussian() might return. Rather, there is
+ * just a very low probability that values far from the mean will be
+ * returned; and a higher probability that numbers near the mean will
+ * be returned.
+ * <br><br>
+ * Takes either 0, 1 or 2 arguments.<br>
+ * If no args, returns a mean of 0 and standard deviation of 1.<br>
+ * If one arg, that arg is the mean (standard deviation is 1).<br>
+ * If two args, first is mean, second is standard deviation.
+ *
+ * @method randomGaussian
+ * @param  {Number} mean  the mean
+ * @param  {Number} sd    the standard deviation
+ * @return {Number} the random number
+ * @example
+ * <div>
+ * <code>
+ * for (var y = 0; y < 100; y++) {
+ *   var x = randomGaussian(50, 15);
+ *   line(50, y, x, y);
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var distribution = new Array(360);
+ *
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   for (var i = 0; i < distribution.length; i++) {
+ *     distribution[i] = floor(randomGaussian(0, 15));
+ *   }
+ * }
+ *
+ * function draw() {
+ *   background(204);
+ *
+ *   translate(width / 2, width / 2);
+ *
+ *   for (var i = 0; i < distribution.length; i++) {
+ *     rotate(TWO_PI / distribution.length);
+ *     stroke(0);
+ *     var dist = abs(distribution[i]);
+ *     line(0, 0, dist, 0);
+ *   }
+ * }
+ * </code>
+ * </div>
+ * @alt
+ * 100 horizontal lines from center of canvas. height & side change each render
+ * black lines radiate from center of canvas. size determined each render
+ */
+p5.prototype.randomGaussian = function(mean, sd) {
+  var y1, x1, x2, w;
+  if (previous) {
+    y1 = y2;
+    previous = false;
+  } else {
+    do {
+      x1 = this.random(2) - 1;
+      x2 = this.random(2) - 1;
+      w = x1 * x1 + x2 * x2;
+    } while (w >= 1);
+    w = Math.sqrt(-2 * Math.log(w) / w);
+    y1 = x1 * w;
+    y2 = x2 * w;
+    previous = true;
+  }
+
+  var m = mean || 0;
+  var s = sd || 1;
+  return y1 * s + m;
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],56:[function(_dereq_,module,exports){
+/**
+ * @module Math
+ * @submodule Trigonometry
+ * @for p5
+ * @requires core
+ * @requires polargeometry
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var polarGeometry = _dereq_('./polargeometry');
+var constants = _dereq_('../core/constants');
+
+p5.prototype._angleMode = constants.RADIANS;
+
+/**
+ * The inverse of cos(), returns the arc cosine of a value. This function
+ * expects the values in the range of -1 to 1 and values are returned in
+ * the range 0 to PI (3.1415927).
+ *
+ * @method acos
+ * @param  {Number} value the value whose arc cosine is to be returned
+ * @return {Number}       the arc cosine of the given value
+ *
+ * @example
+ * <div class= “norender">
+ * <code>
+ * var a = PI;
+ * var c = cos(a);
+ * var ac = acos(c);
+ * // Prints: "3.1415927 : -1.0 : 3.1415927"
+ * print(a + ' : ' + c + ' : ' + ac);
+ * </code>
+ * </div>
+ *
+ * <div class= “norender">
+ * <code>
+ * var a = PI + PI / 4.0;
+ * var c = cos(a);
+ * var ac = acos(c);
+ * // Prints: "3.926991 : -0.70710665 : 2.3561943"
+ * print(a + ' : ' + c + ' : ' + ac);
+ * </code>
+ * </div>
+ */
+p5.prototype.acos = function(ratio) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.acos(ratio);
+  } else {
+    return polarGeometry.radiansToDegrees(Math.acos(ratio));
+  }
+};
+
+/**
+ * The inverse of sin(), returns the arc sine of a value. This function
+ * expects the values in the range of -1 to 1 and values are returned
+ * in the range -PI/2 to PI/2.
+ *
+ * @method asin
+ * @param  {Number} value the value whose arc sine is to be returned
+ * @return {Number}       the arc sine of the given value
+ *
+ * @example
+ * <div class= “norender">
+ * <code>
+ * var a = PI + PI / 3;
+ * var s = sin(a);
+ * var as = asin(s);
+ * // Prints: "1.0471976 : 0.86602545 : 1.0471976"
+ * print(a + ' : ' + s + ' : ' + as);
+ * </code>
+ * </div>
+ *
+ * <div class= “norender">
+ * <code>
+ * var a = PI + PI / 3.0;
+ * var s = sin(a);
+ * var as = asin(s);
+ * // Prints: "4.1887903 : -0.86602545 : -1.0471976"
+ * print(a + ' : ' + s + ' : ' + as);
+ * </code>
+ * </div>
+ *
+ */
+p5.prototype.asin = function(ratio) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.asin(ratio);
+  } else {
+    return polarGeometry.radiansToDegrees(Math.asin(ratio));
+  }
+};
+
+/**
+ * The inverse of tan(), returns the arc tangent of a value. This function
+ * expects the values in the range of -Infinity to Infinity (exclusive) and
+ * values are returned in the range -PI/2 to PI/2.
+ *
+ * @method atan
+ * @param  {Number} value the value whose arc tangent is to be returned
+ * @return {Number}       the arc tangent of the given value
+ *
+ * @example
+ * <div class= “norender">
+ * <code>
+ * var a = PI + PI / 3;
+ * var t = tan(a);
+ * var at = atan(t);
+ * // Prints: "1.0471976 : 1.7320509 : 1.0471976"
+ * print(a + ' : ' + t + ' : ' + at);
+ * </code>
+ * </div>
+ *
+ * <div class= “norender">
+ * <code>
+ * var a = PI + PI / 3.0;
+ * var t = tan(a);
+ * var at = atan(t);
+ * // Prints: "4.1887903 : 1.7320513 : 1.0471977"
+ * print(a + ' : ' + t + ' : ' + at);
+ * </code>
+ * </div>
+ *
+ */
+p5.prototype.atan = function(ratio) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.atan(ratio);
+  } else {
+    return polarGeometry.radiansToDegrees(Math.atan(ratio));
+  }
+};
+
+/**
+ * Calculates the angle (in radians) from a specified point to the coordinate
+ * origin as measured from the positive x-axis. Values are returned as a
+ * float in the range from PI to -PI. The atan2() function is most often used
+ * for orienting geometry to the position of the cursor.
+ * <br><br>
+ * Note: The y-coordinate of the point is the first parameter, and the
+ * x-coordinate is the second parameter, due the the structure of calculating
+ * the tangent.
+ *
+ * @method atan2
+ * @param  {Number} y y-coordinate of the point
+ * @param  {Number} x x-coordinate of the point
+ * @return {Number}   the arc tangent of the given point
+ *
+ * @example
+ * <div>
+ * <code>
+ * function draw() {
+ *   background(204);
+ *   translate(width / 2, height / 2);
+ *   var a = atan2(mouseY - height / 2, mouseX - width / 2);
+ *   rotate(a);
+ *   rect(-30, -5, 60, 10);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 60 by 10 rect at center of canvas rotates with mouse movements
+ *
+ */
+p5.prototype.atan2 = function(y, x) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.atan2(y, x);
+  } else {
+    return polarGeometry.radiansToDegrees(Math.atan2(y, x));
+  }
+};
+
+/**
+ * Calculates the cosine of an angle. This function takes into account the
+ * current angleMode. Values are returned in the range -1 to 1.
+ *
+ * @method cos
+ * @param  {Number} angle the angle
+ * @return {Number}       the cosine of the angle
+ *
+ * @example
+ * <div>
+ * <code>
+ * var a = 0.0;
+ * var inc = TWO_PI / 25.0;
+ * for (var i = 0; i < 25; i++) {
+ *   line(i * 4, 50, i * 4, 50 + cos(a) * 40.0);
+ *   a = a + inc;
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * vertical black lines form wave patterns, extend-down on left and right side
+ *
+ */
+p5.prototype.cos = function(angle) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.cos(angle);
+  } else {
+    return Math.cos(this.radians(angle));
+  }
+};
+
+/**
+ * Calculates the sine of an angle. This function takes into account the
+ * current angleMode. Values are returned in the range -1 to 1.
+ *
+ * @method sin
+ * @param  {Number} angle the angle
+ * @return {Number}       the sine of the angle
+ *
+ * @example
+ * <div>
+ * <code>
+ * var a = 0.0;
+ * var inc = TWO_PI / 25.0;
+ * for (var i = 0; i < 25; i++) {
+ *   line(i * 4, 50, i * 4, 50 + sin(a) * 40.0);
+ *   a = a + inc;
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * vertical black lines extend down and up from center to form wave pattern
+ *
+ */
+p5.prototype.sin = function(angle) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.sin(angle);
+  } else {
+    return Math.sin(this.radians(angle));
+  }
+};
+
+/**
+ * Calculates the tangent of an angle. This function takes into account
+ * the current angleMode. Values are returned in the range -1 to 1.
+ *
+ * @method tan
+ * @param  {Number} angle the angle
+ * @return {Number}       the tangent of the angle
+ *
+ * @example
+ * <div>
+ * <code>
+ * var a = 0.0;
+ * var inc = TWO_PI / 50.0;
+ * for (var i = 0; i < 100; i = i + 2) {
+ *   line(i, 50, i, 50 + tan(a) * 2.0);
+ *   a = a + inc;
+ * }
+ * </code>
+ *
+ *
+ * @alt
+ * vertical black lines end down and up from center to form spike pattern
+ *
+ */
+p5.prototype.tan = function(angle) {
+  if (this._angleMode === constants.RADIANS) {
+    return Math.tan(angle);
+  } else {
+    return Math.tan(this.radians(angle));
+  }
+};
+
+/**
+ * Converts a radian measurement to its corresponding value in degrees.
+ * Radians and degrees are two ways of measuring the same thing. There are
+ * 360 degrees in a circle and 2*PI radians in a circle. For example,
+ * 90° = PI/2 = 1.5707964.
+ *
+ * @method degrees
+ * @param  {Number} radians the radians value to convert to degrees
+ * @return {Number}         the converted angle
+ *
+ *
+ * @example
+ * <div class= “norender">
+ * <code>
+ * var rad = PI / 4;
+ * var deg = degrees(rad);
+ * print(rad + ' radians is ' + deg + ' degrees');
+ * // Prints: 0.7853981633974483 radians is 45 degrees
+ * </code>
+ * </div>
+ *
+ */
+p5.prototype.degrees = function(angle) {
+  return polarGeometry.radiansToDegrees(angle);
+};
+
+/**
+ * Converts a degree measurement to its corresponding value in radians.
+ * Radians and degrees are two ways of measuring the same thing. There are
+ * 360 degrees in a circle and 2*PI radians in a circle. For example,
+ * 90° = PI/2 = 1.5707964.
+ *
+ * @method radians
+ * @param  {Number} degrees the degree value to convert to radians
+ * @return {Number}         the converted angle
+ *
+ * @example
+ * <div class= “norender">
+ * <code>
+ * var deg = 45.0;
+ * var rad = radians(deg);
+ * print(deg + ' degrees is ' + rad + ' radians');
+ * // Prints: 45 degrees is 0.7853981633974483 radians
+ * </code>
+ * </div>
+ */
+p5.prototype.radians = function(angle) {
+  return polarGeometry.degreesToRadians(angle);
+};
+
+/**
+ * Sets the current mode of p5 to given mode. Default mode is RADIANS.
+ *
+ * @method angleMode
+ * @param {Constant} mode either RADIANS or DEGREES
+ *
+ * @example
+ * <div>
+ * <code>
+ * function draw() {
+ *   background(204);
+ *   angleMode(DEGREES); // Change the mode to DEGREES
+ *   var a = atan2(mouseY - height / 2, mouseX - width / 2);
+ *   translate(width / 2, height / 2);
+ *   push();
+ *   rotate(a);
+ *   rect(-20, -5, 40, 10); // Larger rectangle is rotating in degrees
+ *   pop();
+ *   angleMode(RADIANS); // Change the mode to RADIANS
+ *   rotate(a); // var a stays the same
+ *   rect(-40, -5, 20, 10); // Smaller rectangle is rotating in radians
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 40 by 10 rect in center rotates with mouse moves. 20 by 10 rect moves faster.
+ *
+ *
+ */
+p5.prototype.angleMode = function(mode) {
+  if (mode === constants.DEGREES || mode === constants.RADIANS) {
+    this._angleMode = mode;
+  }
+};
+
+module.exports = p5;
+
+},{"../core/constants":21,"../core/core":22,"./polargeometry":54}],57:[function(_dereq_,module,exports){
+/**
+ * @module Typography
+ * @submodule Attributes
+ * @for p5
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Sets the current alignment for drawing text. Accepts two
+ * arguments: horizAlign (LEFT, CENTER, or RIGHT) and
+ * vertAlign (TOP, BOTTOM, CENTER, or BASELINE).
+ *
+ * The horizAlign parameter is in reference to the x value
+ * of the text() function, while the vertAlign parameter is
+ * in reference to the y value.
+ *
+ * So if you write textAlign(LEFT), you are aligning the left
+ * edge of your text to the x value you give in text(). If you
+ * write textAlign(RIGHT, TOP), you are aligning the right edge
+ * of your text to the x value and the top of edge of the text
+ * to the y value.
+ *
+ * @method textAlign
+ * @param {Constant} horizAlign horizontal alignment, either LEFT,
+ *                            CENTER, or RIGHT
+ * @param {Constant} [vertAlign] vertical alignment, either TOP,
+ *                            BOTTOM, CENTER, or BASELINE
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * textSize(16);
+ * textAlign(RIGHT);
+ * text('ABCD', 50, 30);
+ * textAlign(CENTER);
+ * text('EFGH', 50, 50);
+ * textAlign(LEFT);
+ * text('IJKL', 50, 70);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *Letters ABCD displayed at top right, EFGH at center and IJKL at bottom left.
+ *
+ */
+/**
+ * @method textAlign
+ * @return {Object}
+ */
+p5.prototype.textAlign = function(horizAlign, vertAlign) {
+  return this._renderer.textAlign.apply(this._renderer, arguments);
+};
+
+/**
+ * Sets/gets the spacing, in pixels, between lines of text. This
