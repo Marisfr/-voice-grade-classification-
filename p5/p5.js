@@ -65694,3 +65694,969 @@ p5.prototype.textAlign = function(horizAlign, vertAlign) {
 
 /**
  * Sets/gets the spacing, in pixels, between lines of text. This
+ * setting will be used in all subsequent calls to the text() function.
+ *
+ * @method textLeading
+ * @param {Number} leading the size in pixels for spacing between lines
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * // Text to display. The "\n" is a "new line" character
+ * var lines = 'L1\nL2\nL3';
+ * textSize(12);
+ *
+ * textLeading(10); // Set leading to 10
+ * text(lines, 10, 25);
+ *
+ * textLeading(20); // Set leading to 20
+ * text(lines, 40, 25);
+ *
+ * textLeading(30); // Set leading to 30
+ * text(lines, 70, 25);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *set L1 L2 & L3 displayed vertically 3 times. spacing increases for each set
+ */
+/**
+ * @method textLeading
+ * @return {Number}
+ */
+p5.prototype.textLeading = function(theLeading) {
+  return this._renderer.textLeading.apply(this._renderer, arguments);
+};
+
+/**
+ * Sets/gets the current font size. This size will be used in all subsequent
+ * calls to the text() function. Font size is measured in pixels.
+ *
+ * @method textSize
+ * @param {Number} theSize the size of the letters in units of pixels
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * textSize(12);
+ * text('Font Size 12', 10, 30);
+ * textSize(14);
+ * text('Font Size 14', 10, 60);
+ * textSize(16);
+ * text('Font Size 16', 10, 90);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *Font Size 12 displayed small, Font Size 14 medium & Font Size 16 large
+ */
+/**
+ * @method textSize
+ * @return {Number}
+ */
+p5.prototype.textSize = function(theSize) {
+  return this._renderer.textSize.apply(this._renderer, arguments);
+};
+
+/**
+ * Sets/gets the style of the text for system fonts to NORMAL, ITALIC, or BOLD.
+ * Note: this may be is overridden by CSS styling. For non-system fonts
+ * (opentype, truetype, etc.) please load styled fonts instead.
+ *
+ * @method textStyle
+ * @param {Constant} theStyle styling for text, either NORMAL,
+ *                            ITALIC, or BOLD
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * strokeWeight(0);
+ * textSize(12);
+ * textStyle(NORMAL);
+ * text('Font Style Normal', 10, 30);
+ * textStyle(ITALIC);
+ * text('Font Style Italic', 10, 60);
+ * textStyle(BOLD);
+ * text('Font Style Bold', 10, 90);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *words Font Style Normal displayed normally, Italic in italic and bold in bold
+ */
+/**
+ * @method textStyle
+ * @return {String}
+ */
+p5.prototype.textStyle = function(theStyle) {
+  return this._renderer.textStyle.apply(this._renderer, arguments);
+};
+
+/**
+ * Calculates and returns the width of any character or text string.
+ *
+ * @method textWidth
+ * @param {String} theText the String of characters to measure
+ * @return {Number}
+ * @example
+ * <div>
+ * <code>
+ * textSize(28);
+ *
+ * var aChar = 'P';
+ * var cWidth = textWidth(aChar);
+ * text(aChar, 0, 40);
+ * line(cWidth, 0, cWidth, 50);
+ *
+ * var aString = 'p5.js';
+ * var sWidth = textWidth(aString);
+ * text(aString, 0, 85);
+ * line(sWidth, 50, sWidth, 100);
+ * </code>
+ * </div>
+ *
+ * @alt
+ *Letter P and p5.js are displayed with vertical lines at end. P is wide
+ *
+ */
+p5.prototype.textWidth = function(theText) {
+  if (theText.length === 0) {
+    return 0;
+  }
+  return this._renderer.textWidth.apply(this._renderer, arguments);
+};
+
+/**
+ * Returns the ascent of the current font at its current size. The ascent
+ * represents the distance, in pixels, of the tallest character above
+ * the baseline.
+ * @method textAscent
+ * @return {Number}
+ * @example
+ * <div>
+ * <code>
+ * var base = height * 0.75;
+ * var scalar = 0.8; // Different for each font
+ *
+ * textSize(32); // Set initial text size
+ * var asc = textAscent() * scalar; // Calc ascent
+ * line(0, base - asc, width, base - asc);
+ * text('dp', 0, base); // Draw text on baseline
+ *
+ * textSize(64); // Increase text size
+ * asc = textAscent() * scalar; // Recalc ascent
+ * line(40, base - asc, width, base - asc);
+ * text('dp', 40, base); // Draw text on baseline
+ * </code>
+ * </div>
+ */
+p5.prototype.textAscent = function() {
+  return this._renderer.textAscent();
+};
+
+/**
+ * Returns the descent of the current font at its current size. The descent
+ * represents the distance, in pixels, of the character with the longest
+ * descender below the baseline.
+ * @method textDescent
+ * @return {Number}
+ * @example
+ * <div>
+ * <code>
+ * var base = height * 0.75;
+ * var scalar = 0.8; // Different for each font
+ *
+ * textSize(32); // Set initial text size
+ * var desc = textDescent() * scalar; // Calc ascent
+ * line(0, base + desc, width, base + desc);
+ * text('dp', 0, base); // Draw text on baseline
+ *
+ * textSize(64); // Increase text size
+ * desc = textDescent() * scalar; // Recalc ascent
+ * line(40, base + desc, width, base + desc);
+ * text('dp', 40, base); // Draw text on baseline
+ * </code>
+ * </div>
+ */
+p5.prototype.textDescent = function() {
+  return this._renderer.textDescent();
+};
+
+/**
+ * Helper function to measure ascent and descent.
+ */
+p5.prototype._updateTextMetrics = function() {
+  return this._renderer._updateTextMetrics();
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],58:[function(_dereq_,module,exports){
+/**
+ * @module Typography
+ * @submodule Loading & Displaying
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+var opentype = _dereq_('opentype.js');
+
+_dereq_('../core/error_helpers');
+
+/**
+ * Loads an opentype font file (.otf, .ttf) from a file or a URL,
+ * and returns a PFont Object. This method is asynchronous,
+ * meaning it may not finish before the next line in your sketch
+ * is executed.
+ * <br><br>
+ * The path to the font should be relative to the HTML file
+ * that links in your sketch. Loading an from a URL or other
+ * remote location may be blocked due to your browser's built-in
+ * security.
+ *
+ * @method loadFont
+ * @param  {String}        path       name of the file or url to load
+ * @param  {Function}      [callback] function to be executed after
+ *                                    loadFont() completes
+ * @param  {Function}      [onError]  function to be executed if
+ *                                    an error occurs
+ * @return {p5.Font}                  p5.Font object
+ * @example
+ *
+ * <p>Calling loadFont() inside preload() guarantees that the load
+ * operation will have completed before setup() and draw() are called.</p>
+ *
+ * <div><code>
+ * var myFont;
+ * function preload() {
+ *   myFont = loadFont('assets/AvenirNextLTPro-Demi.otf');
+ * }
+ *
+ * function setup() {
+ *   fill('#ED225D');
+ *   textFont(myFont);
+ *   textSize(36);
+ *   text('p5*js', 10, 50);
+ * }
+ * </code></div>
+ *
+ * Outside of preload(), you may supply a callback function to handle the
+ * object:
+ *
+ * <div><code>
+ * function setup() {
+ *   loadFont('assets/AvenirNextLTPro-Demi.otf', drawText);
+ * }
+ *
+ * function drawText(font) {
+ *   fill('#ED225D');
+ *   textFont(font, 36);
+ *   text('p5*js', 10, 50);
+ * }
+ * </code></div>
+ *
+ * <p>You can also use the string name of the font to style other HTML
+ * elements.</p>
+ *
+ * <div><code>
+ * function preload() {
+ *   loadFont('assets/Avenir.otf');
+ * }
+ *
+ * function setup() {
+ *   var myDiv = createDiv('hello there');
+ *   myDiv.style('font-family', 'Avenir');
+ * }
+ * </code></div>
+ *
+ * @alt
+ * p5*js in p5's theme dark pink
+ * p5*js in p5's theme dark pink
+ *
+ */
+p5.prototype.loadFont = function(path, onSuccess, onError) {
+  var p5Font = new p5.Font(this);
+
+  var self = this;
+  opentype.load(path, function(err, font) {
+    if (err) {
+      if (typeof onError !== 'undefined') {
+        return onError(err);
+      }
+      p5._friendlyFileLoadError(4, path);
+      console.error(err, path);
+      return;
+    }
+
+    p5Font.font = font;
+
+    if (typeof onSuccess !== 'undefined') {
+      onSuccess(p5Font);
+    }
+
+    self._decrementPreload();
+
+    // check that we have an acceptable font type
+    var validFontTypes = ['ttf', 'otf', 'woff', 'woff2'],
+      fileNoPath = path
+        .split('\\')
+        .pop()
+        .split('/')
+        .pop(),
+      lastDotIdx = fileNoPath.lastIndexOf('.'),
+      fontFamily,
+      newStyle,
+      fileExt = lastDotIdx < 1 ? null : fileNoPath.substr(lastDotIdx + 1);
+
+    // if so, add it to the DOM (name-only) for use with p5.dom
+    if (validFontTypes.indexOf(fileExt) > -1) {
+      fontFamily = fileNoPath.substr(0, lastDotIdx);
+      newStyle = document.createElement('style');
+      newStyle.appendChild(
+        document.createTextNode(
+          '\n@font-face {' +
+            '\nfont-family: ' +
+            fontFamily +
+            ';\nsrc: url(' +
+            path +
+            ');\n}\n'
+        )
+      );
+      document.head.appendChild(newStyle);
+    }
+  });
+
+  return p5Font;
+};
+
+/**
+ * Draws text to the screen. Displays the information specified in the first
+ * parameter on the screen in the position specified by the additional
+ * parameters. A default font will be used unless a font is set with the
+ * textFont() function and a default size will be used unless a font is set
+ * with textSize(). Change the color of the text with the fill() function.
+ * Change the outline of the text with the stroke() and strokeWeight()
+ * functions.
+ * <br><br>
+ * The text displays in relation to the textAlign() function, which gives the
+ * option to draw to the left, right, and center of the coordinates.
+ * <br><br>
+ * The x2 and y2 parameters define a rectangular area to display within and
+ * may only be used with string data. When these parameters are specified,
+ * they are interpreted based on the current rectMode() setting. Text that
+ * does not fit completely within the rectangle specified will not be drawn
+ * to the screen.
+ *
+ * @method text
+ * @param {String|Object|Array} str the alphanumeric symbols to be displayed
+ * @param {Number} x   x-coordinate of text
+ * @param {Number} y   y-coordinate of text
+ * @param {Number} [x2]  by default, the width of the text box,
+ *                     see rectMode() for more info
+ * @param {Number} [y2]  by default, the height of the text box,
+ *                     see rectMode() for more info
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * textSize(32);
+ * text('word', 10, 30);
+ * fill(0, 102, 153);
+ * text('word', 10, 60);
+ * fill(0, 102, 153, 51);
+ * text('word', 10, 90);
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var s = 'The quick brown fox jumped over the lazy dog.';
+ * fill(50);
+ * text(s, 10, 10, 70, 80); // Text wraps within text box
+ * </code>
+ * </div>
+ *
+ * @alt
+ *'word' displayed 3 times going from black, blue to translucent blue
+ * The quick brown fox jumped over the lazy dog.
+ *
+ */
+p5.prototype.text = function(str, x, y, maxWidth, maxHeight) {
+  return !(this._renderer._doFill || this._renderer._doStroke)
+    ? this
+    : this._renderer.text.apply(this._renderer, arguments);
+};
+
+/**
+ * Sets the current font that will be drawn with the text() function.
+ *
+ * @method textFont
+ * @return {Object} the current font
+ *
+ * @example
+ * <div>
+ * <code>
+ * fill(0);
+ * textSize(12);
+ * textFont('Georgia');
+ * text('Georgia', 12, 30);
+ * textFont('Helvetica');
+ * text('Helvetica', 12, 60);
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * var fontRegular, fontItalic, fontBold;
+ * function preload() {
+ *   fontRegular = loadFont('assets/Regular.otf');
+ *   fontItalic = loadFont('assets/Italic.ttf');
+ *   fontBold = loadFont('assets/Bold.ttf');
+ * }
+ * function setup() {
+ *   background(210);
+ *   fill(0)
+    .strokeWeight(0)
+    .textSize(10);
+ *   textFont(fontRegular);
+ *   text('Font Style Normal', 10, 30);
+ *   textFont(fontItalic);
+ *   text('Font Style Italic', 10, 50);
+ *   textFont(fontBold);
+ *   text('Font Style Bold', 10, 70);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ *words Font Style Normal displayed normally, Italic in italic and bold in bold
+ */
+/**
+ * @method textFont
+ * @param {Object|String} font a font loaded via loadFont(), or a String
+ * representing a <a href="https://mzl.la/2dOw8WD">web safe font</a> (a font
+ * that is generally available across all systems)
+ * @param {Number} [size] the font size to use
+ * @chainable
+ */
+p5.prototype.textFont = function(theFont, theSize) {
+  if (arguments.length) {
+    if (!theFont) {
+      throw Error('null font passed to textFont');
+    }
+
+    this._renderer._setProperty('_textFont', theFont);
+
+    if (theSize) {
+      this._renderer._setProperty('_textSize', theSize);
+      this._renderer._setProperty(
+        '_textLeading',
+        theSize * constants._DEFAULT_LEADMULT
+      );
+    }
+
+    return this._renderer._applyTextProperties();
+  }
+
+  return this._renderer._textFont;
+};
+
+module.exports = p5;
+
+},{"../core/constants":21,"../core/core":22,"../core/error_helpers":25,"opentype.js":10}],59:[function(_dereq_,module,exports){
+/**
+ * This module defines the p5.Font class and functions for
+ * drawing text to the display canvas.
+ * @module Typography
+ * @submodule Font
+ * @requires core
+ * @requires constants
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+
+/*
+ * TODO:
+ * -- kerning
+ * -- alignment: justified?
+ */
+
+/**
+ * Base class for font handling
+ * @class p5.Font
+ * @constructor
+ * @param {p5} [pInst] pointer to p5 instance
+ */
+p5.Font = function(p) {
+  this.parent = p;
+
+  this.cache = {};
+
+  /**
+   * Underlying opentype font implementation
+   * @property font
+   */
+  this.font = undefined;
+  this.name = 'p5.Font'; // for friendly debugger system
+};
+
+p5.Font.prototype.list = function() {
+  // TODO
+  throw 'not yet implemented';
+};
+
+/**
+ * Returns a tight bounding box for the given text string using this
+ * font (currently only supports single lines)
+ *
+ * @method textBounds
+ * @param  {String} line     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Number} [fontSize] font size to use (optional)
+ * @param  {Object} [options] opentype options (optional)
+ *
+ * @return {Object}          a rectangle object with properties: x, y, w, h
+ *
+ * @example
+ * <div>
+ * <code>
+ * var font;
+ * var textString = 'Lorem ipsum dolor sit amet.';
+ * function preload() {
+ *   font = loadFont('./assets/Regular.otf');
+ * }
+ * function setup() {
+ *   background(210);
+ *
+ *   var bbox = font.textBounds(textString, 10, 30, 12);
+ *   fill(255);
+ *   stroke(0);
+ *   rect(bbox.x, bbox.y, bbox.w, bbox.h);
+ *   fill(0);
+ *   noStroke();
+ *
+ *   textFont(font);
+ *   textSize(12);
+ *   text(textString, 10, 30);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ *words Lorem ipsum dol go off canvas and contained by white bounding box
+ *
+ */
+p5.Font.prototype.textBounds = function(str, x, y, fontSize, options) {
+  x = x !== undefined ? x : 0;
+  y = y !== undefined ? y : 0;
+  fontSize = fontSize || this.parent._renderer._textSize;
+
+  // Check cache for existing bounds. Take into consideration the text alignment
+  // settings. Default alignment should match opentype's origin: left-aligned &
+  // alphabetic baseline.
+  var p =
+      (options && options.renderer && options.renderer._pInst) || this.parent,
+    ctx = p._renderer.drawingContext,
+    alignment = ctx.textAlign || constants.LEFT,
+    baseline = ctx.textBaseline || constants.BASELINE,
+    key = cacheKey('textBounds', str, x, y, fontSize, alignment, baseline),
+    result = this.cache[key];
+
+  if (!result) {
+    var minX,
+      minY,
+      maxX,
+      maxY,
+      pos,
+      xCoords = [],
+      yCoords = [],
+      scale = this._scale(fontSize);
+
+    this.font.forEachGlyph(str, x, y, fontSize, options, function(
+      glyph,
+      gX,
+      gY,
+      gFontSize
+    ) {
+      var gm = glyph.getMetrics();
+      xCoords.push(gX + gm.xMin * scale);
+      xCoords.push(gX + gm.xMax * scale);
+      yCoords.push(gY + -gm.yMin * scale);
+      yCoords.push(gY + -gm.yMax * scale);
+    });
+
+    minX = Math.min.apply(null, xCoords);
+    minY = Math.min.apply(null, yCoords);
+    maxX = Math.max.apply(null, xCoords);
+    maxY = Math.max.apply(null, yCoords);
+
+    result = {
+      x: minX,
+      y: minY,
+      h: maxY - minY,
+      w: maxX - minX,
+      advance: minX - x
+    };
+
+    // Bounds are now calculated, so shift the x & y to match alignment settings
+    pos = this._handleAlignment(
+      p,
+      ctx,
+      str,
+      result.x,
+      result.y,
+      result.w + result.advance
+    );
+
+    result.x = pos.x;
+    result.y = pos.y;
+
+    this.cache[
+      cacheKey('textBounds', str, x, y, fontSize, alignment, baseline)
+    ] = result;
+  }
+
+  return result;
+};
+
+/**
+ * Computes an array of points following the path for specified text
+ *
+ * @method textToPoints
+ * @param  {String} txt     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Number} fontSize font size to use (optional)
+ * @param  {Object} [options] an (optional) object that can contain:
+ *
+ * <br>sampleFactor - the ratio of path-length to number of samples
+ * (default=.25); higher values yield more points and are therefore
+ * more precise
+ *
+ * <br>simplifyThreshold - if set to a non-zero value, collinear points will be
+ * be removed from the polygon; the value represents the threshold angle to use
+ * when determining whether two edges are collinear
+ *
+ * @return {Array}  an array of points, each with x, y, alpha (the path angle)
+ * @example
+ * <div>
+ * <code>
+ * var font;
+ * function preload() {
+ *   font = loadFont('./assets/Avenir.otf');
+ * }
+ *
+ * var points;
+ * var bounds;
+ * function setup() {
+ *   createCanvas(100, 100);
+ *   stroke(0);
+ *   fill(255, 104, 204);
+ *
+ *   points = font.textToPoints('p5', 0, 0, 10, {
+ *     sampleFactor: 5,
+ *     simplifyThreshold: 0
+ *   });
+ *   bounds = font.textBounds(' p5 ', 0, 0, 10);
+ * }
+ *
+ * function draw() {
+ *   background(255);
+ *   beginShape();
+ *   translate(-bounds.x * width / bounds.w, -bounds.y * height / bounds.h);
+ *   for (var i = 0; i < points.length; i++) {
+ *     var p = points[i];
+ *     vertex(
+ *       p.x * width / bounds.w +
+ *         sin(20 * p.y / bounds.h + millis() / 1000) * width / 30,
+ *       p.y * height / bounds.h
+ *     );
+ *   }
+ *   endShape(CLOSE);
+ * }
+ * </code>
+ * </div>
+ *
+ */
+p5.Font.prototype.textToPoints = function(txt, x, y, fontSize, options) {
+  var xoff = 0,
+    result = [],
+    glyphs = this._getGlyphs(txt);
+
+  function isSpace(i) {
+    return (
+      (glyphs[i].name && glyphs[i].name === 'space') ||
+      (txt.length === glyphs.length && txt[i] === ' ') ||
+      (glyphs[i].index && glyphs[i].index === 3)
+    );
+  }
+
+  fontSize = fontSize || this.parent._renderer._textSize;
+
+  for (var i = 0; i < glyphs.length; i++) {
+    if (!isSpace(i)) {
+      // fix to #1817, #2069
+
+      var gpath = glyphs[i].getPath(x, y, fontSize),
+        paths = splitPaths(gpath.commands);
+
+      for (var j = 0; j < paths.length; j++) {
+        var pts = pathToPoints(paths[j], options);
+
+        for (var k = 0; k < pts.length; k++) {
+          pts[k].x += xoff;
+          result.push(pts[k]);
+        }
+      }
+    }
+
+    xoff += glyphs[i].advanceWidth * this._scale(fontSize);
+  }
+
+  return result;
+};
+
+// ----------------------------- End API ------------------------------
+
+/**
+ * Returns the set of opentype glyphs for the supplied string.
+ *
+ * Note that there is not a strict one-to-one mapping between characters
+ * and glyphs, so the list of returned glyphs can be larger or smaller
+ *  than the length of the given string.
+ *
+ * @private
+ * @param  {String} str the string to be converted
+ * @return {Array}     the opentype glyphs
+ */
+p5.Font.prototype._getGlyphs = function(str) {
+  return this.font.stringToGlyphs(str);
+};
+
+/**
+ * Returns an opentype path for the supplied string and position.
+ *
+ * @private
+ * @param  {String} line     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Object} options opentype options (optional)
+ * @return {Object}     the opentype path
+ */
+p5.Font.prototype._getPath = function(line, x, y, options) {
+  var p =
+      (options && options.renderer && options.renderer._pInst) || this.parent,
+    ctx = p._renderer.drawingContext,
+    pos = this._handleAlignment(p, ctx, line, x, y);
+
+  return this.font.getPath(line, pos.x, pos.y, p._renderer._textSize, options);
+};
+
+/*
+ * Creates an SVG-formatted path-data string
+ * (See http://www.w3.org/TR/SVG/paths.html#PathData)
+ * from the given opentype path or string/position
+ *
+ * @param  {Object} path    an opentype path, OR the following:
+ *
+ * @param  {String} line     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Object} options opentype options (optional), set options.decimals
+ * to set the decimal precision of the path-data
+ *
+ * @return {Object}     this p5.Font object
+ */
+p5.Font.prototype._getPathData = function(line, x, y, options) {
+  var decimals = 3;
+
+  // create path from string/position
+  if (typeof line === 'string' && arguments.length > 2) {
+    line = this._getPath(line, x, y, options);
+  } else if (typeof x === 'object') {
+    // handle options specified in 2nd arg
+    options = x;
+  }
+
+  // handle svg arguments
+  if (options && typeof options.decimals === 'number') {
+    decimals = options.decimals;
+  }
+
+  return line.toPathData(decimals);
+};
+
+/*
+ * Creates an SVG <path> element, as a string,
+ * from the given opentype path or string/position
+ *
+ * @param  {Object} path    an opentype path, OR the following:
+ *
+ * @param  {String} line     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Object} options opentype options (optional), set options.decimals
+ * to set the decimal precision of the path-data in the <path> element,
+ *  options.fill to set the fill color for the <path> element,
+ *  options.stroke to set the stroke color for the <path> element,
+ *  options.strokeWidth to set the strokeWidth for the <path> element.
+ *
+ * @return {Object}     this p5.Font object
+ */
+p5.Font.prototype._getSVG = function(line, x, y, options) {
+  var decimals = 3;
+
+  // create path from string/position
+  if (typeof line === 'string' && arguments.length > 2) {
+    line = this._getPath(line, x, y, options);
+  } else if (typeof x === 'object') {
+    // handle options specified in 2nd arg
+    options = x;
+  }
+
+  // handle svg arguments
+  if (options) {
+    if (typeof options.decimals === 'number') {
+      decimals = options.decimals;
+    }
+    if (typeof options.strokeWidth === 'number') {
+      line.strokeWidth = options.strokeWidth;
+    }
+    if (typeof options.fill !== 'undefined') {
+      line.fill = options.fill;
+    }
+    if (typeof options.stroke !== 'undefined') {
+      line.stroke = options.stroke;
+    }
+  }
+
+  return line.toSVG(decimals);
+};
+
+/*
+ * Renders an opentype path or string/position
+ * to the current graphics context
+ *
+ * @param  {Object} path    an opentype path, OR the following:
+ *
+ * @param  {String} line     a line of text
+ * @param  {Number} x        x-position
+ * @param  {Number} y        y-position
+ * @param  {Object} options opentype options (optional)
+ *
+ * @return {p5.Font}     this p5.Font object
+ */
+p5.Font.prototype._renderPath = function(line, x, y, options) {
+  var pdata,
+    pg = (options && options.renderer) || this.parent._renderer,
+    ctx = pg.drawingContext;
+
+  if (typeof line === 'object' && line.commands) {
+    pdata = line.commands;
+  } else {
+    //pos = handleAlignment(p, ctx, line, x, y);
+    pdata = this._getPath(line, x, y, options).commands;
+  }
+
+  ctx.beginPath();
+  for (var i = 0; i < pdata.length; i += 1) {
+    var cmd = pdata[i];
+    if (cmd.type === 'M') {
+      ctx.moveTo(cmd.x, cmd.y);
+    } else if (cmd.type === 'L') {
+      ctx.lineTo(cmd.x, cmd.y);
+    } else if (cmd.type === 'C') {
+      ctx.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+    } else if (cmd.type === 'Q') {
+      ctx.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
+    } else if (cmd.type === 'Z') {
+      ctx.closePath();
+    }
+  }
+
+  // only draw stroke if manually set by user
+  if (pg._doStroke && pg._strokeSet) {
+    ctx.stroke();
+  }
+
+  if (pg._doFill) {
+    // if fill hasn't been set by user, use default-text-fill
+    if (!pg._fillSet) {
+      pg._setFill(constants._DEFAULT_TEXT_FILL);
+    }
+    ctx.fill();
+  }
+
+  return this;
+};
+
+p5.Font.prototype._textWidth = function(str, fontSize) {
+  return this.font.getAdvanceWidth(str, fontSize);
+};
+
+p5.Font.prototype._textAscent = function(fontSize) {
+  return this.font.ascender * this._scale(fontSize);
+};
+
+p5.Font.prototype._textDescent = function(fontSize) {
+  return -this.font.descender * this._scale(fontSize);
+};
+
+p5.Font.prototype._scale = function(fontSize) {
+  return (
+    1 / this.font.unitsPerEm * (fontSize || this.parent._renderer._textSize)
+  );
+};
+
+p5.Font.prototype._handleAlignment = function(p, ctx, line, x, y, textWidth) {
+  var fontSize = p._renderer._textSize,
+    textAscent = this._textAscent(fontSize),
+    textDescent = this._textDescent(fontSize);
+
+  textWidth =
+    textWidth !== undefined ? textWidth : this._textWidth(line, fontSize);
+
+  if (ctx.textAlign === constants.CENTER) {
+    x -= textWidth / 2;
+  } else if (ctx.textAlign === constants.RIGHT) {
+    x -= textWidth;
+  }
+
+  if (ctx.textBaseline === constants.TOP) {
+    y += textAscent;
+  } else if (ctx.textBaseline === constants._CTX_MIDDLE) {
+    y += textAscent / 2;
+  } else if (ctx.textBaseline === constants.BOTTOM) {
+    y -= textDescent;
+  }
+
+  return { x: x, y: y };
+};
+
+// path-utils
+
+function pathToPoints(cmds, options) {
+  var opts = parseOpts(options, {
+    sampleFactor: 0.1,
+    simplifyThreshold: 0
+  });
+
+  var len = pointAtLength(cmds, 0, 1), // total-length
+    t = len / (len * opts.sampleFactor),
+    pts = [];
+
+  for (var i = 0; i < len; i += t) {
+    pts.push(pointAtLength(cmds, i));
+  }
+
+  if (opts.simplifyThreshold) {
+    /*var count = */ simplify(pts, opts.simplifyThreshold);
+    //console.log('Simplify: removed ' + count + ' pts');
