@@ -68536,3 +68536,963 @@ function addNfs(num) {
 p5.prototype.split = function(str, delim) {
   p5._validateParameters('split', arguments);
   return str.split(delim);
+};
+
+/**
+ * The splitTokens() function splits a String at one or many character
+ * delimiters or "tokens." The delim parameter specifies the character or
+ * characters to be used as a boundary.
+ * <br><br>
+ * If no delim characters are specified, any whitespace character is used to
+ * split. Whitespace characters include tab (\t), line feed (\n), carriage
+ * return (\r), form feed (\f), and space.
+ *
+ * @method splitTokens
+ * @param  {String} value   the String to be split
+ * @param  {String} [delim] list of individual Strings that will be used as
+ *                          separators
+ * @return {String[]}          Array of Strings
+ * @example
+ * <div class = "norender">
+ * <code>
+ * function setup() {
+ *   var myStr = 'Mango, Banana, Lime';
+ *   var myStrArr = splitTokens(myStr, ',');
+ *
+ *   print(myStrArr); // prints : ["Mango"," Banana"," Lime"]
+ * }
+ * </code>
+ * </div>
+ */
+p5.prototype.splitTokens = function(value, delims) {
+  p5._validateParameters('splitTokens', arguments);
+  var d;
+  if (typeof delims !== 'undefined') {
+    var str = delims;
+    var sqc = /\]/g.exec(str);
+    var sqo = /\[/g.exec(str);
+    if (sqo && sqc) {
+      str = str.slice(0, sqc.index) + str.slice(sqc.index + 1);
+      sqo = /\[/g.exec(str);
+      str = str.slice(0, sqo.index) + str.slice(sqo.index + 1);
+      d = new RegExp('[\\[' + str + '\\]]', 'g');
+    } else if (sqc) {
+      str = str.slice(0, sqc.index) + str.slice(sqc.index + 1);
+      d = new RegExp('[' + str + '\\]]', 'g');
+    } else if (sqo) {
+      str = str.slice(0, sqo.index) + str.slice(sqo.index + 1);
+      d = new RegExp('[' + str + '\\[]', 'g');
+    } else {
+      d = new RegExp('[' + str + ']', 'g');
+    }
+  } else {
+    d = /\s/g;
+  }
+  return value.split(d).filter(function(n) {
+    return n;
+  });
+};
+
+/**
+ * Removes whitespace characters from the beginning and end of a String. In
+ * addition to standard whitespace characters such as space, carriage return,
+ * and tab, this function also removes the Unicode "nbsp" character.
+ *
+ * @method trim
+ * @param  {String} str a String to be trimmed
+ * @return {String}       a trimmed String
+ *
+ * @example
+ * <div>
+ * <code>
+ * var string = trim('  No new lines\n   ');
+ * text(string + ' here', 2, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "No new lines here" displayed center canvas
+ */
+/**
+ * @method trim
+ * @param  {Array} strs an Array of Strings to be trimmed
+ * @return {String[]}   an Array of trimmed Strings
+ */
+p5.prototype.trim = function(str) {
+  p5._validateParameters('trim', arguments);
+  if (str instanceof Array) {
+    return str.map(this.trim);
+  } else {
+    return str.trim();
+  }
+};
+
+module.exports = p5;
+
+},{"../core/core":22,"../core/error_helpers":25}],63:[function(_dereq_,module,exports){
+/**
+ * @module IO
+ * @submodule Time & Date
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * p5.js communicates with the clock on your computer. The day() function
+ * returns the current day as a value from 1 - 31.
+ *
+ * @method day
+ * @return {Integer} the current day
+ * @example
+ * <div>
+ * <code>
+ * var d = day();
+ * text('Current day: \n' + d, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current day is displayed
+ *
+ */
+p5.prototype.day = function() {
+  return new Date().getDate();
+};
+
+/**
+ * p5.js communicates with the clock on your computer. The hour() function
+ * returns the current hour as a value from 0 - 23.
+ *
+ * @method hour
+ * @return {Integer} the current hour
+ * @example
+ * <div>
+ * <code>
+ * var h = hour();
+ * text('Current hour:\n' + h, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current hour is displayed
+ *
+ */
+p5.prototype.hour = function() {
+  return new Date().getHours();
+};
+
+/**
+ * p5.js communicates with the clock on your computer. The minute() function
+ * returns the current minute as a value from 0 - 59.
+ *
+ * @method minute
+ * @return {Integer} the current minute
+ * @example
+ * <div>
+ * <code>
+ * var m = minute();
+ * text('Current minute: \n' + m, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current minute is displayed
+ *
+ */
+p5.prototype.minute = function() {
+  return new Date().getMinutes();
+};
+
+/**
+ * Returns the number of milliseconds (thousandths of a second) since
+ * starting the program. This information is often used for timing events and
+ * animation sequences.
+ *
+ * @method millis
+ * @return {Number} the number of milliseconds since starting the program
+ * @example
+ * <div>
+ * <code>
+ * var millisecond = millis();
+ * text('Milliseconds \nrunning: \n' + millisecond, 5, 40);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * number of milliseconds since program has started displayed
+ *
+ */
+p5.prototype.millis = function() {
+  return window.performance.now();
+};
+
+/**
+ * p5.js communicates with the clock on your computer. The month() function
+ * returns the current month as a value from 1 - 12.
+ *
+ * @method month
+ * @return {Integer} the current month
+ * @example
+ * <div>
+ * <code>
+ * var m = month();
+ * text('Current month: \n' + m, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current month is displayed
+ *
+ */
+p5.prototype.month = function() {
+  return new Date().getMonth() + 1; //January is 0!
+};
+
+/**
+ * p5.js communicates with the clock on your computer. The second() function
+ * returns the current second as a value from 0 - 59.
+ *
+ * @method second
+ * @return {Integer} the current second
+ * @example
+ * <div>
+ * <code>
+ * var s = second();
+ * text('Current second: \n' + s, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current second is displayed
+ *
+ */
+p5.prototype.second = function() {
+  return new Date().getSeconds();
+};
+
+/**
+ * p5.js communicates with the clock on your computer. The year() function
+ * returns the current year as an integer (2014, 2015, 2016, etc).
+ *
+ * @method year
+ * @return {Integer} the current year
+ * @example
+ * <div>
+ * <code>
+ * var y = year();
+ * text('Current year: \n' + y, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Current year is displayed
+ *
+ */
+p5.prototype.year = function() {
+  return new Date().getFullYear();
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],64:[function(_dereq_,module,exports){
+/**
+ * @module Lights, Camera
+ * @submodule Camera
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Sets camera position for a 3D sketch. The function behaves similarly
+ * gluLookAt, except that it replaces the existing modelview matrix instead
+ * of applying any transformations calculated here on top of the existing
+ * model view.
+ * When called with no arguments, this function
+ * sets a default camera equivalent to calling
+ * camera(0, 0, (height/2.0) / tan(PI*30.0 / 180.0), 0, 0, 0, 0, 1, 0);
+ * @method camera
+ * @param  {Number} [x]        camera position value on x axis
+ * @param  {Number} [y]        camera position value on y axis
+ * @param  {Number} [z]        camera position value on z axis
+ * @param  {Number} [centerX]  x coordinate representing center of the sketch
+ * @param  {Number} [centerY]  y coordinate representing center of the sketch
+ * @param  {Number} [centerZ]  z coordinate representing center of the sketch
+ * @param  {Number} [upX]      x component of direction 'up' from camera
+ * @param  {Number} [upY]      y component of direction 'up' from camera
+ * @param  {Number} [upZ]      z component of direction 'up' from camera
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   //move the camera away from the plane by a sin wave
+ *   camera(0, 0, sin(frameCount * 0.01) * 100, 0, 0, 0, 0, 1, 0);
+ *   plane(120, 120);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * blue square shrinks in size grows to fill canvas. disappears then loops.
+ *
+ */
+p5.prototype.camera = function() {
+  this._renderer.camera.apply(this._renderer, arguments);
+  return this;
+};
+
+p5.RendererGL.prototype.camera = function(
+  eyeX,
+  eyeY,
+  eyeZ,
+  centerX,
+  centerY,
+  centerZ,
+  upX,
+  upY,
+  upZ
+) {
+  if (typeof eyeX === 'undefined') {
+    eyeX = this.defaultCameraX;
+    eyeY = this.defaultCameraY;
+    eyeZ = this.defaultCameraZ;
+    centerX = eyeX;
+    centerY = eyeY;
+    centerZ = 0;
+    upX = 0;
+    upY = 1;
+    upZ = 0;
+  }
+
+  this.cameraX = eyeX;
+  this.cameraY = eyeY;
+  this.cameraZ = eyeZ;
+
+  // calculate camera Z vector
+  var z0 = eyeX - centerX;
+  var z1 = eyeY - centerY;
+  var z2 = eyeZ - centerZ;
+
+  this.eyeDist = Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+  if (this.eyeDist !== 0) {
+    z0 /= this.eyeDist;
+    z1 /= this.eyeDist;
+    z2 /= this.eyeDist;
+  }
+
+  // calculate camera Y vector
+  var y0 = upX;
+  var y1 = upY;
+  var y2 = upZ;
+
+  // computer x vector as y cross z
+  var x0 = y1 * z2 - y2 * z1;
+  var x1 = -y0 * z2 + y2 * z0;
+  var x2 = y0 * z1 - y1 * z0;
+
+  // recomputer y = z cross x
+  y0 = z1 * x2 - z2 * x1;
+  y1 = -z0 * x2 + z2 * x0;
+  y2 = z0 * x1 - z1 * x0;
+
+  // cross product gives area of parallelogram, which is < 1.0 for
+  // non-perpendicular unit-length vectors; so normalize x, y here:
+  var xmag = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+  if (xmag !== 0) {
+    x0 /= xmag;
+    x1 /= xmag;
+    x2 /= xmag;
+  }
+
+  var ymag = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+  if (ymag !== 0) {
+    y0 /= ymag;
+    y1 /= ymag;
+    y2 /= ymag;
+  }
+
+  // the camera affects the model view matrix, insofar as it
+  // inverse translates the world to the eye position of the camera
+  // and rotates it.
+  // prettier-ignore
+  this.cameraMatrix.set(x0, y0, z0, 0,
+                        x1, y1, z1, 0,
+                        x2, y2, z2, 0,
+                        0,   0,  0, 1);
+
+  var tx = -eyeX;
+  var ty = -eyeY;
+  var tz = -eyeZ;
+
+  this.cameraMatrix.translate([tx, ty, tz]);
+  this.uMVMatrix.set(
+    this.cameraMatrix.mat4[0],
+    this.cameraMatrix.mat4[1],
+    this.cameraMatrix.mat4[2],
+    this.cameraMatrix.mat4[3],
+    this.cameraMatrix.mat4[4],
+    this.cameraMatrix.mat4[5],
+    this.cameraMatrix.mat4[6],
+    this.cameraMatrix.mat4[7],
+    this.cameraMatrix.mat4[8],
+    this.cameraMatrix.mat4[9],
+    this.cameraMatrix.mat4[10],
+    this.cameraMatrix.mat4[11],
+    this.cameraMatrix.mat4[12],
+    this.cameraMatrix.mat4[13],
+    this.cameraMatrix.mat4[14],
+    this.cameraMatrix.mat4[15]
+  );
+  return this;
+};
+
+/**
+ * Sets perspective camera. When called with no arguments, the defaults
+ * provided are equivalent to
+ * perspective(PI/3.0, width/height, cameraZ/10.0, cameraZ*10.0)
+ * where cameraZ is ((height/2.0) / tan(PI*60.0/360.0));
+ * @method  perspective
+ * @param  {Number} [fovy]   camera frustum vertical field of view,
+ *                           from bottom to top of view, in degrees
+ * @param  {Number} [aspect] camera frustum aspect ratio
+ * @param  {Number} [near]   frustum near plane length
+ * @param  {Number} [far]    frustum far plane length
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * //drag mouse to toggle the world!
+ * //you will see there's a vanish point
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *   var fov = 60 / 180 * PI;
+ *   var cameraZ = height / 2.0 / tan(fov / 2.0);
+ *   perspective(60 / 180 * PI, width / height, cameraZ * 0.1, cameraZ * 10);
+ * }
+ * function draw() {
+ *   background(200);
+ *   orbitControl();
+ *   for (var i = -1; i < 2; i++) {
+ *     for (var j = -2; j < 3; j++) {
+ *       push();
+ *       translate(i * 160, 0, j * 160);
+ *       box(40, 40, 40);
+ *       pop();
+ *     }
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * colored 3d boxes toggleable with mouse position
+ *
+ */
+p5.prototype.perspective = function() {
+  this._renderer.perspective.apply(this._renderer, arguments);
+  return this;
+};
+
+p5.RendererGL.prototype.perspective = function(fovy, aspect, near, far) {
+  if (typeof fovy === 'undefined') {
+    fovy = this.defaultCameraFOV;
+  }
+  if (typeof aspect === 'undefined') {
+    aspect = this.defaultCameraAspect;
+  }
+  if (typeof near === 'undefined') {
+    near = this.defaultCameraNear;
+  }
+  if (typeof far === 'undefined') {
+    far = this.defaultCameraFar;
+  }
+
+  this.cameraFOV = fovy;
+  this.cameraAspect = aspect;
+  this.cameraNear = near;
+  this.cameraFar = far;
+
+  this.uPMatrix = p5.Matrix.identity(this.pInst);
+
+  var f = 1.0 / Math.tan(this.cameraFOV / 2);
+  var nf = 1.0 / (this.cameraNear - this.cameraFar);
+
+  // prettier-ignore
+  this.uPMatrix.set(f / aspect,  0,                     0,  0,
+                    0,          -f,                     0,  0,
+                    0,           0,     (far + near) * nf, -1,
+                    0,           0, (2 * far * near) * nf,  0);
+
+  this._curCamera = 'custom';
+};
+
+/**
+ * Setup ortho camera
+ * @method  ortho
+ * @param  {Number} [left]   camera frustum left plane
+ * @param  {Number} [right]  camera frustum right plane
+ * @param  {Number} [bottom] camera frustum bottom plane
+ * @param  {Number} [top]    camera frustum top plane
+ * @param  {Number} [near]   camera frustum near plane
+ * @param  {Number} [far]    camera frustum far plane
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * //drag mouse to toggle the world!
+ * //there's no vanish point
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *   ortho(-width / 2, width / 2, height / 2, -height / 2, 0, 500);
+ * }
+ * function draw() {
+ *   background(200);
+ *   orbitControl();
+ *   strokeWeight(0.1);
+ *   for (var i = -1; i < 2; i++) {
+ *     for (var j = -2; j < 3; j++) {
+ *       push();
+ *       translate(i * 160, 0, j * 160);
+ *       box(40, 40, 40);
+ *       pop();
+ *     }
+ *   }
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * 3 3d boxes, reveal several more boxes on 3d plane when mouse used to toggle
+ *
+ */
+p5.prototype.ortho = function() {
+  this._renderer.ortho.apply(this._renderer, arguments);
+  return this;
+};
+
+p5.RendererGL.prototype.ortho = function(left, right, bottom, top, near, far) {
+  if (left === undefined) left = -this.width / 2;
+  if (right === undefined) right = +this.width / 2;
+  if (bottom === undefined) bottom = -this.height / 2;
+  if (top === undefined) top = +this.height / 2;
+  if (near === undefined) near = 0;
+  if (far === undefined) far = Math.max(this.width, this.height);
+  this.uPMatrix = p5.Matrix.identity(this._pInst);
+  //this.uPMatrix.ortho(left,right,bottom,top,near,far);
+
+  var w = right - left;
+  var h = top - bottom;
+  var d = far - near;
+
+  var x = +2.0 / w;
+  var y = +2.0 / h;
+  var z = -2.0 / d;
+
+  var tx = -(right + left) / w;
+  var ty = -(top + bottom) / h;
+  var tz = -(far + near) / d;
+
+  this.uPMatrix = p5.Matrix.identity();
+
+  // prettier-ignore
+  this.uPMatrix.set(  x,  0,  0,  0, 
+                      0, -y,  0,  0, 
+                      0,  0,  z,  0, 
+                     tx, ty, tz,  1);
+
+  this._curCamera = 'custom';
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],65:[function(_dereq_,module,exports){
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * @method orbitControl
+ * @for p5
+ * @chainable
+ */
+//@TODO: implement full orbit controls including
+//pan, zoom, quaternion rotation, etc.
+p5.prototype.orbitControl = function() {
+  if (this.mouseIsPressed) {
+    this.rotateY((this.mouseX - this.width / 2) / (this.width / 2));
+    this.rotateX((this.mouseY - this.height / 2) / (this.width / 2));
+  }
+  return this;
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],66:[function(_dereq_,module,exports){
+/**
+ * @module Lights, Camera
+ * @submodule Lights
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Creates an ambient light with a color
+ *
+ * @method ambientLight
+ * @param  {Number}        v1      red or hue value relative to
+ *                                 the current color range
+ * @param  {Number}        v2      green or saturation value
+ *                                 relative to the current color range
+ * @param  {Number}        v3      blue or brightness value
+ *                                 relative to the current color range
+ * @param  {Number}        [alpha]
+ * @chainable
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(0);
+ *   ambientLight(150);
+ *   ambientMaterial(250);
+ *   noStroke();
+ *   sphere(25);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * evenly distributed light across a sphere
+ *
+ */
+
+/**
+ * @method ambientLight
+ * @param  {String}        value   a color string
+ * @param  {Number}        [alpha]
+ * @chainable
+ */
+
+/**
+ * @method ambientLight
+ * @param  {Number[]}      values  an array containing the red,green,blue &
+ *                                 and alpha components of the color
+ * @chainable
+ */
+
+/**
+ * @method ambientLight
+ * @param  {p5.Color}      color   the ambient light color
+ * @chainable
+ */
+p5.prototype.ambientLight = function(v1, v2, v3, a) {
+  var color = this.color.apply(this, arguments);
+
+  var shader = this._renderer._useLightShader();
+
+  //@todo this is a bit icky. array uniforms have
+  //to be multiples of the type 3(rgb) in this case.
+  //a preallocated Float32Array(24) that we copy into
+  //would be better
+  shader.setUniform('uUseLighting', true);
+  //in case there's no material color for the geometry
+  shader.setUniform('uMaterialColor', this._renderer.curFillColor);
+
+  this._renderer.ambientLightColors.push(
+    color._array[0],
+    color._array[1],
+    color._array[2]
+  );
+  shader.setUniform('uAmbientColor', this._renderer.ambientLightColors);
+
+  shader.setUniform(
+    'uAmbientLightCount',
+    this._renderer.ambientLightColors.length / 3
+  );
+
+  return this;
+};
+
+/**
+ * Creates a directional light with a color and a direction
+ * @method directionalLight
+ * @param  {Number}    v1       red or hue value (depending on the current
+ * color mode),
+ * @param  {Number}    v2       green or saturation value
+ * @param  {Number}    v3       blue or brightness value
+ * @param  {p5.Vector} position the direction of the light
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(0);
+ *   //move your mouse to change light direction
+ *   var dirX = (mouseX / width - 0.5) * 2;
+ *   var dirY = (mouseY / height - 0.5) * 2;
+ *   directionalLight(250, 250, 250, -dirX, -dirY, 0.25);
+ *   ambientMaterial(250);
+ *   noStroke();
+ *   sphere(25);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * light source on canvas changeable with mouse position
+ *
+ */
+
+/**
+ * @method directionalLight
+ * @param  {Number[]|String|p5.Color} color   color Array, CSS color string,
+ *                                             or p5.Color value
+ * @param  {Number}                   x       x axis direction
+ * @param  {Number}                   y       y axis direction
+ * @param  {Number}                   z       z axis direction
+ * @chainable
+ */
+
+/**
+ * @method directionalLight
+ * @param  {Number[]|String|p5.Color} color
+ * @param  {p5.Vector}                position
+ * @chainable
+ */
+
+/**
+ * @method directionalLight
+ * @param  {Number}    v1
+ * @param  {Number}    v2
+ * @param  {Number}    v3
+ * @param  {Number}    x
+ * @param  {Number}    y
+ * @param  {Number}    z
+ * @chainable
+ */
+p5.prototype.directionalLight = function(v1, v2, v3, x, y, z) {
+  var shader = this._renderer._useLightShader();
+
+  //@TODO: check parameters number
+  var color = this.color.apply(this, [v1, v2, v3]);
+
+  var _x, _y, _z;
+  var v = arguments[arguments.length - 1];
+  if (typeof v === 'number') {
+    _x = arguments[arguments.length - 3];
+    _y = arguments[arguments.length - 2];
+    _z = arguments[arguments.length - 1];
+  } else {
+    _x = v.x;
+    _y = v.y;
+    _z = v.z;
+  }
+  shader.setUniform('uUseLighting', true);
+  //in case there's no material color for the geometry
+  shader.setUniform('uMaterialColor', this._renderer.curFillColor);
+
+  // normalize direction
+  var l = Math.sqrt(_x * _x + _y * _y + _z * _z);
+  this._renderer.directionalLightDirections.push(_x / l, _y / l, _z / l);
+  shader.setUniform(
+    'uLightingDirection',
+    this._renderer.directionalLightDirections
+  );
+
+  this._renderer.directionalLightColors.push(
+    color._array[0],
+    color._array[1],
+    color._array[2]
+  );
+  shader.setUniform('uDirectionalColor', this._renderer.directionalLightColors);
+
+  shader.setUniform(
+    'uDirectionalLightCount',
+    this._renderer.directionalLightColors.length / 3
+  );
+
+  return this;
+};
+
+/**
+ * Creates a point light with a color and a light position
+ * @method pointLight
+ * @param  {Number}    v1       red or hue value (depending on the current
+ * color mode),
+ * @param  {Number}    v2       green or saturation value
+ * @param  {Number}    v3       blue or brightness value
+ * @param  {Number}    x        x axis position
+ * @param  {Number}    y        y axis position
+ * @param  {Number}    z        z axis position
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(0);
+ *   //move your mouse to change light position
+ *   var locX = mouseX - width / 2;
+ *   var locY = mouseY - height / 2;
+ *   // to set the light position,
+ *   // think of the world's coordinate as:
+ *   // -width/2,-height/2 -------- width/2,-height/2
+ *   //                |            |
+ *   //                |     0,0    |
+ *   //                |            |
+ *   // -width/2,height/2--------width/2,height/2
+ *   pointLight(250, 250, 250, locX, locY, 50);
+ *   ambientMaterial(250);
+ *   noStroke();
+ *   sphere(25);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * spot light on canvas changes position with mouse
+ *
+ */
+
+/**
+ * @method pointLight
+ * @param  {Number}    v1
+ * @param  {Number}    v2
+ * @param  {Number}    v3
+ * @param  {p5.Vector} position the position of the light
+ * @chainable
+ */
+
+/**
+ * @method pointLight
+ * @param  {Number[]|String|p5.Color} color   color Array, CSS color string,
+ * or p5.Color value
+ * @param  {Number}                   x
+ * @param  {Number}                   y
+ * @param  {Number}                   z
+ * @chainable
+ */
+
+/**
+ * @method pointLight
+ * @param  {Number[]|String|p5.Color} color
+ * @param  {p5.Vector}                position
+ * @chainable
+ */
+p5.prototype.pointLight = function(v1, v2, v3, x, y, z) {
+  //@TODO: check parameters number
+  var color = this._renderer._pInst.color.apply(this, [v1, v2, v3]);
+
+  var _x, _y, _z;
+  var v = arguments[arguments.length - 1];
+  if (typeof v === 'number') {
+    _x = arguments[arguments.length - 3];
+    _y = arguments[arguments.length - 2];
+    _z = arguments[arguments.length - 1];
+  } else {
+    _x = v.x;
+    _y = v.y;
+    _z = v.z;
+  }
+
+  var shader = this._renderer._useLightShader();
+  shader.setUniform('uUseLighting', true);
+  //in case there's no material color for the geometry
+  shader.setUniform('uMaterialColor', this._renderer.curFillColor);
+
+  this._renderer.pointLightPositions.push(_x, _y, _z);
+  shader.setUniform('uPointLightLocation', this._renderer.pointLightPositions);
+
+  this._renderer.pointLightColors.push(
+    color._array[0],
+    color._array[1],
+    color._array[2]
+  );
+  shader.setUniform('uPointLightColor', this._renderer.pointLightColors);
+
+  shader.setUniform(
+    'uPointLightCount',
+    this._renderer.pointLightColors.length / 3
+  );
+
+  return this;
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],67:[function(_dereq_,module,exports){
+/**
+ * @module Shape
+ * @submodule 3D Models
+ * @for p5
+ * @requires core
+ * @requires p5.Geometry
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+_dereq_('./p5.Geometry');
+
+/**
+ * Load a 3d model from an OBJ file.
+ * <br><br>
+ * One of the limitations of the OBJ format is that it doesn't have a built-in
+ * sense of scale. This means that models exported from different programs might
+ * be very different sizes. If your model isn't displaying, try calling
+ * loadModel() with the normalized parameter set to true. This will resize the
+ * model to a scale appropriate for p5. You can also make additional changes to
+ * the final size of your model with the scale() function.
+ *
+ * @method loadModel
+ * @param  {String} path              Path of the model to be loaded
+ * @param  {Boolean} normalize        If true, scale the model to a
+ *                                      standardized size when loading
+ * @param  {function(p5.Geometry)} [successCallback] Function to be called
+ *                                     once the model is loaded. Will be passed
+ *                                     the 3D model object.
+ * @param  {function(Event)} [failureCallback] called with event error if
+ *                                         the image fails to load.
+ * @return {p5.Geometry} the p5.Geometry object
+ *
+ * @example
+ * <div>
+ * <code>
+ * //draw a spinning teapot
+ * var teapot;
+ *
+ * function preload() {
+ *   teapot = loadModel('assets/teapot.obj');
+ * }
+ *
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
