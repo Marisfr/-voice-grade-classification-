@@ -67594,3 +67594,945 @@ p5.prototype.shorten = function(list) {
 };
 
 /**
+ * Randomizes the order of the elements of an array. Implements
+ * <a href='http://Bost.Ocks.org/mike/shuffle/' target=_blank>
+ * Fisher-Yates Shuffle Algorithm</a>.
+ *
+ * @method shuffle
+ * @param  {Array}   array  Array to shuffle
+ * @param  {Boolean} [bool] modify passed array
+ * @return {Array}   shuffled Array
+ * @example
+ * <div><code>
+ * function setup() {
+ *   var regularArr = ['ABC', 'def', createVector(), TAU, Math.E];
+ *   print(regularArr);
+ *   shuffle(regularArr, true); // force modifications to passed array
+ *   print(regularArr);
+ *
+ *   // By default shuffle() returns a shuffled cloned array:
+ *   var newArr = shuffle(regularArr);
+ *   print(regularArr);
+ *   print(newArr);
+ * }
+ * </code></div>
+ */
+p5.prototype.shuffle = function(arr, bool) {
+  var isView = ArrayBuffer && ArrayBuffer.isView && ArrayBuffer.isView(arr);
+  arr = bool || isView ? arr : arr.slice();
+
+  var rnd,
+    tmp,
+    idx = arr.length;
+  while (idx > 1) {
+    rnd = (Math.random() * idx) | 0;
+
+    tmp = arr[--idx];
+    arr[idx] = arr[rnd];
+    arr[rnd] = tmp;
+  }
+
+  return arr;
+};
+
+/**
+ * Sorts an array of numbers from smallest to largest, or puts an array of
+ * words in alphabetical order. The original array is not modified; a
+ * re-ordered array is returned. The count parameter states the number of
+ * elements to sort. For example, if there are 12 elements in an array and
+ * count is set to 5, only the first 5 elements in the array will be sorted.
+ *
+ * @method sort
+ * @param {Array} list Array to sort
+ * @param {Integer} [count] number of elements to sort, starting from 0
+ *
+ * @example
+ * <div class = 'norender'><code>
+ * function setup() {
+ *   var words = ['banana', 'apple', 'pear', 'lime'];
+ *   print(words); // ['banana', 'apple', 'pear', 'lime']
+ *   var count = 4; // length of array
+ *
+ *   words = sort(words, count);
+ *   print(words); // ['apple', 'banana', 'lime', 'pear']
+ * }
+ * </code></div>
+ * <div class = 'norender'><code>
+ * function setup() {
+ *   var numbers = [2, 6, 1, 5, 14, 9, 8, 12];
+ *   print(numbers); // [2, 6, 1, 5, 14, 9, 8, 12]
+ *   var count = 5; // Less than the length of the array
+ *
+ *   numbers = sort(numbers, count);
+ *   print(numbers); // [1,2,5,6,14,9,8,12]
+ * }
+ * </code></div>
+ */
+p5.prototype.sort = function(list, count) {
+  var arr = count ? list.slice(0, Math.min(count, list.length)) : list;
+  var rest = count ? list.slice(Math.min(count, list.length)) : [];
+  if (typeof arr[0] === 'string') {
+    arr = arr.sort();
+  } else {
+    arr = arr.sort(function(a, b) {
+      return a - b;
+    });
+  }
+  return arr.concat(rest);
+};
+
+/**
+ * Inserts a value or an array of values into an existing array. The first
+ * parameter specifies the initial array to be modified, and the second
+ * parameter defines the data to be inserted. The third parameter is an index
+ * value which specifies the array position from which to insert data.
+ * (Remember that array index numbering starts at zero, so the first position
+ * is 0, the second position is 1, and so on.)
+ *
+ * @method splice
+ * @param {Array}  list Array to splice into
+ * @param {any}    value value to be spliced in
+ * @param {Integer} position in the array from which to insert data
+ *
+ * @example
+ * <div class = 'norender'><code>
+ * function setup() {
+ *   var myArray = [0, 1, 2, 3, 4];
+ *   var insArray = ['A', 'B', 'C'];
+ *   print(myArray); // [0, 1, 2, 3, 4]
+ *   print(insArray); // ['A','B','C']
+ *
+ *   splice(myArray, insArray, 3);
+ *   print(myArray); // [0,1,2,'A','B','C',3,4]
+ * }
+ * </code></div>
+ */
+p5.prototype.splice = function(list, value, index) {
+  // note that splice returns spliced elements and not an array
+  Array.prototype.splice.apply(list, [index, 0].concat(value));
+
+  return list;
+};
+
+/**
+ * Extracts an array of elements from an existing array. The list parameter
+ * defines the array from which the elements will be copied, and the start
+ * and count parameters specify which elements to extract. If no count is
+ * given, elements will be extracted from the start to the end of the array.
+ * When specifying the start, remember that the first array element is 0.
+ * This function does not change the source array.
+ *
+ * @method subset
+ * @param  {Array}  list    Array to extract from
+ * @param  {Integer} start   position to begin
+ * @param  {Integer} [count] number of values to extract
+ * @return {Array}          Array of extracted elements
+ *
+ * @example
+ * <div class = 'norender'><code>
+ * function setup() {
+ *   var myArray = [1, 2, 3, 4, 5];
+ *   print(myArray); // [1, 2, 3, 4, 5]
+ *
+ *   var sub1 = subset(myArray, 0, 3);
+ *   var sub2 = subset(myArray, 2, 2);
+ *   print(sub1); // [1,2,3]
+ *   print(sub2); // [3,4]
+ * }
+ * </code></div>
+ */
+p5.prototype.subset = function(list, start, count) {
+  if (typeof count !== 'undefined') {
+    return list.slice(start, start + count);
+  } else {
+    return list.slice(start, list.length);
+  }
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],61:[function(_dereq_,module,exports){
+/**
+ * @module Data
+ * @submodule Conversion
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Converts a string to its floating point representation. The contents of a
+ * string must resemble a number, or NaN (not a number) will be returned.
+ * For example, float("1234.56") evaluates to 1234.56, but float("giraffe")
+ * will return NaN.
+ *
+ * When an array of values is passed in, then an array of floats of the same
+ * length is returned.
+ *
+ * @method float
+ * @param {String}  str float string to parse
+ * @return {Number}     floating point representation of string
+ * @example
+ * <div><code>
+ * var str = '20';
+ * var diameter = float(str);
+ * ellipse(width / 2, height / 2, diameter, diameter);
+ * </code></div>
+ *
+ * @alt
+ * 20 by 20 white ellipse in the center of the canvas
+ *
+ */
+p5.prototype.float = function(str) {
+  if (str instanceof Array) {
+    return str.map(parseFloat);
+  }
+  return parseFloat(str);
+};
+
+/**
+ * Converts a boolean, string, or float to its integer representation.
+ * When an array of values is passed in, then an int array of the same length
+ * is returned.
+ *
+ * @method int
+ * @param {String|Boolean|Number}       n value to parse
+ * @return {Number}                     integer representation of value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(int('10')); // 10
+ * print(int(10.31)); // 10
+ * print(int(-10)); // -10
+ * print(int(true)); // 1
+ * print(int(false)); // 0
+ * print(int([false, true, '10.3', 9.8])); // [0, 1, 10, 9]
+ * </code></div>
+ */
+/**
+ * @method int
+ * @param {Array} ns                    values to parse
+ * @return {Number[]}                   integer representation of values
+ */
+p5.prototype.int = function(n, radix) {
+  radix = radix || 10;
+  if (typeof n === 'string') {
+    return parseInt(n, radix);
+  } else if (typeof n === 'number') {
+    return n | 0;
+  } else if (typeof n === 'boolean') {
+    return n ? 1 : 0;
+  } else if (n instanceof Array) {
+    return n.map(function(n) {
+      return p5.prototype.int(n, radix);
+    });
+  }
+};
+
+/**
+ * Converts a boolean, string or number to its string representation.
+ * When an array of values is passed in, then an array of strings of the same
+ * length is returned.
+ *
+ * @method str
+ * @param {String|Boolean|Number|Array} n value to parse
+ * @return {String}                     string representation of value
+ * @example
+ * <div class='norender'><code>
+ * print(str('10')); // "10"
+ * print(str(10.31)); // "10.31"
+ * print(str(-10)); // "-10"
+ * print(str(true)); // "true"
+ * print(str(false)); // "false"
+ * print(str([true, '10.3', 9.8])); // [ "true", "10.3", "9.8" ]
+ * </code></div>
+ */
+p5.prototype.str = function(n) {
+  if (n instanceof Array) {
+    return n.map(p5.prototype.str);
+  } else {
+    return String(n);
+  }
+};
+
+/**
+ * Converts a number or string to its boolean representation.
+ * For a number, any non-zero value (positive or negative) evaluates to true,
+ * while zero evaluates to false. For a string, the value "true" evaluates to
+ * true, while any other value evaluates to false. When an array of number or
+ * string values is passed in, then a array of booleans of the same length is
+ * returned.
+ *
+ * @method boolean
+ * @param {String|Boolean|Number|Array} n value to parse
+ * @return {Boolean}                    boolean representation of value
+ * @example
+ * <div class='norender'><code>
+ * print(boolean(0)); // false
+ * print(boolean(1)); // true
+ * print(boolean('true')); // true
+ * print(boolean('abcd')); // false
+ * print(boolean([0, 12, 'true'])); // [false, true, false]
+ * </code></div>
+ */
+p5.prototype.boolean = function(n) {
+  if (typeof n === 'number') {
+    return n !== 0;
+  } else if (typeof n === 'string') {
+    return n.toLowerCase() === 'true';
+  } else if (typeof n === 'boolean') {
+    return n;
+  } else if (n instanceof Array) {
+    return n.map(p5.prototype.boolean);
+  }
+};
+
+/**
+ * Converts a number, string representation of a number, or boolean to its byte
+ * representation. A byte can be only a whole number between -128 and 127, so
+ * when a value outside of this range is converted, it wraps around to the
+ * corresponding byte representation. When an array of number, string or boolean
+ * values is passed in, then an array of bytes the same length is returned.
+ *
+ * @method byte
+ * @param {String|Boolean|Number}       n value to parse
+ * @return {Number}                     byte representation of value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(byte(127)); // 127
+ * print(byte(128)); // -128
+ * print(byte(23.4)); // 23
+ * print(byte('23.4')); // 23
+ * print(byte('hello')); // NaN
+ * print(byte(true)); // 1
+ * print(byte([0, 255, '100'])); // [0, -1, 100]
+ * </code></div>
+ */
+/**
+ * @method byte
+ * @param {Array} ns                   values to parse
+ * @return {Number[]}                  array of byte representation of values
+ */
+p5.prototype.byte = function(n) {
+  var nn = p5.prototype.int(n, 10);
+  if (typeof nn === 'number') {
+    return (nn + 128) % 256 - 128;
+  } else if (nn instanceof Array) {
+    return nn.map(p5.prototype.byte);
+  }
+};
+
+/**
+ * Converts a number or string to its corresponding single-character
+ * string representation. If a string parameter is provided, it is first
+ * parsed as an integer and then translated into a single-character string.
+ * When an array of number or string values is passed in, then an array of
+ * single-character strings of the same length is returned.
+ *
+ * @method char
+ * @param {String|Number}       n value to parse
+ * @return {String}             string representation of value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(char(65)); // "A"
+ * print(char('65')); // "A"
+ * print(char([65, 66, 67])); // [ "A", "B", "C" ]
+ * print(join(char([65, 66, 67]), '')); // "ABC"
+ * </code></div>
+ */
+/**
+ * @method char
+ * @param {Array} ns              values to parse
+ * @return {String[]}             array of string representation of values
+ */
+p5.prototype.char = function(n) {
+  if (typeof n === 'number' && !isNaN(n)) {
+    return String.fromCharCode(n);
+  } else if (n instanceof Array) {
+    return n.map(p5.prototype.char);
+  } else if (typeof n === 'string') {
+    return p5.prototype.char(parseInt(n, 10));
+  }
+};
+
+/**
+ * Converts a single-character string to its corresponding integer
+ * representation. When an array of single-character string values is passed
+ * in, then an array of integers of the same length is returned.
+ *
+ * @method unchar
+ * @param {String} n     value to parse
+ * @return {Number}      integer representation of value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(unchar('A')); // 65
+ * print(unchar(['A', 'B', 'C'])); // [ 65, 66, 67 ]
+ * print(unchar(split('ABC', ''))); // [ 65, 66, 67 ]
+ * </code></div>
+ */
+/**
+ * @method unchar
+ * @param {Array} ns       values to parse
+ * @return {Number[]}      integer representation of values
+ */
+p5.prototype.unchar = function(n) {
+  if (typeof n === 'string' && n.length === 1) {
+    return n.charCodeAt(0);
+  } else if (n instanceof Array) {
+    return n.map(p5.prototype.unchar);
+  }
+};
+
+/**
+ * Converts a number to a string in its equivalent hexadecimal notation. If a
+ * second parameter is passed, it is used to set the number of characters to
+ * generate in the hexadecimal notation. When an array is passed in, an
+ * array of strings in hexadecimal notation of the same length is returned.
+ *
+ * @method hex
+ * @param {Number} n     value to parse
+ * @param {Number} [digits]
+ * @return {String}      hexadecimal string representation of value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(hex(255)); // "000000FF"
+ * print(hex(255, 6)); // "0000FF"
+ * print(hex([0, 127, 255], 6)); // [ "000000", "00007F", "0000FF" ]
+ * </code></div>
+ */
+/**
+ * @method hex
+ * @param {Number[]} ns    array of values to parse
+ * @param {Number} [digits]
+ * @return {String[]}      hexadecimal string representation of values
+ */
+p5.prototype.hex = function(n, digits) {
+  digits = digits === undefined || digits === null ? (digits = 8) : digits;
+  if (n instanceof Array) {
+    return n.map(function(n) {
+      return p5.prototype.hex(n, digits);
+    });
+  } else if (typeof n === 'number') {
+    if (n < 0) {
+      n = 0xffffffff + n + 1;
+    }
+    var hex = Number(n)
+      .toString(16)
+      .toUpperCase();
+    while (hex.length < digits) {
+      hex = '0' + hex;
+    }
+    if (hex.length >= digits) {
+      hex = hex.substring(hex.length - digits, hex.length);
+    }
+    return hex;
+  }
+};
+
+/**
+ * Converts a string representation of a hexadecimal number to its equivalent
+ * integer value. When an array of strings in hexadecimal notation is passed
+ * in, an array of integers of the same length is returned.
+ *
+ * @method unhex
+ * @param {String} n value to parse
+ * @return {Number}      integer representation of hexadecimal value
+ *
+ * @example
+ * <div class='norender'><code>
+ * print(unhex('A')); // 10
+ * print(unhex('FF')); // 255
+ * print(unhex(['FF', 'AA', '00'])); // [ 255, 170, 0 ]
+ * </code></div>
+ */
+/**
+ * @method unhex
+ * @param {Array} ns values to parse
+ * @return {Number[]}      integer representations of hexadecimal value
+ */
+p5.prototype.unhex = function(n) {
+  if (n instanceof Array) {
+    return n.map(p5.prototype.unhex);
+  } else {
+    return parseInt('0x' + n, 16);
+  }
+};
+
+module.exports = p5;
+
+},{"../core/core":22}],62:[function(_dereq_,module,exports){
+/**
+ * @module Data
+ * @submodule String Functions
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+_dereq_('../core/error_helpers');
+
+//return p5; //LM is this a mistake?
+
+/**
+ * Combines an array of Strings into one String, each separated by the
+ * character(s) used for the separator parameter. To join arrays of ints or
+ * floats, it's necessary to first convert them to Strings using nf() or
+ * nfs().
+ *
+ * @method join
+ * @param  {Array}  list      array of Strings to be joined
+ * @param  {String} separator String to be placed between each item
+ * @return {String}           joined String
+ * @example
+ * <div>
+ * <code>
+ * var array = ['Hello', 'world!'];
+ * var separator = ' ';
+ * var message = join(array, separator);
+ * text(message, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "hello world!" displayed middle left of canvas.
+ *
+ */
+p5.prototype.join = function(list, separator) {
+  p5._validateParameters('join', arguments);
+  return list.join(separator);
+};
+
+/**
+ * This function is used to apply a regular expression to a piece of text,
+ * and return matching groups (elements found inside parentheses) as a
+ * String array. If there are no matches, a null value will be returned.
+ * If no groups are specified in the regular expression, but the sequence
+ * matches, an array of length 1 (with the matched text as the first element
+ * of the array) will be returned.
+ * <br><br>
+ * To use the function, first check to see if the result is null. If the
+ * result is null, then the sequence did not match at all. If the sequence
+ * did match, an array is returned.
+ * <br><br>
+ * If there are groups (specified by sets of parentheses) in the regular
+ * expression, then the contents of each will be returned in the array.
+ * Element [0] of a regular expression match returns the entire matching
+ * string, and the match groups start at element [1] (the first group is [1],
+ * the second [2], and so on).
+ *
+ * @method match
+ * @param  {String} str    the String to be searched
+ * @param  {String} regexp the regexp to be used for matching
+ * @return {String[]}      Array of Strings found
+ * @example
+ * <div>
+ * <code>
+ * var string = 'Hello p5js*!';
+ * var regexp = 'p5js\\*';
+ * var m = match(string, regexp);
+ * text(m, 5, 50);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "p5js*" displayed middle left of canvas.
+ *
+ */
+p5.prototype.match = function(str, reg) {
+  p5._validateParameters('match', arguments);
+  return str.match(reg);
+};
+
+/**
+ * This function is used to apply a regular expression to a piece of text,
+ * and return a list of matching groups (elements found inside parentheses)
+ * as a two-dimensional String array. If there are no matches, a null value
+ * will be returned. If no groups are specified in the regular expression,
+ * but the sequence matches, a two dimensional array is still returned, but
+ * the second dimension is only of length one.
+ * <br><br>
+ * To use the function, first check to see if the result is null. If the
+ * result is null, then the sequence did not match at all. If the sequence
+ * did match, a 2D array is returned.
+ * <br><br>
+ * If there are groups (specified by sets of parentheses) in the regular
+ * expression, then the contents of each will be returned in the array.
+ * Assuming a loop with counter variable i, element [i][0] of a regular
+ * expression match returns the entire matching string, and the match groups
+ * start at element [i][1] (the first group is [i][1], the second [i][2],
+ * and so on).
+ *
+ * @method matchAll
+ * @param  {String} str    the String to be searched
+ * @param  {String} regexp the regexp to be used for matching
+ * @return {String[]}         2d Array of Strings found
+ * @example
+ * <div class="norender">
+ * <code>
+ * var string = 'Hello p5js*! Hello world!';
+ * var regexp = 'Hello';
+ * matchAll(string, regexp);
+ * </code>
+ * </div>
+ */
+p5.prototype.matchAll = function(str, reg) {
+  p5._validateParameters('matchAll', arguments);
+  var re = new RegExp(reg, 'g');
+  var match = re.exec(str);
+  var matches = [];
+  while (match !== null) {
+    matches.push(match);
+    // matched text: match[0]
+    // match start: match.index
+    // capturing group n: match[n]
+    match = re.exec(str);
+  }
+  return matches;
+};
+
+/**
+ * Utility function for formatting numbers into strings. There are two
+ * versions: one for formatting floats, and one for formatting ints.
+ * The values for the digits, left, and right parameters should always
+ * be positive integers.
+ *
+ * @method nf
+ * @param {Number|String}       num      the Number to format
+ * @param {Integer|String}      [left]   number of digits to the left of the
+ *                                decimal point
+ * @param {Integer|String}      [right]  number of digits to the right of the
+ *                                decimal point
+ * @return {String}               formatted String
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   background(200);
+ *   var num = 112.53106115;
+ *
+ *   noStroke();
+ *   fill(0);
+ *   textSize(14);
+ *   // Draw formatted numbers
+ *   text(nf(num, 5, 2), 10, 20);
+ *
+ *   text(nf(num, 4, 3), 10, 55);
+ *
+ *   text(nf(num, 3, 6), 10, 85);
+ *
+ *   // Draw dividing lines
+ *   stroke(120);
+ *   line(0, 30, width, 30);
+ *   line(0, 65, width, 65);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "0011253" top left, "0112.531" mid left, "112.531061" bottom left canvas
+ */
+/**
+ * @method nf
+ * @param {Array}        nums     the Numbers to format
+ * @param {Integer|String}      [left]
+ * @param {Integer|String}      [right]
+ * @return {String[]}                formatted Strings
+ */
+p5.prototype.nf = function(nums, left, right) {
+  p5._validateParameters('nf', arguments);
+  if (nums instanceof Array) {
+    return nums.map(function(x) {
+      return doNf(x, left, right);
+    });
+  } else {
+    var typeOfFirst = Object.prototype.toString.call(nums);
+    if (typeOfFirst === '[object Arguments]') {
+      if (nums.length === 3) {
+        return this.nf(nums[0], nums[1], nums[2]);
+      } else if (nums.length === 2) {
+        return this.nf(nums[0], nums[1]);
+      } else {
+        return this.nf(nums[0]);
+      }
+    } else {
+      return doNf(nums, left, right);
+    }
+  }
+};
+
+function doNf(num, left, right) {
+  var neg = num < 0;
+  var n = neg ? num.toString().substring(1) : num.toString();
+  var decimalInd = n.indexOf('.');
+  var intPart = decimalInd !== -1 ? n.substring(0, decimalInd) : n;
+  var decPart = decimalInd !== -1 ? n.substring(decimalInd + 1) : '';
+  var str = neg ? '-' : '';
+  if (typeof right !== 'undefined') {
+    var decimal = '';
+    if (decimalInd !== -1 || right - decPart.length > 0) {
+      decimal = '.';
+    }
+    if (decPart.length > right) {
+      decPart = decPart.substring(0, right);
+    }
+    for (var i = 0; i < left - intPart.length; i++) {
+      str += '0';
+    }
+    str += intPart;
+    str += decimal;
+    str += decPart;
+    for (var j = 0; j < right - decPart.length; j++) {
+      str += '0';
+    }
+    return str;
+  } else {
+    for (var k = 0; k < Math.max(left - intPart.length, 0); k++) {
+      str += '0';
+    }
+    str += n;
+    return str;
+  }
+}
+
+/**
+ * Utility function for formatting numbers into strings and placing
+ * appropriate commas to mark units of 1000. There are two versions: one
+ * for formatting ints, and one for formatting an array of ints. The value
+ * for the right parameter should always be a positive integer.
+ *
+ * @method nfc
+ * @param  {Number|String}   num     the Number to format
+ * @param  {Integer|String}  [right] number of digits to the right of the
+ *                                  decimal point
+ * @return {String}           formatted String
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   background(200);
+ *   var num = 11253106.115;
+ *   var numArr = [1, 1, 2];
+ *
+ *   noStroke();
+ *   fill(0);
+ *   textSize(12);
+ *
+ *   // Draw formatted numbers
+ *   text(nfc(num, 4), 10, 30);
+ *   text(nfc(numArr, 2), 10, 80);
+ *
+ *   // Draw dividing line
+ *   stroke(120);
+ *   line(0, 50, width, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "11,253,106.115" top middle and "1.00,1.00,2.00" displayed bottom mid
+ */
+/**
+ * @method nfc
+ * @param  {Array}    nums     the Numbers to format
+ * @param  {Integer|String}  [right]
+ * @return {String[]}           formatted Strings
+ */
+p5.prototype.nfc = function(num, right) {
+  p5._validateParameters('nfc', arguments);
+  if (num instanceof Array) {
+    return num.map(function(x) {
+      return doNfc(x, right);
+    });
+  } else {
+    return doNfc(num, right);
+  }
+};
+function doNfc(num, right) {
+  num = num.toString();
+  var dec = num.indexOf('.');
+  var rem = dec !== -1 ? num.substring(dec) : '';
+  var n = dec !== -1 ? num.substring(0, dec) : num;
+  n = n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (right === 0) {
+    rem = '';
+  } else if (typeof right !== 'undefined') {
+    if (right > rem.length) {
+      rem += dec === -1 ? '.' : '';
+      var len = right - rem.length + 1;
+      for (var i = 0; i < len; i++) {
+        rem += '0';
+      }
+    } else {
+      rem = rem.substring(0, right + 1);
+    }
+  }
+  return n + rem;
+}
+
+/**
+ * Utility function for formatting numbers into strings. Similar to nf() but
+ * puts a "+" in front of positive numbers and a "-" in front of negative
+ * numbers. There are two versions: one for formatting floats, and one for
+ * formatting ints. The values for left, and right parameters
+ * should always be positive integers.
+ *
+ * @method nfp
+ * @param {Number} num      the Number to format
+ * @param {Integer}      [left]   number of digits to the left of the decimal
+ *                                point
+ * @param {Integer}      [right]  number of digits to the right of the
+ *                                decimal point
+ * @return {String}         formatted String
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   background(200);
+ *   var num1 = 11253106.115;
+ *   var num2 = -11253106.115;
+ *
+ *   noStroke();
+ *   fill(0);
+ *   textSize(12);
+ *
+ *   // Draw formatted numbers
+ *   text(nfp(num1, 4, 2), 10, 30);
+ *   text(nfp(num2, 4, 2), 10, 80);
+ *
+ *   // Draw dividing line
+ *   stroke(120);
+ *   line(0, 50, width, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "+11253106.11" top middle and "-11253106.11" displayed bottom middle
+ */
+/**
+ * @method nfp
+ * @param {Number[]} nums      the Numbers to format
+ * @param {Integer}      [left]
+ * @param {Integer}      [right]
+ * @return {String[]}         formatted Strings
+ */
+p5.prototype.nfp = function() {
+  p5._validateParameters('nfp', arguments);
+  var nfRes = p5.prototype.nf.apply(this, arguments);
+  if (nfRes instanceof Array) {
+    return nfRes.map(addNfp);
+  } else {
+    return addNfp(nfRes);
+  }
+};
+
+function addNfp(num) {
+  return parseFloat(num) > 0 ? '+' + num.toString() : num.toString();
+}
+
+/**
+ * Utility function for formatting numbers into strings. Similar to nf() but
+ * puts a " " (space) in front of positive numbers and a "-" in front of
+ * negative numbers. There are two versions: one for formatting floats, and
+ * one for formatting ints. The values for the digits, left, and right
+ * parameters should always be positive integers.
+ *
+ * @method nfs
+ * @param {Number}       num      the Number to format
+ * @param {Integer}      [left]   number of digits to the left of the decimal
+ *                                point
+ * @param {Integer}      [right]  number of digits to the right of the
+ *                                decimal point
+ * @return {String}         formatted String
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   background(200);
+ *   var num1 = 11253106.115;
+ *   var num2 = -11253106.115;
+ *
+ *   noStroke();
+ *   fill(0);
+ *   textSize(12);
+ *   // Draw formatted numbers
+ *   text(nfs(num1, 4, 2), 10, 30);
+ *
+ *   text(nfs(num2, 4, 2), 10, 80);
+ *
+ *   // Draw dividing line
+ *   stroke(120);
+ *   line(0, 50, width, 50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "11253106.11" top middle and "-11253106.11" displayed bottom middle
+ */
+/**
+ * @method nfs
+ * @param {Array}        nums     the Numbers to format
+ * @param {Integer}      [left]
+ * @param {Integer}      [right]
+ * @return {String[]}         formatted Strings
+ */
+p5.prototype.nfs = function() {
+  p5._validateParameters('nfs', arguments);
+  var nfRes = p5.prototype.nf.apply(this, arguments);
+  if (nfRes instanceof Array) {
+    return nfRes.map(addNfs);
+  } else {
+    return addNfs(nfRes);
+  }
+};
+
+function addNfs(num) {
+  return parseFloat(num) > 0 ? ' ' + num.toString() : num.toString();
+}
+
+/**
+ * The split() function maps to String.split(), it breaks a String into
+ * pieces using a character or string as the delimiter. The delim parameter
+ * specifies the character or characters that mark the boundaries between
+ * each piece. A String[] array is returned that contains each of the pieces.
+ *
+ * The splitTokens() function works in a similar fashion, except that it
+ * splits using a range of characters instead of a specific character or
+ * sequence.
+ *
+ * @method split
+ * @param  {String} value the String to be split
+ * @param  {String} delim the String used to separate the data
+ * @return {String[]}  Array of Strings
+ * @example
+ * <div>
+ * <code>
+ * var names = 'Pat,Xio,Alex';
+ * var splitString = split(names, ',');
+ * text(splitString[0], 5, 30);
+ * text(splitString[1], 5, 50);
+ * text(splitString[2], 5, 70);
+ * </code>
+ * </div>
+ *
+ * @alt
+ * "pat" top left, "Xio" mid left and "Alex" displayed bottom left
+ *
+ */
+p5.prototype.split = function(str, delim) {
+  p5._validateParameters('split', arguments);
+  return str.split(delim);
