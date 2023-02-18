@@ -69496,3 +69496,984 @@ _dereq_('./p5.Geometry');
  *   background(200);
  *   rotateX(frameCount * 0.01);
  *   rotateY(frameCount * 0.01);
+ *   model(teapot);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Vertically rotating 3-d teapot with red, green and blue gradient.
+ */
+/**
+ * @method loadModel
+ * @param  {String} path
+ * @param  {function(p5.Geometry)} [successCallback]
+ * @param  {function(Event)} [failureCallback]
+ * @return {p5.Geometry} the p5.Geometry object
+ */
+p5.prototype.loadModel = function(path) {
+  var normalize;
+  var successCallback;
+  var failureCallback;
+  if (typeof arguments[1] === 'boolean') {
+    normalize = arguments[1];
+    successCallback = arguments[2];
+    failureCallback = arguments[3];
+  } else {
+    normalize = false;
+    successCallback = arguments[1];
+    failureCallback = arguments[2];
+  }
+
+  var model = new p5.Geometry();
+  model.gid = path + '|' + normalize;
+  this.loadStrings(
+    path,
+    function(strings) {
+      parseObj(model, strings);
+
+      if (normalize) {
+        model.normalize();
+      }
+
+      if (typeof successCallback === 'function') {
+        successCallback(model);
+      }
+    }.bind(this),
+    failureCallback
+  );
+
+  return model;
+};
+
+/**
+ * Parse OBJ lines into model. For reference, this is what a simple model of a
+ * square might look like:
+ *
+ * v -0.5 -0.5 0.5
+ * v -0.5 -0.5 -0.5
+ * v -0.5 0.5 -0.5
+ * v -0.5 0.5 0.5
+ *
+ * f 4 3 2 1
+ */
+function parseObj(model, lines) {
+  // OBJ allows a face to specify an index for a vertex (in the above example),
+  // but it also allows you to specify a custom combination of vertex, UV
+  // coordinate, and vertex normal. So, "3/4/3" would mean, "use vertex 3 with
+  // UV coordinate 4 and vertex normal 3". In WebGL, every vertex with different
+  // parameters must be a different vertex, so loadedVerts is used to
+  // temporarily store the parsed vertices, normals, etc., and indexedVerts is
+  // used to map a specific combination (keyed on, for example, the string
+  // "3/4/3"), to the actual index of the newly created vertex in the final
+  // object.
+  var loadedVerts = {
+    v: [],
+    vt: [],
+    vn: []
+  };
+  var indexedVerts = {};
+
+  for (var line = 0; line < lines.length; ++line) {
+    // Each line is a separate object (vertex, face, vertex normal, etc)
+    // For each line, split it into tokens on whitespace. The first token
+    // describes the type.
+    var tokens = lines[line].trim().split(/\b\s+/);
+
+    if (tokens.length > 0) {
+      if (tokens[0] === 'v' || tokens[0] === 'vn') {
+        // Check if this line describes a vertex or vertex normal.
+        // It will have three numeric parameters.
+        var vertex = new p5.Vector(
+          parseFloat(tokens[1]),
+          parseFloat(tokens[2]),
+          parseFloat(tokens[3])
+        );
+        loadedVerts[tokens[0]].push(vertex);
+      } else if (tokens[0] === 'vt') {
+        // Check if this line describes a texture coordinate.
+        // It will have two numeric parameters.
+        var texVertex = [parseFloat(tokens[1]), parseFloat(tokens[2])];
+        loadedVerts[tokens[0]].push(texVertex);
+      } else if (tokens[0] === 'f') {
+        // Check if this line describes a face.
+        // OBJ faces can have more than three points. Triangulate points.
+        for (var tri = 3; tri < tokens.length; ++tri) {
+          var face = [];
+
+          var vertexTokens = [1, tri - 1, tri];
+
+          for (var tokenInd = 0; tokenInd < vertexTokens.length; ++tokenInd) {
+            // Now, convert the given token into an index
+            var vertString = tokens[vertexTokens[tokenInd]];
+            var vertIndex = 0;
+
+            // TODO: Faces can technically use negative numbers to refer to the
+            // previous nth vertex. I haven't seen this used in practice, but
+            // it might be good to implement this in the future.
+
+            if (indexedVerts[vertString] !== undefined) {
+              vertIndex = indexedVerts[vertString];
+            } else {
+              var vertParts = vertString.split('/');
+              for (var i = 0; i < vertParts.length; i++) {
+                vertParts[i] = parseInt(vertParts[i]) - 1;
+              }
+
+              vertIndex = indexedVerts[vertString] = model.vertices.length;
+              model.vertices.push(loadedVerts.v[vertParts[0]].copy());
+              if (loadedVerts.vt[vertParts[1]]) {
+                model.uvs.push(loadedVerts.vt[vertParts[1]].slice());
+              } else {
+                model.uvs.push([0, 0]);
+              }
+
+              if (loadedVerts.vn[vertParts[2]]) {
+                model.vertexNormals.push(loadedVerts.vn[vertParts[2]].copy());
+              }
+            }
+
+            face.push(vertIndex);
+          }
+
+          if (
+            face[0] !== face[1] &&
+            face[0] !== face[2] &&
+            face[1] !== face[2]
+          ) {
+            model.faces.push(face);
+          }
+        }
+      }
+    }
+  }
+  // If the model doesn't have normals, compute the normals
+  if (model.vertexNormals.length === 0) {
+    model.computeNormals();
+  }
+
+  return model;
+}
+
+/**
+ * Render a 3d model to the screen.
+ *
+ * @method model
+ * @param  {p5.Geometry} model Loaded 3d model to be rendered
+ * @example
+ * <div>
+ * <code>
+ * //draw a spinning teapot
+ * var teapot;
+ *
+ * function preload() {
+ *   teapot = loadModel('assets/teapot.obj');
+ * }
+ *
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   model(teapot);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Vertically rotating 3-d teapot with red, green and blue gradient.
+ *
+ */
+p5.prototype.model = function(model) {
+  if (model.vertices.length > 0) {
+    if (!this._renderer.geometryInHash(model.gid)) {
+      model._makeTriangleEdges();
+      this._renderer._edgesToVertices(model);
+      this._renderer.createBuffers(model.gid, model);
+    }
+
+    this._renderer.drawBuffers(model.gid);
+  }
+};
+
+module.exports = p5;
+
+},{"../core/core":22,"./p5.Geometry":69}],68:[function(_dereq_,module,exports){
+/**
+ * @module Lights, Camera
+ * @submodule Material
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+_dereq_('./p5.Texture');
+
+/**
+ * Loads a custom shader from the provided vertex and fragment
+ * shader paths. The shader files are loaded asynchronously in the
+ * background, so this method should be used in preload().
+ *
+ * For now, there are three main types of shaders. p5 will automatically
+ * supply appropriate vertices, normals, colors, and lighting attributes
+ * if the parameters defined in the shader match the names.
+ *
+ * @method loadShader
+ * @param {String} [vertFilename] path to file containing vertex shader
+ * source code
+ * @param {String} [fragFilename] path to file containing fragment shader
+ * source code
+ * @return {p5.Shader} a shader object created from the provided
+ * vertex and fragment shader files.
+ */
+p5.prototype.loadShader = function(vertFilename, fragFilename) {
+  var loadedShader = new p5.Shader();
+
+  var self = this;
+  var loadedFrag = false;
+  var loadedVert = false;
+
+  this.loadStrings(fragFilename, function(result) {
+    loadedShader._fragSrc = result.join('\n');
+    loadedFrag = true;
+    if (!loadedVert) {
+      self._incrementPreload();
+    }
+  });
+  this.loadStrings(vertFilename, function(result) {
+    loadedShader._vertSrc = result.join('\n');
+    loadedVert = true;
+    if (!loadedFrag) {
+      self._incrementPreload();
+    }
+  });
+
+  return loadedShader;
+};
+
+/**
+ * @method createShader
+ * @param {String} vertSrc source code for the vertex shader
+ * @param {String} fragSrc source code for the fragment shader
+ * @returns {p5.Shader} a shader object created from the provided
+ * vertex and fragment shaders.
+ *
+ * @example
+ * <div modernizr='webgl'>
+ * <code>
+ * // the 'varying's are shared between both vertex & fragment shaders
+ * var varying = 'precision highp float; varying vec2 vPos;';
+ *
+ * // the vertex shader is called for each vertex
+ * var vs =
+ *   varying +
+ *   'attribute vec3 aPosition;' +
+ *   'void main() { vPos = (gl_Position = vec4(aPosition,1.0)).xy; }';
+ *
+ * // the fragment shader is called for each pixel
+ * var fs =
+ *   varying +
+ *   'uniform vec2 p;' +
+ *   'uniform float r;' +
+ *   'const int I = 500;' +
+ *   'void main() {' +
+ *   '  vec2 c = p + vPos * r, z = c;' +
+ *   '  float n = 0.0;' +
+ *   '  for (int i = I; i > 0; i --) {' +
+ *   '    if(z.x*z.x+z.y*z.y > 4.0) {' +
+ *   '      n = float(i)/float(I);' +
+ *   '      break;' +
+ *   '    }' +
+ *   '    z = vec2(z.x*z.x-z.y*z.y, 2.0*z.x*z.y) + c;' +
+ *   '  }' +
+ *   '  gl_FragColor = vec4(0.5-cos(n*17.0)/2.0,0.5-cos(n*13.0)/2.0,0.5-cos(n*23.0)/2.0,1.0);' +
+ *   '}';
+ *
+ * var mandel;
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *
+ *   // create and initialize the shader
+ *   mandel = createShader(vs, fs);
+ *   shader(mandel);
+ *   noStroke();
+ *
+ *   // 'p' is the center point of the Mandelbrot image
+ *   mandel.setUniform('p', [-0.74364388703, 0.13182590421]);
+ * }
+ *
+ * function draw() {
+ *   // 'r' is the size of the image in Mandelbrot-space
+ *   mandel.setUniform('r', 1.5 * exp(-6.5 * (1 + sin(millis() / 2000))));
+ *   quad(-1, -1, 1, -1, 1, 1, -1, 1);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * zooming Mandelbrot set. a colorful, infinitely detailed fractal.
+ */
+p5.prototype.createShader = function(vertSrc, fragSrc) {
+  return new p5.Shader(this._renderer, vertSrc, fragSrc);
+};
+
+/**
+ * The shader() function lets the user provide a custom shader
+ * to fill in shapes in WEBGL mode. Users can create their
+ * own shaders by loading vertex and fragment shaders with
+ * loadShader().
+ *
+ * @method shader
+ * @chainable
+ * @param {p5.Shader} [s] the desired p5.Shader to use for rendering
+ * shapes.
+ */
+p5.prototype.shader = function(s) {
+  if (s._renderer === undefined) {
+    s._renderer = this._renderer;
+  }
+  if (s.isStrokeShader()) {
+    this._renderer.setStrokeShader(s);
+  } else {
+    this._renderer.setFillShader(s);
+  }
+  return this;
+};
+
+/**
+ * Normal material for geometry. You can view all
+ * possible materials in this
+ * <a href="https://p5js.org/examples/3d-materials.html">example</a>.
+ * @method normalMaterial
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   normalMaterial();
+ *   sphere(50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Red, green and blue gradient.
+ *
+ */
+p5.prototype.normalMaterial = function() {
+  this._renderer.drawMode = constants.FILL;
+  this._renderer.setFillShader(this._renderer._getNormalShader());
+  this._renderer.curFillColor = [1, 1, 1, 1];
+  this.noStroke();
+  return this;
+};
+
+/**
+ * Texture for geometry.  You can view other possible materials in this
+ * <a href="https://p5js.org/examples/3d-materials.html">example</a>.
+ * @method texture
+ * @param {p5.Image|p5.MediaElement|p5.Graphics} tex 2-dimensional graphics
+ *                    to render as texture
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * var img;
+ * function preload() {
+ *   img = loadImage('assets/laDefense.jpg');
+ * }
+ *
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   rotateZ(frameCount * 0.01);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   //pass image as texture
+ *   texture(img);
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var pg;
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *   pg = createGraphics(200, 200);
+ *   pg.textSize(100);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   pg.background(255);
+ *   pg.text('hello!', 0, 100);
+ *   //pass image as texture
+ *   texture(pg);
+ *   plane(200);
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * var vid;
+ * function preload() {
+ *   vid = createVideo('assets/fingers.mov');
+ *   vid.hide();
+ *   vid.loop();
+ * }
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   //pass video frame as texture
+ *   texture(vid);
+ *   plane(200);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * Rotating view of many images umbrella and grid roof on a 3d plane
+ * black canvas
+ * black canvas
+ *
+ */
+p5.prototype.texture = function(tex) {
+  this._renderer.GL.depthMask(true);
+  this._renderer.GL.enable(this._renderer.GL.BLEND);
+  this._renderer.GL.blendFunc(
+    this._renderer.GL.SRC_ALPHA,
+    this._renderer.GL.ONE_MINUS_SRC_ALPHA
+  );
+
+  this._renderer.drawMode = constants.TEXTURE;
+  var shader = this._renderer._useLightShader();
+  shader.setUniform('uSpecular', false);
+  shader.setUniform('isTexture', true);
+  shader.setUniform('uSampler', tex);
+  this.noStroke();
+  return this;
+};
+
+/**
+ * Ambient material for geometry with a given color. You can view all
+ * possible materials in this
+ * <a href="https://p5js.org/examples/3d-materials.html">example</a>.
+ * @method  ambientMaterial
+ * @param  {Number} v1  gray value, red or hue value
+ *                         (depending on the current color mode),
+ * @param  {Number} [v2] green or saturation value
+ * @param  {Number} [v3] blue or brightness value
+ * @param  {Number} [a]  opacity
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(0);
+ *   ambientLight(100);
+ *   pointLight(250, 250, 250, 100, 100, 0);
+ *   ambientMaterial(250);
+ *   sphere(50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * radiating light source from top right of canvas
+ *
+ */
+/**
+ * @method  ambientMaterial
+ * @param  {Number[]|String|p5.Color} color  color, color Array, or CSS color string
+ * @chainable
+ */
+p5.prototype.ambientMaterial = function(v1, v2, v3, a) {
+  var color = p5.prototype.color.apply(this, arguments);
+  this._renderer.curFillColor = color._array;
+
+  var shader = this._renderer._useLightShader();
+  shader.setUniform('uMaterialColor', this._renderer.curFillColor);
+  shader.setUniform('uSpecular', false);
+  shader.setUniform('isTexture', false);
+  return this;
+};
+
+/**
+ * Specular material for geometry with a given color. You can view all
+ * possible materials in this
+ * <a href="https://p5js.org/examples/3d-materials.html">example</a>.
+ * @method specularMaterial
+ * @param  {Number} v1  gray value, red or hue value
+ *                       (depending on the current color mode),
+ * @param  {Number} [v2] green or saturation value
+ * @param  {Number} [v3] blue or brightness value
+ * @param  {Number} [a]  opacity
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ * function draw() {
+ *   background(0);
+ *   ambientLight(100);
+ *   pointLight(250, 250, 250, 100, 100, 0);
+ *   specularMaterial(250);
+ *   sphere(50);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * diffused radiating light source from top right of canvas
+ *
+ */
+/**
+ * @method specularMaterial
+ * @param  {Number[]|String|p5.Color} color color Array, or CSS color string
+ * @chainable
+ */
+p5.prototype.specularMaterial = function(v1, v2, v3, a) {
+  var color = p5.prototype.color.apply(this, arguments);
+  this._renderer.curFillColor = color._array;
+
+  var shader = this._renderer._useLightShader();
+  shader.setUniform('uMaterialColor', this._renderer.curFillColor);
+  shader.setUniform('uSpecular', true);
+  shader.setUniform('isTexture', false);
+  return this;
+};
+
+/**
+ * @private blends colors according to color components.
+ * If alpha value is less than 1, we need to enable blending
+ * on our gl context.  Otherwise opaque objects need to a depthMask.
+ * @param  {Number[]} color [description]
+ * @return {Number[]]}  Normalized numbers array
+ */
+p5.RendererGL.prototype._applyColorBlend = function(colors) {
+  var gl = this.GL;
+  if (colors[colors.length - 1] < 1.0) {
+    gl.depthMask(false);
+    gl.enable(gl.BLEND);
+    gl.blendEquation(gl.FUNC_ADD);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  } else {
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+  }
+  return colors;
+};
+
+module.exports = p5;
+
+},{"../core/constants":21,"../core/core":22,"./p5.Texture":75}],69:[function(_dereq_,module,exports){
+//some of the functions are adjusted from Three.js(http://threejs.org)
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+/**
+ * p5 Geometry class
+ * @class p5.Geometry
+ * @constructor
+ * @param  {function | Object} vertData callback function or Object
+ *                     containing routine(s) for vertex data generation
+ * @param  {Integer} [detailX] number of vertices on horizontal surface
+ * @param  {Integer} [detailY] number of vertices on horizontal surface
+ * @param {function} [callback] function to call upon object instantiation.
+ *
+ */
+p5.Geometry = function(detailX, detailY, callback) {
+  //an array containing every vertex
+  //@type [p5.Vector]
+  this.vertices = [];
+
+  //an array containing every vertex for stroke drawing
+  this.lineVertices = [];
+
+  //an array 1 normal per lineVertex with
+  //final position representing which direction to
+  //displace for strokeWeight
+  //[[0,0,-1,1], [0,1,0,-1] ...];
+  this.lineNormals = [];
+
+  //an array containing 1 normal per vertex
+  //@type [p5.Vector]
+  //[p5.Vector, p5.Vector, p5.Vector,p5.Vector, p5.Vector, p5.Vector,...]
+  this.vertexNormals = [];
+  //an array containing each three vertex indices that form a face
+  //[[0, 1, 2], [2, 1, 3], ...]
+  this.faces = [];
+  //a 2D array containing uvs for every vertex
+  //[[0.0,0.0],[1.0,0.0], ...]
+  this.uvs = [];
+  // a 2D array containing edge connectivity pattern for create line vertices
+  //based on faces for most objects;
+  this.edges = [];
+  this.detailX = detailX !== undefined ? detailX : 1;
+  this.detailY = detailY !== undefined ? detailY : 1;
+  if (callback instanceof Function) {
+    callback.call(this);
+  }
+  this.name = 'p5.Geometry'; // for friendly debugger system
+
+  return this; // TODO: is this a constructor?
+};
+
+/**
+ * @method computeFaces
+ * @chainable
+ */
+p5.Geometry.prototype.computeFaces = function() {
+  var sliceCount = this.detailX + 1;
+  var a, b, c, d;
+  for (var i = 0; i < this.detailY; i++) {
+    for (var j = 0; j < this.detailX; j++) {
+      a = i * sliceCount + j; // + offset;
+      b = i * sliceCount + j + 1; // + offset;
+      c = (i + 1) * sliceCount + j + 1; // + offset;
+      d = (i + 1) * sliceCount + j; // + offset;
+      this.faces.push([a, b, d]);
+      this.faces.push([d, b, c]);
+    }
+  }
+  return this;
+};
+
+p5.Geometry.prototype._getFaceNormal = function(faceId) {
+  //This assumes that vA->vB->vC is a counter-clockwise ordering
+  var face = this.faces[faceId];
+  var vA = this.vertices[face[0]];
+  var vB = this.vertices[face[1]];
+  var vC = this.vertices[face[2]];
+  var ab = p5.Vector.sub(vB, vA);
+  var ac = p5.Vector.sub(vC, vA);
+  var n = p5.Vector.cross(ab, ac);
+  var ln = p5.Vector.mag(n);
+  var sinAlpha = ln / (p5.Vector.mag(ab) * p5.Vector.mag(ac));
+  return n.mult(Math.asin(sinAlpha) / ln);
+};
+/**
+ * computes smooth normals per vertex as an average of each
+ * face.
+ * @method computeNormals
+ * @chainable
+ */
+p5.Geometry.prototype.computeNormals = function() {
+  var normals = [];
+  for (var v = 0; v < this.vertices.length; v++) {
+    var normal = new p5.Vector();
+    for (var i = 0; i < this.faces.length; i++) {
+      //if our face contains a given vertex
+      //calculate an average of the normals
+      //of the triangles adjacent to that vertex
+      if (
+        this.faces[i][0] === v ||
+        this.faces[i][1] === v ||
+        this.faces[i][2] === v
+      ) {
+        var faceNormal = normals[i] || (normals[i] = this._getFaceNormal(i));
+        normal = normal.add(faceNormal);
+      }
+    }
+    normal = normal.normalize();
+    this.vertexNormals.push(normal);
+  }
+  return this;
+};
+
+/**
+ * Averages the vertex normals. Used in curved
+ * surfaces
+ * @method averageNormals
+ * @chainable
+ */
+p5.Geometry.prototype.averageNormals = function() {
+  for (var i = 0; i <= this.detailY; i++) {
+    var offset = this.detailX + 1;
+    var temp = p5.Vector.add(
+      this.vertexNormals[i * offset],
+      this.vertexNormals[i * offset + this.detailX]
+    );
+
+    temp = p5.Vector.div(temp, 2);
+    this.vertexNormals[i * offset] = temp;
+    this.vertexNormals[i * offset + this.detailX] = temp;
+  }
+  return this;
+};
+
+/**
+ * Averages pole normals.  Used in spherical primitives
+ * @method averagePoleNormals
+ * @chainable
+ */
+p5.Geometry.prototype.averagePoleNormals = function() {
+  //average the north pole
+  var sum = new p5.Vector(0, 0, 0);
+  for (var i = 0; i < this.detailX; i++) {
+    sum.add(this.vertexNormals[i]);
+  }
+  sum = p5.Vector.div(sum, this.detailX);
+
+  for (i = 0; i < this.detailX; i++) {
+    this.vertexNormals[i] = sum;
+  }
+
+  //average the south pole
+  sum = new p5.Vector(0, 0, 0);
+  for (
+    i = this.vertices.length - 1;
+    i > this.vertices.length - 1 - this.detailX;
+    i--
+  ) {
+    sum.add(this.vertexNormals[i]);
+  }
+  sum = p5.Vector.div(sum, this.detailX);
+
+  for (
+    i = this.vertices.length - 1;
+    i > this.vertices.length - 1 - this.detailX;
+    i--
+  ) {
+    this.vertexNormals[i] = sum;
+  }
+  return this;
+};
+
+/**
+ * Create a 2D array for establishing stroke connections
+ * @private
+ * @return {p5.Geometry}
+ */
+p5.Geometry.prototype._makeTriangleEdges = function() {
+  if (Array.isArray(this.strokeIndices)) {
+    for (var i = 0, max = this.strokeIndices.length; i < max; i++) {
+      this.edges.push(this.strokeIndices[i]);
+    }
+  } else {
+    for (var j = 0; j < this.faces.length; j++) {
+      this.edges.push([this.faces[j][0], this.faces[j][1]]);
+      this.edges.push([this.faces[j][1], this.faces[j][2]]);
+      this.edges.push([this.faces[j][2], this.faces[j][0]]);
+    }
+  }
+  return this;
+};
+
+/**
+ * Create 4 vertices for each stroke line, two at the beginning position
+ * and two at the end position. These vertices are displaced relative to
+ * that line's normal on the GPU
+ * @private
+ * @return {p5.Geometry}
+ */
+p5.RendererGL.prototype._edgesToVertices = function(geom) {
+  geom.lineVertices = [];
+  for (var i = 0; i < geom.edges.length; i++) {
+    var begin = geom.vertices[geom.edges[i][0]];
+    var end = geom.vertices[geom.edges[i][1]];
+    var dir = end
+      .copy()
+      .sub(begin)
+      .normalize();
+    var a = begin.array();
+    var b = begin.array();
+    var c = end.array();
+    var d = end.array();
+    var dirAdd = dir.array();
+    var dirSub = dir.array();
+    // below is used to displace the pair of vertices at beginning and end
+    // in opposite directions
+    dirAdd.push(1);
+    dirSub.push(-1);
+    geom.lineNormals.push(dirAdd, dirSub, dirAdd, dirAdd, dirSub, dirSub);
+    geom.lineVertices.push(a, b, c, c, b, d);
+  }
+};
+
+/**
+ * Modifies all vertices to be centered within the range -100 to 100.
+ * @method normalize
+ * @chainable
+ */
+p5.Geometry.prototype.normalize = function() {
+  if (this.vertices.length > 0) {
+    // Find the corners of our bounding box
+    var maxPosition = this.vertices[0].copy();
+    var minPosition = this.vertices[0].copy();
+
+    for (var i = 0; i < this.vertices.length; i++) {
+      maxPosition.x = Math.max(maxPosition.x, this.vertices[i].x);
+      minPosition.x = Math.min(minPosition.x, this.vertices[i].x);
+      maxPosition.y = Math.max(maxPosition.y, this.vertices[i].y);
+      minPosition.y = Math.min(minPosition.y, this.vertices[i].y);
+      maxPosition.z = Math.max(maxPosition.z, this.vertices[i].z);
+      minPosition.z = Math.min(minPosition.z, this.vertices[i].z);
+    }
+
+    var center = p5.Vector.lerp(maxPosition, minPosition, 0.5);
+    var dist = p5.Vector.sub(maxPosition, minPosition);
+    var longestDist = Math.max(Math.max(dist.x, dist.y), dist.z);
+    var scale = 200 / longestDist;
+
+    for (i = 0; i < this.vertices.length; i++) {
+      this.vertices[i].sub(center);
+      this.vertices[i].mult(scale);
+    }
+  }
+  return this;
+};
+
+module.exports = p5.Geometry;
+
+},{"../core/core":22}],70:[function(_dereq_,module,exports){
+/**
+ * @requires constants
+ * @todo see methods below needing further implementation.
+ * future consideration: implement SIMD optimizations
+ * when browser compatibility becomes available
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/
+ *   Reference/Global_Objects/SIMD
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var polarGeometry = _dereq_('../math/polargeometry');
+var constants = _dereq_('../core/constants');
+
+var GLMAT_ARRAY_TYPE = Array;
+var isMatrixArray = function(x) {
+  return x instanceof Array;
+};
+if (typeof Float32Array !== 'undefined') {
+  GLMAT_ARRAY_TYPE = Float32Array;
+  isMatrixArray = function(x) {
+    return x instanceof Array || x instanceof Float32Array;
+  };
+}
+
+/**
+ * A class to describe a 4x4 matrix
+ * for model and view matrix manipulation in the p5js webgl renderer.
+ * @class p5.Matrix
+ * @private
+ * @constructor
+ * @param {Array} [mat4] array literal of our 4x4 matrix
+ */
+p5.Matrix = function() {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
+
+  // This is default behavior when object
+  // instantiated using createMatrix()
+  // @todo implement createMatrix() in core/math.js
+  if (args.length && args[args.length - 1] instanceof p5) {
+    this.p5 = args[args.length - 1];
+  }
+
+  if (args[0] === 'mat3') {
+    this.mat3 = Array.isArray(args[1])
+      ? args[1]
+      : new GLMAT_ARRAY_TYPE([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+  } else {
+    this.mat4 = Array.isArray(args[0])
+      ? args[0]
+      : new GLMAT_ARRAY_TYPE([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  }
+
+  this.name = 'p5.Matrix'; // for friendly debugger system
+  return this;
+};
+
+/**
+ * Sets the x, y, and z component of the vector using two or three separate
+ * variables, the data from a p5.Matrix, or the values from a float array.
+ *
+ * @method set
+ * @param {p5.Matrix|Float32Array|Number[]} [inMatrix] the input p5.Matrix or
+ *                                     an Array of length 16
+ * @chainable
+ */
+/**
+ * @method set
+ * @param {Number[]} elements 16 numbers passed by value to avoid
+ *                                     array copying.
+ * @chainable
+ */
+p5.Matrix.prototype.set = function(inMatrix) {
+  if (inMatrix instanceof p5.Matrix) {
+    this.mat4 = inMatrix.mat4;
+    return this;
+  } else if (isMatrixArray(inMatrix)) {
+    this.mat4 = inMatrix;
+    return this;
+  } else if (arguments.length === 16) {
+    this.mat4[0] = arguments[0];
+    this.mat4[1] = arguments[1];
+    this.mat4[2] = arguments[2];
+    this.mat4[3] = arguments[3];
+    this.mat4[4] = arguments[4];
+    this.mat4[5] = arguments[5];
+    this.mat4[6] = arguments[6];
+    this.mat4[7] = arguments[7];
+    this.mat4[8] = arguments[8];
+    this.mat4[9] = arguments[9];
+    this.mat4[10] = arguments[10];
+    this.mat4[11] = arguments[11];
+    this.mat4[12] = arguments[12];
+    this.mat4[13] = arguments[13];
+    this.mat4[14] = arguments[14];
+    this.mat4[15] = arguments[15];
+  }
+  return this;
+};
+
+/**
+ * Gets a copy of the vector, returns a p5.Matrix object.
+ *
+ * @method get
+ * @return {p5.Matrix} the copy of the p5.Matrix object
+ */
+p5.Matrix.prototype.get = function() {
+  return new p5.Matrix(this.mat4, this.p5);
+};
+
+/**
+ * return a copy of a matrix
+ * @method copy
+ * @return {p5.Matrix}   the result matrix
+ */
+p5.Matrix.prototype.copy = function() {
+  var copied = new p5.Matrix(this.p5);
+  copied.mat4[0] = this.mat4[0];
+  copied.mat4[1] = this.mat4[1];
+  copied.mat4[2] = this.mat4[2];
