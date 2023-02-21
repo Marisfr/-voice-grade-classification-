@@ -72463,3 +72463,997 @@ p5.RendererGL.prototype.scale = function(x, y, z) {
 };
 
 p5.RendererGL.prototype.rotate = function(rad, axis) {
+  if (typeof axis === 'undefined') {
+    return this.rotateZ(rad);
+  }
+  p5.Matrix.prototype.rotate.apply(this.uMVMatrix, arguments);
+  return this;
+};
+
+p5.RendererGL.prototype.rotateX = function(rad) {
+  this.rotate(rad, 1, 0, 0);
+  return this;
+};
+
+p5.RendererGL.prototype.rotateY = function(rad) {
+  this.rotate(rad, 0, 1, 0);
+  return this;
+};
+
+p5.RendererGL.prototype.rotateZ = function(rad) {
+  this.rotate(rad, 0, 0, 1);
+  return this;
+};
+
+/**
+ * pushes a copy of the model view matrix onto the
+ * MV Matrix stack.
+ */
+p5.RendererGL.prototype.push = function() {
+  uMVMatrixStack.push(this.uMVMatrix.copy());
+  cameraMatrixStack.push(this.cameraMatrix.copy());
+};
+
+/**
+ * [pop description]
+ */
+p5.RendererGL.prototype.pop = function() {
+  if (uMVMatrixStack.length === 0) {
+    throw new Error('Invalid popMatrix!');
+  }
+  this.uMVMatrix = uMVMatrixStack.pop();
+  if (cameraMatrixStack.length === 0) {
+    throw new Error('Invalid popMatrix!');
+  }
+  this.cameraMatrix = cameraMatrixStack.pop();
+};
+
+p5.RendererGL.prototype.resetMatrix = function() {
+  this.uMVMatrix = p5.Matrix.identity(this._pInst);
+  return this;
+};
+
+// Text/Typography
+// @TODO:
+p5.RendererGL.prototype._applyTextProperties = function() {
+  //@TODO finish implementation
+  console.error('text commands not yet implemented in webgl');
+};
+
+//////////////////////////////////////////////
+// SHADER
+//////////////////////////////////////////////
+
+/*
+ * Initializes and uses the specified shader, then returns
+ * that shader. Note: initialization and resetting the program
+ * is only used if needed (say, if a new value is provided)
+ * so it is safe to call this method with the same shader multiple
+ * times without a signficant performance hit).
+ *
+ * @method setFillShader
+ * @param {p5.Shader} [s] a p5.Shader object
+ * @return {p5.Shader} the current, updated fill shader
+ */
+p5.RendererGL.prototype.setFillShader = function(s) {
+  if (this.curFillShader !== s) {
+    // only do setup etc. if shader is actually new.
+    this.curFillShader = s;
+
+    // safe to do this multiple times;
+    // init() will bail early if has already been run.
+    this.curFillShader.init();
+    //this.curFillShader.useProgram();
+  }
+  // always return this.curFillShader, even if no change was made.
+  return this.curFillShader;
+};
+
+/*
+ * @method setStrokeShader
+ * @param {p5.Shader} [s] a p5.Shader object
+ * @return {p5.Shader} the current, updated stroke shader
+ */
+p5.RendererGL.prototype.setStrokeShader = function(s) {
+  if (this.curStrokeShader !== s) {
+    // only do setup etc. if shader is actually new.
+    this.curStrokeShader = s;
+    // safe to do this multiple times;
+    // init() will bail early if has already been run.
+    this.curStrokeShader.init();
+    //this.curStrokeShader.useProgram();
+  }
+  // always return this.curLineShader, even if no change was made.
+  return this.curStrokeShader;
+};
+
+/*
+ * shaders are created and cached on a per-renderer basis,
+ * on the grounds that each renderer will have its own gl context
+ * and the shader must be valid in that context.
+ *
+ *
+ */
+
+p5.RendererGL.prototype._useLightShader = function() {
+  if (!this.curFillShader || !this.curFillShader.isLightShader()) {
+    this.setFillShader(this._getLightShader());
+  }
+  return this.curFillShader;
+};
+
+p5.RendererGL.prototype._useColorShader = function() {
+  // looking at the code within the glsl files, I'm not really
+  // sure why these are two different shaders. but, they are,
+  // and if we're drawing in retain mode but the shader is the
+  // immediate mode one, we need to switch.
+
+  // TODO: what if curFillShader is _any_ other shader?
+  if (
+    !this.curFillShader ||
+    this.curFillShader === this._defaultImmediateModeShader
+  ) {
+    // there are different immediate mode and retain mode color shaders.
+    // if we're using the immediate mode one, we need to switch to
+    // one that works for retain mode.
+    this.setFillShader(this._getColorShader());
+  }
+  return this.curFillShader;
+};
+
+p5.RendererGL.prototype._useImmediateModeShader = function() {
+  // TODO: what if curFillShader is _any_ other shader?
+  if (!this.curFillShader || this.curFillShader === this._defaultColorShader) {
+    // this is the fill/stroke shader for retain mode.
+    // must switch to immediate mode shader before drawing!
+    this.setFillShader(this._getImmediateModeShader());
+    // note that if we're using the texture shader...
+    // this shouldn't change. :)
+  }
+  return this.curFillShader;
+};
+
+p5.RendererGL.prototype._getLightShader = function() {
+  if (!this._defaultLightShader) {
+    if (this.attributes.perPixelLighting) {
+      this._defaultLightShader = new p5.Shader(
+        this,
+        defaultShaders.phongVert,
+        defaultShaders.phongFrag
+      );
+    } else {
+      this._defaultLightShader = new p5.Shader(
+        this,
+        defaultShaders.lightVert,
+        defaultShaders.lightTextureFrag
+      );
+    }
+  }
+  //this.drawMode = constants.FILL;
+  return this._defaultLightShader;
+};
+
+p5.RendererGL.prototype._getImmediateModeShader = function() {
+  if (!this._defaultImmediateModeShader) {
+    this._defaultImmediateModeShader = new p5.Shader(
+      this,
+      defaultShaders.immediateVert,
+      defaultShaders.vertexColorFrag
+    );
+  }
+  //this.drawMode = constants.FILL;
+  return this._defaultImmediateModeShader;
+};
+
+p5.RendererGL.prototype._getNormalShader = function() {
+  if (!this._defaultNormalShader) {
+    this._defaultNormalShader = new p5.Shader(
+      this,
+      defaultShaders.normalVert,
+      defaultShaders.normalFrag
+    );
+  }
+  //this.drawMode = constants.FILL;
+  return this._defaultNormalShader;
+};
+
+p5.RendererGL.prototype._getColorShader = function() {
+  if (!this._defaultColorShader) {
+    this._defaultColorShader = new p5.Shader(
+      this,
+      defaultShaders.normalVert,
+      defaultShaders.basicFrag
+    );
+  }
+  //this.drawMode = constants.FILL;
+  return this._defaultColorShader;
+};
+
+p5.RendererGL.prototype._getLineShader = function() {
+  if (!this._defaultLineShader) {
+    this._defaultLineShader = new p5.Shader(
+      this,
+      defaultShaders.lineVert,
+      defaultShaders.lineFrag
+    );
+  }
+  //this.drawMode = constants.STROKE;
+  return this._defaultLineShader;
+};
+
+p5.RendererGL.prototype._getEmptyTexture = function() {
+  if (!this._emptyTexture) {
+    // a plain white texture RGBA, full alpha, single pixel.
+    var im = new p5.Image(1, 1);
+    im.set(0, 0, 255);
+    this._emptyTexture = new p5.Texture(this, im);
+  }
+  return this._emptyTexture;
+};
+
+p5.RendererGL.prototype.getTexture = function(img) {
+  var checkSource = function(element) {
+    return element.src === img;
+  };
+  //this.drawMode = constants.TEXTURE;
+  var tex = this.textures.find(checkSource);
+  if (!tex) {
+    tex = new p5.Texture(this, img);
+    this.textures.push(tex);
+  }
+
+  return tex;
+};
+
+//Binds a buffer to the drawing context
+//when passed more than two arguments it also updates or initializes
+//the data associated with the buffer
+p5.RendererGL.prototype._bindBuffer = function(
+  buffer,
+  target,
+  values,
+  type,
+  usage
+) {
+  this.GL.bindBuffer(target, buffer);
+  if (values !== undefined) {
+    var data = new type(values);
+    this.GL.bufferData(target, data, usage);
+  }
+};
+
+///////////////////////////////
+//// UTILITY FUNCTIONS
+//////////////////////////////
+/**
+ * turn a two dimensional array into one dimensional array
+ * @private
+ * @param  {Array} arr 2-dimensional array
+ * @return {Array}     1-dimensional array
+ * [[1, 2, 3],[4, 5, 6]] -> [1, 2, 3, 4, 5, 6]
+ */
+p5.RendererGL.prototype._flatten = function(arr) {
+  //when empty, return empty
+  if (arr.length === 0) {
+    return [];
+  } else if (arr.length > 20000) {
+    //big models , load slower to avoid stack overflow
+    //faster non-recursive flatten via axelduch
+    //stackoverflow.com/questions/27266550/how-to-flatten-nested-array-in-javascript
+    var toString = Object.prototype.toString;
+    var arrayTypeStr = '[object Array]';
+    var result = [];
+    var nodes = arr.slice();
+    var node;
+    node = nodes.pop();
+    do {
+      if (toString.call(node) === arrayTypeStr) {
+        nodes.push.apply(nodes, node);
+      } else {
+        result.push(node);
+      }
+    } while (nodes.length && (node = nodes.pop()) !== undefined);
+    result.reverse(); // we reverse result to restore the original order
+    return result;
+  } else {
+    //otherwise if model within limits for browser
+    //use faster recursive loading
+    return [].concat.apply([], arr);
+  }
+};
+
+/**
+ * turn a p5.Vector Array into a one dimensional number array
+ * @private
+ * @param  {p5.Vector[]} arr  an array of p5.Vector
+ * @return {Number[]}     a one dimensional array of numbers
+ * [p5.Vector(1, 2, 3), p5.Vector(4, 5, 6)] ->
+ * [1, 2, 3, 4, 5, 6]
+ */
+p5.RendererGL.prototype._vToNArray = function(arr) {
+  return this._flatten(
+    arr.map(function(item) {
+      return [item.x, item.y, item.z];
+    })
+  );
+};
+
+module.exports = p5.RendererGL;
+
+},{"../core/constants":21,"../core/core":22,"../core/p5.Renderer":29,"./p5.Matrix":70,"./p5.Shader":74}],74:[function(_dereq_,module,exports){
+/**
+ * This module defines the p5.Shader class
+ * @module Lights, Camera
+ * @submodule Shaders
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Shader class for WEBGL Mode
+ * @class p5.Shader
+ * @constructor
+ * @param {p5.RendererGL} renderer an instance of p5.RendererGL that
+ * will provide the GL context for this new p5.Shader
+ * @param {String} vertSrc source code for the vertex shader (as a string)
+ * @param {String} fragSrc source code for the fragment shader (as a string)
+ */
+p5.Shader = function(renderer, vertSrc, fragSrc) {
+  // TODO: adapt this to not take ids, but rather,
+  // to take the source for a vertex and fragment shader
+  // to enable custom shaders at some later date
+  this._renderer = renderer;
+  this._vertSrc = vertSrc;
+  this._fragSrc = fragSrc;
+  this._vertShader = -1;
+  this._fragShader = -1;
+  this._glProgram = 0;
+  this._loadedAttributes = false;
+  this.attributes = {};
+  this._loadedUniforms = false;
+  this.uniforms = {};
+  this._bound = false;
+  this.samplers = [];
+
+  return this;
+};
+
+/**
+ * Creates, compiles, and links the shader based on its
+ * sources for the vertex and fragment shaders (provided
+ * to the constructor). Populates known attributes and
+ * uniforms from the shader.
+ * @method init
+ * @chainable
+ * @private
+ */
+p5.Shader.prototype.init = function() {
+  if (this._glProgram === 0 /* or context is stale? */) {
+    var gl = this._renderer.GL;
+
+    // @todo: once custom shading is allowed,
+    // friendly error messages should be used here to share
+    // compiler and linker errors.
+
+    //set up the shader by
+    // 1. creating and getting a gl id for the shader program,
+    // 2. compliling its vertex & fragment sources,
+    // 3. linking the vertex and fragment shaders
+    this._vertShader = gl.createShader(gl.VERTEX_SHADER);
+    //load in our default vertex shader
+    gl.shaderSource(this._vertShader, this._vertSrc);
+    gl.compileShader(this._vertShader);
+    // if our vertex shader failed compilation?
+    if (!gl.getShaderParameter(this._vertShader, gl.COMPILE_STATUS)) {
+      console.error(
+        'Yikes! An error occurred compiling the vertex shader:' +
+          gl.getShaderInfoLog(this._vertShader)
+      );
+      return null;
+    }
+
+    this._fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+    //load in our material frag shader
+    gl.shaderSource(this._fragShader, this._fragSrc);
+    gl.compileShader(this._fragShader);
+    // if our frag shader failed compilation?
+    if (!gl.getShaderParameter(this._fragShader, gl.COMPILE_STATUS)) {
+      console.error(
+        'Darn! An error occurred compiling the fragment shader:' +
+          gl.getShaderInfoLog(this._fragShader)
+      );
+      return null;
+    }
+
+    this._glProgram = gl.createProgram();
+    gl.attachShader(this._glProgram, this._vertShader);
+    gl.attachShader(this._glProgram, this._fragShader);
+    gl.linkProgram(this._glProgram);
+    if (!gl.getProgramParameter(this._glProgram, gl.LINK_STATUS)) {
+      console.error(
+        'Snap! Error linking shader program: ' +
+          gl.getProgramInfoLog(this._glProgram)
+      );
+    }
+
+    this._loadAttributes();
+    this._loadUniforms();
+  }
+  return this;
+};
+
+/**
+ * Queries the active attributes for this shader and loads
+ * their names and locations into the attributes array.
+ * @method _loadAttributes
+ * @private
+ */
+p5.Shader.prototype._loadAttributes = function() {
+  if (this._loadedAttributes) {
+    return;
+  }
+
+  this.attributes = {};
+
+  var gl = this._renderer.GL;
+
+  var numAttributes = gl.getProgramParameter(
+    this._glProgram,
+    gl.ACTIVE_ATTRIBUTES
+  );
+  for (var i = 0; i < numAttributes; ++i) {
+    var attributeInfo = gl.getActiveAttrib(this._glProgram, i);
+    var name = attributeInfo.name;
+    var location = gl.getAttribLocation(this._glProgram, name);
+    var attribute = {};
+    attribute.name = name;
+    attribute.location = location;
+    attribute.type = attributeInfo.type;
+    attribute.size = attributeInfo.size;
+    this.attributes[name] = attribute;
+  }
+
+  this._loadedAttributes = true;
+};
+
+/**
+ * Queries the active uniforms for this shader and loads
+ * their names and locations into the uniforms array.
+ * @method _loadUniforms
+ * @private
+ */
+p5.Shader.prototype._loadUniforms = function() {
+  if (this._loadedUniforms) {
+    return;
+  }
+
+  var gl = this._renderer.GL;
+
+  // Inspect shader and cache uniform info
+  var numUniforms = gl.getProgramParameter(this._glProgram, gl.ACTIVE_UNIFORMS);
+
+  var samplerIndex = 0;
+  for (var i = 0; i < numUniforms; ++i) {
+    var uniformInfo = gl.getActiveUniform(this._glProgram, i);
+    var uniform = {};
+    uniform.location = gl.getUniformLocation(this._glProgram, uniformInfo.name);
+    uniform.size = uniformInfo.size;
+    var uniformName = uniformInfo.name;
+    //uniforms thats are arrays have their name returned as
+    //someUniform[0] which is a bit silly so we trim it
+    //off here. The size property tells us that its an array
+    //so we dont lose any information by doing this
+    if (uniformInfo.size > 1) {
+      uniformName = uniformName.substring(0, uniformName.indexOf('[0]'));
+    }
+    uniform.name = uniformName;
+    uniform.type = uniformInfo.type;
+    if (uniform.type === gl.SAMPLER_2D) {
+      uniform.samplerIndex = samplerIndex;
+      samplerIndex++;
+      this.samplers.push(uniform);
+    }
+    this.uniforms[uniformName] = uniform;
+  }
+  this._loadedUniforms = true;
+};
+
+p5.Shader.prototype.compile = function() {
+  // TODO
+};
+
+/**
+ * initializes (if needed) and binds the shader program.
+ * @method bindShader
+ * @private
+ */
+p5.Shader.prototype.bindShader = function() {
+  this.init();
+  if (!this._bound) {
+    this.useProgram();
+    this._bound = true;
+    this.bindTextures();
+
+    this._loadAttributes();
+    this._loadUniforms();
+
+    this._renderer._setDefaultCamera();
+    this._setMatrixUniforms();
+    if (this === this._renderer.curStrokeShader) {
+      this._setViewportUniform();
+    }
+  }
+};
+
+/**
+ * @method unbindShader
+ * @chainable
+ * @private
+ */
+p5.Shader.prototype.unbindShader = function() {
+  if (this._bound) {
+    this.unbindTextures();
+    //this._renderer.GL.useProgram(0); ??
+    this._bound = false;
+  }
+  return this;
+};
+
+p5.Shader.prototype.bindTextures = function() {
+  var gl = this._renderer.GL;
+  for (var i = 0; i < this.samplers.length; i++) {
+    var uniform = this.samplers[i];
+    var tex = uniform.texture;
+    if (tex === undefined) {
+      // user hasn't yet supplied a texture for this slot.
+      // (or there may not be one--maybe just lighting),
+      // so we supply a default texture instead.
+      tex = this._renderer._getEmptyTexture();
+    }
+    gl.activeTexture(gl.TEXTURE0 + uniform.samplerIndex);
+    tex.bindTexture();
+    tex.update();
+    gl.uniform1i(uniform.location, uniform.samplerIndex);
+  }
+};
+
+p5.Shader.prototype.unbindTextures = function() {
+  // TODO: migrate stuff from material.js here
+  // - OR - have material.js define this function
+};
+
+p5.Shader.prototype._setMatrixUniforms = function() {
+  this.setUniform('uProjectionMatrix', this._renderer.uPMatrix.mat4);
+  this.setUniform('uModelViewMatrix', this._renderer.uMVMatrix.mat4);
+  this.setUniform('uViewMatrix', this._renderer.cameraMatrix.mat4);
+  if (this === this._renderer.curFillShader) {
+    this._renderer.uNMatrix.inverseTranspose(this._renderer.uMVMatrix);
+    this.setUniform('uNormalMatrix', this._renderer.uNMatrix.mat3);
+  }
+};
+
+p5.Shader.prototype._setViewportUniform = function() {
+  this.setUniform('uViewport', this._renderer._viewport);
+};
+
+/**
+ * @method useProgram
+ * @chainable
+ * @private
+ */
+p5.Shader.prototype.useProgram = function() {
+  var gl = this._renderer.GL;
+  gl.useProgram(this._glProgram);
+  return this;
+};
+
+/**
+ * Wrapper around gl.uniform functions.
+ * As we store uniform info in the shader we can use that
+ * to do type checking on the supplied data and call
+ * the appropriate function.
+ * @method setUniform
+ * @chainable
+ * @param {String} uniformName the name of the uniform in the
+ * shader program
+ * @param {Object|Number|Boolean|Number[]} data the data to be associated
+ * with that uniform; type varies (could be a single numerical value, array,
+ * matrix, or texture / sampler reference)
+ */
+p5.Shader.prototype.setUniform = function(uniformName, data) {
+  //@todo update all current gl.uniformXX calls
+
+  var uniform = this.uniforms[uniformName];
+  if (!uniform) {
+    //@todo warning?
+    return;
+  }
+  var location = uniform.location;
+
+  var gl = this._renderer.GL;
+  // todo: is this safe to do here?
+  // todo: store the values another way?
+  this.useProgram();
+
+  // TODO BIND?
+
+  switch (uniform.type) {
+    case gl.BOOL:
+      if (data === true) {
+        gl.uniform1i(location, 1);
+      } else {
+        gl.uniform1i(location, 0);
+      }
+      break;
+    case gl.INT:
+      if (uniform.size > 1) {
+        gl.uniform1iv(location, data);
+      } else {
+        gl.uniform1i(location, data);
+      }
+      break;
+    case gl.FLOAT:
+      if (uniform.size > 1) {
+        gl.uniform1fv(location, data);
+      } else {
+        gl.uniform1f(location, data);
+      }
+      break;
+    case gl.FLOAT_MAT3:
+      gl.uniformMatrix3fv(location, false, data);
+      break;
+    case gl.FLOAT_MAT4:
+      gl.uniformMatrix4fv(location, false, data);
+      break;
+    case gl.FLOAT_VEC2:
+      if (uniform.size > 1) {
+        gl.uniform2fv(location, data);
+      } else {
+        gl.uniform2f(location, data[0], data[1]);
+      }
+      break;
+    case gl.FLOAT_VEC3:
+      if (uniform.size > 1) {
+        gl.uniform3fv(location, data);
+      } else {
+        gl.uniform3f(location, data[0], data[1], data[2]);
+      }
+      break;
+    case gl.FLOAT_VEC4:
+      if (uniform.size > 1) {
+        gl.uniform4fv(location, data);
+      } else {
+        gl.uniform4f(location, data[0], data[1], data[2], data[3]);
+      }
+      break;
+    case gl.SAMPLER_2D:
+      gl.activeTexture(gl.TEXTURE0 + uniform.samplerIndex);
+      uniform.texture = this._renderer.getTexture(data);
+      gl.uniform1i(uniform.location, uniform.samplerIndex);
+      break;
+    //@todo complete all types
+  }
+  return this;
+};
+
+/* NONE OF THIS IS FAST OR EFFICIENT BUT BEAR WITH ME
+ *
+ * these shader "type" query methods are used by various
+ * facilities of the renderer to determine if changing
+ * the shader type for the required action (for example,
+ * do we need to load the default lighting shader if the
+ * current shader cannot handle lighting?)
+ *
+ **/
+
+p5.Shader.prototype.isLightShader = function() {
+  return (
+    this.uniforms.uUseLighting !== undefined ||
+    this.uniforms.uAmbientLightCount !== undefined ||
+    this.uniforms.uDirectionalLightCount !== undefined ||
+    this.uniforms.uPointLightCount !== undefined ||
+    this.uniforms.uAmbientColor !== undefined ||
+    this.uniforms.uDirectionalColor !== undefined ||
+    this.uniforms.uPointLightLocation !== undefined ||
+    this.uniforms.uPointLightColor !== undefined ||
+    this.uniforms.uLightingDirection !== undefined ||
+    this.uniforms.uSpecular !== undefined
+  );
+};
+
+p5.Shader.prototype.isTextureShader = function() {
+  return this.samplerIndex > 0;
+};
+
+p5.Shader.prototype.isColorShader = function() {
+  return (
+    this.attributes.aVertexColor !== undefined ||
+    this.uniforms.uMaterialColor !== undefined
+  );
+};
+
+p5.Shader.prototype.isTexLightShader = function() {
+  return this.isLightShader() && this.isTextureShader();
+};
+
+p5.Shader.prototype.isStrokeShader = function() {
+  return this.uniforms.uStrokeWeight !== undefined;
+};
+
+/**
+ * @method enableAttrib
+ * @chainable
+ * @private
+ */
+p5.Shader.prototype.enableAttrib = function(
+  loc,
+  size,
+  type,
+  normalized,
+  stride,
+  offset
+) {
+  var gl = this._renderer.GL;
+  if (loc !== -1) {
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, size, type, normalized, stride, offset);
+  }
+  return this;
+};
+
+module.exports = p5.Shader;
+
+},{"../core/core":22}],75:[function(_dereq_,module,exports){
+/**
+ * This module defines the p5.Texture class
+ * @module Lights, Camera
+ * @submodule Material
+ * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+var p5 = _dereq_('../core/core');
+
+/**
+ * Texture class for WEBGL Mode
+ * @class p5.Texture
+ * @constructor
+ * @param {p5.RendererGL} renderer an instance of p5.RendererGL that
+ * will provide the GL context for this new p5.Texture
+ * @param {p5.Image|p5.Graphics|p5.Element|p5.MediaElement} [obj] the
+ * object containing the image data to store in the texture.
+ */
+p5.Texture = function(renderer, obj) {
+  this._renderer = renderer;
+
+  var gl = this._renderer.GL;
+
+  this.src = obj;
+  this.glTex = undefined;
+  this.glTarget = gl.TEXTURE_2D;
+  this.glFormat = gl.RGBA;
+  this.mipmaps = false;
+  this.glMinFilter = gl.LINEAR;
+  this.glMagFilter = gl.LINEAR;
+  this.glWrapS = gl.CLAMP_TO_EDGE;
+  this.glWrapT = gl.CLAMP_TO_EDGE;
+
+  // used to determine if this texture might need constant updating
+  // because it is a video or gif.
+  this.isSrcMediaElement =
+    typeof p5.MediaElement !== 'undefined' && obj instanceof p5.MediaElement;
+  this._videoPrevUpdateTime = 0;
+  this.isSrcHTMLElement =
+    typeof p5.Element !== 'undefined' &&
+    obj instanceof p5.Element &&
+    !(obj instanceof p5.Graphics);
+  this.isSrcP5Image = obj instanceof p5.Image;
+  this.isSrcP5Graphics = obj instanceof p5.Graphics;
+
+  var textureData = this._getTextureDataFromSource();
+  this.width = textureData.width;
+  this.height = textureData.height;
+
+  this.init(textureData);
+  return this;
+};
+
+p5.Texture.prototype._getTextureDataFromSource = function() {
+  var textureData;
+  if (this.isSrcP5Image) {
+    // param is a p5.Image
+    textureData = this.src.canvas;
+  } else if (
+    this.isSrcMediaElement ||
+    this.isSrcP5Graphics ||
+    this.isSrcHTMLElement
+  ) {
+    // if param is a video HTML element
+    textureData = this.src.elt;
+  }
+  return textureData;
+};
+
+/**
+ * Initializes common texture parameters, creates a gl texture,
+ * tries to upload the texture for the first time if data is
+ * already available.
+ * @private
+ * @method init
+ */
+p5.Texture.prototype.init = function(data) {
+  var gl = this._renderer.GL;
+  this.glTex = gl.createTexture();
+  this.bindTexture();
+
+  //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.glMagFilter);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.glMinFilter);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.glWrapS);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.glWrapT);
+
+  if (
+    this.width === 0 ||
+    this.height === 0 ||
+    (this.isSrcMediaElement && !this.src.loadedmetadata)
+  ) {
+    // assign a 1x1 empty texture initially, because data is not yet ready,
+    // so that no errors occur in gl console!
+    var tmpdata = new Uint8Array([1, 1, 1, 1]);
+    gl.texImage2D(
+      this.glTarget,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      this.glFormat,
+      gl.UNSIGNED_BYTE,
+      tmpdata
+    );
+  } else {
+    // data is ready: just push the texture!
+    gl.texImage2D(
+      this.glTarget,
+      0,
+      this.glFormat,
+      this.glFormat,
+      gl.UNSIGNED_BYTE,
+      data
+    );
+  }
+};
+
+/**
+ * Checks if the source data for this texture has changed (if it's
+ * easy to do so) and reuploads the texture if necessary. If it's not
+ * possible or to expensive to do a calculation to determine wheter or
+ * not the data has occurred, this method simply re-uploads the texture.
+ * @method update
+ */
+p5.Texture.prototype.update = function() {
+  var data = this.src;
+  if (data.width === 0 || data.height === 0) {
+    return; // nothing to do!
+  }
+
+  var textureData = this._getTextureDataFromSource();
+
+  var gl = this._renderer.GL;
+  // pull texture from data, make sure width & height are appropriate
+  if (textureData.width !== this.width || textureData.height !== this.height) {
+    // make sure that if the width and height of this.src have changed
+    // for some reason, we update our metadata and upload the texture again
+    this.width = textureData.width;
+    this.height = textureData.height;
+
+    this.bindTexture();
+    gl.texImage2D(
+      this.glTarget,
+      0,
+      this.glFormat,
+      this.glFormat,
+      gl.UNSIGNED_BYTE,
+      textureData
+    );
+
+    if (this.isSrcP5Image) {
+      data.setModified(false);
+    } else if (this.isSrcMediaElement || this.isSrcHTMLElement) {
+      // on the first frame the metadata comes in, the size will be changed
+      // from 0 to actual size, but pixels may not be available.
+      // flag for update in a future frame.
+      // if we don't do this, a paused video, for example, may not
+      // send the first frame to texture memory.
+      data.setModified(true);
+    }
+  } else if (this.isSrcP5Image) {
+    // for an image, we only update if the modified field has been set,
+    // for example, by a call to p5.Image.set
+    if (data.isModified()) {
+      this.bindTexture();
+      gl.texImage2D(
+        this.glTarget,
+        0,
+        this.glFormat,
+        this.glFormat,
+        gl.UNSIGNED_BYTE,
+        textureData
+      );
+      data.setModified(false);
+    }
+  } else if (this.isSrcMediaElement) {
+    var shouldUpdate = false;
+
+    // for a media element (video), we'll check if the current time in
+    // the video frame matches the last time. if it doesn't match, the
+    // video has advanced or otherwise been taken to a new frame,
+    // and we need to upload it.
+    if (data.isModified()) {
+      // p5.MediaElement may have also had set/updatePixels, etc. called
+      // on it and should be updated, or may have been set for the first
+      // time!
+      shouldUpdate = true;
+      data.setModified(false);
+    } else if (data.loadedmetadata) {
+      // if the meta data has been loaded, we can ask the video
+      // what it's current position (in time) is.
+      if (this._videoPrevUpdateTime !== data.time()) {
+        // update the texture in gpu mem only if the current
+        // video timestamp does not match the timestamp of the last
+        // time we uploaded this texture (and update the time we
+        // last uploaded, too)
+        this._videoPrevUpdateTime = data.time();
+        shouldUpdate = true;
+      }
+    }
+
+    if (shouldUpdate) {
+      this.bindTexture();
+      gl.texImage2D(
+        this.glTarget,
+        0,
+        this.glFormat,
+        this.glFormat,
+        gl.UNSIGNED_BYTE,
+        textureData
+      );
+    }
+  } else {
+    /* data instanceof p5.Graphics, probably */ // there is not enough information to tell if the texture can be
+    // conditionally updated; so to be safe, we just go ahead and upload it.
+    gl.texImage2D(
+      this.glTarget,
+      0,
+      this.glFormat,
+      this.glFormat,
+      gl.UNSIGNED_BYTE,
+      textureData
+    );
+  }
+};
+
+/**
+ * Binds the texture to the appropriate GL target.
+ * @method bindTexture
+ */
+p5.Texture.prototype.bindTexture = function() {
+  // bind texture using gl context + glTarget and
+  // generated gl texture object
+  var gl = this._renderer.GL;
+  gl.bindTexture(this.glTarget, this.glTex);
+
+  return this;
+};
+
+/**
+ * Unbinds the texture from the appropriate GL target.
+ * @method unbindTexture
+ */
+p5.Texture.prototype.unbindTexture = function() {
