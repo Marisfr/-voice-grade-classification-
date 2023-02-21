@@ -74425,3 +74425,28 @@ p5.RendererGL.prototype.curve = function(
  *   rotateX(frameCount * 0.01);
  *   rotateY(frameCount * 0.01);
  *   // Use fill instead of stroke to change the color of shape.
+ *   fill(255, 0, 0);
+ *   line(10, 10, 0, 60, 60, 20);
+ * }
+ * </code>
+ * </div>
+ */
+p5.RendererGL.prototype.line = function() {
+  if (arguments.length === 6) {
+    this.beginShape();
+    this.vertex(arguments[0], arguments[1], arguments[2]);
+    this.vertex(arguments[3], arguments[4], arguments[5]);
+    this.endShape();
+  } else if (arguments.length === 4) {
+    this.beginShape();
+    this.vertex(arguments[0], arguments[1], 0);
+    this.vertex(arguments[2], arguments[3], 0);
+    this.endShape();
+  }
+  return this;
+};
+
+module.exports = p5;
+
+},{"../core/core":22,"./p5.Geometry":69}]},{},[13])(13)
+});
