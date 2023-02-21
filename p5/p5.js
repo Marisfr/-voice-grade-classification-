@@ -71502,3 +71502,964 @@ p5.RendererGL.prototype.createBuffers = function(gId, obj) {
     this._bindBuffer(
       geometry.lineNormalBuffer,
       gl.ARRAY_BUFFER,
+      this._flatten(obj.lineNormals),
+      Float32Array,
+      gl.STATIC_DRAW
+    );
+
+    this.curStrokeShader.enableAttrib(
+      this.curStrokeShader.attributes.aDirection.location,
+      4,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+
+  // initialize the fill shader's 'aPosition' buffer, if used
+  if (this.curFillShader.attributes.aPosition) {
+    geometry.vertexBuffer = gl.createBuffer();
+
+    // allocate space for vertex positions
+    this._bindBuffer(
+      geometry.vertexBuffer,
+      gl.ARRAY_BUFFER,
+      this._vToNArray(obj.vertices),
+      Float32Array,
+      gl.STATIC_DRAW
+    );
+
+    this.curFillShader.enableAttrib(
+      this.curFillShader.attributes.aPosition.location,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+
+  // allocate space for faces
+  geometry.indexBuffer = gl.createBuffer();
+  this._bindBuffer(
+    geometry.indexBuffer,
+    gl.ELEMENT_ARRAY_BUFFER,
+    this._flatten(obj.faces),
+    Uint16Array,
+    gl.STATIC_DRAW
+  );
+
+  // initialize the fill shader's 'aNormal' buffer, if used
+  if (this.curFillShader.attributes.aNormal) {
+    geometry.normalBuffer = gl.createBuffer();
+
+    // allocate space for normals
+    this._bindBuffer(
+      geometry.normalBuffer,
+      gl.ARRAY_BUFFER,
+      this._vToNArray(obj.vertexNormals),
+      Float32Array,
+      gl.STATIC_DRAW
+    );
+
+    this.curFillShader.enableAttrib(
+      this.curFillShader.attributes.aNormal.location,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+
+  // initialize the fill shader's 'aTexCoord' buffer, if used
+  if (this.curFillShader.attributes.aTexCoord) {
+    geometry.uvBuffer = gl.createBuffer();
+
+    // tex coords
+    this._bindBuffer(
+      geometry.uvBuffer,
+      gl.ARRAY_BUFFER,
+      this._flatten(obj.uvs),
+      Float32Array,
+      gl.STATIC_DRAW
+    );
+
+    this.curFillShader.enableAttrib(
+      this.curFillShader.attributes.aTexCoord.location,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+  //}
+};
+
+/**
+ * Draws buffers given a geometry key ID
+ * @private
+ * @param  {String} gId     ID in our geom hash
+ * @chainable
+ */
+p5.RendererGL.prototype.drawBuffers = function(gId) {
+  this._setDefaultCamera();
+  var gl = this.GL;
+  this._useColorShader();
+  var geometry = this.gHash[gId];
+
+  if (this._doStroke && geometry.lineVertexCount > 0) {
+    this.curStrokeShader.bindShader();
+
+    // bind the stroke shader's 'aPosition' buffer
+    if (geometry.lineVertexBuffer) {
+      this._bindBuffer(geometry.lineVertexBuffer, gl.ARRAY_BUFFER);
+      this.curStrokeShader.enableAttrib(
+        this.curStrokeShader.attributes.aPosition.location,
+        3,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    // bind the stroke shader's 'aDirection' buffer
+    if (geometry.lineNormalBuffer) {
+      this._bindBuffer(geometry.lineNormalBuffer, gl.ARRAY_BUFFER);
+      this.curStrokeShader.enableAttrib(
+        this.curStrokeShader.attributes.aDirection.location,
+        4,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    this._applyColorBlend(this.curStrokeColor);
+    this._drawArrays(gl.TRIANGLES, gId);
+    this.curStrokeShader.unbindShader();
+  }
+
+  if (this._doFill !== false) {
+    this.curFillShader.bindShader();
+
+    // bind the fill shader's 'aPosition' buffer
+    if (geometry.vertexBuffer) {
+      //vertex position buffer
+      this._bindBuffer(geometry.vertexBuffer, gl.ARRAY_BUFFER);
+      this.curFillShader.enableAttrib(
+        this.curFillShader.attributes.aPosition.location,
+        3,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    if (geometry.indexBuffer) {
+      //vertex index buffer
+      this._bindBuffer(geometry.indexBuffer, gl.ELEMENT_ARRAY_BUFFER);
+    }
+
+    // bind the fill shader's 'aNormal' buffer
+    if (geometry.normalBuffer) {
+      this._bindBuffer(geometry.normalBuffer, gl.ARRAY_BUFFER);
+      this.curFillShader.enableAttrib(
+        this.curFillShader.attributes.aNormal.location,
+        3,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    // bind the fill shader's 'aTexCoord' buffer
+    if (geometry.uvBuffer) {
+      // uv buffer
+      this._bindBuffer(geometry.uvBuffer, gl.ARRAY_BUFFER);
+      this.curFillShader.enableAttrib(
+        this.curFillShader.attributes.aTexCoord.location,
+        2,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    this._applyColorBlend(this.curFillColor);
+    this._drawElements(gl.TRIANGLES, gId);
+    this.curFillShader.unbindShader();
+  }
+  return this;
+};
+
+/**
+ * Calls drawBuffers() with a scaled model/view matrix.
+ *
+ * This is used by various 3d primitive methods (in primitives.js, eg. plane,
+ * box, torus, etc...) to allow caching of un-scaled geometries. Those
+ * geometries are generally created with unit-length dimensions, cached as
+ * such, and then scaled appropriately in this method prior to rendering.
+ *
+ * @private
+ * @method drawBuffersScaled
+ * @param {String} gId     ID in our geom hash
+ * @param {Number} scaleX  the amount to scale in the X direction
+ * @param {Number} scaleY  the amount to scale in the Y direction
+ * @param {Number} scaleZ  the amount to scale in the Z direction
+ */
+p5.RendererGL.prototype.drawBuffersScaled = function(
+  gId,
+  scaleX,
+  scaleY,
+  scaleZ
+) {
+  var uMVMatrix = this.uMVMatrix.copy();
+  try {
+    this.uMVMatrix.scale(scaleX, scaleY, scaleZ);
+    this.drawBuffers(gId);
+  } finally {
+    this.uMVMatrix = uMVMatrix;
+  }
+};
+
+p5.RendererGL.prototype._drawArrays = function(drawMode, gId) {
+  this.GL.drawArrays(drawMode, 0, this.gHash[gId].lineVertexCount);
+  return this;
+};
+
+p5.RendererGL.prototype._drawElements = function(drawMode, gId) {
+  this.GL.drawElements(
+    drawMode,
+    this.gHash[gId].numberOfItems,
+    this.GL.UNSIGNED_SHORT,
+    0
+  );
+};
+
+module.exports = p5.RendererGL;
+
+},{"../core/core":22}],73:[function(_dereq_,module,exports){
+'use strict';
+
+var p5 = _dereq_('../core/core');
+var constants = _dereq_('../core/constants');
+_dereq_('./p5.Shader');
+_dereq_('../core/p5.Renderer');
+_dereq_('./p5.Matrix');
+
+
+var uMVMatrixStack = [];
+var cameraMatrixStack = [];
+
+var defaultShaders = {
+  immediateVert: "attribute vec3 aPosition;\nattribute vec4 aVertexColor;\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform float uResolution;\nuniform float uPointSize;\n\nvarying vec4 vColor;\nvoid main(void) {\n  vec4 positionVec4 = vec4(aPosition, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n  vColor = aVertexColor;\n  gl_PointSize = uPointSize;\n}\n",
+  vertexColorVert: "attribute vec3 aPosition;\nattribute vec4 aVertexColor;\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\n\nvarying vec4 vColor;\n\nvoid main(void) {\n  vec4 positionVec4 = vec4(aPosition, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n  vColor = aVertexColor;\n}\n",
+  vertexColorFrag: "precision mediump float;\nvarying vec4 vColor;\nvoid main(void) {\n  gl_FragColor = vColor;\n}",
+  normalVert: "attribute vec3 aPosition;\nattribute vec3 aNormal;\nattribute vec2 aTexCoord;\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat3 uNormalMatrix;\n\nvarying vec3 vVertexNormal;\nvarying highp vec2 vVertTexCoord;\n\nvoid main(void) {\n  vec4 positionVec4 = vec4(aPosition, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n  vVertexNormal = normalize(vec3( uNormalMatrix * aNormal ));\n  vVertTexCoord = aTexCoord;\n}\n",
+  normalFrag: "precision mediump float;\nvarying vec3 vVertexNormal;\nvoid main(void) {\n  gl_FragColor = vec4(vVertexNormal, 1.0);\n}",
+  basicFrag: "precision mediump float;\nvarying vec3 vVertexNormal;\nuniform vec4 uMaterialColor;\nvoid main(void) {\n  gl_FragColor = uMaterialColor;\n}",
+  lightVert: "attribute vec3 aPosition;\nattribute vec3 aNormal;\nattribute vec2 aTexCoord;\n\nuniform mat4 uViewMatrix;\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat3 uNormalMatrix;\nuniform int uAmbientLightCount;\nuniform int uDirectionalLightCount;\nuniform int uPointLightCount;\n\nuniform vec3 uAmbientColor[8];\nuniform vec3 uLightingDirection[8];\nuniform vec3 uDirectionalColor[8];\nuniform vec3 uPointLightLocation[8];\nuniform vec3 uPointLightColor[8];\nuniform bool uSpecular;\n\nvarying vec3 vVertexNormal;\nvarying vec2 vVertTexCoord;\nvarying vec3 vLightWeighting;\n\nvoid main(void){\n\n  vec4 positionVec4 = vec4(aPosition, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n\n  vec3 vertexNormal = normalize(vec3( uNormalMatrix * aNormal ));\n  vVertexNormal = vertexNormal;\n  vVertTexCoord = aTexCoord;\n\n  vec4 mvPosition = uModelViewMatrix * vec4(aPosition, 1.0);\n  vec3 eyeDirection = normalize(-mvPosition.xyz);\n\n  float shininess = 32.0;\n  float specularFactor = 2.0;\n  float diffuseFactor = 0.3;\n\n  vec3 ambientLightFactor = vec3(0.0);\n\n  for (int i = 0; i < 8; i++) {\n    if (uAmbientLightCount == i) break;\n    ambientLightFactor += uAmbientColor[i];\n  }\n\n\n  vec3 directionalLightFactor = vec3(0.0);\n\n  for (int j = 0; j < 8; j++) {\n    if (uDirectionalLightCount == j) break;\n    vec3 dir = uLightingDirection[j];\n    float directionalLightWeighting = max(dot(vertexNormal, -dir), 0.0);\n    directionalLightFactor += uDirectionalColor[j] * directionalLightWeighting;\n  }\n\n\n  vec3 pointLightFactor = vec3(0.0);\n\n  for (int k = 0; k < 8; k++) {\n    if (uPointLightCount == k) break;\n    vec3 loc = (uViewMatrix * vec4(uPointLightLocation[k], 1.0)).xyz;\n    vec3 lightDirection = normalize(loc - mvPosition.xyz);\n\n    float directionalLightWeighting = max(dot(vertexNormal, lightDirection), 0.0);\n\n    float specularLightWeighting = 0.0;\n    if (uSpecular ){\n      vec3 reflectionDirection = reflect(-lightDirection, vertexNormal);\n      specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), shininess);\n    }\n\n    pointLightFactor += uPointLightColor[k] * (specularFactor * specularLightWeighting\n      + directionalLightWeighting * diffuseFactor);\n  }\n\n  vLightWeighting =  ambientLightFactor + directionalLightFactor + pointLightFactor;\n}\n",
+  lightTextureFrag: "precision mediump float;\n\nuniform vec4 uMaterialColor;\nuniform sampler2D uSampler;\nuniform bool isTexture;\nuniform bool uUseLighting;\n\nvarying vec3 vLightWeighting;\nvarying highp vec2 vVertTexCoord;\n\nvoid main(void) {\n  gl_FragColor = isTexture ? texture2D(uSampler, vVertTexCoord) : uMaterialColor;\n  if (uUseLighting)\n    gl_FragColor.rgb *= vLightWeighting;\n}",
+  phongVert: "precision mediump float;\n\nattribute vec3 aPosition;\nattribute vec3 aNormal;\nattribute vec2 aTexCoord;\n\nuniform vec3 uAmbientColor[8];\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat3 uNormalMatrix;\nuniform int uAmbientLightCount;\n\nvarying vec3 vNormal;\nvarying vec2 vTexCoord;\nvarying vec3 vViewPosition;\nvarying vec3 vAmbientColor;\n\nvoid main(void){\n\n  vec4 viewModelPosition = uModelViewMatrix * vec4(aPosition, 1.0);\n\n  // Pass varyings to fragment shader\n  vViewPosition = viewModelPosition.xyz;\n  gl_Position = uProjectionMatrix * viewModelPosition;  \n\n  vNormal = normalize(uNormalMatrix * normalize(aNormal));\n  vTexCoord = aTexCoord;\n\n  vAmbientColor = vec3(0.0);\n  for (int i = 0; i < 8; i++) {\n    if (uAmbientLightCount == i) break;\n    vAmbientColor += uAmbientColor[i];\n  }\n}\n",
+  phongFrag: "precision mediump float;\n\n//uniform mat4 uModelViewMatrix;\nuniform mat4 uViewMatrix;\n\nuniform vec4 uMaterialColor;\nuniform sampler2D uSampler;\nuniform bool isTexture;\nuniform bool uUseLighting;\n\nuniform vec3 uLightingDirection[8];\nuniform vec3 uDirectionalColor[8];\nuniform vec3 uPointLightLocation[8];\nuniform vec3 uPointLightColor[8];\nuniform bool uSpecular;\n\nuniform int uDirectionalLightCount;\nuniform int uPointLightCount;\n\nvarying vec3 vNormal;\nvarying vec2 vTexCoord;\nvarying vec3 vViewPosition;\nvarying vec3 vAmbientColor;\n\nvec3 V;\nvec3 N;\n\nconst float shininess = 32.0;\nconst float specularFactor = 2.0;\nconst float diffuseFactor = 0.73;\n\nstruct LightResult {\n\tfloat specular;\n\tfloat diffuse;\n};\n\nfloat phongSpecular(\n  vec3 lightDirection,\n  vec3 viewDirection,\n  vec3 surfaceNormal,\n  float shininess) {\n\n  vec3 R = normalize(reflect(-lightDirection, surfaceNormal));  \n  return pow(max(0.0, dot(R, viewDirection)), shininess);\n}\n\nfloat lambertDiffuse(\n  vec3 lightDirection,\n  vec3 surfaceNormal) {\n  return max(0.0, dot(-lightDirection, surfaceNormal));\n}\n\nLightResult light(vec3 lightVector) {\n\n  vec3 L = normalize(lightVector);\n\n  //compute our diffuse & specular terms\n  LightResult lr;\n  if (uSpecular)\n    lr.specular = phongSpecular(L, V, N, shininess);\n  lr.diffuse = lambertDiffuse(L, N);\n  return lr;\n}\n\nvoid main(void) {\n\n  V = normalize(vViewPosition);\n  N = vNormal;\n\n  vec3 diffuse = vec3(0.0);\n  float specular = 0.0;\n\n  for (int j = 0; j < 8; j++) {\n    if (uDirectionalLightCount == j) break;\n\n    LightResult result = light(uLightingDirection[j]);\n    diffuse += result.diffuse * uDirectionalColor[j];\n    specular += result.specular;\n  }\n\n  for (int k = 0; k < 8; k++) {\n    if (uPointLightCount == k) break;\n\n    vec3 lightPosition = (uViewMatrix * vec4(uPointLightLocation[k], 1.0)).xyz;\n    vec3 lightVector = vViewPosition - lightPosition;\n\t\n    //calculate attenuation\n    float lightDistance = length(lightVector);\n    float falloff = 500.0 / (lightDistance + 500.0);\n\n    LightResult result = light(lightVector);\n    diffuse += result.diffuse * falloff * uPointLightColor[k];\n    specular += result.specular * falloff;\n  }\n\n  gl_FragColor = isTexture ? texture2D(uSampler, vTexCoord) : uMaterialColor;\n  gl_FragColor.rgb = gl_FragColor.rgb * (diffuse * diffuseFactor + vAmbientColor) + specular * specularFactor;\n}",
+  lineVert: "/*\n  Part of the Processing project - http://processing.org\n  Copyright (c) 2012-15 The Processing Foundation\n  Copyright (c) 2004-12 Ben Fry and Casey Reas\n  Copyright (c) 2001-04 Massachusetts Institute of Technology\n  This library is free software; you can redistribute it and/or\n  modify it under the terms of the GNU Lesser General Public\n  License as published by the Free Software Foundation, version 2.1.\n  This library is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n  Lesser General Public License for more details.\n  You should have received a copy of the GNU Lesser General\n  Public License along with this library; if not, write to the\n  Free Software Foundation, Inc., 59 Temple Place, Suite 330,\n  Boston, MA  02111-1307  USA\n*/\n\n#define PROCESSING_LINE_SHADER\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform float uStrokeWeight;\n\nuniform vec4 uViewport;\nvec3 scale = vec3(1.0);\n\nattribute vec4 aPosition;\nattribute vec4 aDirection;\n  \nvoid main() {\n  vec4 posp = uModelViewMatrix * aPosition;\n  vec4 posq = uModelViewMatrix * (aPosition + vec4(aDirection.xyz, 0));\n\n  // Moving vertices slightly toward the camera\n  // to avoid depth-fighting with the fill triangles.\n  // Discussed here:\n  // http://www.opengl.org/discussion_boards/ubbthreads.php?ubb=showflat&Number=252848  \n  posp.xyz = posp.xyz * scale;\n  posq.xyz = posq.xyz * scale;\n\n  vec4 p = uProjectionMatrix * posp;\n  vec4 q = uProjectionMatrix * posq;\n\n  // formula to convert from clip space (range -1..1) to screen space (range 0..[width or height])\n  // screen_p = (p.xy/p.w + <1,1>) * 0.5 * uViewport.zw\n\n  // prevent division by W by transforming the tangent formula (div by 0 causes\n  // the line to disappear, see https://github.com/processing/processing/issues/5183)\n  // t = screen_q - screen_p\n  //\n  // tangent is normalized and we don't care which aDirection it points to (+-)\n  // t = +- normalize( screen_q - screen_p )\n  // t = +- normalize( (q.xy/q.w+<1,1>)*0.5*uViewport.zw - (p.xy/p.w+<1,1>)*0.5*uViewport.zw )\n  //\n  // extract common factor, <1,1> - <1,1> cancels out\n  // t = +- normalize( (q.xy/q.w - p.xy/p.w) * 0.5 * uViewport.zw )\n  //\n  // convert to common divisor\n  // t = +- normalize( ((q.xy*p.w - p.xy*q.w) / (p.w*q.w)) * 0.5 * uViewport.zw )\n  //\n  // remove the common scalar divisor/factor, not needed due to normalize and +-\n  // (keep uViewport - can't remove because it has different components for x and y\n  //  and corrects for aspect ratio, see https://github.com/processing/processing/issues/5181)\n  // t = +- normalize( (q.xy*p.w - p.xy*q.w) * uViewport.zw )\n\n  vec2 tangent = normalize((q.xy*p.w - p.xy*q.w) * uViewport.zw);\n\n  // flip tangent to normal (it's already normalized)\n  vec2 normal = vec2(-tangent.y, tangent.x);\n\n  float thickness = aDirection.w * uStrokeWeight;\n  vec2 offset = normal * thickness / 2.0;\n\n  // Perspective ---\n  // convert from world to clip by multiplying with projection scaling factor\n  // to get the right thickness (see https://github.com/processing/processing/issues/5182)\n  // invert Y, projections in Processing invert Y\n  vec2 perspScale = (uProjectionMatrix * vec4(1, -1, 0, 0)).xy;\n\n  // No Perspective ---\n  // multiply by W (to cancel out division by W later in the pipeline) and\n  // convert from screen to clip (derived from clip to screen above)\n  vec2 noPerspScale = p.w / (0.5 * uViewport.zw);\n\n  //gl_Position.xy = p.xy + offset.xy * mix(noPerspScale, perspScale, float(perspective > 0));\n  gl_Position.xy = p.xy + offset.xy * perspScale;\n  gl_Position.zw = p.zw;\n}\n",
+  lineFrag: "precision mediump float;\nprecision mediump int;\n\nuniform vec4 uMaterialColor;\n\nvoid main() {\n  gl_FragColor = uMaterialColor;\n}"
+};
+
+/**
+ * 3D graphics class
+ * @class p5.RendererGL
+ * @constructor
+ * @extends p5.Renderer
+ * @todo extend class to include public method for offscreen
+ * rendering (FBO).
+ *
+ */
+p5.RendererGL = function(elt, pInst, isMainCanvas, attr) {
+  p5.Renderer.call(this, elt, pInst, isMainCanvas);
+  this.attributes = {};
+  attr = attr || {};
+  this.attributes.alpha = attr.alpha === undefined ? true : attr.alpha;
+  this.attributes.depth = attr.depth === undefined ? true : attr.depth;
+  this.attributes.stencil = attr.stencil === undefined ? true : attr.stencil;
+  this.attributes.antialias =
+    attr.antialias === undefined ? false : attr.antialias;
+  this.attributes.premultipliedAlpha =
+    attr.premultipliedAlpha === undefined ? false : attr.premultipliedAlpha;
+  this.attributes.preserveDrawingBuffer =
+    attr.preserveDrawingBuffer === undefined
+      ? true
+      : attr.preserveDrawingBuffer;
+  this.attributes.perPixelLighting =
+    attr.perPixelLighting === undefined ? false : attr.perPixelLighting;
+  this._initContext();
+  this.isP3D = true; //lets us know we're in 3d mode
+  this.GL = this.drawingContext;
+
+  // lights
+
+  this.ambientLightColors = [];
+  this.directionalLightDirections = [];
+  this.directionalLightColors = [];
+
+  this.pointLightPositions = [];
+  this.pointLightColors = [];
+
+  /**
+   * model view, projection, & normal
+   * matrices
+   */
+  this.uMVMatrix = new p5.Matrix();
+  this.uPMatrix = new p5.Matrix();
+  this.uNMatrix = new p5.Matrix('mat3');
+
+  // Camera
+  this._curCamera = null;
+  // default camera settings, then use those to populate camera fields.
+  this._computeCameraDefaultSettings();
+  this.cameraFOV = this.defaultCameraFOV;
+  this.cameraAspect = this.defaultAspect;
+  this.cameraX = this.defaultCameraX;
+  this.cameraY = this.defaultCameraY;
+  this.cameraZ = this.defaultCameraZ;
+  this.cameraNear = this.defaultCameraNear;
+  this.cameraFar = this.defaultCameraFar;
+  this.cameraMatrix = new p5.Matrix(pInst);
+  this.camera(); // set default camera matrices
+
+  //Geometry & Material hashes
+  this.gHash = {};
+
+  this._defaultLightShader = undefined;
+  this._defaultImmediateModeShader = undefined;
+  this._defaultNormalShader = undefined;
+  this._defaultColorShader = undefined;
+
+  this.curFillShader = undefined;
+  this.curStrokeShader = undefined;
+
+  this._useColorShader();
+  this.setStrokeShader(this._getLineShader());
+
+  //Imediate Mode
+  //default drawing is done in Retained Mode
+  this.isImmediateDrawing = false;
+  this.immediateMode = {};
+
+  // note: must call fill() and stroke () AFTER
+  // default shader has been set.
+  this.fill(255, 255, 255, 255);
+  //this.stroke(0, 0, 0, 255);
+  this.pointSize = 5.0; //default point size
+  this.strokeWeight(2);
+  this.stroke(0, 0, 0);
+  // array of textures created in this gl context via this.getTexture(src)
+  this.textures = [];
+  this.name = 'p5.RendererGL'; // for friendly debugger system
+
+  return this;
+};
+
+p5.RendererGL.prototype = Object.create(p5.Renderer.prototype);
+
+//////////////////////////////////////////////
+// Setting
+//////////////////////////////////////////////
+
+p5.RendererGL.prototype._initContext = function() {
+  try {
+    this.drawingContext =
+      this.canvas.getContext('webgl', this.attributes) ||
+      this.canvas.getContext('experimental-webgl', this.attributes);
+    if (this.drawingContext === null) {
+      throw new Error('Error creating webgl context');
+    } else {
+      console.log('p5.RendererGL: enabled webgl context');
+      var gl = this.drawingContext;
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      this._viewport = this.drawingContext.getParameter(
+        this.drawingContext.VIEWPORT
+      );
+    }
+  } catch (er) {
+    throw new Error(er);
+  }
+};
+
+//This is helper function to reset the context anytime the attributes
+//are changed with setAttributes()
+
+p5.RendererGL.prototype._resetContext = function(attr, options, callback) {
+  var w = this.width;
+  var h = this.height;
+  var defaultId = this.canvas.id;
+  var c = this.canvas;
+  if (c) {
+    c.parentNode.removeChild(c);
+  }
+  c = document.createElement('canvas');
+  c.id = defaultId;
+  if (this._pInst._userNode) {
+    this._pInst._userNode.appendChild(c);
+  } else {
+    document.body.appendChild(c);
+  }
+  this._pInst.canvas = c;
+  var renderer = new p5.RendererGL(this._pInst.canvas, this._pInst, true, attr);
+  this._pInst._setProperty('_renderer', renderer);
+  renderer.resize(w, h);
+  renderer._applyDefaults();
+  this._pInst._elements.push(renderer);
+  if (typeof callback === 'function') {
+    //setTimeout with 0 forces the task to the back of the queue, this ensures that
+    //we finish switching out the renderer
+    setTimeout(function() {
+      callback.apply(window._renderer, options);
+    }, 0);
+  }
+};
+/**
+ * @module Rendering
+ * @submodule Rendering
+ * @for p5
+ */
+/**
+ * Set attributes for the WebGL Drawing context.
+ * This is a way of adjusting ways that the WebGL
+ * renderer works to fine-tune the display and performance.
+ * This should be put in setup().
+ * The available attributes are:
+ * <br>
+ * alpha - indicates if the canvas contains an alpha buffer
+ * default is true
+ * <br><br>
+ * depth - indicates whether the drawing buffer has a depth buffer
+ * of at least 16 bits - default is true
+ * <br><br>
+ * stencil - indicates whether the drawing buffer has a stencil buffer
+ * of at least 8 bits
+ * <br><br>
+ * antialias - indicates whether or not to perform anti-aliasing
+ * default is false
+ * <br><br>
+ * premultipliedAlpha - indicates that the page compositor will assume
+ * the drawing buffer contains colors with pre-multiplied alpha
+ * default is false
+ * <br><br>
+ * preserveDrawingBuffer - if true the buffers will not be cleared and
+ * and will preserve their values until cleared or overwritten by author
+ * (note that p5 clears automatically on draw loop)
+ * default is true
+ * <br><br>
+ * perPixelLighting - if true, per-pixel lighting will be used in the
+ * lighting shader.
+ * default is false
+ * <br><br>
+ * @method setAttributes
+ * @for p5
+ * @param  {String}  key Name of attribute
+ * @param  {Boolean}        value New value of named attribute
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(255);
+ *   push();
+ *   rotateZ(frameCount * 0.02);
+ *   rotateX(frameCount * 0.02);
+ *   rotateY(frameCount * 0.02);
+ *   fill(0, 0, 0);
+ *   box(50);
+ *   pop();
+ * }
+ * </code>
+ * </div>
+ * <br>
+ * Now with the antialias attribute set to true.
+ * <br>
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *   setAttributes('antialias', true);
+ * }
+ *
+ * function draw() {
+ *   background(255);
+ *   push();
+ *   rotateZ(frameCount * 0.02);
+ *   rotateX(frameCount * 0.02);
+ *   rotateY(frameCount * 0.02);
+ *   fill(0, 0, 0);
+ *   box(50);
+ *   pop();
+ * }
+ * </code>
+ * </div>
+ *
+ * <div>
+ * <code>
+ * // press the mouse button to enable perPixelLighting
+ * function setup() {
+ *   createCanvas(100, 100, WEBGL);
+ *   noStroke();
+ *   fill(255);
+ * }
+ *
+ * var lights = [
+ *   { c: '#f00', t: 1.12, p: 1.91, r: 0.2 },
+ *   { c: '#0f0', t: 1.21, p: 1.31, r: 0.2 },
+ *   { c: '#00f', t: 1.37, p: 1.57, r: 0.2 },
+ *   { c: '#ff0', t: 1.12, p: 1.91, r: 0.7 },
+ *   { c: '#0ff', t: 1.21, p: 1.31, r: 0.7 },
+ *   { c: '#f0f', t: 1.37, p: 1.57, r: 0.7 }
+ * ];
+ *
+ * function draw() {
+ *   var t = millis() / 1000 + 1000;
+ *   background(0);
+ *   directionalLight(color('#222'), 1, 1, 1);
+ *
+ *   for (var i = 0; i < lights.length; i++) {
+ *     var light = lights[i];
+ *     pointLight(
+ *       color(light.c),
+ *       p5.Vector.fromAngles(t * light.t, t * light.p, width * light.r)
+ *     );
+ *   }
+ *
+ *   specularMaterial(255);
+ *   sphere(width * 0.1);
+ *
+ *   rotateX(t * 0.77);
+ *   rotateY(t * 0.83);
+ *   rotateZ(t * 0.91);
+ *   torus(width * 0.3, width * 0.07, 30, 10);
+ * }
+ *
+ * function mousePressed() {
+ *   setAttributes('perPixelLighting', true);
+ *   noStroke();
+ *   fill(255);
+ * }
+ * function mouseReleased() {
+ *   setAttributes('perPixelLighting', false);
+ *   noStroke();
+ *   fill(255);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt a rotating cube with smoother edges
+ */
+/**
+ * @method setAttributes
+ * @for p5
+ * @param  {Object}  obj object with key-value pairs
+ */
+
+p5.prototype.setAttributes = function(key, value) {
+  //@todo_FES
+  var attr;
+  if (typeof value !== 'undefined') {
+    attr = {};
+    attr[key] = value;
+  } else if (key instanceof Object) {
+    attr = key;
+  }
+  this._renderer._resetContext(attr);
+};
+
+/**
+ * @class p5.RendererGL
+ */
+
+p5.RendererGL.prototype._computeCameraDefaultSettings = function() {
+  this.defaultCameraFOV = 60 / 180 * Math.PI;
+  this.defaultCameraAspect = this.width / this.height;
+  this.defaultCameraX = 0;
+  this.defaultCameraY = 0;
+  this.defaultCameraZ =
+    this.height / 2.0 / Math.tan(this.defaultCameraFOV / 2.0);
+  this.defaultCameraNear = this.defaultCameraZ * 0.1;
+  this.defaultCameraFar = this.defaultCameraZ * 10;
+};
+
+//detect if user didn't set the camera
+//then call this function below
+p5.RendererGL.prototype._setDefaultCamera = function() {
+  if (this._curCamera === null) {
+    this._computeCameraDefaultSettings();
+    this.cameraFOV = this.defaultCameraFOV;
+    this.cameraAspect = this.defaultAspect;
+    this.cameraX = this.defaultCameraX;
+    this.cameraY = this.defaultCameraY;
+    this.cameraZ = this.defaultCameraZ;
+    this.cameraNear = this.defaultCameraNear;
+    this.cameraFar = this.defaultCameraFar;
+
+    this.perspective();
+    this.camera();
+    this._curCamera = 'default';
+  }
+};
+
+p5.RendererGL.prototype._update = function() {
+  // reset model view and apply initial camera transform
+  // (containing only look at info; no projection).
+  this.uMVMatrix.set(
+    this.cameraMatrix.mat4[0],
+    this.cameraMatrix.mat4[1],
+    this.cameraMatrix.mat4[2],
+    this.cameraMatrix.mat4[3],
+    this.cameraMatrix.mat4[4],
+    this.cameraMatrix.mat4[5],
+    this.cameraMatrix.mat4[6],
+    this.cameraMatrix.mat4[7],
+    this.cameraMatrix.mat4[8],
+    this.cameraMatrix.mat4[9],
+    this.cameraMatrix.mat4[10],
+    this.cameraMatrix.mat4[11],
+    this.cameraMatrix.mat4[12],
+    this.cameraMatrix.mat4[13],
+    this.cameraMatrix.mat4[14],
+    this.cameraMatrix.mat4[15]
+  );
+
+  // reset light data for new frame.
+
+  this.ambientLightColors.length = 0;
+  this.directionalLightDirections.length = 0;
+  this.directionalLightColors.length = 0;
+
+  this.pointLightPositions.length = 0;
+  this.pointLightColors.length = 0;
+};
+
+/**
+ * [background description]
+ */
+p5.RendererGL.prototype.background = function() {
+  var _col = this._pInst.color.apply(this._pInst, arguments);
+  var _r = _col.levels[0] / 255;
+  var _g = _col.levels[1] / 255;
+  var _b = _col.levels[2] / 255;
+  var _a = _col.levels[3] / 255;
+  this.GL.clearColor(_r, _g, _b, _a);
+  this.GL.depthMask(true);
+  this.GL.clear(this.GL.COLOR_BUFFER_BIT | this.GL.DEPTH_BUFFER_BIT);
+};
+
+//@TODO implement this
+// p5.RendererGL.prototype.clear = function() {
+//@TODO
+// };
+
+//////////////////////////////////////////////
+// COLOR
+//////////////////////////////////////////////
+/**
+ * Basic fill material for geometry with a given color
+ * @method  fill
+ * @class p5.RendererGL
+ * @param  {Number|Number[]|String|p5.Color} v1  gray value,
+ * red or hue value (depending on the current color mode),
+ * or color Array, or CSS color string
+ * @param  {Number}            [v2] green or saturation value
+ * @param  {Number}            [v3] blue or brightness value
+ * @param  {Number}            [a]  opacity
+ * @chainable
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(200, 200, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   noStroke();
+ *   fill(100, 100, 240);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   box(75, 75, 75);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black canvas with purple cube spinning
+ *
+ */
+p5.RendererGL.prototype.fill = function(v1, v2, v3, a) {
+  //see material.js for more info on color blending in webgl
+  var color = p5.prototype.color.apply(this._pInst, arguments);
+  this.curFillColor = color._array;
+
+  if (this.isImmediateDrawing) {
+    this.setFillShader(this._getImmediateModeShader());
+  } else {
+    this.setFillShader(this._getColorShader());
+  }
+  this.drawMode = constants.FILL;
+  this.curFillShader.setUniform('uMaterialColor', this.curFillColor);
+};
+
+/**
+ * Basic stroke material for geometry with a given color
+ * @method  stroke
+ * @param  {Number|Number[]|String|p5.Color} v1  gray value,
+ * red or hue value (depending on the current color mode),
+ * or color Array, or CSS color string
+ * @param  {Number}            [v2] green or saturation value
+ * @param  {Number}            [v3] blue or brightness value
+ * @param  {Number}            [a]  opacity
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(200, 200, WEBGL);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   stroke(240, 150, 150);
+ *   fill(100, 100, 240);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   box(75, 75, 75);
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black canvas with purple cube with pink outline spinning
+ *
+ */
+p5.RendererGL.prototype.stroke = function(r, g, b, a) {
+  //@todo allow transparency in stroking currently doesn't have
+  //any impact and causes problems with specularMaterial
+  arguments[3] = 255;
+  var color = p5.prototype.color.apply(this._pInst, arguments);
+  this.curStrokeColor = color._array;
+  this.curStrokeShader.setUniform('uMaterialColor', this.curStrokeColor);
+};
+
+/**
+ * Change weight of stroke
+ * @method  strokeWeight
+ * @param  {Number} stroke weight to be used for drawing
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   createCanvas(200, 400, WEBGL);
+ *   setAttributes('antialias', true);
+ * }
+ *
+ * function draw() {
+ *   background(0);
+ *   noStroke();
+ *   translate(0, -100, 0);
+ *   stroke(240, 150, 150);
+ *   fill(100, 100, 240);
+ *   push();
+ *   strokeWeight(8);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   sphere(75);
+ *   pop();
+ *   push();
+ *   translate(0, 200, 0);
+ *   strokeWeight(1);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   sphere(75);
+ *   pop();
+ * }
+ * </code>
+ * </div>
+ *
+ * @alt
+ * black canvas with two purple rotating spheres with pink
+ * outlines the sphere on top has much heavier outlines,
+ *
+ */
+p5.RendererGL.prototype.strokeWeight = function(w) {
+  if (this.curStrokeWeight !== w) {
+    this.pointSize = w;
+    this.curStrokeWeight = w;
+    this.curStrokeShader.setUniform('uStrokeWeight', w);
+  }
+};
+
+/**
+ * Returns an array of [R,G,B,A] values for any pixel or grabs a section of
+ * an image. If no parameters are specified, the entire image is returned.
+ * Use the x and y parameters to get the value of one pixel. Get a section of
+ * the display window by specifying additional w and h parameters. When
+ * getting an image, the x and y parameters define the coordinates for the
+ * upper-left corner of the image, regardless of the current imageMode().
+ * <br><br>
+ * If the pixel requested is outside of the image window, [0,0,0,255] is
+ * returned.
+ * <br><br>
+ * Getting the color of a single pixel with get(x, y) is easy, but not as fast
+ * as grabbing the data directly from pixels[]. The equivalent statement to
+ * get(x, y) is using pixels[] with pixel density d
+ *
+ *
+ * @method get
+ * @param  {Number}               [x] x-coordinate of the pixel
+ * @param  {Number}               [y] y-coordinate of the pixel
+ * @param  {Number}               [w] width
+ * @param  {Number}               [h] height
+ * @return {Number[]|Color|p5.Image}  color of pixel at x,y in array format
+ *                                    [R, G, B, A] or p5.Image
+ */
+p5.RendererGL.prototype.get = function(x, y, w, h) {
+  return p5.Renderer2D.prototype.get.apply(this, [x, y, w, h]);
+};
+
+/**
+ * Loads the pixels data for this canvas into the pixels[] attribute.
+ * Note that updatePixels() and set() do not work.
+ * Any pixel manipulation must be done directly to the pixels[] array.
+ *
+ * @method loadPixels
+ *
+ */
+
+p5.RendererGL.prototype.loadPixels = function() {
+  //@todo_FES
+  if (this.attributes.preserveDrawingBuffer !== true) {
+    console.log(
+      'loadPixels only works in WebGL when preserveDrawingBuffer ' + 'is true.'
+    );
+    return;
+  }
+  var pd = this._pInst._pixelDensity;
+  var x = 0;
+  var y = 0;
+  var w = this.width;
+  var h = this.height;
+  w *= pd;
+  h *= pd;
+  //if there isn't a renderer-level temporary pixels buffer
+  //make a new one
+  if (typeof this.pixels === 'undefined') {
+    this.pixels = new Uint8Array(
+      this.GL.drawingBufferWidth * this.GL.drawingBufferHeight * 4
+    );
+  }
+  this.GL.readPixels(
+    x,
+    y,
+    w,
+    h,
+    this.GL.RGBA,
+    this.GL.UNSIGNED_BYTE,
+    this.pixels
+  );
+  this._pInst._setProperty('pixels', this.pixels);
+};
+
+//////////////////////////////////////////////
+// HASH | for geometry
+//////////////////////////////////////////////
+
+p5.RendererGL.prototype.geometryInHash = function(gId) {
+  return this.gHash[gId] !== undefined;
+};
+
+/**
+ * [resize description]
+ * @private
+ * @param  {Number} w [description]
+ * @param  {Number} h [description]
+ */
+p5.RendererGL.prototype.resize = function(w, h) {
+  p5.Renderer.prototype.resize.call(this, w, h);
+  this.GL.viewport(
+    0,
+    0,
+    this.GL.drawingBufferWidth,
+    this.GL.drawingBufferHeight
+  );
+  this._viewport = this.GL.getParameter(this.GL.VIEWPORT);
+  // If we're using the default camera, update the aspect ratio
+  if (this._curCamera === null || this._curCamera === 'default') {
+    this._curCamera = null;
+    // camera defaults are dependent on the width & height of the screen,
+    // so we'll want to update them if the size of the screen changes.
+    this._setDefaultCamera();
+  }
+  //resize pixels buffer
+  if (typeof this.pixels !== 'undefined') {
+    this.pixels = new Uint8Array(
+      this.GL.drawingBufferWidth * this.GL.drawingBufferHeight * 4
+    );
+  }
+};
+
+/**
+ * clears color and depth buffers
+ * with r,g,b,a
+ * @private
+ * @param {Number} r normalized red val.
+ * @param {Number} g normalized green val.
+ * @param {Number} b normalized blue val.
+ * @param {Number} a normalized alpha val.
+ */
+p5.RendererGL.prototype.clear = function() {
+  this.GL.clearColor(arguments[0], arguments[1], arguments[2], arguments[3]);
+  this.GL.clear(this.GL.COLOR_BUFFER_BIT | this.GL.DEPTH_BUFFER_BIT);
+};
+
+/**
+ * [translate description]
+ * @private
+ * @param  {Number} x [description]
+ * @param  {Number} y [description]
+ * @param  {Number} z [description]
+ * @chainable
+ * @todo implement handle for components or vector as args
+ */
+p5.RendererGL.prototype.translate = function(x, y, z) {
+  if (x instanceof p5.Vector) {
+    z = x.z;
+    y = x.y;
+    x = x.x;
+  }
+  this.uMVMatrix.translate([x, y, z]);
+  return this;
+};
+
+/**
+ * Scales the Model View Matrix by a vector
+ * @private
+ * @param  {Number | p5.Vector | Array} x [description]
+ * @param  {Number} [y] y-axis scalar
+ * @param  {Number} [z] z-axis scalar
+ * @chainable
+ */
+p5.RendererGL.prototype.scale = function(x, y, z) {
+  this.uMVMatrix.scale(x, y, z);
+  return this;
+};
+
+p5.RendererGL.prototype.rotate = function(rad, axis) {
